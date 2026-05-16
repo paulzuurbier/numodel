@@ -52,9 +52,12 @@ function update_tag(file, content, tagname, tagdate)
   tagname = tagname or release_tag
 
   if file:match("%.dtx$") then
-    -- \ProvidesPackage{...}[YYYY/MM/DD vX.Y.Z ...]
+    -- \ProvidesPackage{...}[YYYY/MM/DD vX.Y.Z ...]  and
+    -- \ProvidesFile{...}[YYYY/MM/DD vX.Y.Z ...]   (used by \GetFileInfo
+    -- in the driver to populate \fileversion / \filedate in the title
+    -- footnote).
     content = content:gsub(
-      "(\\ProvidesPackage{[^}]+}%[)%d%d%d%d/%d%d/%d%d v[%d.]+",
+      "(\\Provides[A-Za-z]+{[^}]+}%[)%d%d%d%d/%d%d/%d%d v[%d.]+",
       "%1" .. tagdate .. " v" .. tagname)
     -- \ProvidesExplFile{...}{YYYY/MM/DD}{vX.Y.Z}{...}
     content = content:gsub(
