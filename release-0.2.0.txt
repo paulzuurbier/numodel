@@ -1,0 +1,16 @@
+First CTAN release of numodel-bundle (v0.2.0).
+
+numodel-bundle is a LuaLaTeX package for writing and rendering
+numerical models (Euler-integrated dynamical systems) directly
+inside LaTeX documents, aimed at physics teaching material.
+
+The bundle ships two modules:
+
+* numodel      -- modelling engine: text-mode rule tables, Forrester
+                  stock-and-flow diagrams (tight/forrester/edu styles),
+                  numerical simulation in Lua, y(x)-plot integration.
+* numodel-plot -- PGFPlots styling layer that auto-sizes plots to a
+                  clean tick lattice; configurable axis-label formats
+                  (IEEE, ISO 80000-1).
+
+Pre-1.0 release; breaking changes still possible before 1.0.0.

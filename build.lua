@@ -97,9 +97,18 @@ aimed at physics teaching material.  The bundle contains numodel
 (a PGFPlots styling layer that auto-sizes plots to whole-number tick
 intervals).
 ]],
-  topic       = {"physics", "luatex", "diagram", "graphics-plot"},
+  topic       = {"physics", "luatex", "diagram", "diagram-flow",
+                 "graphics-plot", "pgf-tikz", "teaching", "use-luatex"},
   ctanPath    = "/macros/luatex/latex/numodel-bundle",
-  -- No public source URL: development happens in a private repo.
-  -- Reach the maintainer via the email above for bug reports.
+  repository  = "https://github.com/paulzuurbier/numodel",
+  bugtracker  = "https://github.com/paulzuurbier/numodel/issues",
   update      = false,    -- first CTAN release; flip to true after upload
 }
+
+-- l3build's stock `upload` target has no bundle_func, so on a bundle it
+-- iterates submodules and looks for the CTAN zip inside each module
+-- directory.  Our zip is built once at the bundle root, so make
+-- `l3build upload` run there directly.
+if target_list and target_list.upload then
+  target_list.upload.bundle_func = upload
+end
