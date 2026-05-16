@@ -1,0 +1,29 @@
+prefix=proj
+vars:
+  projT: type=system text=t gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  projDt: type=system text=dt gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  projX: type=stock text=x gridx=1 gridy=0 role=stock vpos_x= vpos_y=
+  projY: type=stock text=y gridx=3 gridy=0 role=stock vpos_x= vpos_y=
+  projVx: type=stock text=v_x gridx=4 gridy=0 role=stock vpos_x= vpos_y=
+  projVy: type=stock text=v_y gridx=6 gridy=0 role=stock vpos_x= vpos_y=
+  projG: type=constant text=g gridx=5 gridy=0 role=inflow-valve vpos_x= vpos_y=
+flows.inflow:
+  projVy -> projG
+  projX -> projVx
+  projY -> projVy
+flows.outflow:
+flows.valve_for:
+  projG -> projVy
+flows.outvalve_for:
+flows.between_valve:
+flows.between_target:
+flows.stock_valve:
+flows.stock_phantom_valve:
+  projX -> projVx
+  projY -> projVy
+deps:
+  projT -> projDt
+  projVy -> projDt,projG
+  projX -> projDt,projVx
+  projY -> projDt,projVy
+causals:

@@ -1,0 +1,19 @@
+% Regression test: syntax=NL loads the Dutch (CoachTaal) keyword
+% table and produces the corresponding column headers in \textmodel.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{val}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{0.1}{\s}{2}{system}
+\mvar{Y}{y}{50}{\m}{2}{stock}
+\mvar{G}{g}{-9.81}{\m\per\s\squared}{2}{constant}
+\mrule{Y}{\valY + \valG * \valDt}
+\mstop{\valY <= 0}
+\TIMO
+\TYPE{=== syntax=NL \string\textmodel\space output ===}
+\textmodel
+\end{document}

@@ -1,0 +1,14 @@
+inflow:
+  liftEsys -> liftdMGV
+outflow:
+  liftEZ -> liftdMGV
+  liftEsys -> liftPout
+valve_for:
+outvalve_for:
+  liftPout -> liftEsys
+between_valve:
+  liftdMGV -> liftEZ
+between_target:
+  liftdMGV -> liftEsys
+stock_valve:
+stock_phantom_valve:

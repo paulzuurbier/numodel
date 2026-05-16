@@ -1,0 +1,23 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== syntax=NL \textmodel output ===
+TEXTMODEL start
+BUILD_TABLE rules: y\,=\,y+ g\cdot   dt|\protect \protect \unhbox \voidb@x \hbox {Als }y\leqslant   0\protect \protect \unhbox \voidb@x \hbox { Dan}\protect \protect \unhbox \voidb@x \hbox { Stop }\protect \protect \unhbox \voidb@x \hbox {EindAls}
+BUILD_TABLE types: rule|rule
+BUILD_TABLE numrules: 2
+BUILD_TABLE numstarts: 4
+BUILD_TABLE before-step table: \begin {tabular}{r|l|l}&\textbf {model}&\textbf {startwaarden}\\\hline 
+BUILD_TABLE iter row: 0
+BUILD_TABLE row: 1type: rule
+BUILD_TABLE emit rule num: 1content: y\,=\,y+ g\cdot   dt
+BUILD_TABLE after-emit table tail: {tabular}{r|l|l}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$y\,=\,y+ g\cdot   dt$&
+BUILD_TABLE iter row: 1
+BUILD_TABLE row: 2type: rule
+BUILD_TABLE emit rule num: 2content: \protect \protect \unhbox \voidb@x \hbox {Als }y\leqslant   0\protect \protect \unhbox \voidb@x \hbox { Dan}\protect \protect \unhbox \voidb@x \hbox { Stop }\protect \protect \unhbox \voidb@x \hbox {EindAls}
+BUILD_TABLE after-emit table tail: {tabular}{r|l|l}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$y\,=\,y+ g\cdot   dt$&$t=\valTqty $\\\rule {0pt}{2.6ex}2&$\protect \protect \unhbox \voidb@x \hbox {Als }y\leqslant   0\protect \protect \unhbox \voidb@x \hbox { Dan}\protect \protect \unhbox \voidb@x \hbox { Stop }\protect \protect \unhbox \voidb@x \hbox {EindAls}$&
+TEXTMODEL table: \begin {tabular}{r|l|l}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$y\,=\,y+ g\cdot   dt$&$t=\valTqty $\\\rule {0pt}{2.6ex}2&$\protect \protect \unhbox \voidb@x \hbox {Als }y\leqslant   0\protect \protect \unhbox \voidb@x \hbox { Dan}\protect \protect \unhbox \voidb@x \hbox { Stop }\protect \protect \unhbox \voidb@x \hbox {EindAls}$&$dt=\valDtqty $\\&&$y=\valYqty $\\&&$g=\valGqty $\\\end {tabular}
+LaTeX Font Info:    Trying to load font information for U+msa on input line ....
+LaTeX Font Info:    Trying to load font information for U+msb on input line ....
+TEXTMODEL done
+[1
+] (m003-syntax-NL.aux)

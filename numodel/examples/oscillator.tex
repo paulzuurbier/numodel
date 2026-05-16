@@ -1,0 +1,42 @@
+% oscillator.tex — undamped mass-spring oscillator.
+%
+% A harmonic oscillator: m x'' + k x = 0.  Two stocks (position X
+% and velocity V) coupled through the spring force F = -k X.
+
+\documentclass{article}
+\usepackage[syntax=english]{numodel}
+
+\begin{document}
+
+\numodelsetup{diagram-style=tight}
+\newmodelprefix{osc}
+
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.01}{\s}{2}{systeem}
+\mvar{V}{v}{0}{\m\per\s}{3}{hulp}
+\mvar{X}{x}{0.10}{\m}{3}{voorraad}
+\mvar{M}{m}{0.250}{\kg}{3}{constante}
+\mvar{K}{k}{40}{\N\per\m}{2}{constante}
+
+\mrule{V}{\oscV - (\oscK / \oscM) * \oscX * \oscDt}
+\mrule{X}{\oscX + \oscV * \oscDt}
+\mrule{T}{\oscT + \oscDt}
+\mstop{\oscT >= 1.5}
+
+\section*{Tekstmodel}
+\textmodel
+
+\section*{Grafisch model}
+\graphicmodel
+\directlua{
+local f = io.open("oscillator.layout.txt","w")
+f:write(numodel.dump_layout("osc")); f:close()
+}
+
+\section*{Simulatie}
+\computemodel
+
+\section*{Uitwijking}
+\diagrammodel{T}{X}{osc-x-t}
+
+\end{document}

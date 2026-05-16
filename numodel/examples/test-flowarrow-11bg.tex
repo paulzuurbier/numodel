@@ -1,0 +1,79 @@
+% test-flowarrow-11bg.tex — exercises plan 11b.g:
+%   flowarrow-style    = hollow | filled
+%   valve-style        = valve | circle | edu
+%   flowarrow-cloud-tip = true | false  (global + per-\mvar override)
+%
+% Runs the same model under several setting combinations to verify
+% that the keys flip rendering as expected and that per-mvar
+% override on a stock wins over the global default.
+\documentclass{article}
+\usepackage[syntax=english]{numodel}
+
+\begin{document}
+
+\section*{forrester (defaults: hollow, valve, cloud=true)}
+\numodelsetup{diagram-style=forrester}
+\newmodelprefix{a}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{1}{\s}{2}{system}
+\mvar{N}{n}{0}{}{0}{stock}
+\mvar{R}{r}{5}{\per\s}{2}{constant}
+\mrule{N}{\aN + \aR * \aDt}
+\mrule{T}{\aT + \aDt}
+\mstop{\aT >= 5}
+\graphicmodel
+\computemodel
+
+\section*{tight (defaults: filled, edu, cloud=false)}
+\numodelsetup{diagram-style=tight}
+\newmodelprefix{b}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{1}{\s}{2}{system}
+\mvar{N}{n}{0}{}{0}{stock}
+\mvar{R}{r}{5}{\per\s}{2}{constant}
+\mrule{N}{\bN + \bR * \bDt}
+\mrule{T}{\bT + \bDt}
+\mstop{\bT >= 5}
+\graphicmodel
+\computemodel
+
+\section*{tight + global cloud=true}
+\numodelsetup{diagram-style=tight, flowarrow-cloud-tip=true}
+\newmodelprefix{c}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{1}{\s}{2}{system}
+\mvar{N}{n}{0}{}{0}{stock}
+\mvar{R}{r}{5}{\per\s}{2}{constant}
+\mrule{N}{\cN + \cR * \cDt}
+\mrule{T}{\cT + \cDt}
+\mstop{\cT >= 5}
+\graphicmodel
+\computemodel
+
+\section*{forrester + per-mvar cloud=false on the stock}
+\numodelsetup{diagram-style=forrester, flowarrow-cloud-tip=}
+\newmodelprefix{d}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{1}{\s}{2}{system}
+\mvar[flowarrow-cloud-tip=false]{N}{n}{0}{}{0}{stock}
+\mvar{R}{r}{5}{\per\s}{2}{constant}
+\mrule{N}{\dN + \dR * \dDt}
+\mrule{T}{\dT + \dDt}
+\mstop{\dT >= 5}
+\graphicmodel
+\computemodel
+
+\section*{\textbackslash graphicmodel one-render override (filled, circle, cloud=true) on a tight model}
+\numodelsetup{diagram-style=tight, flowarrow-cloud-tip=}
+\newmodelprefix{e}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{1}{\s}{2}{system}
+\mvar{N}{n}{0}{}{0}{stock}
+\mvar{R}{r}{5}{\per\s}{2}{constant}
+\mrule{N}{\eN + \eR * \eDt}
+\mrule{T}{\eT + \eDt}
+\mstop{\eT >= 5}
+\graphicmodel[flowarrow-style=filled, valve-style=circle, flowarrow-cloud-tip=true]
+\computemodel
+
+\end{document}

@@ -1,0 +1,22 @@
+% simple.tex — minimal numodel-plot example.
+%
+% Plots y = 2x on a clean tick lattice, with auto-built axis labels
+% from \xlabelqty/\xlabelunit (default IEEE format: "v (m/s)").
+
+\documentclass{article}
+\usepackage{siunitx}
+\usepackage{numodel-plot}
+
+\begin{document}
+
+\def\xmin{0}\def\xmax{10}
+\def\ymin{0}\def\ymax{20}
+\def\xlabelqty{t}\def\xlabelunit{\s}
+\def\ylabelqty{v}\def\ylabelunit{\m\per\s}
+
+\drawplot{
+  \addplot[domain=\xmin:\xmax,thick]{2*x};
+  \addlegendentry{$v = 2\,t$}
+}
+
+\end{document}

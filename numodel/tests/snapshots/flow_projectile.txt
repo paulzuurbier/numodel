@@ -1,0 +1,14 @@
+inflow:
+  projVy -> projG
+  projX -> projVx
+  projY -> projVy
+outflow:
+valve_for:
+  projG -> projVy
+outvalve_for:
+between_valve:
+between_target:
+stock_valve:
+stock_phantom_valve:
+  projX -> projVx
+  projY -> projVy

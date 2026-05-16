@@ -1,0 +1,26 @@
+prefix=osc
+vars:
+  oscT: type=system text=t gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  oscDt: type=system text=dt gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  oscV: type=aux text=v gridx=0 gridy=0 role=inflow-valve vpos_x= vpos_y=
+  oscX: type=stock text=x gridx=1 gridy=0 role=stock vpos_x= vpos_y=
+  oscM: type=constant text=m gridx=0 gridy=2 role=constant vpos_x= vpos_y=
+  oscK: type=constant text=k gridx=1 gridy=2 role=constant vpos_x= vpos_y=
+flows.inflow:
+  oscX -> oscV
+flows.outflow:
+flows.valve_for:
+  oscV -> oscX
+flows.outvalve_for:
+flows.between_valve:
+flows.between_target:
+flows.stock_valve:
+flows.stock_phantom_valve:
+deps:
+  oscT -> oscDt
+  oscV -> oscDt,oscX,oscM,oscK
+  oscX -> oscDt,oscV
+causals:
+  oscX -> oscV bend=right tgt_is_valve=true
+  oscM -> oscV bend=none tgt_is_valve=true
+  oscK -> oscV bend=none tgt_is_valve=true

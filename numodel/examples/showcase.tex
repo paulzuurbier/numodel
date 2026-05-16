@@ -1,0 +1,90 @@
+% free-fall.tex — single-stock numerical model.
+%
+% A ball dropped from y0 = 100 m under constant gravity.  One
+% Forrester stock for height (Y), one for velocity (V), and an
+% auxiliary integrator for time (T).  \diagrammodel renders Y(T).
+
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\usepackage[a4paper, margin=0.5cm]{geometry}
+
+\begin{document}
+
+\def\dgridx{2}\def\dgridy{2}
+% === COMPUTERMODEL ===
+%\numodelsetup{diagram-style=forrester, flowarrow-cloud-tip=true}
+\numodelsetup{diagram-style=tight, flowarrow-cloud-tip=false, gridmaxx=6}
+\newmodelprefix{lift}
+
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{0.03}{\s}{1}{system}
+\mvar{Tend}{T}{5.6}{\s}{2}{system}
+
+\mvar{J}{j}{1.1}{\m\per\s^3}{2}{constant}
+\mvar{G}{g}{9.81}{\m\per\s\squared}{3}{constant}
+\mvar{Mcab}{m_{cab}}{700}{\kg}{3}{constant}
+\mvar{Mcon}{m_{con}}{400}{\kg}{3}{constant}
+\mvar{Frol}{F_{rol}}{40}{\N}{2}{constant}
+
+\mvar{FzCab}{F_{Z,cab}}{}{\N}{3}{hulp}
+\mvar{FzCon}{F_{Z,con}}{}{\N}{3}{hulp}
+\mvar{FzNet}{F_{Z,net}}{}{\N}{3}{hulp}
+\mvar{Fmotor}{F_{motor}}{}{\N}{3}{hulp}
+
+\mvar{EZ}{E_Z}{}{\J}{3}{stock}
+\mvar{Esys}{E_{sys}}{}{\J}{3}{stock}
+\mvar{Pout}{P_{out}}{}{\W}{3}{hulp}
+\mvar{dMGV}{dMGV}{}{\W}{3}{hulp}
+
+%\mvar[gridx=1,gridy=-1]{A}{a}{0}{\m\per\s\squared}{2}{stock}
+\mvar{A}{a}{0}{\m\per\s\squared}{2}{stock}
+\mvar{V}{v}{0}{\m\per\s}{1}{stock}
+\mvar{H}{h}{0}{\m}{1}{stock}
+
+\mrule{FzCab}{\liftMcab * \liftG}
+\mrule{FzCon}{\liftMcon * \liftG}
+\mrule{FzNet}{\liftFzCab - \liftFzCon}
+\mrule*{A}{(\liftT < \liftTend / 4) || (\liftT > \liftTend * 3 / 4) ? \liftA + \liftJ * \liftDt : \liftA - \liftJ * \liftDt}
+\mrule{V}{\liftV + \liftA * \liftDt}
+\mrule[aliasright=\cdots]{H}{\liftH + \liftV * \liftDt}
+\mrule[aliasright=\cdots]{Fmotor}{(\liftMcab + \liftMcon) * \liftA + \liftFzNet + \liftFrol}
+\mrule{dMGV}{(\liftMcab-\liftMcon)*\liftG * \liftV}
+\mrule{Pout}{\liftFrol * \liftV}
+\mrule{EZ}{\liftEZ - \liftdMGV * \liftDt}
+\mrule{Esys}{\liftEsys - \liftPout * \liftDt + \liftdMGV * \liftDt}
+\mrule{T}{\liftT + \liftDt}
+\mstop{\liftT >= \liftTend}
+
+\section*{Tekstmodel}
+\textmodel
+
+\section*{Grafisch Model}
+\graphicmodel
+\directlua{
+  local f = io.open("showcase.layout.txt","w")
+  f:write(numodel.dump_layout("lift")); f:close()
+}
+
+% Simulatie
+\computemodel
+
+\section*{Diagram}
+\def\ycmmax{8}
+\diagrammodel{T}{H}{lift}
+
+
+\section*{forrester + per-mvar cloud=false on the stock}
+\numodelsetup{diagram-style=forrester, flowarrow-cloud-tip=true}
+\newmodelprefix{d}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{1}{\s}{2}{system}
+\mvar[flowarrow-cloud-tip=true]{N}{n}{0}{}{0}{stock}
+\mvar{R}{r}{5}{\per\s}{2}{constant}
+\mrule{N}{\dN + \dR * \dDt}
+\mrule{T}{\dT + \dDt}
+\mstop{\dT >= 5}
+\textmodel
+\graphicmodel
+\computemodel
+
+\end{document}

@@ -1,0 +1,72 @@
+prefix=lift
+vars:
+  liftT: type=system text=t gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  liftDt: type=system text=dt gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  liftTend: type=system text=T gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  liftJ: type=constant text=j gridx=0 gridy=0 role=inflow-valve vpos_x= vpos_y=
+  liftG: type=constant text=g gridx=0 gridy=3 role=constant vpos_x= vpos_y=
+  liftMcab: type=constant text=m_{cab} gridx=1 gridy=3 role=constant vpos_x= vpos_y=
+  liftMcon: type=constant text=m_{con} gridx=2 gridy=3 role=constant vpos_x= vpos_y=
+  liftFrol: type=constant text=F_{rol} gridx=3 gridy=3 role=constant vpos_x= vpos_y=
+  liftFzCab: type=aux text=F_{Z,cab} gridx=0 gridy=2 role=aux vpos_x= vpos_y=
+  liftFzCon: type=aux text=F_{Z,con} gridx=1 gridy=2 role=aux vpos_x= vpos_y=
+  liftFzNet: type=aux text=F_{Z,net} gridx=2 gridy=2 role=aux vpos_x= vpos_y=
+  liftFmotor: type=aux text=F_{motor} gridx=3 gridy=2 role=aux vpos_x= vpos_y=
+  liftEZ: type=stock text=E_Z gridx=0 gridy=1 role=stock vpos_x= vpos_y=
+  liftEsys: type=stock text=E_{sys} gridx=2 gridy=1 role=stock vpos_x= vpos_y=
+  liftPout: type=aux text=P_{out} gridx=3 gridy=1 role=outflow-valve vpos_x= vpos_y=
+  liftdMGV: type=aux text=dMGV gridx=1 gridy=1 role=between-valve vpos_x= vpos_y=
+  liftA: type=stock text=a gridx=1 gridy=0 role=stock vpos_x= vpos_y=
+  liftV: type=stock text=v gridx=3 gridy=0 role=stock vpos_x= vpos_y=
+  liftH: type=stock text=h gridx=5 gridy=0 role=stock vpos_x= vpos_y=
+flows.inflow:
+  liftA -> liftJ
+  liftEsys -> liftdMGV
+  liftH -> liftV
+  liftV -> liftA
+flows.outflow:
+  liftEZ -> liftdMGV
+  liftEsys -> liftPout
+flows.valve_for:
+  liftJ -> liftA
+flows.outvalve_for:
+  liftPout -> liftEsys
+flows.between_valve:
+  liftdMGV -> liftEZ
+flows.between_target:
+  liftdMGV -> liftEsys
+flows.stock_valve:
+flows.stock_phantom_valve:
+  liftH -> liftV
+  liftV -> liftA
+deps:
+  liftA -> liftT,liftDt,liftTend,liftJ
+  liftEZ -> liftDt,liftdMGV
+  liftEsys -> liftDt,liftPout,liftdMGV
+  liftFmotor -> liftMcab,liftMcon,liftFrol,liftFzNet,liftA
+  liftFzCab -> liftG,liftMcab
+  liftFzCon -> liftG,liftMcon
+  liftFzNet -> liftFzCab,liftFzCon
+  liftH -> liftDt,liftV
+  liftPout -> liftFrol,liftV
+  liftT -> liftDt
+  liftV -> liftDt,liftA
+  liftdMGV -> liftG,liftMcab,liftMcon,liftV
+causals:
+  liftG -> liftFzCab bend=none tgt_is_valve=false
+  liftMcab -> liftFzCab bend=none tgt_is_valve=false
+  liftG -> liftFzCon bend=none tgt_is_valve=false
+  liftMcon -> liftFzCon bend=none tgt_is_valve=false
+  liftFzCab -> liftFzNet bend=left tgt_is_valve=false
+  liftFzCon -> liftFzNet bend=none tgt_is_valve=false
+  liftMcab -> liftFmotor bend=none tgt_is_valve=false
+  liftMcon -> liftFmotor bend=none tgt_is_valve=false
+  liftFrol -> liftFmotor bend=none tgt_is_valve=false
+  liftFzNet -> liftFmotor bend=none tgt_is_valve=false
+  liftA -> liftFmotor bend=left tgt_is_valve=false
+  liftFrol -> liftPout bend=left tgt_is_valve=true
+  liftV -> liftPout bend=none tgt_is_valve=true
+  liftG -> liftdMGV bend=none tgt_is_valve=true
+  liftMcab -> liftdMGV bend=left tgt_is_valve=true
+  liftMcon -> liftdMGV bend=none tgt_is_valve=true
+  liftV -> liftdMGV bend=none tgt_is_valve=true

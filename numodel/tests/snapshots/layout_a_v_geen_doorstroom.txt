@@ -1,0 +1,24 @@
+prefix=av
+vars:
+  avT: type=system text=t gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  avDt: type=system text=dt gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  avA: type=stock text=a gridx=1 gridy=0 role=stock vpos_x= vpos_y=
+  avV: type=stock text=v gridx=3 gridy=0 role=stock vpos_x= vpos_y=
+  avJ: type=constant text=j gridx=0 gridy=0 role=inflow-valve vpos_x= vpos_y=
+flows.inflow:
+  avA -> avJ
+  avV -> avA
+flows.outflow:
+flows.valve_for:
+  avJ -> avA
+flows.outvalve_for:
+flows.between_valve:
+flows.between_target:
+flows.stock_valve:
+flows.stock_phantom_valve:
+  avV -> avA
+deps:
+  avA -> avDt,avJ
+  avT -> avDt
+  avV -> avDt,avA
+causals:

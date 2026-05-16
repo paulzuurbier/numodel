@@ -1,0 +1,11 @@
+inflow:
+  oscX -> oscV
+outflow:
+  oscV -> oscX
+valve_for:
+outvalve_for:
+between_valve:
+between_target:
+stock_valve:
+stock_phantom_valve:
+  oscX -> oscV

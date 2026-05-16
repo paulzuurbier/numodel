@@ -1,0 +1,29 @@
+prefix=ee
+vars:
+  eeT: type=system text=t gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  eeDt: type=system text=dt gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  eeEel: type=stock text=Eel gridx=0 gridy=0 role=stock vpos_x= vpos_y=
+  eeQ: type=stock text=Q gridx=2 gridy=0 role=stock vpos_x= vpos_y=
+  eeP: type=aux text=P gridx=1 gridy=0 role=between-valve vpos_x= vpos_y=
+  eeR: type=constant text=R gridx=0 gridy=2 role=constant vpos_x= vpos_y=
+  eeI: type=constant text=I gridx=1 gridy=2 role=constant vpos_x= vpos_y=
+flows.inflow:
+  eeQ -> eeP
+flows.outflow:
+  eeEel -> eeP
+flows.valve_for:
+flows.outvalve_for:
+flows.between_valve:
+  eeP -> eeEel
+flows.between_target:
+  eeP -> eeQ
+flows.stock_valve:
+flows.stock_phantom_valve:
+deps:
+  eeEel -> eeDt,eeP
+  eeP -> eeR,eeI
+  eeQ -> eeDt,eeP
+  eeT -> eeDt
+causals:
+  eeR -> eeP bend=none tgt_is_valve=true
+  eeI -> eeP bend=none tgt_is_valve=true

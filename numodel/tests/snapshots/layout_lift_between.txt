@@ -1,0 +1,27 @@
+prefix=lift
+vars:
+  liftT: type=system text=t gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  liftDt: type=system text=dt gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  liftEZ: type=stock text=E_Z gridx=0 gridy=0 role=stock vpos_x= vpos_y=
+  liftEsys: type=stock text=Esys gridx=2 gridy=0 role=stock vpos_x= vpos_y=
+  liftPout: type=aux text=Pout gridx=3 gridy=0 role=outflow-valve vpos_x= vpos_y=
+  liftdMGV: type=aux text=dMGV gridx=1 gridy=0 role=between-valve vpos_x= vpos_y=
+flows.inflow:
+  liftEsys -> liftdMGV
+flows.outflow:
+  liftEZ -> liftdMGV
+  liftEsys -> liftPout
+flows.valve_for:
+flows.outvalve_for:
+  liftPout -> liftEsys
+flows.between_valve:
+  liftdMGV -> liftEZ
+flows.between_target:
+  liftdMGV -> liftEsys
+flows.stock_valve:
+flows.stock_phantom_valve:
+deps:
+  liftEZ -> liftDt,liftdMGV
+  liftEsys -> liftDt,liftPout,liftdMGV
+  liftT -> liftDt
+causals:

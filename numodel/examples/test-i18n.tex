@@ -1,0 +1,38 @@
+% test-i18n.tex — verify column titles (per syntax) and decimal separator
+% (per syntax + explicit decimal-separator override).
+\documentclass{article}
+\usepackage{numodel}
+
+\begin{document}
+
+\newmodelprefix{ball}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.05}{\s}{2}{systeem}
+\mvar{V}{v}{0}{\m\per\s}{3}{voorraad}
+\mvar{Y}{y}{100}{\m}{3}{voorraad}
+\mvar{G}{g}{-9.81}{\m\per\s\squared}{3}{constante}
+\mrule{V}{\ballV + \ballG * \ballDt}
+\mrule{Y}{\ballY + \ballV * \ballDt}
+\mrule{T}{\ballT + \ballDt}
+\mstop{\ballY <= 2}
+
+\section*{1. Default (\texttt{syntax=english}) — kop ``initial values'', punt}
+\textmodel
+
+\section*{2. \texttt{syntax=coachtaal} — kop ``startwaarden'', komma}
+\numodelsetup{syntax=coachtaal}
+\textmodel
+
+\section*{3. Coachtaal + expliciete \texttt{decimal-separator=point}}
+\numodelsetup{syntax=coachtaal, decimal-separator=point}
+\textmodel
+
+\section*{4. Switch syntax → english; expliciete keuze \emph{punt} blijft}
+\numodelsetup{syntax=english}
+\textmodel
+
+\section*{5. Switch syntax → coachtaal; expliciete keuze \emph{punt} blijft}
+\numodelsetup{syntax=coachtaal}
+\textmodel
+
+\end{document}

@@ -1,0 +1,257 @@
+% cloud-arrow-design.tex --- speeltuin voor het ontwerp van de
+% Cloud-pijlpunt voor numodel.  Volledig stand-alone: hangt niet af
+% van numodel.sty.  Compileer met: lualatex cloud-arrow-design.tex
+%
+% Elke variant is gedeclareerd als een aparte pgfarrow (CloudA,
+% CloudB, ...).  Elke rij in het document toont dezelfde pijl met
+% een andere variant; eronder een kortere pijl zodat je ziet hoe het
+% wolkje meebeweegt.  Pas de drawing code aan, hercompileer, kies
+% een winnaar en kopieer die terug naar numodel.dtx.
+
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=1.5cm]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+% ====================================================================
+% Variant A — vijf cirkels (huidige numodel-versie).
+% ====================================================================
+\pgfdeclarearrow{
+  name = CloudA,
+  parameters = { \the\pgfarrowlength \the\pgfarrowwidth },
+  setup code = {
+    \pgfarrowssettipend{\pgfarrowlength}
+    \pgfarrowssetbackend{0pt}
+    \pgfarrowssetlineend{0.2\pgfarrowlength}
+    \pgfarrowssetvisualbackend{0pt}
+    \pgfarrowssetvisualtipend{\pgfarrowlength}
+  },
+  defaults = { length = 1em, width = 1em },
+  drawing code = {
+    \pgfpathcircle{\pgfqpoint{0.2\pgfarrowlength}{ 0.25\pgfarrowwidth}}{0.25\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.2\pgfarrowlength}{-0.25\pgfarrowwidth}}{0.25\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.5\pgfarrowlength}{ 0.30\pgfarrowwidth}}{0.30\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.5\pgfarrowlength}{-0.30\pgfarrowwidth}}{0.30\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.8\pgfarrowlength}{ 0pt}}{0.25\pgfarrowwidth}
+    \pgfusepathqfillstroke
+  },
+}
+
+% ====================================================================
+% Variant B — zeven cirkels, fluffier.  Probeert het Forrester-cloud
+% silhouet wat completer te maken.
+% ====================================================================
+\pgfdeclarearrow{
+  name = CloudB,
+  parameters = { \the\pgfarrowlength \the\pgfarrowwidth },
+  setup code = {
+    \pgfarrowssettipend{\pgfarrowlength}
+    \pgfarrowssetbackend{0pt}
+    \pgfarrowssetlineend{0.15\pgfarrowlength}
+    \pgfarrowssetvisualbackend{0pt}
+    \pgfarrowssetvisualtipend{\pgfarrowlength}
+  },
+  defaults = { length = 1em, width = 1em },
+  drawing code = {
+    \pgfpathcircle{\pgfqpoint{0.15\pgfarrowlength}{ 0.20\pgfarrowwidth}}{0.22\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.15\pgfarrowlength}{-0.20\pgfarrowwidth}}{0.22\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.35\pgfarrowlength}{ 0.30\pgfarrowwidth}}{0.30\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.35\pgfarrowlength}{-0.30\pgfarrowwidth}}{0.30\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.60\pgfarrowlength}{ 0.30\pgfarrowwidth}}{0.30\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.60\pgfarrowlength}{-0.30\pgfarrowwidth}}{0.30\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.85\pgfarrowlength}{ 0pt}}{0.25\pgfarrowwidth}
+    \pgfusepathqfillstroke
+  },
+}
+
+% ====================================================================
+% Variant C — TikZ' ingebouwde `cloud` shape, gerenderd via een
+% pgfnode binnen de drawing code.  Geeft het meest cloud-achtige
+% silhouet (sinusvormige bogen tussen puffs i.p.v. cirkelovergangen).
+% ====================================================================
+\usetikzlibrary{shapes.symbols}
+\pgfdeclarearrow{
+  name = CloudC,
+  parameters = { \the\pgfarrowlength \the\pgfarrowwidth },
+  setup code = {
+    \pgfarrowssettipend{\pgfarrowlength}
+    \pgfarrowssetbackend{0pt}
+    \pgfarrowssetlineend{0.2\pgfarrowlength}
+    \pgfarrowssetvisualbackend{0pt}
+    \pgfarrowssetvisualtipend{\pgfarrowlength}
+  },
+  defaults = { length = 1em, width = 1em },
+  drawing code = {
+    \pgfnode{cloud}{center}{}{tmpcloud}{%
+      \pgfusepathqfillstroke}
+  },
+}
+
+% ====================================================================
+% Variant D — drie grote cirkels (minimalistisch, snel te lezen).
+% ====================================================================
+\pgfdeclarearrow{
+  name = CloudD,
+  parameters = { \the\pgfarrowlength \the\pgfarrowwidth },
+  setup code = {
+    \pgfarrowssettipend{\pgfarrowlength}
+    \pgfarrowssetbackend{0pt}
+    \pgfarrowssetlineend{0.25\pgfarrowlength}
+    \pgfarrowssetvisualbackend{0pt}
+    \pgfarrowssetvisualtipend{\pgfarrowlength}
+  },
+  defaults = { length = 1em, width = 1em },
+  drawing code = {
+    \pgfpathcircle{\pgfqpoint{0.25\pgfarrowlength}{ 0pt}}{0.40\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.55\pgfarrowlength}{ 0.20\pgfarrowwidth}}{0.30\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.80\pgfarrowlength}{ 0pt}}{0.35\pgfarrowwidth}
+    \pgfusepathqfillstroke
+  },
+}
+
+% ====================================================================
+% Variant F — 8 cirkels: 3 boven, 3 onder, plus 2 op de schachtlijn
+% (start en tip van de wolk).  Eerst stroke dan fill: pad wordt twee
+% keer opgebouwd, eerst zwart geveegd, daarna witte vulling die alle
+% interne arcs afdekt.  Werkt met elke cirkel-config.
+% ====================================================================
+\pgfdeclarearrow{
+  name = CloudF,
+  parameters = { \the\pgfarrowlength \the\pgfarrowwidth },
+  setup code = {
+    \pgfarrowssettipend{\pgfarrowlength}
+    \pgfarrowssetbackend{0pt}
+    \pgfarrowssetlineend{0.2\pgfarrowlength}
+    \pgfarrowssetvisualbackend{0pt}
+    \pgfarrowssetvisualtipend{\pgfarrowlength}
+  },
+  defaults = { length = 1em, width = 1em },
+  drawing code = {
+    % Pass 1: stroke (zwart, default lijnkleur)
+    \pgfpathcircle{\pgfqpoint{0.00\pgfarrowlength}{ 0.00\pgfarrowwidth}}{0.20\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.15\pgfarrowlength}{ 0.20\pgfarrowwidth}}{0.25\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.50\pgfarrowlength}{ 0.25\pgfarrowwidth}}{0.35\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.85\pgfarrowlength}{ 0.20\pgfarrowwidth}}{0.25\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{1.00\pgfarrowlength}{ 0.00\pgfarrowwidth}}{0.20\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.15\pgfarrowlength}{-0.20\pgfarrowwidth}}{0.25\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.50\pgfarrowlength}{-0.25\pgfarrowwidth}}{0.35\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.85\pgfarrowlength}{-0.20\pgfarrowwidth}}{0.25\pgfarrowwidth}
+    \pgfusepathqstroke
+    % Pass 2: fill (witte vulling dekt alle binnen-arcs af)
+    \pgfpathcircle{\pgfqpoint{0.00\pgfarrowlength}{ 0.00\pgfarrowwidth}}{0.20\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.15\pgfarrowlength}{ 0.20\pgfarrowwidth}}{0.25\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.50\pgfarrowlength}{ 0.25\pgfarrowwidth}}{0.35\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.85\pgfarrowlength}{ 0.20\pgfarrowwidth}}{0.25\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{1.00\pgfarrowlength}{ 0.00\pgfarrowwidth}}{0.20\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.15\pgfarrowlength}{-0.20\pgfarrowwidth}}{0.25\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.50\pgfarrowlength}{-0.25\pgfarrowwidth}}{0.35\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.85\pgfarrowlength}{-0.20\pgfarrowwidth}}{0.25\pgfarrowwidth}
+    \pgfusepathqfill
+  },
+}
+
+% ====================================================================
+% Variant G — één gesloten pad van \pgfpatharc segmenten (zoals
+% gevraagd: "een pad dat uit delen van cirkels bestaat").  Vier
+% puffen rondom een cloud-center; iedere boog gaat van het tangent-
+% punt met de vorige puff naar dat met de volgende.  Geen interne
+% arcs, dus fill+stroke in één keer geeft direct het juiste plaatje.
+% Hoekwaarden zijn met de hand getuned op het oog; pas aan voor een
+% andere wolkvorm.
+% ====================================================================
+\pgfdeclarearrow{
+  name = CloudG,
+  parameters = { \the\pgfarrowlength \the\pgfarrowwidth },
+  setup code = {
+    \pgfarrowssettipend{\pgfarrowlength}
+    \pgfarrowssetbackend{0pt}
+    \pgfarrowssetlineend{0.2\pgfarrowlength}
+    \pgfarrowssetvisualbackend{0pt}
+    \pgfarrowssetvisualtipend{\pgfarrowlength}
+  },
+  defaults = { length = 1em, width = 1em },
+  drawing code = {
+    % Vier puffen, elk straal 0.30W; de puff-centers zitten op een
+    % ellips met halve-assen (0.30L, 0.20W) rond (0.5L, 0).
+    % Tangentpunten zijn op het oog gekozen.
+    %
+    % Start: linkerpunt van de linker puff.
+    \pgfpathmoveto{\pgfqpoint{-0.10\pgfarrowlength}{0pt}}
+    % Linker puff: arc van 120° linksom door 30° (boven) naar 30°.
+    \pgfpatharc{120}{30}{0.30\pgfarrowwidth}
+    % Boven puff: van 150° naar 30° (over de top).
+    \pgfpatharc{150}{30}{0.30\pgfarrowwidth}
+    % Rechter puff: van 150° naar 0° (langs de bovenkant naar rechts).
+    \pgfpatharc{150}{0}{0.30\pgfarrowwidth}
+    % Sluit terug langs de onderkant: arc op rechter puff van 0 → -150°.
+    \pgfpatharc{0}{-150}{0.30\pgfarrowwidth}
+    % Onder puff: van -30° naar -150°.
+    \pgfpatharc{-30}{-150}{0.30\pgfarrowwidth}
+    % Linker puff onder: van -30° terug naar 180° (start).
+    \pgfpatharc{-30}{-120}{0.30\pgfarrowwidth}
+    \pgfpathclose
+    \pgfusepathqfillstroke
+  },
+}
+
+% ====================================================================
+% Variant E — als A maar met platte onderkant (cirkels boven
+% baseline), zoals een tekening van een lucht-wolk in profiel.
+% ====================================================================
+\pgfdeclarearrow{
+  name = CloudE,
+  parameters = { \the\pgfarrowlength \the\pgfarrowwidth },
+  setup code = {
+    \pgfarrowssettipend{\pgfarrowlength}
+    \pgfarrowssetbackend{0pt}
+    \pgfarrowssetlineend{0.2\pgfarrowlength}
+    \pgfarrowssetvisualbackend{0pt}
+    \pgfarrowssetvisualtipend{\pgfarrowlength}
+  },
+  defaults = { length = 1em, width = 1em },
+  drawing code = {
+    % vier cirkels boven de lijn
+    \pgfpathcircle{\pgfqpoint{0.18\pgfarrowlength}{ 0.10\pgfarrowwidth}}{0.22\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.40\pgfarrowlength}{ 0.20\pgfarrowwidth}}{0.30\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.65\pgfarrowlength}{ 0.20\pgfarrowwidth}}{0.30\pgfarrowwidth}
+    \pgfpathcircle{\pgfqpoint{0.85\pgfarrowlength}{ 0.10\pgfarrowwidth}}{0.22\pgfarrowwidth}
+    \pgfusepathqfillstroke
+  },
+}
+
+% ====================================================================
+% Helper: één rij met twee pijlen (lange + korte) en een label.
+% ====================================================================
+\newcommand{\cloudrow}[2]{%
+  \par\noindent\textsf{#1:}\par
+  \begin{tikzpicture}[baseline={(current bounding box.center)}]
+    \draw[{#2[fill=white, line width=0.6pt]}-Latex, line width=3pt]
+      (0,0) -- (5,0);
+    \draw[{#2[fill=white, line width=0.6pt]}-Latex, line width=3pt]
+      (0,-1) -- (2.5,-1);
+    \draw[-{#2[fill=white, line width=0.6pt]}, line width=3pt]
+      (6,0) -- (10,0);
+    \draw[-{#2[fill=white, line width=0.6pt]}, line width=3pt]
+      (6,-1) -- (8.5,-1);
+  \end{tikzpicture}\par\bigskip
+}
+
+\begin{document}
+\section*{Cloud-pijlpunt design speeltuin}
+
+Per variant: linker paar = inflow (cloud-Latex), rechter paar =
+outflow (-cloud).  Bovenste pijl 5\,cm, onderste 2{,}5\,cm — om te
+zien of de wolk consistent meeschaalt of vast aan het uiteinde
+hangt.  Lijndikte 3pt overal; cloud-rand 0{,}6pt.
+
+\bigskip
+
+\cloudrow{Variant A — 5 cirkels (huidig)}{CloudA}
+\cloudrow{Variant B — 7 cirkels (fluffier)}{CloudB}
+\cloudrow{Variant C — TikZ \texttt{cloud}-shape}{CloudC}
+\cloudrow{Variant D — 3 grote cirkels}{CloudD}
+\cloudrow{Variant E — vlakke onderkant}{CloudE}
+\cloudrow{Variant F — 8 cirkels, stroke-dan-fill (geen interne lijnen)}{CloudF}
+\cloudrow{Variant G — \'e\'en gesloten pad van arcs (\texttt{\textbackslash pgfpatharc}-keten)}{CloudG}
+
+\end{document}

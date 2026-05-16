@@ -1,0 +1,3 @@
+causals:
+  oscM -> oscV bend=none tgt_is_valve=false
+  oscK -> oscV bend=none tgt_is_valve=false

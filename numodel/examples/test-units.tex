@@ -1,0 +1,34 @@
+% test-units.tex — verify units=true (default) and per-table override.
+\documentclass{article}
+\usepackage[syntax=english]{numodel}
+
+\begin{document}
+
+\newmodelprefix{ball}
+
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.05}{\s}{2}{systeem}
+\mvar{V}{v}{0}{\m\per\s}{3}{voorraad}
+\mvar{Y}{y}{100}{\m}{3}{voorraad}
+\mvar{G}{g}{-9.81}{\m\per\s\squared}{3}{constante}
+
+\mrule{V}{\ballV + \ballG * \ballDt}
+\mrule{Y}{\ballY + \ballV * \ballDt}
+\mrule{T}{\ballT + \ballDt}
+\mstop{\ballY <= 2}
+
+\section*{Default (units=true → \texttt{\textbackslash qty})}
+\textmodel
+
+\section*{Per-tabel override: \texttt{[units=false]} → \texttt{\textbackslash num}}
+\textmodel[units=false]
+
+\section*{Globale override via \texttt{\textbackslash numodelsetup\{units=false\}}}
+\numodelsetup{units=false}
+\textmodel
+
+\section*{En weer terug naar global units=true}
+\numodelsetup{units=true}
+\textmodel
+
+\end{document}

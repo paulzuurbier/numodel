@@ -1,0 +1,53 @@
+% test-diagram-styles.tex — drie diagram-stijlen naast elkaar.
+%
+% Identiek model "N(t) = R*t" met R als directe instroom (constante),
+% gerenderd in:
+%   - tight     (default)            : valve krijgt R-label; R verdwijnt als losse node
+%   - forrester (System Dynamics-std) : valve heeft geen label; R blijft staan; causale pijl
+%   - edu       (didactisch dubbel)   : valve krijgt R-label én R blijft staan; causale pijl
+
+\documentclass{article}
+\usepackage[syntax=english]{numodel}
+
+\begin{document}
+
+\section*{tight (default)}
+\numodelsetup{diagram-style=tight}
+\newmodelprefix{a}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{1}{\s}{2}{systeem}
+\mvar{N}{n}{0}{}{0}{voorraad}
+\mvar{R}{r}{5}{\per\s}{2}{constante}
+\mrule{N}{\aN + \aR * \aDt}
+\mrule{T}{\aT + \aDt}
+\mstop{\aT >= 5}
+\graphicmodel
+\computemodel
+
+\section*{forrester}
+\numodelsetup{diagram-style=forrester}
+\newmodelprefix{b}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{1}{\s}{2}{systeem}
+\mvar{N}{n}{0}{}{0}{voorraad}
+\mvar{R}{r}{5}{\per\s}{2}{constante}
+\mrule{N}{\bN + \bR * \bDt}
+\mrule{T}{\bT + \bDt}
+\mstop{\bT >= 5}
+\graphicmodel
+\computemodel
+
+\section*{edu}
+\numodelsetup{diagram-style=edu}
+\newmodelprefix{c}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{1}{\s}{2}{systeem}
+\mvar{N}{n}{0}{}{0}{voorraad}
+\mvar{R}{r}{5}{\per\s}{2}{constante}
+\mrule{N}{\cN + \cR * \cDt}
+\mrule{T}{\cT + \cDt}
+\mstop{\cT >= 5}
+\graphicmodel
+\computemodel
+
+\end{document}

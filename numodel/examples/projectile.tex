@@ -1,0 +1,41 @@
+% projectile.tex — two coupled stocks (x- and y-position).
+%
+% A projectile launched at 30 m/s under angle 60 deg, landing back
+% on the ground.  Demonstrates two parallel state evolutions plus a
+% non-trivial \mstop expression.
+
+\documentclass{article}
+\usepackage[syntax=english]{numodel}
+
+\begin{document}
+
+\newmodelprefix{proj}
+
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.02}{\s}{2}{systeem}
+\mvar{Vx}{v_x}{15}{\m\per\s}{3}{voorraad} 
+\mvar{X}{x}{0}{\m}{3}{voorraad}
+\mvar{G}{g}{-9.81}{\m\per\s\squared}{3}{constante}    % 30 cos 60 deg
+\mvar{Vy}{v_y}{25.98}{\m\per\s}{3}{voorraad}  % 30 sin 60 deg
+\mvar{Y}{y}{0}{\m}{3}{voorraad}
+
+\mrule{Vy}{\projVy + \projG * \projDt}
+\mrule{X}{\projX + \projVx * \projDt}
+\mrule{Y}{\projY + \projVy * \projDt}
+\mrule{T}{\projT + \projDt}
+\mstop{\projY < 0}
+
+\section*{Grafisch model}
+\graphicmodel
+  \directlua{
+    local f = io.open("projectile.layout.txt","w")
+    f:write(numodel.dump_layout("proj")); f:close()
+  }
+
+\section*{Simulatie}
+\computemodel
+
+\section*{Baan}
+\diagrammodel{X}{Y}{proj-baan}
+
+\end{document}

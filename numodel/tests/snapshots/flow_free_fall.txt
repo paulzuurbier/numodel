@@ -1,0 +1,12 @@
+inflow:
+  ballV -> ballG
+  ballY -> ballV
+outflow:
+valve_for:
+  ballG -> ballV
+outvalve_for:
+between_valve:
+between_target:
+stock_valve:
+stock_phantom_valve:
+  ballY -> ballV

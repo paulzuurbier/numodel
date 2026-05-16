@@ -1,0 +1,3 @@
+causals:
+  eeR -> eeP bend=none tgt_is_valve=true
+  eeI -> eeP bend=none tgt_is_valve=true

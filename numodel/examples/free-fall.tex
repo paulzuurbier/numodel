@@ -1,0 +1,42 @@
+% free-fall.tex — single-stock numerical model.
+%
+% A ball dropped from y0 = 100 m under constant gravity.  One
+% Forrester stock for height (Y), one for velocity (V), and an
+% auxiliary integrator for time (T).  \diagrammodel renders Y(T).
+
+\documentclass{article}
+\usepackage[syntax=english]{numodel}
+
+\begin{document}
+
+\newmodelprefix{ball}
+
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.05}{\s}{2}{systeem}
+\mvar{V}{v}{0}{\m\per\s}{3}{voorraad}
+\mvar{Y}{y}{100}{\m}{3}{voorraad}
+\mvar{G}{g}{-9.81}{\m\per\s\squared}{3}{constante}
+
+\mrule{V}{\ballV + \ballG * \ballDt}
+\mrule{Y}{\ballY + \ballV * \ballDt}
+\mrule{T}{\ballT + \ballDt}
+\mstop{\ballY <= 2}
+
+\section*{Tekstmodel}
+\textmodel
+
+\section*{Grafisch Model}
+\graphicmodel
+\directlua{
+local f = io.open("free-fall.layout.txt","w")
+f:write(numodel.dump_layout("ball")); f:close()
+}
+
+% Simulatie
+\computemodel
+
+\section*{Diagram}
+\def\ycmmax{8}
+\diagrammodel{T}{Y}{ball-fall}
+
+\end{document}

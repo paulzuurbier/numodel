@@ -1,0 +1,24 @@
+% scaled.tex — automatic factor-of-ten extraction.
+%
+% Tick magnitudes outside [1e-2, 1e4] are absorbed into the axis
+% label as a 10^n factor; PGFPlots' "scaled ticks" keep tick numbers
+% small.  Here the energy axis spans 0..5e7 J, so the y-label becomes
+% "E (10^7 J)".
+
+\documentclass{article}
+\usepackage{siunitx}
+\usepackage{numodel-plot}
+
+\begin{document}
+
+\def\xmin{0}\def\xmax{100000}
+\def\ymin{0}\def\ymax{50000000}
+\def\xlabelqty{t}\def\xlabelunit{\s}
+\def\ylabelqty{E}\def\ylabelunit{\J}
+
+\drawplot{
+  \addplot[domain=\xmin:\xmax,thick,samples=50]{500*x};
+  \addlegendentry{$E = P\,t$ met $P = \qty{500}{\W}$}
+}
+
+\end{document}

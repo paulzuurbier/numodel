@@ -1,0 +1,27 @@
+% test-wrap.tex — quick visual check of the gridmaxx wrap behaviour.
+\documentclass{article}
+\usepackage[syntax=english,gridmaxx=3]{numodel}
+
+\begin{document}
+
+\newmodelprefix{wrp}
+
+\mvar{Dt}{dt}{0.05}{\s}{2}{systeem}
+\mvar{K1}{k_1}{1}{}{2}{constante}
+\mvar{K2}{k_2}{2}{}{2}{constante}
+\mvar{K3}{k_3}{3}{}{2}{constante}
+\mvar{K4}{k_4}{4}{}{2}{constante}
+\mvar{K5}{k_5}{5}{}{2}{constante}
+\mvar{A}{a}{}{}{2}{hulp}
+\mvar{S}{s}{0}{}{2}{voorraad}
+
+\mrule{A}{\wrpK1 + \wrpK2 + \wrpK3 + \wrpK4 + \wrpK5}
+\mrule{S}{\wrpS + \wrpA * \wrpDt}
+
+\graphicmodel
+\directlua{
+local f = io.open("test-wrap.layout.txt","w")
+f:write(numodel.dump_layout("wrp")); f:close()
+}
+
+\end{document}

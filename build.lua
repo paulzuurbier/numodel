@@ -1,0 +1,105 @@
+#!/usr/bin/env texlua
+
+-- Build configuration for the numodel bundle
+-- (See l3build documentation for variable reference.)
+
+-- Bundle metadata --------------------------------------------------------
+
+bundle = "numodel-bundle"
+
+-- `modules` is auto-discovered by l3build from subdirectories that
+-- contain a build.lua; we do not set it explicitly.
+
+-- Engine config (`typesetexe`, `unpackexe`, `checkengines`, ...) lives
+-- in each module's build.lua: l3build does not propagate those from
+-- the bundle script into per-module runs.
+
+-- File handling ----------------------------------------------------------
+
+-- Demo + regression fixtures live in the modules but are not shipped in
+-- the CTAN zip: end users get the dtx, ins, sty/def, lua, README,
+-- CHANGELOG and the typeset PDF.
+excludefiles = {
+  "*/build",
+  "*/tests",            -- developer-only Lua unit tests
+  "*/testfiles",        -- developer-only l3build regression tests
+}
+
+-- Bundle packaging -------------------------------------------------------
+
+-- Preserve the per-module subdirectory layout in the source view of
+-- the CTAN zip (without this, README.md/CHANGELOG.md from both
+-- modules clash in a flat layout and one silently overwrites the
+-- other).  The TDS view is always laid out by TDS rules regardless.
+flatten = false
+
+-- Ship a .tds.zip inside the upload archive so TeX Live can install
+-- the package directly without re-running docstrip.
+packtdszip = true
+
+-- Tagging ----------------------------------------------------------------
+
+-- Single source of truth for the current release.  Read by
+-- update_tag() so a single `l3build tag` call propagates version and
+-- date into every source file that carries them.
+release_date = "2026/05/16"
+release_tag  = "0.2.0"
+
+function update_tag(file, content, tagname, tagdate)
+  -- l3build passes the date as YYYY-MM-DD; LaTeX provides expect
+  -- YYYY/MM/DD, so normalize here.
+  tagdate = (tagdate or release_date):gsub("%-", "/")
+  tagname = tagname or release_tag
+
+  if file:match("%.dtx$") then
+    -- \ProvidesPackage{...}[YYYY/MM/DD vX.Y.Z ...]
+    content = content:gsub(
+      "(\\ProvidesPackage{[^}]+}%[)%d%d%d%d/%d%d/%d%d v[%d.]+",
+      "%1" .. tagdate .. " v" .. tagname)
+    -- \ProvidesExplFile{...}{YYYY/MM/DD}{vX.Y.Z}{...}
+    content = content:gsub(
+      "(\\ProvidesExplFile{[^}]+}){%d%d%d%d/%d%d/%d%d}{[v]?[%d.]+}",
+      "%1{" .. tagdate .. "}{" .. tagname .. "}")
+  elseif file:match("%.ins$") then
+    -- copyright year line
+    content = content:gsub(
+      "Copyright %(C%) %d%d%d%d",
+      "Copyright (C) " .. tagdate:sub(1, 4))
+  elseif file:match("%.lua$") then
+    -- header comment with version line, format
+    --   -- numodel.lua  vX.Y.Z  YYYY/MM/DD
+    content = content:gsub(
+      "(%-%-%s+numodel[^\n]-%s+)v[%d.]+%s+%d%d%d%d/%d%d/%d%d",
+      "%1v" .. tagname .. "  " .. tagdate)
+  end
+
+  return content
+end
+
+-- CTAN upload ------------------------------------------------------------
+
+ctanpkg     = "numodel-bundle"
+ctanreadme  = "README.md"
+
+uploadconfig = {
+  pkg         = ctanpkg,
+  version     = "v" .. release_tag,
+  author      = "Paul Zuurbier",
+  uploader    = "Paul Zuurbier",
+  email       = "mail@paulzuurbier.nl",
+  license     = "lppl1.3c",
+  summary     = "Numerical physics models with Forrester diagrams and auto-sized plots",
+  description = [[
+A LuaLaTeX bundle for writing and rendering numerical models
+(Euler-integrated dynamical systems) directly inside LaTeX documents,
+aimed at physics teaching material.  The bundle contains numodel
+(the modelling engine with stock-and-flow diagrams) and numodel-plot
+(a PGFPlots styling layer that auto-sizes plots to whole-number tick
+intervals).
+]],
+  topic       = {"physics", "luatex", "diagram", "graphics-plot"},
+  ctanPath    = "/macros/luatex/latex/numodel-bundle",
+  -- No public source URL: development happens in a private repo.
+  -- Reach the maintainer via the email above for bug reports.
+  update      = false,    -- first CTAN release; flip to true after upload
+}

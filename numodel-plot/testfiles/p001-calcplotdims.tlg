@@ -1,0 +1,44 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== \calcplotdims results ===
+x range: 0 .. 10
+y range: 0 .. 5
+! Undefined control sequence.
+<write> x tick : \xtick 
+l. ...\TYPE{x tick : \xtick}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+x tick : 
+! Undefined control sequence.
+<write> y tick : \ytick 
+l. ...\TYPE{y tick : \ytick}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+y tick : 
+! Undefined control sequence.
+<write> x width: \xwidth 
+                         \space cm
+l. ...\TYPE{x width: \xwidth\space cm}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+x width:  cm
+! Undefined control sequence.
+<write> y height: \ywidth 
+                          \space cm
+l. ...\TYPE{y height: \ywidth\space cm}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+y height:  cm
+(p001-calcplotdims.aux)

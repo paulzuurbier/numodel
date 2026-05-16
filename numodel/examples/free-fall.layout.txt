@@ -1,0 +1,24 @@
+prefix=ball
+vars:
+  ballT: type=system text=t gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  ballDt: type=system text=dt gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  ballV: type=stock text=v gridx=1 gridy=0 role=stock vpos_x= vpos_y=
+  ballY: type=stock text=y gridx=3 gridy=0 role=stock vpos_x= vpos_y=
+  ballG: type=constant text=g gridx=0 gridy=0 role=inflow-valve vpos_x= vpos_y=
+flows.inflow:
+  ballV -> ballG
+  ballY -> ballV
+flows.outflow:
+flows.valve_for:
+  ballG -> ballV
+flows.outvalve_for:
+flows.between_valve:
+flows.between_target:
+flows.stock_valve:
+flows.stock_phantom_valve:
+  ballY -> ballV
+deps:
+  ballT -> ballDt
+  ballV -> ballDt,ballG
+  ballY -> ballDt,ballV
+causals:

@@ -1,0 +1,12 @@
+inflow:
+  eeQ -> eeP
+outflow:
+  eeEel -> eeP
+valve_for:
+outvalve_for:
+between_valve:
+  eeP -> eeEel
+between_target:
+  eeP -> eeQ
+stock_valve:
+stock_phantom_valve:

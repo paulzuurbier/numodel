@@ -1,0 +1,33 @@
+% test-diagram-styles-inline.tex — diagram-style als \graphicmodel-key.
+% Eén model, drie renders zonder \numodelsetup of \newmodelprefix te
+% herhalen. Verifieert ook dat de globale state daarna teruggezet is.
+
+\documentclass{article}
+\usepackage[syntax=english]{numodel}
+
+\begin{document}
+
+\newmodelprefix{m}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{1}{\s}{2}{systeem}
+\mvar{N}{n}{0}{}{0}{voorraad}
+\mvar{R}{r}{5}{\per\s}{2}{hulp}
+\mrule{N}{\mN + \mR * \mDt}
+\mrule{T}{\mT + \mDt}
+\mstop{\mT >= 5}
+
+\section*{tight (key)}
+\graphicmodel[diagram-style=tight]
+
+\section*{forrester (key)}
+\graphicmodel[diagram-style=forrester]
+
+\section*{edu (key)}
+\graphicmodel[diagram-style=edu]
+
+\section*{geen key — moet weer default (tight) zijn}
+\graphicmodel
+
+\computemodel
+
+\end{document}

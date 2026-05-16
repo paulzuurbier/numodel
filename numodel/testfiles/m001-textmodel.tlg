@@ -1,0 +1,27 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== \textmodel output ===
+TEXTMODEL start
+BUILD_TABLE rules: v\,=\,v+ g\cdot   dt|y\,=\,y+ v\cdot   dt|\protect \protect \unhbox \voidb@x \hbox {IF }y\leqslant   0\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF}
+BUILD_TABLE types: rule|rule|rule
+BUILD_TABLE numrules: 3
+BUILD_TABLE numstarts: 5
+BUILD_TABLE before-step table: \begin {tabular}{r|l|l}&\textbf {model}&\textbf {initial values}\\\hline 
+BUILD_TABLE iter row: 0
+BUILD_TABLE row: 1type: rule
+BUILD_TABLE emit rule num: 1content: v\,=\,v+ g\cdot   dt
+BUILD_TABLE after-emit table tail: {tabular}{r|l|l}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$v\,=\,v+ g\cdot   dt$&
+BUILD_TABLE iter row: 1
+BUILD_TABLE row: 2type: rule
+BUILD_TABLE emit rule num: 2content: y\,=\,y+ v\cdot   dt
+BUILD_TABLE after-emit table tail: {tabular}{r|l|l}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$v\,=\,v+ g\cdot   dt$&$t=\ballTqty $\\\rule {0pt}{2.6ex}2&$y\,=\,y+ v\cdot   dt$&
+BUILD_TABLE iter row: 2
+BUILD_TABLE row: 3type: rule
+BUILD_TABLE emit rule num: 3content: \protect \protect \unhbox \voidb@x \hbox {IF }y\leqslant   0\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF}
+BUILD_TABLE after-emit table tail: {tabular}{r|l|l}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$v\,=\,v+ g\cdot   dt$&$t=\ballTqty $\\\rule {0pt}{2.6ex}2&$y\,=\,y+ v\cdot   dt$&$dt=\ballDtqty $\\\rule {0pt}{2.6ex}3&$\protect \protect \unhbox \voidb@x \hbox {IF }y\leqslant   0\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF}$&
+TEXTMODEL table: \begin {tabular}{r|l|l}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$v\,=\,v+ g\cdot   dt$&$t=\ballTqty $\\\rule {0pt}{2.6ex}2&$y\,=\,y+ v\cdot   dt$&$dt=\ballDtqty $\\\rule {0pt}{2.6ex}3&$\protect \protect \unhbox \voidb@x \hbox {IF }y\leqslant   0\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF}$&$y=\ballYqty $\\&&$v=\ballVqty $\\&&$g=\ballGqty $\\\end {tabular}
+LaTeX Font Info:    Trying to load font information for U+msa on input line ....
+LaTeX Font Info:    Trying to load font information for U+msb on input line ....
+TEXTMODEL done
+[1
+] (m001-textmodel.aux)

@@ -1,0 +1,24 @@
+prefix=wrp
+vars:
+  wrpDt: type=system text=dt gridx=-1 gridy=-1 role= vpos_x= vpos_y=
+  wrpK1: type=constant text=k_1 gridx=0 gridy=3 role=constant vpos_x= vpos_y=
+  wrpK2: type=constant text=k_2 gridx=1 gridy=3 role=constant vpos_x= vpos_y=
+  wrpK3: type=constant text=k_3 gridx=2 gridy=3 role=constant vpos_x= vpos_y=
+  wrpK4: type=constant text=k_4 gridx=0 gridy=2 role=constant vpos_x= vpos_y=
+  wrpK5: type=constant text=k_5 gridx=1 gridy=2 role=constant vpos_x= vpos_y=
+  wrpA: type=aux text=a gridx=0 gridy=0 role=inflow-valve vpos_x= vpos_y=
+  wrpS: type=stock text=s gridx=1 gridy=0 role=stock vpos_x= vpos_y=
+flows.inflow:
+  wrpS -> wrpA
+flows.outflow:
+flows.valve_for:
+  wrpA -> wrpS
+flows.outvalve_for:
+flows.between_valve:
+flows.between_target:
+flows.stock_valve:
+flows.stock_phantom_valve:
+deps:
+  wrpA -> 
+  wrpS -> wrpDt,wrpA
+causals:

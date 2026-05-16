@@ -1,0 +1,12 @@
+inflow:
+  avA -> avJ
+  avV -> avA
+outflow:
+valve_for:
+  avJ -> avA
+outvalve_for:
+between_valve:
+between_target:
+stock_valve:
+stock_phantom_valve:
+  avV -> avA

@@ -1,0 +1,19 @@
+% Regression test: \drawplot emits a tikzpicture+axis with the
+% expected labels assembled from \xlabelqty/\xlabelunit and the
+% y-axis equivalents.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage{siunitx}
+\usepackage{numodel-plot}
+\begin{document}
+\START
+\OMIT
+\def\xmin{0}\def\xmax{10}
+\def\ymin{0}\def\ymax{5}
+\def\xlabelqty{t}\def\xlabelunit{\s}
+\def\ylabelqty{v}\def\ylabelunit{\m\per\s}
+\TIMO
+\TYPE{=== \string\drawplot\space embedded in tikzpicture ===}
+\drawplot{\addplot[domain=\xmin:\xmax]{0.5*x};}
+\TYPE{=== drawplot returned, no errors ===}
+\end{document}

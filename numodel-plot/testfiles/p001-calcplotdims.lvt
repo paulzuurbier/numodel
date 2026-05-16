@@ -1,0 +1,22 @@
+% Regression test: \calcplotdims rounds the axis range to a clean
+% tick lattice and produces consistent xmin/xmax/ymin/ymax + tick
+% increments.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage{siunitx}
+\usepackage{numodel-plot}
+\begin{document}
+\START
+\OMIT
+\def\xmin{0}\def\xmax{9.7}
+\def\ymin{0}\def\ymax{4.85}
+\calcplotdims
+\TIMO
+\TYPE{=== \string\calcplotdims\space results ===}
+\TYPE{x range: \xmin\space.. \xmax}
+\TYPE{y range: \ymin\space.. \ymax}
+\TYPE{x tick : \xtick}
+\TYPE{y tick : \ytick}
+\TYPE{x width: \xwidth\space cm}
+\TYPE{y height: \ywidth\space cm}
+\end{document}

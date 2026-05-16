@@ -1,0 +1,22 @@
+# l3build working directories
+build/
+**/build/
+
+# DocStrip / index aux files
+*.idx
+*.glo
+*.gls
+*.ist
+*.ind
+*.hd
+
+# Generated package files (regenerable via `l3build unpack`)
+numodel/numodel.sty
+numodel/numodel-EN.def
+numodel/numodel-NL.def
+numodel-plot/numodel-plot.sty
+
+# CTAN upload artefacts
+*-ctan.curlopt
+*.zip
+*.tds.zip

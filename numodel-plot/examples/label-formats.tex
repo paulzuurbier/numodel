@@ -1,0 +1,32 @@
+% label-formats.tex — five built-in axis-label formats side by side.
+%
+% \numodelplotsetup{axis-label-format=...} switches between:
+%   ieee       v (m/s)        (default)
+%   iso        v / (m/s)      ISO 80000-1
+%   brackets   v [m/s]        older physics convention
+%   qty-only   v
+%   unit-only  m/s
+
+\documentclass{article}
+\usepackage{siunitx}
+\usepackage{numodel-plot}
+
+\newcommand{\testplot}[1]{%
+  \par\vspace{1em}\textbf{axis-label-format=#1}\par
+  \numodelplotsetup{axis-label-format=#1}%
+  \def\xmin{0}\def\xmax{10}%
+  \def\ymin{0}\def\ymax{20}%
+  \def\xlabelqty{t}\def\xlabelunit{\s}%
+  \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
+  \drawplot{\addplot[domain=0:10,thick]{2*x};}%
+}
+
+\begin{document}
+
+\testplot{ieee}
+\testplot{iso}
+\testplot{brackets}
+\testplot{qty-only}
+\testplot{unit-only}
+
+\end{document}
