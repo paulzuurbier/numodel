@@ -84,6 +84,17 @@ end
 ctanpkg     = "numodel-bundle"
 ctanreadme  = "README.md"
 
+-- Read the release announcement from release-<tag>.txt so a fresh
+-- file per release is picked up automatically by `l3build upload`.
+local function read_release_notes()
+  local fname = "release-" .. release_tag .. ".txt"
+  local f = io.open(fname, "r")
+  if not f then return nil end
+  local s = f:read("a")
+  f:close()
+  return s
+end
+
 uploadconfig = {
   pkg         = ctanpkg,
   version     = "v" .. release_tag,
@@ -105,6 +116,7 @@ intervals).
   ctanPath    = "/macros/luatex/latex/numodel-bundle",
   repository  = "https://github.com/paulzuurbier/numodel",
   bugtracker  = "https://github.com/paulzuurbier/numodel/issues",
+  announcement = read_release_notes(),
   update      = true,
 }
 
