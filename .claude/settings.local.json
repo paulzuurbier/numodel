@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp strip19.pdf /c/Users/paulz/Desktop/strip19c.pdf)",
+      "Bash(lualatex --interaction=nonstopmode show16.tex)",
+      "Bash(cp show16.pdf /c/Users/paulz/Desktop/show16c.pdf)",
+      "Bash(lualatex --interaction=nonstopmode strip21.tex)",
+      "Bash(pdftotext strip21.pdf -)"
+    ]
+  }
+}

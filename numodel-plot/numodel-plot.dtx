@@ -90,6 +90,13 @@
 % \drawplot{\addplot[domain=\xmin:\xmax]{0.5*x};}
 % \end{verbatim}
 % \end{quote}
+% renders as
+% \begin{center}
+% \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
+% \def\xlabelqty{t}\def\xlabelunit{\s}%
+% \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
+% \drawplot{\addplot[domain=\xmin:\xmax]{0.5*x};}
+% \end{center}
 % The user sets the data range (|\xmin|\ldots|\ymax|) and optionally a
 % quantity symbol plus \textsf{siunitx} unit for each axis.
 % |\drawplot| internally calls |\calcplotdims| to round the range to a
@@ -101,7 +108,26 @@
 % likewise for the $y$-axis).  If the data magnitude exceeds $10^{4}$
 % or is below $10^{-2}$, a factor~$10^{n}$ is injected into the label
 % and PGFPlots' own |scaled ticks| are configured so that tick numbers
-% remain small.
+% remain small.  In the next example the data magnitude is
+% $5\times10^{7}$ and the unit |\mega\joule\per\kilo\gram| already
+% carries two engineering prefixes; the package extracts every prefix
+% and combines them with the magnitude into a single power-of-ten
+% factor:
+% \begin{quote}
+% \begin{verbatim}
+% \def\xmin{0}   \def\xmax{10}
+% \def\ymin{0}   \def\ymax{5e7}
+% \def\xlabelqty{m}  \def\xlabelunit{\kilo\gram}
+% \def\ylabelqty{E}  \def\ylabelunit{\mega\joule\per\kilo\gram}
+% \drawplot{\addplot[domain=\xmin:\xmax]{5e6*x};}
+% \end{verbatim}
+% \end{quote}
+% \begin{center}
+% \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5e7}%
+% \def\xlabelqty{m}\def\xlabelunit{\kilo\gram}%
+% \def\ylabelqty{E}\def\ylabelunit{\mega\joule\per\kilo\gram}%
+% \drawplot{\addplot[domain=\xmin:\xmax]{5e6*x};}
+% \end{center}
 %
 % Users preferring full control can omit |\xlabelqty|/|\xlabelunit|
 % and set |\xlabel|/|\ylabel| directly; the package will use them
@@ -145,13 +171,99 @@
 %   height in centimetres (defaults 12 and 10).
 % \end{description}
 %
+% The first three axis-label formats render as follows.  Each plot
+% uses |\numodelplotsetup{xcmmax=3, ycmmax=3}| so the axis itself is
+% trimmed to a 2~cm by 3~cm tick lattice (the package's invariant 1~cm
+% major-grid spacing is preserved); three natural-size plots are wider
+% than the text body and overflow slightly into the right margin:
+% \begin{center}
+% \begin{tabular}{@{}c@{\hspace{1em}}c@{\hspace{1em}}c@{}}
+% \numodelplotsetup{xcmmax=3, ycmmax=3, axis-label-format=ieee}%
+% \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
+% \def\xlabelqty{v}\def\xlabelunit{\m\per\s}%
+% \def\ylabelqty{F}\def\ylabelunit{\N}%
+% \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.4*x};}
+% &
+% \numodelplotsetup{xcmmax=3, ycmmax=3, axis-label-format=iso}%
+% \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
+% \def\xlabelqty{v}\def\xlabelunit{\m\per\s}%
+% \def\ylabelqty{F}\def\ylabelunit{\N}%
+% \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.4*x};}
+% &
+% \numodelplotsetup{xcmmax=3, ycmmax=3, axis-label-format=brackets}%
+% \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
+% \def\xlabelqty{v}\def\xlabelunit{\m\per\s}%
+% \def\ylabelqty{F}\def\ylabelunit{\N}%
+% \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.4*x};}
+% \\
+% \texttt{ieee} & \texttt{iso} & \texttt{brackets}
+% \end{tabular}
+% \end{center}
+% \numodelplotsetup{axis-label-format=ieee}%
+%
+% Three grid variants, sized the same way:
+% \begin{center}
+% \begin{tabular}{@{}c@{\hspace{1em}}c@{\hspace{1em}}c@{}}
+% \numodelplotsetup{xcmmax=3, ycmmax=3, grid=mm-dots}%
+% \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
+% \def\xlabelqty{t}\def\xlabelunit{\s}%
+% \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
+% \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.5*x};}
+% &
+% \numodelplotsetup{xcmmax=3, ycmmax=3, grid=none}%
+% \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
+% \def\xlabelqty{t}\def\xlabelunit{\s}%
+% \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
+% \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.5*x};}
+% &
+% \numodelplotsetup{xcmmax=3, ycmmax=3,
+%   grid={grid=major, grid style={gray, very thin}}}%
+% \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
+% \def\xlabelqty{t}\def\xlabelunit{\s}%
+% \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
+% \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.5*x};}
+% \\
+% \texttt{mm-dots} & \texttt{none} & \texttt{\{major,gray\}}
+% \end{tabular}
+% \end{center}
+% \numodelplotsetup{grid=mm-dots}%
+%
 % \subsection{PGFPlots styles}
 %
 % The package defines three PGFPlots styles applied by |\drawplot|:
 % |numodel/grid|, |numodel/ticks|, |numodel/axis|.  These can be
 % overridden wholesale through |\pgfplotsset{numodel/axis/.style={...}}|
 % from the calling preamble, giving projects a single choke point for
-% house-style customisation.
+% house-style customisation.  One override per style, on the same
+% plot:
+% \begin{center}
+% \begin{tabular}{@{}c@{\hspace{1em}}c@{\hspace{1em}}c@{}}
+% \pgfplotsset{numodel/grid/.style={grid=major,
+%   grid style={gray!50, very thin}}}%
+% \numodelplotsetup{xcmmax=3, ycmmax=3}%
+% \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
+% \def\xlabelqty{t}\def\xlabelunit{\s}%
+% \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
+% \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.5*x};}
+% &
+% \pgfplotsset{numodel/ticks/.style={tick style={red, thick},
+%   minor tick num=4}}%
+% \numodelplotsetup{xcmmax=3, ycmmax=3}%
+% \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
+% \def\xlabelqty{t}\def\xlabelunit{\s}%
+% \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
+% \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.5*x};}
+% &
+% \pgfplotsset{numodel/axis/.append style={axis line style={->}}}%
+% \numodelplotsetup{xcmmax=3, ycmmax=3}%
+% \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
+% \def\xlabelqty{t}\def\xlabelunit{\s}%
+% \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
+% \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.5*x};}
+% \\
+% \texttt{numodel/grid} & \texttt{numodel/ticks} & \texttt{numodel/axis}
+% \end{tabular}
+% \end{center}
 %
 % \section{Public API}
 %
@@ -292,7 +404,7 @@
       } },
     grid / none .code:n =
       \pgfplotsset{ numodel/grid/.style={grid=none} },
-    grid .unknown .code:n =
+    grid / unknown .code:n =
       \pgfplotsset{ numodel/grid/.style={#1} },
 
     xcmmax .code:n = \def\xcmmax{#1},
@@ -542,9 +654,11 @@
     \edef\nmp@xlabelexp{\fpeval{
       \nmp@xmag > 0 ? 3*floor(ln(\nmp@xmag)/ln(10)/3) : 0
     }}
-    \edef\nmp@xlabelexpuse{\nmp@xlabelexp}
-    \__numodelplot_xlabel_emit_scaled:
-    \ifnum\nmp@xlabelexp=0\relax\else
+    \ifnum\nmp@xlabelexp=0\relax
+      \__numodelplot_xlabel_emit_unscaled:
+    \else
+      \edef\nmp@xlabelexpuse{\nmp@xlabelexp}
+      \__numodelplot_xlabel_emit_scaled:
       \edef\nmp@xlabelexpneg{\fpeval{-\nmp@xlabelexp}}
       \pznmpAppendXScaleTicks{\nmp@xlabelexpneg}
       \__numodelplot_suppress_xscale_label:
@@ -565,9 +679,11 @@
     \edef\nmp@ylabelexp{\fpeval{
       \nmp@ymag > 0 ? 3*floor(ln(\nmp@ymag)/ln(10)/3) : 0
     }}
-    \edef\nmp@ylabelexpuse{\nmp@ylabelexp}
-    \__numodelplot_ylabel_emit_scaled:
-    \ifnum\nmp@ylabelexp=0\relax\else
+    \ifnum\nmp@ylabelexp=0\relax
+      \__numodelplot_ylabel_emit_unscaled:
+    \else
+      \edef\nmp@ylabelexpuse{\nmp@ylabelexp}
+      \__numodelplot_ylabel_emit_scaled:
       \edef\nmp@ylabelexpneg{\fpeval{-\nmp@ylabelexp}}
       \pznmpAppendYScaleTicks{\nmp@ylabelexpneg}
       \__numodelplot_suppress_yscale_label:
@@ -578,109 +694,93 @@
 }
 \ExplSyntaxOff
 
-\newcommand{\calcplotdims}{
-\edef\nmp@xlog{\fpeval{floor(ln(\xmax-\xmin)/ln(10))}}
-\edef\nmp@ylog{\fpeval{floor(ln(\ymax-\ymin)/ln(10))}}
-
-\edef\nmp@xS{\fpeval{(\xmax-\xmin) / (10^\nmp@xlog)}}
-\edef\nmp@yS{\fpeval{(\ymax-\ymin) / (10^\nmp@ylog)}}
-
-\edef\xcm{\fpeval{
-  \nmp@xS <= \xcmmax/10 ? 10 * \nmp@xS :
-  \nmp@xS <= \xcmmax/5  ?  5 * \nmp@xS :
-  \nmp@xS <= \xcmmax/4  ?  4 * \nmp@xS :
-  \nmp@xS <= \xcmmax/2  ?  2 * \nmp@xS :
-  \nmp@xS <= \xcmmax    ?      \nmp@xS :
-                        \nmp@xS / 2
-}}
-
-\edef\ycm{\fpeval{
-  \nmp@yS <= \ycmmax/10 ? 10 * \nmp@yS :
-  \nmp@yS <= \ycmmax/5  ?  5 * \nmp@yS :
-  \nmp@yS <= \ycmmax/4  ?  4 * \nmp@yS :
-  \nmp@yS <= \ycmmax/2  ?  2 * \nmp@yS :
-  \nmp@yS <= \ycmmax    ?      \nmp@yS :
-                        \nmp@yS / 2
-}}
-
-\edef\nmp@xtickdiv{\fpeval{\nmp@xS / \xcm}}
-\edef\nmp@ytickdiv{\fpeval{\nmp@yS / \ycm}}
-
-\edef\xtickdistance{\fpeval{\nmp@xtickdiv * 10^\nmp@xlog}}
-\edef\ytickdistance{\fpeval{\nmp@ytickdiv * 10^\nmp@ylog}}
-
-\edef\xmax{\fpeval{ceil(\xmax / \xtickdistance) * \xtickdistance}}
-\edef\ymax{\fpeval{ceil(\ymax / \ytickdistance) * \ytickdistance}}
-\edef\xmin{\fpeval{floor(\xmin / \xtickdistance) * \xtickdistance}}
-\edef\ymin{\fpeval{floor(\ymin / \ytickdistance) * \ytickdistance}}
-\edef\xcm{\fpeval{(\xmax - \xmin) / \xtickdistance}}
-\edef\ycm{\fpeval{(\ymax - \ymin) / \ytickdistance}}
-
-\edef\nmp@yStraddles{\fpeval{(\ymin<0 && \ymax>0) ? 1 : 0}}
-\edef\nmp@yAllNonPos{\fpeval{\ymax<=0 ? 1 : 0}}
-\edef\nmp@xStraddles{\fpeval{(\xmin<0 && \xmax>0) ? 1 : 0}}
-\edef\nmp@xAllNonPos{\fpeval{\xmax<=0 ? 1 : 0}}
-
+\newcommand{\calcplotdims}{%
+\edef\nmp@xlog{\fpeval{floor(ln(\xmax-\xmin)/ln(10))}}%
+\edef\nmp@ylog{\fpeval{floor(ln(\ymax-\ymin)/ln(10))}}%
+\edef\nmp@xS{\fpeval{(\xmax-\xmin) / (10^\nmp@xlog)}}%
+\edef\nmp@yS{\fpeval{(\ymax-\ymin) / (10^\nmp@ylog)}}%
+\edef\xcm{\fpeval{%
+  \nmp@xS <= \xcmmax/10 ? 10 * \nmp@xS :%
+  \nmp@xS <= \xcmmax/5  ?  5 * \nmp@xS :%
+  \nmp@xS <= \xcmmax/4  ?  4 * \nmp@xS :%
+  \nmp@xS <= \xcmmax/2  ?  2 * \nmp@xS :%
+  \nmp@xS <= \xcmmax    ?      \nmp@xS :%
+                        \nmp@xS / 2%
+}}%
+\edef\ycm{\fpeval{%
+  \nmp@yS <= \ycmmax/10 ? 10 * \nmp@yS :%
+  \nmp@yS <= \ycmmax/5  ?  5 * \nmp@yS :%
+  \nmp@yS <= \ycmmax/4  ?  4 * \nmp@yS :%
+  \nmp@yS <= \ycmmax/2  ?  2 * \nmp@yS :%
+  \nmp@yS <= \ycmmax    ?      \nmp@yS :%
+                        \nmp@yS / 2%
+}}%
+\edef\nmp@xtickdiv{\fpeval{\nmp@xS / \xcm}}%
+\edef\nmp@ytickdiv{\fpeval{\nmp@yS / \ycm}}%
+\edef\xtickdistance{\fpeval{\nmp@xtickdiv * 10^\nmp@xlog}}%
+\edef\ytickdistance{\fpeval{\nmp@ytickdiv * 10^\nmp@ylog}}%
+\edef\xmax{\fpeval{ceil(\xmax / \xtickdistance) * \xtickdistance}}%
+\edef\ymax{\fpeval{ceil(\ymax / \ytickdistance) * \ytickdistance}}%
+\edef\xmin{\fpeval{floor(\xmin / \xtickdistance) * \xtickdistance}}%
+\edef\ymin{\fpeval{floor(\ymin / \ytickdistance) * \ytickdistance}}%
+\edef\xcm{\fpeval{(\xmax - \xmin) / \xtickdistance}}%
+\edef\ycm{\fpeval{(\ymax - \ymin) / \ytickdistance}}%
+\edef\nmp@yStraddles{\fpeval{(\ymin<0 && \ymax>0) ? 1 : 0}}%
+\edef\nmp@yAllNonPos{\fpeval{\ymax<=0 ? 1 : 0}}%
+\edef\nmp@xStraddles{\fpeval{(\xmin<0 && \xmax>0) ? 1 : 0}}%
+\edef\nmp@xAllNonPos{\fpeval{\xmax<=0 ? 1 : 0}}%
 \ifnum\nmp@yStraddles=1
-  \pgfplotsset{numodel/axis/.append style={axis x line*=middle}}
+  \pgfplotsset{numodel/axis/.append style={axis x line*=middle}}%
 \else
   \ifnum\nmp@yAllNonPos=1
-    \pgfplotsset{numodel/axis/.append style={axis x line*=top}}
+    \pgfplotsset{numodel/axis/.append style={axis x line*=top}}%
   \fi
 \fi
-
 \ifnum\nmp@xStraddles=1
-  \pgfplotsset{numodel/axis/.append style={axis y line*=middle}}
+  \pgfplotsset{numodel/axis/.append style={axis y line*=middle}}%
 \else
   \ifnum\nmp@xAllNonPos=1
-    \pgfplotsset{numodel/axis/.append style={axis y line*=right}}
+    \pgfplotsset{numodel/axis/.append style={axis y line*=right}}%
   \fi
 \fi
-
-\edef\nmp@axisMoved{\fpeval{(\nmp@yStraddles || \nmp@yAllNonPos || \nmp@xStraddles || \nmp@xAllNonPos) ? 1 : 0}}
+\edef\nmp@axisMoved{\fpeval{(\nmp@yStraddles || \nmp@yAllNonPos || \nmp@xStraddles || \nmp@xAllNonPos) ? 1 : 0}}%
 \ifnum\nmp@axisMoved=1
-\pgfplotsset{numodel/axis/.append style={
-  every x tick scale label/.style={at={(xticklabel cs:1.05)}, anchor=south west},
-  every y tick scale label/.style={at={(yticklabel cs:1.05)}, anchor=south east}
-}}
+\pgfplotsset{numodel/axis/.append style={%
+  every x tick scale label/.style={at={(xticklabel cs:1.05)}, anchor=south west},%
+  every y tick scale label/.style={at={(yticklabel cs:1.05)}, anchor=south east}%
+}}%
 \fi
-
-\edef\nmp@fourQuad{\fpeval{(\nmp@xStraddles && \nmp@yStraddles) ? 1 : 0}}
+\edef\nmp@fourQuad{\fpeval{(\nmp@xStraddles && \nmp@yStraddles) ? 1 : 0}}%
 \ifnum\nmp@fourQuad=1
-\pgfplotsset{numodel/axis/.append style={
-  xlabel style={at={(xticklabel cs:1.05)}, anchor=west},
-  ylabel style={at={(yticklabel cs:1.05)}, anchor=south, rotate=0}
-}}
+\pgfplotsset{numodel/axis/.append style={%
+  xlabel style={at={(xticklabel cs:1.05)}, anchor=west},%
+  ylabel style={at={(yticklabel cs:1.05)}, anchor=south, rotate=0}%
+}}%
 \fi
-
-\edef\nmp@qIandII{\fpeval{(\nmp@xStraddles && \ymin>=0) ? 1 : 0}}
+\edef\nmp@qIandII{\fpeval{(\nmp@xStraddles && \ymin>=0) ? 1 : 0}}%
 \ifnum\nmp@qIandII=1
-\pgfplotsset{numodel/axis/.append style={
-  ylabel style={at={(yticklabel cs:1.05)}, anchor=south, rotate=0}
-}}
+\pgfplotsset{numodel/axis/.append style={%
+  ylabel style={at={(yticklabel cs:1.05)}, anchor=south, rotate=0}%
+}}%
 \fi
-
-\edef\nmp@qIIandIII{\fpeval{(\nmp@yStraddles && \nmp@xAllNonPos) ? 1 : 0}}
+\edef\nmp@qIIandIII{\fpeval{(\nmp@yStraddles && \nmp@xAllNonPos) ? 1 : 0}}%
 \ifnum\nmp@qIIandIII=1
-\pgfplotsset{numodel/axis/.append style={
-  xlabel style={at={(xticklabel cs:-0.05)}, anchor=east}
-}}
+\pgfplotsset{numodel/axis/.append style={%
+  xlabel style={at={(xticklabel cs:-0.05)}, anchor=east}%
+}}%
 \fi
-
-\edef\nmp@qIIIandIV{\fpeval{(\nmp@xStraddles && \nmp@yAllNonPos) ? 1 : 0}}
+\edef\nmp@qIIIandIV{\fpeval{(\nmp@xStraddles && \nmp@yAllNonPos) ? 1 : 0}}%
 \ifnum\nmp@qIIIandIV=1
-\pgfplotsset{numodel/axis/.append style={
-  ylabel style={at={(yticklabel cs:-0.05)}, anchor=north, rotate=0}
-}}
+\pgfplotsset{numodel/axis/.append style={%
+  ylabel style={at={(yticklabel cs:-0.05)}, anchor=north, rotate=0}%
+}}%
 \fi
-
-\edef\nmp@qIVandI{\fpeval{(\nmp@yStraddles && \xmin>=0) ? 1 : 0}}
+\edef\nmp@qIVandI{\fpeval{(\nmp@yStraddles && \xmin>=0) ? 1 : 0}}%
 \ifnum\nmp@qIVandI=1
-\pgfplotsset{numodel/axis/.append style={
-  xlabel style={at={(xticklabel cs:1.05)}, anchor=west}
-}}
+\pgfplotsset{numodel/axis/.append style={%
+  xlabel style={at={(xticklabel cs:1.05)}, anchor=west}%
+}}%
 \fi
-
 \ifdefined\xlabelqty\ifdefined\xlabelunit\xlabelbuild\fi\fi
 \ifdefined\ylabelqty\ifdefined\ylabelunit\ylabelbuild\fi\fi
 }
@@ -700,8 +800,7 @@
       ytick distance=\ytickdistance,
       width=\xcm cm,
       height=\ycm cm,
-      scale only axis,
-      legend pos=outer north east
+      scale only axis
     ]
       #1
     \end{axis}
