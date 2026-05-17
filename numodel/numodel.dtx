@@ -16,7 +16,7 @@
 % companion Lua module numodel.lua.
 %
 %<*driver>
-\ProvidesFile{numodel.dtx}[2026/05/16 v0.2.0 numodel documentation]
+\ProvidesFile{numodel.dtx}[2026/05/17 v0.3.0 numodel documentation]
 \documentclass{ltxdoc}
 \usepackage{numodel}
 \usepackage[left=3.5cm, right=2cm, top=2cm, bottom=2cm, marginparwidth=3.5cm, marginparsep=0.3cm]{geometry}
@@ -38,6 +38,9 @@
 %   with numodel-plot; diagram-style key; units key; localised
 %   column titles; decimal-separator key; factor-aware flow
 %   detection.  See CHANGELOG.md for details.}
+% \changes{v0.3.0}{2026/05/17}{Version-sync release with
+%   \textsf{numodel-plot}~v0.3.0; no functional changes to
+%   \textsf{numodel} itself.}
 %
 % \GetFileInfo{numodel.dtx}
 %
@@ -657,7 +660,7 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{numodel}[2026/05/16 v0.2.0
+\ProvidesPackage{numodel}[2026/05/17 v0.3.0
   Numerical physics models with Euler integration and Forrester diagrams]
 
 \RequirePackage{expl3}
@@ -3199,7 +3202,7 @@ end
 %
 %    \begin{macrocode}
 %<*EN>
-\ProvidesExplFile{numodel-EN.def}{2026/05/16}{0.2.0}
+\ProvidesExplFile{numodel-EN.def}{2026/05/17}{0.3.0}
   {numodel~keyword~table~--~English~(XMILE)}
 \cs_new:Npn \__numodel_kw_EN_if:           { IF~ }
 \cs_new:Npn \__numodel_kw_EN_then:         { ~THEN~ }
@@ -3226,7 +3229,7 @@ end
 %
 %    \begin{macrocode}
 %<*NL>
-\ProvidesExplFile{numodel-NL.def}{2026/05/16}{0.2.0}
+\ProvidesExplFile{numodel-NL.def}{2026/05/17}{0.3.0}
   {numodel~keyword~table~--~Dutch~(CoachTaal)}
 \cs_new:Npn \__numodel_kw_NL_if:           { Als~ }
 \cs_new:Npn \__numodel_kw_NL_then:         { ~Dan~ }

@@ -5,6 +5,12 @@ All notable changes to `numodel` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] — 2026-05-17
+
+Version-sync release.  No functional changes to `numodel`; bumped to
+keep bundle component versions aligned with `numodel-plot` 0.3.0 (per
+CTAN's bundle-versioning convention).
+
 ## [0.2.0] — 2026-05-16
 
 ### Added

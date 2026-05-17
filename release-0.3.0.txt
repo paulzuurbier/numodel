@@ -1,0 +1,36 @@
+numodel-bundle v0.3.0 -- maintenance release for numodel-plot.
+
+numodel-bundle is a LuaLaTeX package for writing and rendering
+numerical models (Euler-integrated dynamical systems) directly
+inside LaTeX documents, aimed at physics teaching material.
+
+The bundle ships two modules:
+
+* numodel      -- modelling engine: text-mode rule tables, Forrester
+                  stock-and-flow diagrams (tight/forrester/edu styles),
+                  numerical simulation in Lua, y(x)-plot integration.
+* numodel-plot -- PGFPlots styling layer that auto-sizes plots to a
+                  clean tick lattice; configurable axis-label formats
+                  (IEEE, ISO 80000-1).
+
+numodel-plot 0.3.0 fixes two latent bugs that broke documented
+behaviour and adds worked example plots to the manual:
+
+* \calcplotdims no longer emits stray \par tokens from blank lines
+  in its source.  Inside an \sbox or a subcaption/subfigure cell
+  those \par tokens reserved ~3.4 cm of empty space on the left of
+  every plot's bounding box.  Plots now sit tight in their boxes
+  and tile correctly in tabular and subfigure layouts.
+* Custom grid= values via \numodelplotsetup{grid={...}} now work as
+  documented (previously the grid / unknown handler was registered
+  with the wrong l3keys syntax for a .choice: key and any value
+  other than mm-dots or none raised an "accepts only a fixed set
+  of choices" error).
+* legend pos=outer north east moved from \drawplot into the
+  numodel/axis style so it can be overridden through
+  \pgfplotsset{numodel/axis/.append style={legend pos=...}}.
+
+numodel is bumped to 0.3.0 for version-sync only; no functional
+changes there.
+
+Pre-1.0 release; breaking changes still possible before 1.0.0.

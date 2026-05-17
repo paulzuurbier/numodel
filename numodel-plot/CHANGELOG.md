@@ -5,7 +5,7 @@ All notable changes to `numodel-plot` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [0.2.0] — 2026-05-17
+## [0.3.0] — 2026-05-17
 
 ### Added
 - Rendered example plots in the manual: a minimum working example and a
@@ -14,13 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   §PGFPlots styles.
 
 ### Changed
-- `\drawplot` now invokes `\calcplotdims` internally; user code no
-  longer needs an explicit `\calcplotdims` call before `\drawplot`.
-  `\calcplotdims` remains public for advanced cases (overlay TikZ,
-  custom `axis` environment).
-- Default `axis-label-format` is now `ieee` (the former `parens`
-  option, renamed for consistency with engineering convention).
-  The `parens` key has been removed.
 - Moved `legend pos=outer north east` from `\drawplot`'s hard-coded
   axis options into the overridable `numodel/axis` style, so callers
   can change the legend position via
@@ -41,6 +34,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   with the wrong `l3keys` syntax for a `.choice:` key (`grid .unknown`
   instead of `grid / unknown`), so any value other than `mm-dots` or
   `none` raised an "accepts only a fixed set of choices" error.
+
+## [0.2.0] — 2026-05-16
+
+### Changed
+- `\drawplot` now invokes `\calcplotdims` internally; user code no
+  longer needs an explicit `\calcplotdims` call before `\drawplot`.
+  `\calcplotdims` remains public for advanced cases (overlay TikZ,
+  custom `axis` environment).
+- Default `axis-label-format` is now `ieee` (the former `parens`
+  option, renamed for consistency with engineering convention).
+  The `parens` key has been removed.
 
 ## [0.1] — 2026-04-24
 

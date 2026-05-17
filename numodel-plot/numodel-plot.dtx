@@ -15,7 +15,7 @@
 % and the derived file numodel-plot.sty.
 %
 %<*driver>
-\ProvidesFile{numodel-plot.dtx}[2026/05/16 v0.2.0 numodel-plot documentation]
+\ProvidesFile{numodel-plot.dtx}[2026/05/17 v0.3.0 numodel-plot documentation]
 \documentclass{ltxdoc}
 \usepackage[left=3.5cm, right=2cm, top=2cm, bottom=2cm, marginparwidth=3.5cm, marginparsep=0.3cm]{geometry}
 \usepackage{numodel-plot}
@@ -37,6 +37,12 @@
 % \changes{v0.2.0}{2026/05/16}{l3build workflow; bundle structure
 %   with numodel; \cs{drawplot} now invokes \cs{calcplotdims}
 %   internally; default axis-label-format renamed to \texttt{ieee}.}
+% \changes{v0.3.0}{2026/05/17}{Fix \cs{par}-token leak in
+%   \cs{calcplotdims} that bloated the picture bounding box inside
+%   horizontal boxes; fix \texttt{grid / unknown} key syntax so custom
+%   \texttt{grid=} values work; move \texttt{legend pos=outer north
+%   east} into the \texttt{numodel/axis} style so it can be overridden;
+%   add rendered example plots throughout the manual.}
 %
 % \GetFileInfo{numodel-plot.dtx}
 %
@@ -343,7 +349,7 @@
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{numodel-plot}[2026/05/16 v0.2.0 Auto-sizing PGFPlots engine]
+\ProvidesPackage{numodel-plot}[2026/05/17 v0.3.0 Auto-sizing PGFPlots engine]
 
 \makeatletter
 

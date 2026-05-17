@@ -42,8 +42,8 @@ packtdszip = true
 -- Single source of truth for the current release.  Read by
 -- update_tag() so a single `l3build tag` call propagates version and
 -- date into every source file that carries them.
-release_date = "2026/05/16"
-release_tag  = "0.2.0"
+release_date = "2026/05/17"
+release_tag  = "0.3.0"
 
 function update_tag(file, content, tagname, tagdate)
   -- l3build passes the date as YYYY-MM-DD; LaTeX provides expect
@@ -105,7 +105,7 @@ intervals).
   ctanPath    = "/macros/luatex/latex/numodel-bundle",
   repository  = "https://github.com/paulzuurbier/numodel",
   bugtracker  = "https://github.com/paulzuurbier/numodel/issues",
-  update      = false,    -- first CTAN release; flip to true after upload
+  update      = true,
 }
 
 -- l3build's stock `upload` target has no bundle_func, so on a bundle it

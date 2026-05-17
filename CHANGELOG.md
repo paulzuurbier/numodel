@@ -8,6 +8,13 @@ For module-specific entries see `numodel/CHANGELOG.md` and
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 each module independently adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] — 2026-05-17
+
+- `numodel-plot` 0.3.0 — rendering-bug fixes plus worked examples in
+  the manual; see `numodel-plot/CHANGELOG.md` for details.
+- `numodel` 0.3.0 — version-sync bump only; no functional changes
+  (CTAN convention: bundle module versions stay aligned).
+
 ## [0.2.0] — 2026-05-16
 
 Initial CTAN release of the bundle.
