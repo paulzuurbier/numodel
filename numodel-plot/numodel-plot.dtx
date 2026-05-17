@@ -17,7 +17,9 @@
 %<*driver>
 \ProvidesFile{numodel-plot.dtx}[2026/05/16 v0.2.0 numodel-plot documentation]
 \documentclass{ltxdoc}
+\usepackage[left=3.5cm, right=2cm, top=2cm, bottom=2cm, marginparwidth=3.5cm, marginparsep=0.3cm]{geometry}
 \usepackage{numodel-plot}
+\usepackage{subcaption}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -174,57 +176,64 @@
 % The first three axis-label formats render as follows.  Each plot
 % uses |\numodelplotsetup{xcmmax=3, ycmmax=3}| so the axis itself is
 % trimmed to a 2~cm by 3~cm tick lattice (the package's invariant 1~cm
-% major-grid spacing is preserved); three natural-size plots are wider
-% than the text body and overflow slightly into the right margin:
+% major-grid spacing is preserved):
 % \begin{center}
-% \begin{tabular}{@{}c@{\hspace{1em}}c@{\hspace{1em}}c@{}}
+% \captionsetup{type=figure}%
+% \begin{subfigure}{0.33\textwidth}\centering
 % \numodelplotsetup{xcmmax=3, ycmmax=3, axis-label-format=ieee}%
 % \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
 % \def\xlabelqty{v}\def\xlabelunit{\m\per\s}%
 % \def\ylabelqty{F}\def\ylabelunit{\N}%
 % \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.4*x};}
-% &
+% \caption*{\texttt{ieee}}
+% \end{subfigure}\hspace{-1cm}%
+% \begin{subfigure}{0.33\textwidth}\centering
 % \numodelplotsetup{xcmmax=3, ycmmax=3, axis-label-format=iso}%
 % \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
 % \def\xlabelqty{v}\def\xlabelunit{\m\per\s}%
 % \def\ylabelqty{F}\def\ylabelunit{\N}%
 % \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.4*x};}
-% &
+% \caption*{\texttt{iso}}
+% \end{subfigure}\hspace{-1cm}%
+% \begin{subfigure}{0.33\textwidth}\centering
 % \numodelplotsetup{xcmmax=3, ycmmax=3, axis-label-format=brackets}%
 % \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
 % \def\xlabelqty{v}\def\xlabelunit{\m\per\s}%
 % \def\ylabelqty{F}\def\ylabelunit{\N}%
 % \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.4*x};}
-% \\
-% \texttt{ieee} & \texttt{iso} & \texttt{brackets}
-% \end{tabular}
+% \caption*{\texttt{brackets}}
+% \end{subfigure}
 % \end{center}
 % \numodelplotsetup{axis-label-format=ieee}%
 %
 % Three grid variants, sized the same way:
 % \begin{center}
-% \begin{tabular}{@{}c@{\hspace{1em}}c@{\hspace{1em}}c@{}}
+% \captionsetup{type=figure}%
+% \begin{subfigure}{0.33\textwidth}\centering
 % \numodelplotsetup{xcmmax=3, ycmmax=3, grid=mm-dots}%
 % \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
 % \def\xlabelqty{t}\def\xlabelunit{\s}%
 % \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
 % \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.5*x};}
-% &
+% \caption*{\texttt{mm-dots}}
+% \end{subfigure}\hspace{-1cm}%
+% \begin{subfigure}{0.33\textwidth}\centering
 % \numodelplotsetup{xcmmax=3, ycmmax=3, grid=none}%
 % \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
 % \def\xlabelqty{t}\def\xlabelunit{\s}%
 % \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
 % \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.5*x};}
-% &
+% \caption*{\texttt{none}}
+% \end{subfigure}\hspace{-1cm}%
+% \begin{subfigure}{0.33\textwidth}\centering
 % \numodelplotsetup{xcmmax=3, ycmmax=3,
 %   grid={grid=major, grid style={gray, very thin}}}%
 % \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
 % \def\xlabelqty{t}\def\xlabelunit{\s}%
 % \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
 % \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.5*x};}
-% \\
-% \texttt{mm-dots} & \texttt{none} & \texttt{\{major,gray\}}
-% \end{tabular}
+% \caption*{\texttt{\{major,gray\}}}
+% \end{subfigure}
 % \end{center}
 % \numodelplotsetup{grid=mm-dots}%
 %
@@ -237,7 +246,8 @@
 % house-style customisation.  One override per style, on the same
 % plot:
 % \begin{center}
-% \begin{tabular}{@{}c@{\hspace{1em}}c@{\hspace{1em}}c@{}}
+% \captionsetup{type=figure}%
+% \begin{subfigure}{0.33\textwidth}\centering
 % \pgfplotsset{numodel/grid/.style={grid=major,
 %   grid style={gray!50, very thin}}}%
 % \numodelplotsetup{xcmmax=3, ycmmax=3}%
@@ -245,7 +255,9 @@
 % \def\xlabelqty{t}\def\xlabelunit{\s}%
 % \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
 % \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.5*x};}
-% &
+% \caption*{\texttt{numodel/grid}}
+% \end{subfigure}\hspace{-1cm}%
+% \begin{subfigure}{0.33\textwidth}\centering
 % \pgfplotsset{numodel/ticks/.style={tick style={red, thick},
 %   minor tick num=4}}%
 % \numodelplotsetup{xcmmax=3, ycmmax=3}%
@@ -253,16 +265,17 @@
 % \def\xlabelqty{t}\def\xlabelunit{\s}%
 % \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
 % \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.5*x};}
-% &
+% \caption*{\texttt{numodel/ticks}}
+% \end{subfigure}\hspace{-1cm}%
+% \begin{subfigure}{0.33\textwidth}\centering
 % \pgfplotsset{numodel/axis/.append style={axis line style={->}}}%
 % \numodelplotsetup{xcmmax=3, ycmmax=3}%
 % \def\xmin{0}\def\xmax{10}\def\ymin{0}\def\ymax{5}%
 % \def\xlabelqty{t}\def\xlabelunit{\s}%
 % \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
 % \drawplot{\addplot[domain=\xmin:\xmax,thick]{0.5*x};}
-% \\
-% \texttt{numodel/grid} & \texttt{numodel/ticks} & \texttt{numodel/axis}
-% \end{tabular}
+% \caption*{\texttt{numodel/axis}}
+% \end{subfigure}
 % \end{center}
 %
 % \section{Public API}
