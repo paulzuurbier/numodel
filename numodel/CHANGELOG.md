@@ -5,6 +5,14 @@ All notable changes to `numodel` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased] — 0.4.0
+
+### Added
+- Expression reference table in the manual (`\subsection{Expression reference}`)
+  listing all l3fp operators and functions with their XMILE and CoachTaal
+  equivalents, including notes on constructions for functions not natively
+  available in l3fp (hyperbolic functions, base-10 and base-2 logarithms).
+
 ## [0.3.0] — 2026-05-17
 
 Version-sync release.  No functional changes to `numodel`; bumped to

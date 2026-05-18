@@ -1,0 +1,202 @@
+% expr-render-test.tex
+% Visual inspection test: how does \textmodel render each l3fp construct?
+%
+% Purpose: compile and inspect \textmodel output for every operator and
+%   function in the l3fp expression grammar, including those not yet
+%   display-translated by numodel.  \computemodel verifies that the
+%   expressions also evaluate without error.
+%
+% Compile with:  lualatex expr-render-test.tex
+%   (run from numodel/ after unpacking, or from build/doc/ after l3build doc)
+%
+% Model design: U starts at 1.0 and grows 10 % per step, so it stays
+%   positive throughout -- safe for ln, sqrt, log, etc.  T steps 0.1 s
+%   per iteration; the simulation stops after 3 steps (T >= 0.25).
+%
+% l3fp notes discovered during testing:
+%   - no log(x): l3fp only has ln(x); use ln(x)/ln(10) for base-10
+%   - no log2: use ln(x)/ln(2)
+%   - no mod:  use x - trunc(x/y)*y
+%   - no sinh/cosh/tanh/coth: use explicit (exp(x)-exp(-x))/2 etc.
+%   - no e constant: use exp(1)
+
+\documentclass{article}
+\usepackage[syntax=EN]{numodel}
+\begin{document}
+
+\newmodelprefix{expr}
+
+% -----------------------------------------------------------------------
+% System / stock variables
+% -----------------------------------------------------------------------
+\mvar{T}{t}{0}{\s}{3}{system}
+\mvar{Dt}{dt}{0.1}{\s}{2}{system}
+\mvar{U}{u}{1.0}{}{4}{stock}       % stays positive; updated last
+
+% -----------------------------------------------------------------------
+% Arithmetic operators  (+ - * / ^)
+% -----------------------------------------------------------------------
+\mvar{Arith}{v_{1}}{0}{}{4}{aux}
+
+% -----------------------------------------------------------------------
+% Comparison operators and ternary  (< <= > >= = !=  / ? :)
+% -----------------------------------------------------------------------
+\mvar{Cmp}{v_{2}}{0}{}{4}{aux}    % single-line ternary
+\mvar{CmpS}{v_{3}}{0}{}{4}{aux}   % multi-line ternary (\mrule*)
+
+% -----------------------------------------------------------------------
+% Boolean operators  (&& || !)
+% -----------------------------------------------------------------------
+\mvar{Bool}{v_{4}}{0}{}{4}{aux}
+
+% -----------------------------------------------------------------------
+% abs, sign  (supported -- display-translated)
+% -----------------------------------------------------------------------
+\mvar{Absv}{v_{5}}{0}{}{4}{aux}
+\mvar{Signv}{v_{6}}{0}{}{4}{aux}
+
+% -----------------------------------------------------------------------
+% General math (not yet display-translated)
+% -----------------------------------------------------------------------
+\mvar{Modv}{v_{7}}{0}{}{4}{aux}     % mod via formula: x - trunc(x/y)*y
+\mvar{Sqrtv}{v_{8}}{0}{}{4}{aux}
+\mvar{Truncv}{v_{9}}{0}{}{4}{aux}
+\mvar{Roundv}{v_{10}}{0}{}{4}{aux}
+\mvar{Floorv}{v_{11}}{0}{}{4}{aux}
+\mvar{Ceilv}{v_{12}}{0}{}{4}{aux}
+\mvar{Minv}{v_{13}}{0}{}{4}{aux}
+\mvar{Maxv}{v_{14}}{0}{}{4}{aux}
+
+% -----------------------------------------------------------------------
+% Exponential and logarithmic
+% -----------------------------------------------------------------------
+\mvar{Expv}{v_{15}}{0}{}{4}{aux}
+\mvar{Lnv}{v_{16}}{0}{}{4}{aux}
+\mvar{LogXv}{v_{17}}{0}{}{4}{aux}   % log(x) = base-10 in l3fp
+\mvar{LogBv}{v_{18}}{0}{}{4}{aux}   % log2 via ln(x)/ln(2)
+
+% -----------------------------------------------------------------------
+% Trigonometry (radians)
+% -----------------------------------------------------------------------
+\mvar{Sinv}{v_{19}}{0}{}{4}{aux}
+\mvar{Cosv}{v_{20}}{0}{}{4}{aux}
+\mvar{Tanv}{v_{21}}{0}{}{4}{aux}
+\mvar{Asinv}{v_{22}}{0}{}{4}{aux}
+\mvar{Acosv}{v_{23}}{0}{}{4}{aux}
+\mvar{Atanv}{v_{24}}{0}{}{4}{aux}
+\mvar{Atan2v}{v_{25}}{0}{}{4}{aux}
+
+% -----------------------------------------------------------------------
+% Trigonometry (degrees)
+% -----------------------------------------------------------------------
+\mvar{Sindv}{v_{26}}{0}{}{4}{aux}
+\mvar{Cosdv}{v_{27}}{0}{}{4}{aux}
+\mvar{Tandv}{v_{28}}{0}{}{4}{aux}
+\mvar{Asindv}{v_{29}}{0}{}{4}{aux}
+\mvar{Acosdv}{v_{30}}{0}{}{4}{aux}
+\mvar{Atandv}{v_{31}}{0}{}{4}{aux}
+
+% -----------------------------------------------------------------------
+% Hyperbolic (no native l3fp; expressed via exp)
+% -----------------------------------------------------------------------
+\mvar{Sinhv}{v_{32}}{0}{}{4}{aux}
+\mvar{Coshv}{v_{33}}{0}{}{4}{aux}
+\mvar{Tanhv}{v_{34}}{0}{}{4}{aux}
+\mvar{Cothv}{v_{35}}{0}{}{4}{aux}
+
+% -----------------------------------------------------------------------
+% Constants
+% -----------------------------------------------------------------------
+\mvar{Piv}{v_{36}}{0}{}{6}{aux}
+\mvar{Ev}{v_{37}}{0}{}{6}{aux}   % e constant = exp(1) in l3fp
+% inf and nan cannot be stored in a variable (fp_to_decimal fails),
+% so they are omitted from this test.
+% \mvar{Infv}{v_{38}}{0}{}{4}{aux}
+% \mvar{Nanv}{v_{39}}{0}{}{4}{aux}
+
+% -----------------------------------------------------------------------
+% Random
+% -----------------------------------------------------------------------
+\mvar{Randv}{v_{40}}{0}{}{4}{aux}
+
+% ======================================================================
+% Rules
+% ======================================================================
+
+% Time update and stop condition (3 iterations: T = 0.1, 0.2, 0.3)
+\mrule{T}{\exprT + \exprDt}
+\mstop{\exprT >= 0.25}
+
+\mruletext{--- Arithmetic operators ---}
+\mrule{Arith}{\exprU * 2 + 1 - 0.5 / 2 ^ 3}
+
+\mruletext{--- Comparison + ternary (single-line) ---}
+\mrule{Cmp}{\exprU >= 1.05 ? 1 : 0}
+
+\mruletext{--- Ternary multi-line (\string\mrule*) ---}
+\mrule*{CmpS}{\exprU >= 1.05 ? 1 : 0}
+
+\mruletext{--- Boolean operators ---}
+\mrule{Bool}{(\exprU > 0) && !(\exprT >= 1) ? 1 : 0}
+
+\mruletext{--- abs, sign (display-translated) ---}
+\mrule{Absv}{abs(\exprU - 2)}
+\mrule{Signv}{sign(\exprU - 1.05)}
+
+\mruletext{--- General math ---}
+\mrule{Modv}{\exprU - trunc(\exprU / 0.7) * 0.7}
+\mrule{Sqrtv}{sqrt(\exprU)}
+\mrule{Truncv}{trunc(\exprU * 3.7)}
+\mrule{Roundv}{round(\exprU, 2)}
+\mrule{Floorv}{floor(\exprU + 0.3)}
+\mrule{Ceilv}{ceil(\exprU - 0.3)}
+\mrule{Minv}{min(\exprU, 1.05)}
+\mrule{Maxv}{max(\exprU, 1.05)}
+
+\mruletext{--- Exponential and logarithmic ---}
+\mrule{Expv}{exp(\exprU)}
+\mrule{Lnv}{ln(\exprU)}
+\mrule{LogXv}{ln(\exprU) / ln(10)}
+\mrule{LogBv}{ln(\exprU) / ln(2)}
+
+\mruletext{--- Trigonometry (radians) ---}
+\mrule{Sinv}{sin(\exprT * pi)}
+\mrule{Cosv}{cos(\exprT * pi)}
+\mrule{Tanv}{tan(\exprT)}
+\mrule{Asinv}{asin(sin(\exprT * pi))}
+\mrule{Acosv}{acos(cos(\exprT * pi))}
+\mrule{Atanv}{atan(\exprT)}
+\mrule{Atan2v}{atan(\exprT, 1.0)}
+
+\mruletext{--- Trigonometry (degrees) ---}
+\mrule{Sindv}{sind(\exprT * 180)}
+\mrule{Cosdv}{cosd(\exprT * 180)}
+\mrule{Tandv}{tand(\exprT * 90)}
+\mrule{Asindv}{asind(sind(\exprT * 90))}
+\mrule{Acosdv}{acosd(cosd(\exprT * 90))}
+\mrule{Atandv}{atand(\exprT)}
+
+\mruletext{--- Hyperbolic (via exp formulas) ---}
+\mrule{Sinhv}{(exp(\exprT) - exp(-\exprT)) / 2}
+\mrule{Coshv}{(exp(\exprT) + exp(-\exprT)) / 2}
+\mrule{Tanhv}{(exp(\exprT) - exp(-\exprT)) / (exp(\exprT) + exp(-\exprT))}
+\mrule{Cothv}{(exp(\exprT + 0.5) + exp(-(\exprT + 0.5))) / (exp(\exprT + 0.5) - exp(-(\exprT + 0.5)))}
+
+\mruletext{--- Constants ---}
+\mrule{Piv}{pi}
+\mrule{Ev}{exp(1)}
+% \mrule{Infv}{inf}   % fp_to_decimal(inf) fails -- omitted
+% \mrule{Nanv}{nan}   % fp_to_decimal(nan) fails -- omitted
+
+\mruletext{--- Random ---}
+\mrule{Randv}{rand()}
+
+% U updated last so all aux rules above see the previous step's value
+\mrule{U}{\exprU * 1.1}
+
+% ======================================================================
+\textmodel
+
+\computemodel
+
+\end{document}

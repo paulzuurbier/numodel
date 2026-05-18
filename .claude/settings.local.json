@@ -5,7 +5,22 @@
       "Bash(lualatex --interaction=nonstopmode show16.tex)",
       "Bash(cp show16.pdf /c/Users/paulz/Desktop/show16c.pdf)",
       "Bash(lualatex --interaction=nonstopmode strip21.tex)",
-      "Bash(pdftotext strip21.pdf -)"
+      "Bash(pdftotext strip21.pdf -)",
+      "Bash(l3build doc *)",
+      "Bash(ps -o pid,etime,command -p 66586)",
+      "Bash(echo \"Build gestart, PID $!\")",
+      "Bash(cp /Users/pzu/numodel-bundle/numodel/tests/expr-render-test.tex /Users/pzu/numodel-bundle/build/doc/)",
+      "Bash(lualatex -interaction=nonstopmode expr-render-test.tex)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(grep -E \"^!|Error|error\" /tmp/expr-test.log | head -15)",
+      "Read(//private/tmp/**)",
+      "Bash(TEXINPUTS=../unpacked: lualatex -interaction=nonstopmode expr-render-test.tex > /tmp/expr-test.log 2>&1 *)",
+      "Bash(TEXINPUTS=../unpacked:../local: lualatex -interaction=nonstopmode expr-render-test.tex)",
+      "Bash(TEXINPUTS=../unpacked:../local: lualatex expr-render-test.tex)",
+      "Bash(pdfinfo /Users/pzu/numodel-bundle/build/doc/expr-render-test.pdf)"
+    ],
+    "additionalDirectories": [
+      "/private/tmp"
     ]
   }
 }

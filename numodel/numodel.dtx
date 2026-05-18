@@ -20,6 +20,10 @@
 \documentclass{ltxdoc}
 \usepackage{numodel}
 \usepackage[left=3.5cm, right=2cm, top=2cm, bottom=2cm, marginparwidth=3.5cm, marginparsep=0.3cm]{geometry}
+\usepackage{xcolor}
+\usepackage{longtable}
+\usepackage{booktabs}
+\definecolor{numorange}{rgb}{0.90,0.45,0.00}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -419,11 +423,10 @@
 % keeping the table column narrow so a |\graphicmodel| can sit
 % alongside it, and making the source itself easier to read.  For
 % non-ternary expressions the star has no effect.
-% \meta{expr} may use the full |\fp_eval| expression grammar
-% including |+ - * / ^|, |abs|, |sign|, ternary |cond ? a : b|, and
-% Boolean operators \texttt{\&\&} (and) and \texttt{||} (or), and the
-% comparison operators \texttt{<}, \texttt{<=}, \texttt{>}, \texttt{>=},
-% \texttt{=}, \texttt{!=}.
+% \meta{expr} may use the full |\fp_eval| expression grammar.
+% See Table~\ref{tab:expr} (Section~\ref{sec:expr}) for a complete
+% overview of supported operators and functions with their XMILE and
+% CoachTaal equivalents.
 %
 % \DescribeMacro{\mruletext}
 % Inserts a free-text row in the rule table without registering a
@@ -437,6 +440,194 @@
 % where \meta{expr} evaluates true.  Exactly one |\mstop| per model
 % prefix is required before |\computemodel|.  Without one,
 % |\computemodel| issues a warning.
+%
+% \subsection{Expression reference}\label{sec:expr}
+%
+% Table~\ref{tab:expr} lists all expression constructs for |\mrule|
+% bodies.  The \textbf{XMILE} column shows XMILE\,v1.0 syntax,
+% \textbf{l3fp} shows the |\fp_eval|-compatible form used inside
+% |\mrule|, and \textbf{CoachTaal} shows the Coach\,6 equivalent.
+% \textcolor{numorange}{Orange} entries are not yet fully supported
+% by \textsf{numodel} (the expression computes correctly, but the
+% rendered keyword in the rule table is not yet translated).
+% \textit{Italic} cells contain a derived equivalent rather than a
+% native keyword.
+%
+% \begin{longtable}{@{} l l l @{}}
+%   \caption{Expression reference: XMILE, \texttt{\textbackslash fp\_eval},
+%            and CoachTaal}\label{tab:expr}\\
+%   \toprule
+%   \textbf{XMILE} & \textbf{l3fp (\texttt{\textbackslash fpeval})}
+%                  & \textbf{CoachTaal} \\
+%   \midrule
+%   \endfirsthead
+%   \toprule
+%   \textbf{XMILE} & \textbf{l3fp (\texttt{\textbackslash fpeval})}
+%                  & \textbf{CoachTaal} \\
+%   \midrule
+%   \endhead
+%   \bottomrule
+%   \endlastfoot
+%
+%   \multicolumn{3}{l}{\itshape Arithmetic operators} \\*
+%   \midrule
+%   \texttt{+} & \texttt{+} & \texttt{+} \\
+%   \texttt{-} & \texttt{-} & \texttt{-} \\
+%   \texttt{*} & \texttt{*} & \texttt{*} \\
+%   \texttt{/} & \texttt{/} & \texttt{/} \\
+%   \texttt{\textasciicircum} &
+%     \texttt{\textasciicircum} &
+%     \texttt{\textasciicircum} \\
+%   \textcolor{numorange}{\texttt{MOD(x,y)}}
+%     & \textcolor{numorange}{\texttt{mod(x,y)}}
+%     & \textcolor{numorange}{\texttt{Rest(x,y)}} \\
+%   \addlinespace[4pt]
+%   \multicolumn{3}{l}{\itshape Comparison operators} \\*
+%   \midrule
+%   \texttt{<}  & \texttt{<}  & \texttt{<}  \\
+%   \texttt{<=} & \texttt{<=} & \texttt{<=} \\
+%   \texttt{>}  & \texttt{>}  & \texttt{>}  \\
+%   \texttt{>=} & \texttt{>=} & \texttt{>=} \\
+%   \texttt{=}  & \texttt{=}  & \texttt{=}  \\
+%   \texttt{<>} & \texttt{!=} & \texttt{<>} \\
+%   \addlinespace[4pt]
+%   \multicolumn{3}{l}{\itshape Boolean operators} \\*
+%   \midrule
+%   \texttt{AND} & \texttt{\&\&} & \texttt{EN}   \\
+%   \texttt{OR}  & \texttt{\textbar\textbar} & \texttt{OF}   \\
+%   \texttt{NOT} & \texttt{!}    & \texttt{NIET} \\
+%   \addlinespace[4pt]
+%   \multicolumn{3}{l}{\itshape Control flow} \\*
+%   \midrule
+%   \texttt{IF c THEN a ELSE b}
+%     & \texttt{c ? a : b}
+%     & \texttt{Als c Dan a Anders b EindAls} \\
+%   \addlinespace[4pt]
+%   \multicolumn{3}{l}{\itshape General math functions} \\*
+%   \midrule
+%   \texttt{ABS(x)}  & \texttt{abs(x)}  & \texttt{Abs(x)}  \\
+%   \texttt{SIGN(x)} & \texttt{sign(x)} & \texttt{Teken(x)} \\
+%   \textcolor{numorange}{\texttt{SQRT(x)}}
+%     & \textcolor{numorange}{\texttt{sqrt(x)}}
+%     & \textcolor{numorange}{\texttt{Wortel(x)}} \\
+%   \textcolor{numorange}{\texttt{INT(x)}}
+%     & \textcolor{numorange}{\texttt{trunc(x)}}
+%     & \textcolor{numorange}{\texttt{Geheel(x)}} \\
+%   \textcolor{numorange}{\textit{INT(x+0.5)}}
+%     & \textcolor{numorange}{\texttt{round(x)}}
+%     & \textcolor{numorange}{\textit{Afronden(x,0)}} \\
+%   \textcolor{numorange}{\textit{INT(x)}}
+%     & \textcolor{numorange}{\texttt{floor(x)}}
+%     & \textcolor{numorange}{\textit{Geheel(x)}} \\
+%   \textcolor{numorange}{\textit{INT(x)+1}}
+%     & \textcolor{numorange}{\texttt{ceil(x)}}
+%     & \textcolor{numorange}{\textit{Geheel(x)+1}} \\
+%   \textcolor{numorange}{\texttt{MIN(x,y)}}
+%     & \textcolor{numorange}{\texttt{min(x,y)}}
+%     & \textcolor{numorange}{\texttt{Min(x,y)}} \\
+%   \textcolor{numorange}{\texttt{MAX(x,y)}}
+%     & \textcolor{numorange}{\texttt{max(x,y)}}
+%     & \textcolor{numorange}{\texttt{Max(x,y)}} \\
+%   \addlinespace[4pt]
+%   \multicolumn{3}{l}{\itshape Exponential and logarithmic} \\*
+%   \midrule
+%   \textcolor{numorange}{\texttt{EXP(x)}}
+%     & \textcolor{numorange}{\texttt{exp(x)}}
+%     & \textcolor{numorange}{\texttt{Exp(x)}} \\
+%   \textcolor{numorange}{\texttt{LN(x)}}
+%     & \textcolor{numorange}{\texttt{ln(x)}}
+%     & \textcolor{numorange}{\texttt{Ln(x)}} \\
+%   \textcolor{numorange}{\texttt{LOG10(x)}}
+%     & \textcolor{numorange}{\textit{ln(x)/ln(10)}}
+%     & \textcolor{numorange}{\texttt{Log(x)}} \\
+%   \addlinespace[4pt]
+%   \multicolumn{3}{l}{\itshape Trigonometry (radians)} \\*
+%   \midrule
+%   \textcolor{numorange}{\texttt{SIN(x)}}
+%     & \textcolor{numorange}{\texttt{sin(x)}}
+%     & \textcolor{numorange}{\texttt{sin(x)}} \\
+%   \textcolor{numorange}{\texttt{COS(x)}}
+%     & \textcolor{numorange}{\texttt{cos(x)}}
+%     & \textcolor{numorange}{\texttt{cos(x)}} \\
+%   \textcolor{numorange}{\texttt{TAN(x)}}
+%     & \textcolor{numorange}{\texttt{tan(x)}}
+%     & \textcolor{numorange}{\texttt{tan(x)}} \\
+%   \textcolor{numorange}{\texttt{ARCSIN(x)}}
+%     & \textcolor{numorange}{\texttt{asin(x)}}
+%     & \textcolor{numorange}{\texttt{arcsin(x)}} \\
+%   \textcolor{numorange}{\texttt{ARCCOS(x)}}
+%     & \textcolor{numorange}{\texttt{acos(x)}}
+%     & \textcolor{numorange}{\texttt{arccos(x)}} \\
+%   \textcolor{numorange}{\texttt{ARCTAN(x)}}
+%     & \textcolor{numorange}{\texttt{atan(x)}}
+%     & \textcolor{numorange}{\texttt{arctan(x)}} \\
+%   \textcolor{numorange}{\texttt{ARCTAN2(y,x)}}
+%     & \textcolor{numorange}{\texttt{atan(y,x)}}
+%     & \textcolor{numorange}{\textit{arctan(y/x)}} \\
+%   \addlinespace[4pt]
+%   \multicolumn{3}{l}{\itshape Trigonometry (degrees)} \\*
+%   \midrule
+%   \textcolor{numorange}{\textit{SIN(2*PI/360*x)}}
+%     & \textcolor{numorange}{\texttt{sind(x)}}
+%     & \textcolor{numorange}{\textit{sin(2*pi/360*x)}} \\
+%   \textcolor{numorange}{\textit{COS(2*PI/360*x)}}
+%     & \textcolor{numorange}{\texttt{cosd(x)}}
+%     & \textcolor{numorange}{\textit{cos(2*pi/360*x)}} \\
+%   \textcolor{numorange}{\textit{TAN(2*PI/360*x)}}
+%     & \textcolor{numorange}{\texttt{tand(x)}}
+%     & \textcolor{numorange}{\textit{tan(2*pi/360*x)}} \\
+%   \textcolor{numorange}{\textit{360/PI*ARCSIN(x)}}
+%     & \textcolor{numorange}{\texttt{asind(x)}}
+%     & \textcolor{numorange}{\textit{360/pi*arcsin(x)}} \\
+%   \textcolor{numorange}{\textit{360/PI*ARCCOS(x)}}
+%     & \textcolor{numorange}{\texttt{acosd(x)}}
+%     & \textcolor{numorange}{\textit{360/pi*arccos(x)}} \\
+%   \textcolor{numorange}{\textit{360/PI*ARCTAN(x)}}
+%     & \textcolor{numorange}{\texttt{atand(x)}}
+%     & \textcolor{numorange}{\textit{360/pi*arctan(x)}} \\
+%   \addlinespace[4pt]
+%   \multicolumn{3}{l}{\itshape Constants} \\*
+%   \midrule
+%   \texttt{PI} & \texttt{pi} & \texttt{pi} \\
+%   \texttt{e}  & \textit{exp(1)}  & \texttt{e}  \\
+%   \textcolor{numorange}{\texttt{INF}}
+%     & \textcolor{numorange}{\texttt{inf}}
+%     & \textcolor{numorange}{\textit{---}} \\
+%   \textcolor{numorange}{\texttt{NAN}}
+%     & \textcolor{numorange}{\texttt{nan}}
+%     & \textcolor{numorange}{\textit{---}} \\
+%   \addlinespace[4pt]
+%   \multicolumn{3}{l}{\itshape Simulation-specific functions (XMILE only)} \\*
+%   \midrule
+%   \textcolor{numorange}{\texttt{TIME}}
+%     & \textcolor{numorange}{\textit{user variable (\texttt{\textbackslash mvar})}}
+%     & \textcolor{numorange}{\textit{user variable}} \\
+%   \textcolor{numorange}{\texttt{DT}}
+%     & \textcolor{numorange}{\textit{user variable (\texttt{\textbackslash mvar})}}
+%     & \textcolor{numorange}{\textit{user variable}} \\
+%   \textcolor{numorange}{\texttt{STEP(h,t\textsubscript{0})}}
+%     & \textcolor{numorange}{\textit{T >= t0 ? h : 0}}
+%     & \textcolor{numorange}{\textit{Als T >= t0 Dan h Anders 0}} \\
+%   \textcolor{numorange}{\texttt{RAMP(s,t\textsubscript{0})}}
+%     & \textcolor{numorange}{\textit{T > t0 ? s*(T-t0) : 0}}
+%     & \textcolor{numorange}{\textit{Als T > t0 Dan s*(T-t0) Anders 0}} \\
+%   \textcolor{numorange}{\texttt{DELAY(x,dt)}}
+%     & \textcolor{numorange}{\textit{not supported}}
+%     & \textcolor{numorange}{\textit{not supported}} \\
+%   \textcolor{numorange}{\texttt{SMOOTH(x,t)}}
+%     & \textcolor{numorange}{\textit{not supported}}
+%     & \textcolor{numorange}{\textit{not supported}} \\
+%   \textcolor{numorange}{\texttt{INIT(x)}}
+%     & \textcolor{numorange}{\textit{not supported}}
+%     & \textcolor{numorange}{\textit{not supported}} \\
+%   \textcolor{numorange}{\texttt{PREVIOUS(x)}}
+%     & \textcolor{numorange}{\textit{not supported}}
+%     & \textcolor{numorange}{\textit{not supported}} \\
+%   \textcolor{numorange}{\texttt{RANDOM(lo,hi)}}
+%     & \textcolor{numorange}{\texttt{rand()}}
+%     & \textcolor{numorange}{\textit{not supported}} \\
+%
+% \end{longtable}
 %
 % \subsection{Render commands}
 %
@@ -514,7 +705,7 @@
 %       + (\mstep{Y}{-1} - \mstep{Y}{-2})
 %       / (\mstep{T}{-1} - \mstep{T}{-2})
 %       * (x - \mstep{T}{-1})};
-%   \addlegendentry{secant through last two steps}
+%   \addlegendentry{secant endpoints}
 % ]{ball-fall-secant}
 % \end{verbatim}
 % \end{quote}
@@ -531,7 +722,7 @@
 %       + (\mstep{Y}{-1} - \mstep{Y}{-2})
 %       / (\mstep{T}{-1} - \mstep{T}{-2})
 %       * (x - \mstep{T}{-1})};
-%   \addlegendentry{secant through last two steps}
+%   \addlegendentry{secant endpoints}
 % ]{ball-fall-secant}
 % \end{center}
 %

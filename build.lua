@@ -23,6 +23,7 @@ excludefiles = {
   "*/build",
   "*/tests",            -- developer-only Lua unit tests
   "*/testfiles",        -- developer-only l3build regression tests
+  "docs",               -- local reference PDFs, not shipped to CTAN
 }
 
 -- Bundle packaging -------------------------------------------------------
