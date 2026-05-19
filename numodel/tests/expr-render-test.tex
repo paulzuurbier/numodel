@@ -6,6 +6,13 @@
 %   display-translated by numodel.  \computemodel verifies that the
 %   expressions also evaluate without error.
 %
+% The model body is wrapped in \fullmodel{<prefix>} and called twice --
+% once under syntax=EN (XMILE keywords) and once under syntax=NL
+% (CoachTaal keywords) -- so the rendered table appears in both forms
+% for side-by-side comparison of the display-translation layer.  The
+% prefix-dependent rule bodies use the helper \vv{<name>}, which
+% expands to \<current-prefix><name>.
+%
 % Compile with:  lualatex expr-render-test.tex
 %   (run from numodel/ after unpacking, or from build/doc/ after l3build doc)
 %
@@ -13,188 +20,212 @@
 %   positive throughout -- safe for ln, sqrt, log, etc.  T steps 0.1 s
 %   per iteration; the simulation stops after 3 steps (T >= 0.25).
 %
-% l3fp notes discovered during testing:
+% l3fp notes (cf. interface3.pdf section 30.13.3):
 %   - no log(x): l3fp only has ln(x); use ln(x)/ln(10) for base-10
-%   - no log2: use ln(x)/ln(2)
-%   - no mod:  use x - trunc(x/y)*y
+%   - logb(x) is floor(log10(|x|)), NOT log base b
+%   - no mod:  use x - trunc(x/y)*y (l3fp roadmap item)
 %   - no sinh/cosh/tanh/coth: use explicit (exp(x)-exp(-x))/2 etc.
 %   - no e constant: use exp(1)
+%   - acsc/asec/acscd/asecd need |x| >= 1
+%   - fact(x) requires non-negative integer x
 
 \documentclass{article}
 \usepackage[syntax=EN]{numodel}
+\usepackage[left=2cm, right=2cm, top=2cm, bottom=2cm]{geometry}
 \begin{document}
 
-\newmodelprefix{expr}
+% \vv{X} -> \<prefix>X (the unexpanded control sequence).  Used inside
+% \Mrule / \Mrules / \Mstop bodies so that the rule body resolves to
+% the current prefix's variable cs.
+\def\vv#1{\expandafter\noexpand\csname\Mprefix#1\endcsname}
 
-% -----------------------------------------------------------------------
-% System / stock variables
-% -----------------------------------------------------------------------
-\mvar{T}{t}{0}{\s}{3}{system}
-\mvar{Dt}{dt}{0.1}{\s}{2}{system}
-\mvar{U}{u}{1.0}{}{4}{stock}       % stays positive; updated last
+% Wrappers that e-expand their body before delegating, so \vv{...} is
+% resolved at declaration time.  \mvar and \mruletext do not reference
+% prefix variables, so they need no wrapping.
+\def\Mrule#1#2{\edef\Mtmp{\noexpand\mrule{#1}{#2}}\Mtmp}
+\def\Mrules#1#2{\edef\Mtmp{\noexpand\mrule*{#1}{#2}}\Mtmp}
+\def\Mstop#1{\edef\Mtmp{\noexpand\mstop{#1}}\Mtmp}
 
-% -----------------------------------------------------------------------
-% Arithmetic operators  (+ - * / ^)
-% -----------------------------------------------------------------------
-\mvar{Arith}{v_{1}}{0}{}{4}{aux}
-
-% -----------------------------------------------------------------------
-% Comparison operators and ternary  (< <= > >= = !=  / ? :)
-% -----------------------------------------------------------------------
-\mvar{Cmp}{v_{2}}{0}{}{4}{aux}    % single-line ternary
-\mvar{CmpS}{v_{3}}{0}{}{4}{aux}   % multi-line ternary (\mrule*)
-
-% -----------------------------------------------------------------------
-% Boolean operators  (&& || !)
-% -----------------------------------------------------------------------
-\mvar{Bool}{v_{4}}{0}{}{4}{aux}
-
-% -----------------------------------------------------------------------
-% abs, sign  (supported -- display-translated)
-% -----------------------------------------------------------------------
-\mvar{Absv}{v_{5}}{0}{}{4}{aux}
-\mvar{Signv}{v_{6}}{0}{}{4}{aux}
-
-% -----------------------------------------------------------------------
-% General math (not yet display-translated)
-% -----------------------------------------------------------------------
-\mvar{Modv}{v_{7}}{0}{}{4}{aux}     % mod via formula: x - trunc(x/y)*y
-\mvar{Sqrtv}{v_{8}}{0}{}{4}{aux}
-\mvar{Truncv}{v_{9}}{0}{}{4}{aux}
-\mvar{Roundv}{v_{10}}{0}{}{4}{aux}
-\mvar{Floorv}{v_{11}}{0}{}{4}{aux}
-\mvar{Ceilv}{v_{12}}{0}{}{4}{aux}
-\mvar{Minv}{v_{13}}{0}{}{4}{aux}
-\mvar{Maxv}{v_{14}}{0}{}{4}{aux}
-
-% -----------------------------------------------------------------------
-% Exponential and logarithmic
-% -----------------------------------------------------------------------
-\mvar{Expv}{v_{15}}{0}{}{4}{aux}
-\mvar{Lnv}{v_{16}}{0}{}{4}{aux}
-\mvar{LogXv}{v_{17}}{0}{}{4}{aux}   % log(x) = base-10 in l3fp
-\mvar{LogBv}{v_{18}}{0}{}{4}{aux}   % log2 via ln(x)/ln(2)
-
-% -----------------------------------------------------------------------
-% Trigonometry (radians)
-% -----------------------------------------------------------------------
-\mvar{Sinv}{v_{19}}{0}{}{4}{aux}
-\mvar{Cosv}{v_{20}}{0}{}{4}{aux}
-\mvar{Tanv}{v_{21}}{0}{}{4}{aux}
-\mvar{Asinv}{v_{22}}{0}{}{4}{aux}
-\mvar{Acosv}{v_{23}}{0}{}{4}{aux}
-\mvar{Atanv}{v_{24}}{0}{}{4}{aux}
-\mvar{Atan2v}{v_{25}}{0}{}{4}{aux}
-
-% -----------------------------------------------------------------------
-% Trigonometry (degrees)
-% -----------------------------------------------------------------------
-\mvar{Sindv}{v_{26}}{0}{}{4}{aux}
-\mvar{Cosdv}{v_{27}}{0}{}{4}{aux}
-\mvar{Tandv}{v_{28}}{0}{}{4}{aux}
-\mvar{Asindv}{v_{29}}{0}{}{4}{aux}
-\mvar{Acosdv}{v_{30}}{0}{}{4}{aux}
-\mvar{Atandv}{v_{31}}{0}{}{4}{aux}
-
-% -----------------------------------------------------------------------
-% Hyperbolic (no native l3fp; expressed via exp)
-% -----------------------------------------------------------------------
-\mvar{Sinhv}{v_{32}}{0}{}{4}{aux}
-\mvar{Coshv}{v_{33}}{0}{}{4}{aux}
-\mvar{Tanhv}{v_{34}}{0}{}{4}{aux}
-\mvar{Cothv}{v_{35}}{0}{}{4}{aux}
-
-% -----------------------------------------------------------------------
-% Constants
-% -----------------------------------------------------------------------
-\mvar{Piv}{v_{36}}{0}{}{6}{aux}
-\mvar{Ev}{v_{37}}{0}{}{6}{aux}   % e constant = exp(1) in l3fp
-% inf and nan cannot be stored in a variable (fp_to_decimal fails),
-% so they are omitted from this test.
-% \mvar{Infv}{v_{38}}{0}{}{4}{aux}
-% \mvar{Nanv}{v_{39}}{0}{}{4}{aux}
-
-% -----------------------------------------------------------------------
-% Random
-% -----------------------------------------------------------------------
-\mvar{Randv}{v_{40}}{0}{}{4}{aux}
+% The model body, parameterised by prefix.
+\newcommand\fullmodel[1]{%
+  \def\Mprefix{#1}%
+  \newmodelprefix{#1}%
+  %
+  % --- System / stock variables ---
+  \mvar{T}{t}{0}{\s}{3}{system}%
+  \mvar{Dt}{dt}{0.1}{\s}{2}{system}%
+  \mvar{U}{u}{1.0}{}{4}{stock}%
+  %
+  % --- Aux variables ---
+  \mvar{Arith}{v_{1}}{0}{}{4}{aux}%
+  \mvar{Cmp}{v_{2}}{0}{}{4}{aux}%
+  \mvar{CmpS}{v_{3}}{0}{}{4}{aux}%
+  \mvar{Bool}{v_{4}}{0}{}{4}{aux}%
+  \mvar{Absv}{v_{5}}{0}{}{4}{aux}%
+  \mvar{Signv}{v_{6}}{0}{}{4}{aux}%
+  \mvar{Modv}{v_{7}}{0}{}{4}{aux}%
+  \mvar{Sqrtv}{v_{8}}{0}{}{4}{aux}%
+  \mvar{Truncv}{v_{9}}{0}{}{4}{aux}%
+  \mvar{Roundv}{v_{10}}{0}{}{4}{aux}%
+  \mvar{Floorv}{v_{11}}{0}{}{4}{aux}%
+  \mvar{Ceilv}{v_{12}}{0}{}{4}{aux}%
+  \mvar{Minv}{v_{13}}{0}{}{4}{aux}%
+  \mvar{Maxv}{v_{14}}{0}{}{4}{aux}%
+  \mvar{Factv}{v_{56}}{0}{}{4}{aux}%
+  \mvar{Expv}{v_{15}}{0}{}{4}{aux}%
+  \mvar{Lnv}{v_{16}}{0}{}{4}{aux}%
+  \mvar{LogXv}{v_{17}}{0}{}{4}{aux}%
+  \mvar{Logbv}{v_{18}}{0}{}{4}{aux}%
+  \mvar{Sinv}{v_{19}}{0}{}{4}{aux}%
+  \mvar{Cosv}{v_{20}}{0}{}{4}{aux}%
+  \mvar{Tanv}{v_{21}}{0}{}{4}{aux}%
+  \mvar{Asinv}{v_{22}}{0}{}{4}{aux}%
+  \mvar{Acosv}{v_{23}}{0}{}{4}{aux}%
+  \mvar{Atanv}{v_{24}}{0}{}{4}{aux}%
+  \mvar{Atan2v}{v_{25}}{0}{}{4}{aux}%
+  \mvar{Cotv}{v_{41}}{0}{}{4}{aux}%
+  \mvar{Cscv}{v_{42}}{0}{}{4}{aux}%
+  \mvar{Secv}{v_{43}}{0}{}{4}{aux}%
+  \mvar{Acotv}{v_{44}}{0}{}{4}{aux}%
+  \mvar{Acot2v}{v_{45}}{0}{}{4}{aux}%
+  \mvar{Acscv}{v_{46}}{0}{}{4}{aux}%
+  \mvar{Asecv}{v_{47}}{0}{}{4}{aux}%
+  \mvar{Sindv}{v_{26}}{0}{}{4}{aux}%
+  \mvar{Cosdv}{v_{27}}{0}{}{4}{aux}%
+  \mvar{Tandv}{v_{28}}{0}{}{4}{aux}%
+  \mvar{Asindv}{v_{29}}{0}{}{4}{aux}%
+  \mvar{Acosdv}{v_{30}}{0}{}{4}{aux}%
+  \mvar{Atandv}{v_{31}}{0}{}{4}{aux}%
+  \mvar{Atand2v}{v_{48}}{0}{}{4}{aux}%
+  \mvar{Cotdv}{v_{49}}{0}{}{4}{aux}%
+  \mvar{Cscdv}{v_{50}}{0}{}{4}{aux}%
+  \mvar{Secdv}{v_{51}}{0}{}{4}{aux}%
+  \mvar{Acotdv}{v_{52}}{0}{}{4}{aux}%
+  \mvar{Acotd2v}{v_{53}}{0}{}{4}{aux}%
+  \mvar{Acscdv}{v_{54}}{0}{}{4}{aux}%
+  \mvar{Asecdv}{v_{55}}{0}{}{4}{aux}%
+  \mvar{Sinhv}{v_{32}}{0}{}{4}{aux}%
+  \mvar{Coshv}{v_{33}}{0}{}{4}{aux}%
+  \mvar{Tanhv}{v_{34}}{0}{}{4}{aux}%
+  \mvar{Cothv}{v_{35}}{0}{}{4}{aux}%
+  \mvar{Piv}{v_{36}}{0}{}{6}{aux}%
+  \mvar{Ev}{v_{37}}{0}{}{6}{aux}%
+  \mvar{Degv}{v_{60}}{0}{}{6}{aux}%
+  \mvar{Truev}{v_{61}}{0}{}{4}{aux}%
+  \mvar{Falsev}{v_{62}}{0}{}{4}{aux}%
+  \mvar{Randv}{v_{40}}{0}{}{4}{aux}%
+  \mvar{Randint1v}{v_{58}}{0}{}{4}{aux}%
+  \mvar{Randint2v}{v_{59}}{0}{}{4}{aux}%
+  %
+  % --- Rules ---
+  % Time update and stop condition (3 iterations: T = 0.1, 0.2, 0.3)
+  \Mrule{T}{\vv{T} + \vv{Dt}}%
+  \Mstop{\vv{T} >= 0.25}%
+  %
+  \mruletext{--- Arithmetic operators ---}%
+  \Mrule{Arith}{\vv{U} * 2 + 1 - 0.5 / 2 ^ 3}%
+  %
+  \mruletext{--- Comparison + ternary (single-line) ---}%
+  \Mrule{Cmp}{\vv{U} >= 1.05 ? 1 : 0}%
+  %
+  \mruletext{--- Ternary multi-line (\string\mrule*) ---}%
+  \Mrules{CmpS}{\vv{U} >= 1.05 ? 1 : 0}%
+  %
+  \mruletext{--- Boolean operators ---}%
+  \Mrule{Bool}{(\vv{U} > 0) && !(\vv{T} >= 1) ? 1 : 0}%
+  %
+  \mruletext{--- abs, sign (display-translated) ---}%
+  \Mrule{Absv}{abs(\vv{U} - 2)}%
+  \Mrule{Signv}{sign(\vv{U} - 1.05)}%
+  %
+  \mruletext{--- General math ---}%
+  \Mrule{Modv}{\vv{U} - trunc(\vv{U} / 0.7) * 0.7}%
+  \Mrule{Sqrtv}{sqrt(\vv{U})}%
+  \Mrule{Truncv}{trunc(\vv{U} * 3.7)}%
+  \Mrule{Roundv}{round(\vv{U}, 2)}%
+  \Mrule{Floorv}{floor(\vv{U} + 0.3)}%
+  \Mrule{Ceilv}{ceil(\vv{U} - 0.3)}%
+  \Mrule{Minv}{min(\vv{U}, 1.05)}%
+  \Mrule{Maxv}{max(\vv{U}, 1.05)}%
+  \Mrule{Factv}{fact(3)}%
+  %
+  \mruletext{--- Exponential and logarithmic ---}%
+  \Mrule{Expv}{exp(\vv{U})}%
+  \Mrule{Lnv}{ln(\vv{U})}%
+  \Mrule{LogXv}{ln(\vv{U}) / ln(10)}%
+  \Mrule{Logbv}{logb(\vv{U} * 100)}%
+  %
+  \mruletext{--- Trigonometry (radians) ---}%
+  \Mrule{Sinv}{sin(\vv{T} * pi)}%
+  \Mrule{Cosv}{cos(\vv{T} * pi)}%
+  \Mrule{Tanv}{tan(\vv{T})}%
+  \Mrule{Asinv}{asin(sin(\vv{T} * pi))}%
+  \Mrule{Acosv}{acos(cos(\vv{T} * pi))}%
+  \Mrule{Atanv}{atan(\vv{T})}%
+  \Mrule{Atan2v}{atan(\vv{T}, 1.0)}%
+  \Mrule{Cotv}{cot(\vv{T})}%
+  \Mrule{Cscv}{csc(\vv{T})}%
+  \Mrule{Secv}{sec(\vv{T})}%
+  \Mrule{Acotv}{acot(\vv{T})}%
+  \Mrule{Acot2v}{acot(\vv{T}, 1.0)}%
+  \Mrule{Acscv}{acsc(2)}%
+  \Mrule{Asecv}{asec(2)}%
+  %
+  \mruletext{--- Trigonometry (degrees) ---}%
+  \Mrule{Sindv}{sind(\vv{T} * 180)}%
+  \Mrule{Cosdv}{cosd(\vv{T} * 180)}%
+  \Mrule{Tandv}{tand(\vv{T} * 90)}%
+  \Mrule{Asindv}{asind(sind(\vv{T} * 90))}%
+  \Mrule{Acosdv}{acosd(cosd(\vv{T} * 90))}%
+  \Mrule{Atandv}{atand(\vv{T})}%
+  \Mrule{Atand2v}{atand(\vv{T}, 1.0)}%
+  \Mrule{Cotdv}{cotd(\vv{T} * 90)}%
+  \Mrule{Cscdv}{cscd(\vv{T} * 90)}%
+  \Mrule{Secdv}{secd(\vv{T} * 90)}%
+  \Mrule{Acotdv}{acotd(\vv{T})}%
+  \Mrule{Acotd2v}{acotd(\vv{T}, 1.0)}%
+  \Mrule{Acscdv}{acscd(2)}%
+  \Mrule{Asecdv}{asecd(2)}%
+  %
+  \mruletext{--- Hyperbolic (via exp formulas) ---}%
+  \Mrule{Sinhv}{(exp(\vv{T}) - exp(-\vv{T})) / 2}%
+  \Mrule{Coshv}{(exp(\vv{T}) + exp(-\vv{T})) / 2}%
+  \Mrule{Tanhv}{(exp(\vv{T}) - exp(-\vv{T})) / (exp(\vv{T}) + exp(-\vv{T}))}%
+  \Mrule{Cothv}{(exp(\vv{T} + 0.5) + exp(-(\vv{T} + 0.5))) / (exp(\vv{T} + 0.5) - exp(-(\vv{T} + 0.5)))}%
+  %
+  \mruletext{--- Constants ---}%
+  \Mrule{Piv}{pi}%
+  \Mrule{Ev}{exp(1)}%
+  \Mrule{Degv}{deg}%
+  \Mrule{Truev}{true}%
+  \Mrule{Falsev}{false}%
+  %
+  \mruletext{--- Random ---}%
+  \Mrule{Randv}{rand()}%
+  \Mrule{Randint1v}{randint(10)}%
+  \Mrule{Randint2v}{randint(5, 15)}%
+  %
+  % U updated last so all aux rules above see the previous step's value
+  \Mrule{U}{\vv{U} * 1.1}%
+}
 
 % ======================================================================
-% Rules
+% Run 1: English (XMILE) syntax
 % ======================================================================
+\fullmodel{expr}
 
-% Time update and stop condition (3 iterations: T = 0.1, 0.2, 0.3)
-\mrule{T}{\exprT + \exprDt}
-\mstop{\exprT >= 0.25}
+\textmodel
 
-\mruletext{--- Arithmetic operators ---}
-\mrule{Arith}{\exprU * 2 + 1 - 0.5 / 2 ^ 3}
-
-\mruletext{--- Comparison + ternary (single-line) ---}
-\mrule{Cmp}{\exprU >= 1.05 ? 1 : 0}
-
-\mruletext{--- Ternary multi-line (\string\mrule*) ---}
-\mrule*{CmpS}{\exprU >= 1.05 ? 1 : 0}
-
-\mruletext{--- Boolean operators ---}
-\mrule{Bool}{(\exprU > 0) && !(\exprT >= 1) ? 1 : 0}
-
-\mruletext{--- abs, sign (display-translated) ---}
-\mrule{Absv}{abs(\exprU - 2)}
-\mrule{Signv}{sign(\exprU - 1.05)}
-
-\mruletext{--- General math ---}
-\mrule{Modv}{\exprU - trunc(\exprU / 0.7) * 0.7}
-\mrule{Sqrtv}{sqrt(\exprU)}
-\mrule{Truncv}{trunc(\exprU * 3.7)}
-\mrule{Roundv}{round(\exprU, 2)}
-\mrule{Floorv}{floor(\exprU + 0.3)}
-\mrule{Ceilv}{ceil(\exprU - 0.3)}
-\mrule{Minv}{min(\exprU, 1.05)}
-\mrule{Maxv}{max(\exprU, 1.05)}
-
-\mruletext{--- Exponential and logarithmic ---}
-\mrule{Expv}{exp(\exprU)}
-\mrule{Lnv}{ln(\exprU)}
-\mrule{LogXv}{ln(\exprU) / ln(10)}
-\mrule{LogBv}{ln(\exprU) / ln(2)}
-
-\mruletext{--- Trigonometry (radians) ---}
-\mrule{Sinv}{sin(\exprT * pi)}
-\mrule{Cosv}{cos(\exprT * pi)}
-\mrule{Tanv}{tan(\exprT)}
-\mrule{Asinv}{asin(sin(\exprT * pi))}
-\mrule{Acosv}{acos(cos(\exprT * pi))}
-\mrule{Atanv}{atan(\exprT)}
-\mrule{Atan2v}{atan(\exprT, 1.0)}
-
-\mruletext{--- Trigonometry (degrees) ---}
-\mrule{Sindv}{sind(\exprT * 180)}
-\mrule{Cosdv}{cosd(\exprT * 180)}
-\mrule{Tandv}{tand(\exprT * 90)}
-\mrule{Asindv}{asind(sind(\exprT * 90))}
-\mrule{Acosdv}{acosd(cosd(\exprT * 90))}
-\mrule{Atandv}{atand(\exprT)}
-
-\mruletext{--- Hyperbolic (via exp formulas) ---}
-\mrule{Sinhv}{(exp(\exprT) - exp(-\exprT)) / 2}
-\mrule{Coshv}{(exp(\exprT) + exp(-\exprT)) / 2}
-\mrule{Tanhv}{(exp(\exprT) - exp(-\exprT)) / (exp(\exprT) + exp(-\exprT))}
-\mrule{Cothv}{(exp(\exprT + 0.5) + exp(-(\exprT + 0.5))) / (exp(\exprT + 0.5) - exp(-(\exprT + 0.5)))}
-
-\mruletext{--- Constants ---}
-\mrule{Piv}{pi}
-\mrule{Ev}{exp(1)}
-% \mrule{Infv}{inf}   % fp_to_decimal(inf) fails -- omitted
-% \mrule{Nanv}{nan}   % fp_to_decimal(nan) fails -- omitted
-
-\mruletext{--- Random ---}
-\mrule{Randv}{rand()}
-
-% U updated last so all aux rules above see the previous step's value
-\mrule{U}{\exprU * 1.1}
+\computemodel
 
 % ======================================================================
+% Run 2: Dutch (CoachTaal) syntax -- re-declare the model under a new
+% prefix so its display strings are baked with the NL keywords.
+% ======================================================================
+\numodelsetup{syntax=NL}
+
+\fullmodel{exprNL}
+
 \textmodel
 
 \computemodel

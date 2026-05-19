@@ -446,7 +446,9 @@
 % Table~\ref{tab:expr} lists all expression constructs for |\mrule|
 % bodies.  The \textbf{XMILE} column shows XMILE\,v1.0 syntax,
 % \textbf{l3fp} shows the |\fp_eval|-compatible form used inside
-% |\mrule|, and \textbf{CoachTaal} shows the Coach\,6 equivalent.
+% |\mrule|, and \textbf{CoachTaal} shows the Coach\,7 equivalent
+% (function names from the standard CoachTaal math reference;
+% note that argument separators in CoachTaal are semicolons).
 % \textcolor{numorange}{Orange} entries are not yet fully supported
 % by \textsf{numodel} (the expression computes correctly, but the
 % rendered keyword in the rule table is not yet translated).
@@ -479,8 +481,8 @@
 %     \texttt{\textasciicircum} &
 %     \texttt{\textasciicircum} \\
 %   \textcolor{numorange}{\texttt{MOD(x,y)}}
-%     & \textcolor{numorange}{\texttt{mod(x,y)}}
-%     & \textcolor{numorange}{\texttt{Rest(x,y)}} \\
+%     & \textcolor{numorange}{\textit{x - trunc(x/y)*y}}
+%     & \textcolor{numorange}{\textit{x - Entier(x/y)*y}} \\
 %   \addlinespace[4pt]
 %   \multicolumn{3}{l}{\itshape Comparison operators} \\*
 %   \midrule
@@ -507,95 +509,139 @@
 %   \midrule
 %   \texttt{ABS(x)}  & \texttt{abs(x)}  & \texttt{Abs(x)}  \\
 %   \texttt{SIGN(x)} & \texttt{sign(x)} & \texttt{Teken(x)} \\
-%   \textcolor{numorange}{\texttt{SQRT(x)}}
-%     & \textcolor{numorange}{\texttt{sqrt(x)}}
-%     & \textcolor{numorange}{\texttt{Wortel(x)}} \\
+%   \texttt{SQRT(x)} & \texttt{sqrt(x)} & \texttt{Sqrt(x)} \\
 %   \textcolor{numorange}{\texttt{INT(x)}}
 %     & \textcolor{numorange}{\texttt{trunc(x)}}
-%     & \textcolor{numorange}{\texttt{Geheel(x)}} \\
+%     & \textcolor{numorange}{\textit{Entier(Abs(x))*Teken(x)}} \\
 %   \textcolor{numorange}{\textit{INT(x+0.5)}}
 %     & \textcolor{numorange}{\texttt{round(x)}}
-%     & \textcolor{numorange}{\textit{Afronden(x,0)}} \\
+%     & \textcolor{numorange}{\texttt{Round(x)}} \\
 %   \textcolor{numorange}{\textit{INT(x)}}
 %     & \textcolor{numorange}{\texttt{floor(x)}}
-%     & \textcolor{numorange}{\textit{Geheel(x)}} \\
-%   \textcolor{numorange}{\textit{INT(x)+1}}
+%     & \textcolor{numorange}{\texttt{Entier(x)}} \\
+%   \textcolor{numorange}{\textit{-INT(-x)}}
 %     & \textcolor{numorange}{\texttt{ceil(x)}}
-%     & \textcolor{numorange}{\textit{Geheel(x)+1}} \\
+%     & \textcolor{numorange}{\textit{-Entier(-x)}} \\
 %   \textcolor{numorange}{\texttt{MIN(x,y)}}
 %     & \textcolor{numorange}{\texttt{min(x,y)}}
-%     & \textcolor{numorange}{\texttt{Min(x,y)}} \\
+%     & \textcolor{numorange}{\texttt{Min(x;y)}} \\
 %   \textcolor{numorange}{\texttt{MAX(x,y)}}
 %     & \textcolor{numorange}{\texttt{max(x,y)}}
-%     & \textcolor{numorange}{\texttt{Max(x,y)}} \\
+%     & \textcolor{numorange}{\texttt{Max(x;y)}} \\
+%   \textcolor{numorange}{\textit{---}}
+%     & \textcolor{numorange}{\texttt{fact(x)}}
+%     & \textcolor{numorange}{\texttt{Fac(x)}} \\
+%   \textcolor{numorange}{\textit{INT(LOG10(ABS(x)))}}
+%     & \textcolor{numorange}{\texttt{logb(x)}}
+%     & \textcolor{numorange}{\textit{Entier(Log(Abs(x)))}} \\
 %   \addlinespace[4pt]
 %   \multicolumn{3}{l}{\itshape Exponential and logarithmic} \\*
 %   \midrule
-%   \textcolor{numorange}{\texttt{EXP(x)}}
-%     & \textcolor{numorange}{\texttt{exp(x)}}
-%     & \textcolor{numorange}{\texttt{Exp(x)}} \\
-%   \textcolor{numorange}{\texttt{LN(x)}}
-%     & \textcolor{numorange}{\texttt{ln(x)}}
-%     & \textcolor{numorange}{\texttt{Ln(x)}} \\
+%   \texttt{EXP(x)} & \texttt{exp(x)} & \texttt{Exp(x)} \\
+%   \texttt{LN(x)}  & \texttt{ln(x)}  & \texttt{Ln(x)}  \\
 %   \textcolor{numorange}{\texttt{LOG10(x)}}
 %     & \textcolor{numorange}{\textit{ln(x)/ln(10)}}
 %     & \textcolor{numorange}{\texttt{Log(x)}} \\
 %   \addlinespace[4pt]
 %   \multicolumn{3}{l}{\itshape Trigonometry (radians)} \\*
 %   \midrule
-%   \textcolor{numorange}{\texttt{SIN(x)}}
-%     & \textcolor{numorange}{\texttt{sin(x)}}
-%     & \textcolor{numorange}{\texttt{sin(x)}} \\
-%   \textcolor{numorange}{\texttt{COS(x)}}
-%     & \textcolor{numorange}{\texttt{cos(x)}}
-%     & \textcolor{numorange}{\texttt{cos(x)}} \\
-%   \textcolor{numorange}{\texttt{TAN(x)}}
-%     & \textcolor{numorange}{\texttt{tan(x)}}
-%     & \textcolor{numorange}{\texttt{tan(x)}} \\
-%   \textcolor{numorange}{\texttt{ARCSIN(x)}}
-%     & \textcolor{numorange}{\texttt{asin(x)}}
-%     & \textcolor{numorange}{\texttt{arcsin(x)}} \\
-%   \textcolor{numorange}{\texttt{ARCCOS(x)}}
-%     & \textcolor{numorange}{\texttt{acos(x)}}
-%     & \textcolor{numorange}{\texttt{arccos(x)}} \\
+%   \texttt{SIN(x)}    & \texttt{sin(x)}  & \texttt{Sin(x)}    \\
+%   \texttt{COS(x)}    & \texttt{cos(x)}  & \texttt{Cos(x)}    \\
+%   \texttt{TAN(x)}    & \texttt{tan(x)}  & \texttt{Tan(x)}    \\
+%   \texttt{ARCSIN(x)} & \texttt{asin(x)} & \texttt{Arcsin(x)} \\
+%   \texttt{ARCCOS(x)} & \texttt{acos(x)} & \texttt{Arccos(x)} \\
 %   \textcolor{numorange}{\texttt{ARCTAN(x)}}
 %     & \textcolor{numorange}{\texttt{atan(x)}}
-%     & \textcolor{numorange}{\texttt{arctan(x)}} \\
+%     & \textcolor{numorange}{\texttt{Arctan(x)}} \\
 %   \textcolor{numorange}{\texttt{ARCTAN2(y,x)}}
 %     & \textcolor{numorange}{\texttt{atan(y,x)}}
-%     & \textcolor{numorange}{\textit{arctan(y/x)}} \\
+%     & \textcolor{numorange}{\textit{Arctan(y/x)}} \\
+%   \textcolor{numorange}{\textit{1/TAN(x)}}
+%     & \textcolor{numorange}{\texttt{cot(x)}}
+%     & \textcolor{numorange}{\textit{1/Tan(x)}} \\
+%   \textcolor{numorange}{\textit{1/SIN(x)}}
+%     & \textcolor{numorange}{\texttt{csc(x)}}
+%     & \textcolor{numorange}{\textit{1/Sin(x)}} \\
+%   \textcolor{numorange}{\textit{1/COS(x)}}
+%     & \textcolor{numorange}{\texttt{sec(x)}}
+%     & \textcolor{numorange}{\textit{1/Cos(x)}} \\
+%   \textcolor{numorange}{\textit{ARCSIN(1/x)}}
+%     & \textcolor{numorange}{\texttt{acsc(x)}}
+%     & \textcolor{numorange}{\textit{Arcsin(1/x)}} \\
+%   \textcolor{numorange}{\textit{ARCCOS(1/x)}}
+%     & \textcolor{numorange}{\texttt{asec(x)}}
+%     & \textcolor{numorange}{\textit{Arccos(1/x)}} \\
+%   \textcolor{numorange}{\textit{ARCTAN(1/x)}}
+%     & \textcolor{numorange}{\texttt{acot(x)}}
+%     & \textcolor{numorange}{\textit{Arctan(1/x)}} \\
+%   \textcolor{numorange}{\textit{ARCTAN2(x,y)}}
+%     & \textcolor{numorange}{\texttt{acot(y,x)}}
+%     & \textcolor{numorange}{\textit{Arctan(x/y)}} \\
 %   \addlinespace[4pt]
 %   \multicolumn{3}{l}{\itshape Trigonometry (degrees)} \\*
 %   \midrule
-%   \textcolor{numorange}{\textit{SIN(2*PI/360*x)}}
+%   \textcolor{numorange}{\textit{SIN(PI/180*x)}}
 %     & \textcolor{numorange}{\texttt{sind(x)}}
-%     & \textcolor{numorange}{\textit{sin(2*pi/360*x)}} \\
-%   \textcolor{numorange}{\textit{COS(2*PI/360*x)}}
+%     & \textcolor{numorange}{\textit{Sin(Pi/180*x)}} \\
+%   \textcolor{numorange}{\textit{COS(PI/180*x)}}
 %     & \textcolor{numorange}{\texttt{cosd(x)}}
-%     & \textcolor{numorange}{\textit{cos(2*pi/360*x)}} \\
-%   \textcolor{numorange}{\textit{TAN(2*PI/360*x)}}
+%     & \textcolor{numorange}{\textit{Cos(Pi/180*x)}} \\
+%   \textcolor{numorange}{\textit{TAN(PI/180*x)}}
 %     & \textcolor{numorange}{\texttt{tand(x)}}
-%     & \textcolor{numorange}{\textit{tan(2*pi/360*x)}} \\
-%   \textcolor{numorange}{\textit{360/PI*ARCSIN(x)}}
+%     & \textcolor{numorange}{\textit{Tan(Pi/180*x)}} \\
+%   \textcolor{numorange}{\textit{180/PI*ARCSIN(x)}}
 %     & \textcolor{numorange}{\texttt{asind(x)}}
-%     & \textcolor{numorange}{\textit{360/pi*arcsin(x)}} \\
-%   \textcolor{numorange}{\textit{360/PI*ARCCOS(x)}}
+%     & \textcolor{numorange}{\textit{180/Pi*Arcsin(x)}} \\
+%   \textcolor{numorange}{\textit{180/PI*ARCCOS(x)}}
 %     & \textcolor{numorange}{\texttt{acosd(x)}}
-%     & \textcolor{numorange}{\textit{360/pi*arccos(x)}} \\
-%   \textcolor{numorange}{\textit{360/PI*ARCTAN(x)}}
+%     & \textcolor{numorange}{\textit{180/Pi*Arccos(x)}} \\
+%   \textcolor{numorange}{\textit{180/PI*ARCTAN(x)}}
 %     & \textcolor{numorange}{\texttt{atand(x)}}
-%     & \textcolor{numorange}{\textit{360/pi*arctan(x)}} \\
+%     & \textcolor{numorange}{\textit{180/Pi*Arctan(x)}} \\
+%   \textcolor{numorange}{\textit{180/PI*ARCTAN2(y,x)}}
+%     & \textcolor{numorange}{\texttt{atand(y,x)}}
+%     & \textcolor{numorange}{\textit{180/Pi*Arctan(y/x)}} \\
+%   \textcolor{numorange}{\textit{1/TAN(PI/180*x)}}
+%     & \textcolor{numorange}{\texttt{cotd(x)}}
+%     & \textcolor{numorange}{\textit{1/Tan(Pi/180*x)}} \\
+%   \textcolor{numorange}{\textit{1/SIN(PI/180*x)}}
+%     & \textcolor{numorange}{\texttt{cscd(x)}}
+%     & \textcolor{numorange}{\textit{1/Sin(Pi/180*x)}} \\
+%   \textcolor{numorange}{\textit{1/COS(PI/180*x)}}
+%     & \textcolor{numorange}{\texttt{secd(x)}}
+%     & \textcolor{numorange}{\textit{1/Cos(Pi/180*x)}} \\
+%   \textcolor{numorange}{\textit{180/PI*ARCSIN(1/x)}}
+%     & \textcolor{numorange}{\texttt{acscd(x)}}
+%     & \textcolor{numorange}{\textit{180/Pi*Arcsin(1/x)}} \\
+%   \textcolor{numorange}{\textit{180/PI*ARCCOS(1/x)}}
+%     & \textcolor{numorange}{\texttt{asecd(x)}}
+%     & \textcolor{numorange}{\textit{180/Pi*Arccos(1/x)}} \\
+%   \textcolor{numorange}{\textit{180/PI*ARCTAN(1/x)}}
+%     & \textcolor{numorange}{\texttt{acotd(x)}}
+%     & \textcolor{numorange}{\textit{180/Pi*Arctan(1/x)}} \\
+%   \textcolor{numorange}{\textit{180/PI*ARCTAN2(x,y)}}
+%     & \textcolor{numorange}{\texttt{acotd(y,x)}}
+%     & \textcolor{numorange}{\textit{180/Pi*Arctan(x/y)}} \\
 %   \addlinespace[4pt]
 %   \multicolumn{3}{l}{\itshape Constants} \\*
 %   \midrule
-%   \texttt{PI} & \texttt{pi} & \texttt{pi} \\
-%   \texttt{e}  & \textit{exp(1)}  & \texttt{e}  \\
+%   \texttt{PI} & \texttt{pi} & \texttt{Pi} \\
+%   \texttt{e}  & \textit{exp(1)}  & \textit{Exp(1)}  \\
 %   \textcolor{numorange}{\texttt{INF}}
 %     & \textcolor{numorange}{\texttt{inf}}
 %     & \textcolor{numorange}{\textit{---}} \\
 %   \textcolor{numorange}{\texttt{NAN}}
 %     & \textcolor{numorange}{\texttt{nan}}
 %     & \textcolor{numorange}{\textit{---}} \\
+%   \textcolor{numorange}{\textit{PI/180}}
+%     & \textcolor{numorange}{\texttt{deg}}
+%     & \textcolor{numorange}{\textit{Pi/180}} \\
+%   \textcolor{numorange}{\textit{1}}
+%     & \textcolor{numorange}{\texttt{true}}
+%     & \textcolor{numorange}{\texttt{Aan}} \\
+%   \textcolor{numorange}{\textit{0}}
+%     & \textcolor{numorange}{\texttt{false}}
+%     & \textcolor{numorange}{\texttt{Uit}} \\
 %   \addlinespace[4pt]
 %   \multicolumn{3}{l}{\itshape Simulation-specific functions (XMILE only)} \\*
 %   \midrule
@@ -607,10 +653,10 @@
 %     & \textcolor{numorange}{\textit{user variable}} \\
 %   \textcolor{numorange}{\texttt{STEP(h,t\textsubscript{0})}}
 %     & \textcolor{numorange}{\textit{T >= t0 ? h : 0}}
-%     & \textcolor{numorange}{\textit{Als T >= t0 Dan h Anders 0}} \\
+%     & \textcolor{numorange}{\textit{Als T >= t0 Dan h Anders 0 EindAls}} \\
 %   \textcolor{numorange}{\texttt{RAMP(s,t\textsubscript{0})}}
 %     & \textcolor{numorange}{\textit{T > t0 ? s*(T-t0) : 0}}
-%     & \textcolor{numorange}{\textit{Als T > t0 Dan s*(T-t0) Anders 0}} \\
+%     & \textcolor{numorange}{\textit{Als T > t0 Dan s*(T-t0) Anders 0 EindAls}} \\
 %   \textcolor{numorange}{\texttt{DELAY(x,dt)}}
 %     & \textcolor{numorange}{\textit{not supported}}
 %     & \textcolor{numorange}{\textit{not supported}} \\
@@ -623,8 +669,17 @@
 %   \textcolor{numorange}{\texttt{PREVIOUS(x)}}
 %     & \textcolor{numorange}{\textit{not supported}}
 %     & \textcolor{numorange}{\textit{not supported}} \\
-%   \textcolor{numorange}{\texttt{RANDOM(lo,hi)}}
+%   \textcolor{numorange}{\textit{RANDOM(0,1)}}
 %     & \textcolor{numorange}{\texttt{rand()}}
+%     & \textcolor{numorange}{\texttt{Rand}} \\
+%   \textcolor{numorange}{\texttt{RANDOM(lo,hi)}}
+%     & \textcolor{numorange}{\textit{lo + (hi-lo)*rand()}}
+%     & \textcolor{numorange}{\textit{lo + (hi-lo)*Rand}} \\
+%   \textcolor{numorange}{\textit{not supported}}
+%     & \textcolor{numorange}{\texttt{randint(n)}}
+%     & \textcolor{numorange}{\textit{not supported}} \\
+%   \textcolor{numorange}{\textit{not supported}}
+%     & \textcolor{numorange}{\texttt{randint(m,n)}}
 %     & \textcolor{numorange}{\textit{not supported}} \\
 %
 % \end{longtable}
@@ -1075,6 +1130,14 @@ end
 \tl_new:N \g__numodel_kw_not_tl
 \tl_new:N \g__numodel_kw_sign_tl
 \tl_new:N \g__numodel_kw_abs_tl
+\tl_new:N \g__numodel_kw_sqrt_tl
+\tl_new:N \g__numodel_kw_exp_tl
+\tl_new:N \g__numodel_kw_ln_tl
+\tl_new:N \g__numodel_kw_sin_tl
+\tl_new:N \g__numodel_kw_cos_tl
+\tl_new:N \g__numodel_kw_tan_tl
+\tl_new:N \g__numodel_kw_asin_tl
+\tl_new:N \g__numodel_kw_acos_tl
 \tl_new:N \g__numodel_kw_stop_tl
 
 % Recomputes all tl caches from \g__numodel_syntax_tl.  Must be
@@ -1093,6 +1156,14 @@ end
     \tl_gset:Ne \g__numodel_kw_not_tl      { \__numodel_kw:n {not}      }
     \tl_gset:Ne \g__numodel_kw_sign_tl     { \__numodel_kw:n {sign}     }
     \tl_gset:Ne \g__numodel_kw_abs_tl      { \__numodel_kw:n {abs}      }
+    \tl_gset:Ne \g__numodel_kw_sqrt_tl     { \__numodel_kw:n {sqrt}     }
+    \tl_gset:Ne \g__numodel_kw_exp_tl      { \__numodel_kw:n {exp}      }
+    \tl_gset:Ne \g__numodel_kw_ln_tl       { \__numodel_kw:n {ln}       }
+    \tl_gset:Ne \g__numodel_kw_sin_tl      { \__numodel_kw:n {sin}      }
+    \tl_gset:Ne \g__numodel_kw_cos_tl      { \__numodel_kw:n {cos}      }
+    \tl_gset:Ne \g__numodel_kw_tan_tl      { \__numodel_kw:n {tan}      }
+    \tl_gset:Ne \g__numodel_kw_asin_tl     { \__numodel_kw:n {asin}     }
+    \tl_gset:Ne \g__numodel_kw_acos_tl     { \__numodel_kw:n {acos}     }
     \tl_gset:Ne \g__numodel_kw_stop_tl     { \__numodel_kw:n {stop}     }
   }
 
@@ -1756,6 +1827,14 @@ end
 %   >=  <=        -> \geqslant  \leqslant
 %   sign(...)     -> SIGN(...)   / Teken(...) in coachtaal
 %   abs(...)      -> ABS(...)    / Abs(...)   in coachtaal
+%   sqrt(...)     -> SQRT(...)   / Sqrt(...)   in coachtaal
+%   exp(...)      -> EXP(...)    / Exp(...)    in coachtaal
+%   ln(...)       -> LN(...)     / Ln(...)     in coachtaal
+%   sin(...)      -> SIN(...)    / Sin(...)    in coachtaal
+%   cos(...)      -> COS(...)    / Cos(...)    in coachtaal
+%   tan(...)      -> TAN(...)    / Tan(...)    in coachtaal
+%   asin(...)     -> ARCSIN(...) / Arcsin(...) in coachtaal
+%   acos(...)     -> ARCCOS(...) / Arccos(...) in coachtaal
 %   &&            -> AND          / EN          in coachtaal
 %   ||            -> OR           / OF          in coachtaal
 %   cond ? a : b  -> IF cond THEN ... ELSE ... ENDIF (or coachtaal eq.)
@@ -1786,11 +1865,29 @@ end
     \regex_replace_all:nnN { \* } { \c{cdot} \x{20} } #1
     \regex_replace_all:nnN { >= } { \c{geqslant} \x{20} } #1
     \regex_replace_all:nnN { <= } { \c{leqslant} \x{20} } #1
-    % Functions (syllabus notation)
+    % Functions (syllabus notation).  Order matters: asin/acos must
+    % match before sin/cos, otherwise the inner sin/cos gets replaced
+    % first and the outer arc- prefix is left dangling.
     \regex_replace_all:nnN { sign \( }
       { \c{text}\cB\{ \u{g__numodel_kw_sign_tl}\cE\}( } #1
     \regex_replace_all:nnN { abs \( }
       { \c{text}\cB\{ \u{g__numodel_kw_abs_tl}\cE\}( } #1
+    \regex_replace_all:nnN { sqrt \( }
+      { \c{text}\cB\{ \u{g__numodel_kw_sqrt_tl}\cE\}( } #1
+    \regex_replace_all:nnN { exp \( }
+      { \c{text}\cB\{ \u{g__numodel_kw_exp_tl}\cE\}( } #1
+    \regex_replace_all:nnN { ln \( }
+      { \c{text}\cB\{ \u{g__numodel_kw_ln_tl}\cE\}( } #1
+    \regex_replace_all:nnN { asin \( }
+      { \c{text}\cB\{ \u{g__numodel_kw_asin_tl}\cE\}( } #1
+    \regex_replace_all:nnN { acos \( }
+      { \c{text}\cB\{ \u{g__numodel_kw_acos_tl}\cE\}( } #1
+    \regex_replace_all:nnN { sin \( }
+      { \c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}( } #1
+    \regex_replace_all:nnN { cos \( }
+      { \c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}( } #1
+    \regex_replace_all:nnN { \b tan \( }
+      { \c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}( } #1
     % Logical operators (syllabus notation)
     \regex_replace_all:nnN { \&\& }
       { \c{text}\cB\{\u{g__numodel_kw_and_tl}\cE\} } #1
@@ -3407,6 +3504,14 @@ end
 \cs_new:Npn \__numodel_kw_EN_not:          { NOT~ }
 \cs_new:Npn \__numodel_kw_EN_sign:         { SIGN }
 \cs_new:Npn \__numodel_kw_EN_abs:          { ABS }
+\cs_new:Npn \__numodel_kw_EN_sqrt:         { SQRT }
+\cs_new:Npn \__numodel_kw_EN_exp:          { EXP }
+\cs_new:Npn \__numodel_kw_EN_ln:           { LN }
+\cs_new:Npn \__numodel_kw_EN_sin:          { SIN }
+\cs_new:Npn \__numodel_kw_EN_cos:          { COS }
+\cs_new:Npn \__numodel_kw_EN_tan:          { TAN }
+\cs_new:Npn \__numodel_kw_EN_asin:         { ARCSIN }
+\cs_new:Npn \__numodel_kw_EN_acos:         { ARCCOS }
 \cs_new:Npn \__numodel_kw_EN_stop:         { ~STOP~ }
 \cs_new:Npn \__numodel_kw_EN_th_model:     { model }
 \cs_new:Npn \__numodel_kw_EN_th_initvals:  { initial~values }
@@ -3434,6 +3539,14 @@ end
 \cs_new:Npn \__numodel_kw_NL_not:          { NIET~ }
 \cs_new:Npn \__numodel_kw_NL_sign:         { Teken }
 \cs_new:Npn \__numodel_kw_NL_abs:          { Abs }
+\cs_new:Npn \__numodel_kw_NL_sqrt:         { Sqrt }
+\cs_new:Npn \__numodel_kw_NL_exp:          { Exp }
+\cs_new:Npn \__numodel_kw_NL_ln:           { Ln }
+\cs_new:Npn \__numodel_kw_NL_sin:          { Sin }
+\cs_new:Npn \__numodel_kw_NL_cos:          { Cos }
+\cs_new:Npn \__numodel_kw_NL_tan:          { Tan }
+\cs_new:Npn \__numodel_kw_NL_asin:         { Arcsin }
+\cs_new:Npn \__numodel_kw_NL_acos:         { Arccos }
 \cs_new:Npn \__numodel_kw_NL_stop:         { ~Stop~ }
 \cs_new:Npn \__numodel_kw_NL_th_model:     { model }
 \cs_new:Npn \__numodel_kw_NL_th_initvals:  { startwaarden }
