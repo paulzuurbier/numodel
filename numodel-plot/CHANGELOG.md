@@ -5,6 +5,20 @@ All notable changes to `numodel-plot` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] — 2026-05-19
+
+Version-sync release.  No functional changes to `numodel-plot`;
+bumped to keep bundle component versions aligned with `numodel`
+0.4.0 (per CTAN's bundle-versioning convention).
+
+### Changed
+- Example files renamed to avoid generic filenames (CTAN maintainer
+  feedback):
+  - `examples/numodel-plot-simple.tex` →
+    `examples/numodel-plot-example-basic.tex`
+  - `examples/numodel-plot-scaled.tex` →
+    `examples/numodel-plot-example-scaled.tex`
+
 ## [0.3.0] — 2026-05-17
 
 ### Added

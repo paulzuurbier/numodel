@@ -16,12 +16,11 @@
 % companion Lua module numodel.lua.
 %
 %<*driver>
-\ProvidesFile{numodel.dtx}[2026/05/17 v0.3.0 numodel documentation]
+\ProvidesFile{numodel.dtx}[2026/05/19 v0.4.0 numodel documentation]
 \documentclass{ltxdoc}
 \usepackage{numodel}
 \usepackage[left=3.5cm, right=2cm, top=2cm, bottom=2cm, marginparwidth=3.5cm, marginparsep=0.3cm]{geometry}
 \usepackage{xcolor}
-\usepackage{longtable}
 \usepackage{booktabs}
 \definecolor{numorange}{rgb}{0.90,0.45,0.00}
 \EnableCrossrefs
@@ -45,6 +44,12 @@
 % \changes{v0.3.0}{2026/05/17}{Version-sync release with
 %   \textsf{numodel-plot}~v0.3.0; no functional changes to
 %   \textsf{numodel} itself.}
+% \changes{v0.4.0}{2026/05/19}{Expression reference table; display
+%   translation for sqrt/exp/ln/sin/cos/tan/asin/acos; \cs{textmodel}
+%   migrated to \textsf{tabularray}'s \texttt{longtblr} with
+%   localised continuation markers; new \texttt{tblrenv} key for
+%   \cs{textmodel}, \cs{numodelsetup} and package option.  See
+%   CHANGELOG.md for details.}
 %
 % \GetFileInfo{numodel.dtx}
 %
@@ -282,6 +287,17 @@
 %   only the numeric value (|\num|).  Boolean, default |true|.  May
 %   also be supplied to |\textmodel[units=false]| as a per-table
 %   override; the global setting is restored after rendering.
+% \item[\texttt{tblrenv}] Which \textsf{tabularray} environment wraps
+%   the |\textmodel| table.  Three values: |longtblr| (default,
+%   page-breakable); |tblr| (inline, no page breaks); |talltblr|
+%   (inline, no page breaks, supports |\caption|/notes).  Pick |tblr|
+%   or |talltblr| when |\textmodel| sits inside an enclosing
+%   environment that suppresses page breaks (|subfigure|, |minipage|,
+%   \dots); the default |longtblr| would otherwise emit spurious
+%   ``(Continued)'' / \emph{Continued on next page} markers in that
+%   setting.  May also be supplied per render as
+%   |\textmodel[tblrenv=...]|; the global setting is restored
+%   afterwards.
 % \item[\texttt{decimal-separator}] Decimal mark used by every number
 %   that |numodel| renders: the \emph{initial values} column of
 %   |\textmodel|, and the tick labels of |\diagrammodel|.  Two values:
@@ -455,24 +471,21 @@
 % \textit{Italic} cells contain a derived equivalent rather than a
 % native keyword.
 %
-% \begin{longtable}{@{} l l l @{}}
-%   \caption{Expression reference: XMILE, \texttt{\textbackslash fp\_eval},
-%            and CoachTaal}\label{tab:expr}\\
-%   \toprule
+% \begin{longtblr}[
+%   caption = {Expression reference: XMILE, \texttt{\textbackslash fp\_eval},
+%              and CoachTaal},
+%   label   = {tab:expr},
+% ]{
+%   colspec = {@{} l l l @{}},
+%   rowhead = 1,
+%   rowsep  = 1pt,
+% }
 %   \textbf{XMILE} & \textbf{l3fp (\texttt{\textbackslash fpeval})}
 %                  & \textbf{CoachTaal} \\
-%   \midrule
-%   \endfirsthead
-%   \toprule
-%   \textbf{XMILE} & \textbf{l3fp (\texttt{\textbackslash fpeval})}
-%                  & \textbf{CoachTaal} \\
-%   \midrule
-%   \endhead
-%   \bottomrule
-%   \endlastfoot
+%   \hline
 %
-%   \multicolumn{3}{l}{\itshape Arithmetic operators} \\*
-%   \midrule
+%   \SetCell[c=3]{l} \itshape Arithmetic operators \\
+%   \hline
 %   \texttt{+} & \texttt{+} & \texttt{+} \\
 %   \texttt{-} & \texttt{-} & \texttt{-} \\
 %   \texttt{*} & \texttt{*} & \texttt{*} \\
@@ -483,30 +496,30 @@
 %   \textcolor{numorange}{\texttt{MOD(x,y)}}
 %     & \textcolor{numorange}{\textit{x - trunc(x/y)*y}}
 %     & \textcolor{numorange}{\textit{x - Entier(x/y)*y}} \\
-%   \addlinespace[4pt]
-%   \multicolumn{3}{l}{\itshape Comparison operators} \\*
-%   \midrule
+%
+%   \SetCell[c=3]{l} \itshape Comparison operators \\
+%   \hline
 %   \texttt{<}  & \texttt{<}  & \texttt{<}  \\
 %   \texttt{<=} & \texttt{<=} & \texttt{<=} \\
 %   \texttt{>}  & \texttt{>}  & \texttt{>}  \\
 %   \texttt{>=} & \texttt{>=} & \texttt{>=} \\
 %   \texttt{=}  & \texttt{=}  & \texttt{=}  \\
 %   \texttt{<>} & \texttt{!=} & \texttt{<>} \\
-%   \addlinespace[4pt]
-%   \multicolumn{3}{l}{\itshape Boolean operators} \\*
-%   \midrule
+%
+%   \SetCell[c=3]{l} \itshape Boolean operators \\
+%   \hline
 %   \texttt{AND} & \texttt{\&\&} & \texttt{EN}   \\
 %   \texttt{OR}  & \texttt{\textbar\textbar} & \texttt{OF}   \\
 %   \texttt{NOT} & \texttt{!}    & \texttt{NIET} \\
-%   \addlinespace[4pt]
-%   \multicolumn{3}{l}{\itshape Control flow} \\*
-%   \midrule
+%
+%   \SetCell[c=3]{l} \itshape Control flow \\
+%   \hline
 %   \texttt{IF c THEN a ELSE b}
 %     & \texttt{c ? a : b}
 %     & \texttt{Als c Dan a Anders b EindAls} \\
-%   \addlinespace[4pt]
-%   \multicolumn{3}{l}{\itshape General math functions} \\*
-%   \midrule
+%
+%   \SetCell[c=3]{l} \itshape General math functions \\
+%   \hline
 %   \texttt{ABS(x)}  & \texttt{abs(x)}  & \texttt{Abs(x)}  \\
 %   \texttt{SIGN(x)} & \texttt{sign(x)} & \texttt{Teken(x)} \\
 %   \texttt{SQRT(x)} & \texttt{sqrt(x)} & \texttt{Sqrt(x)} \\
@@ -534,17 +547,17 @@
 %   \textcolor{numorange}{\textit{INT(LOG10(ABS(x)))}}
 %     & \textcolor{numorange}{\texttt{logb(x)}}
 %     & \textcolor{numorange}{\textit{Entier(Log(Abs(x)))}} \\
-%   \addlinespace[4pt]
-%   \multicolumn{3}{l}{\itshape Exponential and logarithmic} \\*
-%   \midrule
+%
+%   \SetCell[c=3]{l} \itshape Exponential and logarithmic \\
+%   \hline
 %   \texttt{EXP(x)} & \texttt{exp(x)} & \texttt{Exp(x)} \\
 %   \texttt{LN(x)}  & \texttt{ln(x)}  & \texttt{Ln(x)}  \\
 %   \textcolor{numorange}{\texttt{LOG10(x)}}
 %     & \textcolor{numorange}{\textit{ln(x)/ln(10)}}
 %     & \textcolor{numorange}{\texttt{Log(x)}} \\
-%   \addlinespace[4pt]
-%   \multicolumn{3}{l}{\itshape Trigonometry (radians)} \\*
-%   \midrule
+%
+%   \SetCell[c=3]{l} \itshape Trigonometry (radians) \\
+%   \hline
 %   \texttt{SIN(x)}    & \texttt{sin(x)}  & \texttt{Sin(x)}    \\
 %   \texttt{COS(x)}    & \texttt{cos(x)}  & \texttt{Cos(x)}    \\
 %   \texttt{TAN(x)}    & \texttt{tan(x)}  & \texttt{Tan(x)}    \\
@@ -577,9 +590,9 @@
 %   \textcolor{numorange}{\textit{ARCTAN2(x,y)}}
 %     & \textcolor{numorange}{\texttt{acot(y,x)}}
 %     & \textcolor{numorange}{\textit{Arctan(x/y)}} \\
-%   \addlinespace[4pt]
-%   \multicolumn{3}{l}{\itshape Trigonometry (degrees)} \\*
-%   \midrule
+%
+%   \SetCell[c=3]{l} \itshape Trigonometry (degrees) \\
+%   \hline
 %   \textcolor{numorange}{\textit{SIN(PI/180*x)}}
 %     & \textcolor{numorange}{\texttt{sind(x)}}
 %     & \textcolor{numorange}{\textit{Sin(Pi/180*x)}} \\
@@ -622,9 +635,9 @@
 %   \textcolor{numorange}{\textit{180/PI*ARCTAN2(x,y)}}
 %     & \textcolor{numorange}{\texttt{acotd(y,x)}}
 %     & \textcolor{numorange}{\textit{180/Pi*Arctan(x/y)}} \\
-%   \addlinespace[4pt]
-%   \multicolumn{3}{l}{\itshape Constants} \\*
-%   \midrule
+%
+%   \SetCell[c=3]{l} \itshape Constants \\
+%   \hline
 %   \texttt{PI} & \texttt{pi} & \texttt{Pi} \\
 %   \texttt{e}  & \textit{exp(1)}  & \textit{Exp(1)}  \\
 %   \textcolor{numorange}{\texttt{INF}}
@@ -642,9 +655,9 @@
 %   \textcolor{numorange}{\textit{0}}
 %     & \textcolor{numorange}{\texttt{false}}
 %     & \textcolor{numorange}{\texttt{Uit}} \\
-%   \addlinespace[4pt]
-%   \multicolumn{3}{l}{\itshape Simulation-specific functions (XMILE only)} \\*
-%   \midrule
+%
+%   \SetCell[c=3]{l} \itshape Simulation-specific functions (XMILE only) \\
+%   \hline
 %   \textcolor{numorange}{\texttt{TIME}}
 %     & \textcolor{numorange}{\textit{user variable (\texttt{\textbackslash mvar})}}
 %     & \textcolor{numorange}{\textit{user variable}} \\
@@ -681,17 +694,32 @@
 %   \textcolor{numorange}{\textit{not supported}}
 %     & \textcolor{numorange}{\texttt{randint(m,n)}}
 %     & \textcolor{numorange}{\textit{not supported}} \\
-%
-% \end{longtable}
+%   \hline
+% \end{longtblr}
 %
 % \subsection{Render commands}
 %
 % \DescribeMacro{\textmodel}
 % Renders the rule-and-startvalue table.  Optional |[<keys>]| accepts
-% |prefix=<name>| (render a non-current model) and either
-% |units=true| or |units=false|, which overrides the global
-% |\numodelsetup| setting for this single render only.  The global
-% state is restored afterwards.
+% |prefix=<name>| (render a non-current model), |units=true| or
+% |units=false|, and |tblrenv=tblr|longtblr|talltblr|.  Each per-call
+% key overrides the global |\numodelsetup| setting for this single
+% render only; the global state is restored afterwards.
+%
+% |tblrenv| selects which |tabularray| environment wraps the table:
+% |longtblr| (default) breaks across pages, |tblr| renders inline
+% without page breaks, |talltblr| renders inline but with caption and
+% note support.  Use |tblr| or |talltblr| when |\textmodel| sits inside
+% an enclosing environment that suppresses page breaks (|subfigure|,
+% |minipage|, \dots); the default |longtblr| would otherwise emit
+% spurious continuation markers there.
+%
+% \textbf{Row spacing.}  |numodel| loads |tabularray| and sets
+% |\SetTblrInner{rowsep=0pt}| globally so the rule listing renders
+% compactly.  This applies to \emph{every} |tabularray| table in the
+% document; if you want the default spacing back in your own tables,
+% issue |\SetTblrInner{rowsep=2pt}| (or whatever value you prefer)
+% somewhere in your document.
 %
 % \DescribeMacro{\graphicmodel}
 % Renders the Forrester stock-and-flow diagram.  Variables of type
@@ -906,7 +934,7 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{numodel}[2026/05/17 v0.3.0
+\ProvidesPackage{numodel}[2026/05/19 v0.4.0
   Numerical physics models with Euler integration and Forrester diagrams]
 
 \RequirePackage{expl3}
@@ -966,6 +994,31 @@
 \RequirePackage{luacode}
 \RequirePackage{siunitx}
 \RequirePackage{float}        % \diagrammodel uses [H] placement
+\RequirePackage{tabularray}   % \textmodel uses longtblr (page-breakable,
+                              % works inside floats/subfigure)
+% Define a numodel theme for longtblr in \textmodel.  The default
+% `normal' middlehead/lasthead prefixes the continuation marker with
+% `Table N:' from \tablename/\thetable; we don't issue \caption, so we
+% want only the conthead text (which is itself localised via
+% \tblrcontheadname, updated by \__numodel_refresh_kw:).  Likewise for
+% the foot.  Activated via `theme = {numodel}' in the longtblr options.
+\DefTblrTemplate {firsthead}            {numodel} {}
+\DefTblrTemplate {middlehead, lasthead} {numodel} { \UseTblrTemplate {conthead} {default} }
+\DefTblrTemplate {firstfoot, middlefoot}{numodel} { \UseTblrTemplate {contfoot} {default} }
+\DefTblrTemplate {lastfoot}             {numodel} {}
+\NewTblrTheme {numodel}
+  {
+    \SetTblrTemplate {firsthead}            {numodel}
+    \SetTblrTemplate {middlehead, lasthead} {numodel}
+    \SetTblrTemplate {firstfoot, middlefoot}{numodel}
+    \SetTblrTemplate {lastfoot}             {numodel}
+  }
+% Tighten the default row separation of all tabularray tables: the
+% \textmodel rule listing is denser and more compact than the
+% tabularray default.  Users who want the default spacing back in
+% their own tables can simply issue \SetTblrInner{rowsep=<value>} in
+% their document.
+\SetTblrInner{rowsep=0pt}
 \RequirePackage{numodel-plot}
 
 % ====================================================================
@@ -1078,6 +1131,15 @@ end
 % Per-table override via \textmodel[units=true|false].
 \bool_new:N \g__numodel_units_bool
 
+% tabularray environment used by \textmodel (see \numodelsetup{tblrenv}):
+%   longtblr -- default; page-breakable; suitable for body text.
+%   tblr     -- basic; no page breaks; choose this when \textmodel sits
+%               inside an outer environment that already suppresses page
+%               breaks (subfigure, minipage, ...).
+%   talltblr -- like tblr (no page breaks) but supports captions/notes.
+% Per-table override via \textmodel[tblrenv=...].
+\tl_new:N \g__numodel_tblrenv_tl
+
 % Decimal separator for \textmodel initial values and \diagrammodel
 % tick values (see \numodelsetup{decimal-separator}):
 %   point   -- '.' (siunitx output-decimal-marker={.})
@@ -1165,6 +1227,9 @@ end
     \tl_gset:Ne \g__numodel_kw_asin_tl     { \__numodel_kw:n {asin}     }
     \tl_gset:Ne \g__numodel_kw_acos_tl     { \__numodel_kw:n {acos}     }
     \tl_gset:Ne \g__numodel_kw_stop_tl     { \__numodel_kw:n {stop}     }
+    % tabularray continuation markers (used by longtblr in \textmodel)
+    \tl_gset:Ne \tblrcontfootname { \__numodel_kw:n {contfoot} }
+    \tl_gset:Ne \tblrcontheadname { \__numodel_kw:n {conthead} }
   }
 
 % Helper: \__numodel_kwt:n {<key>} expands to \text{<kw-value>}.
@@ -1354,6 +1419,13 @@ end
       { \bool_gset_true:N  \g__numodel_units_bool },
     units / false              .code:n =
       { \bool_gset_false:N \g__numodel_units_bool },
+    tblrenv                    .choice:,
+    tblrenv / tblr             .code:n =
+      { \tl_gset:Nn \g__numodel_tblrenv_tl { tblr } },
+    tblrenv / longtblr         .code:n =
+      { \tl_gset:Nn \g__numodel_tblrenv_tl { longtblr } },
+    tblrenv / talltblr         .code:n =
+      { \tl_gset:Nn \g__numodel_tblrenv_tl { talltblr } },
     decimal-separator          .choice:,
     decimal-separator / comma  .code:n =
       {
@@ -1382,6 +1454,7 @@ end
     stockwidth    = 0.375,
     diagram-style = tight,
     units         = true,
+    tblrenv       = longtblr,
   }
 
 % Package-time options.  \usepackage[syntax=NL]{numodel} delegates
@@ -1399,6 +1472,7 @@ end
     valve-style         .meta:nn = { numodel / setup }{ valve-style         = #1 },
     flowarrow-cloud-tip .meta:nn = { numodel / setup }{ flowarrow-cloud-tip = #1 },
     units               .meta:nn = { numodel / setup }{ units               = #1 },
+    tblrenv             .meta:nn = { numodel / setup }{ tblrenv             = #1 },
     decimal-separator   .meta:nn = { numodel / setup }{ decimal-separator   = #1 },
   }
 \ProcessKeyOptions [ numodel / pkg ]
@@ -1561,12 +1635,22 @@ end
       { \tl_set:Nn \l__numodel_cmd_units_tl { true  } },
     units / false              .code:n =
       { \tl_set:Nn \l__numodel_cmd_units_tl { false } },
+    % \textmodel-only: temporary override of the global tblrenv tl.
+    % Cleared after every \textmodel call.
+    tblrenv                    .choice:,
+    tblrenv / tblr             .code:n =
+      { \tl_set:Nn \l__numodel_cmd_tblrenv_tl { tblr } },
+    tblrenv / longtblr         .code:n =
+      { \tl_set:Nn \l__numodel_cmd_tblrenv_tl { longtblr } },
+    tblrenv / talltblr         .code:n =
+      { \tl_set:Nn \l__numodel_cmd_tblrenv_tl { talltblr } },
   }
 \tl_new:N \l__numodel_cmd_diagstyle_tl
 \tl_new:N \l__numodel_cmd_flowarrow_tl
 \tl_new:N \l__numodel_cmd_valve_tl
 \tl_new:N \l__numodel_cmd_flowcloud_tl
 \tl_new:N \l__numodel_cmd_units_tl
+\tl_new:N \l__numodel_cmd_tblrenv_tl
 
 \cs_new_protected:Npn \__numodel_resolve_prefix:n #1
   {
@@ -2242,8 +2326,11 @@ end
     \int_zero:N \l__numodel_row_int
     \int_zero:N \l__numodel_dispnum_int
     \int_zero:N \l__numodel_startrow_int
-    \tl_gset:Nn \g__numodel_table_tl
-      { \begin{tabular}{r|l|l} & \textbf }
+    \tl_gset:Nn \g__numodel_table_tl { \begin }
+    \tl_gput_right:Ne \g__numodel_table_tl
+      { { \tl_use:N \g__numodel_tblrenv_tl } }
+    \tl_gput_right:Nn \g__numodel_table_tl
+      { [theme={numodel}]{colspec={r|l|l}, rowhead=1} & \textbf }
     \tl_gput_right:Ne \g__numodel_table_tl
       { { \__numodel_kw:n {th_model} } }
     \tl_gput_right:Nn \g__numodel_table_tl
@@ -2306,13 +2393,16 @@ end
           { \seq_item:Nn \g_mvar_start_seq { \l__numodel_startrow_int } }
         \tl_gput_right:Nn \g__numodel_table_tl { \\ }
       }
-    \tl_gput_right:Nn \g__numodel_table_tl { \end{tabular} }
+    \tl_gput_right:Nn \g__numodel_table_tl { \end }
+    \tl_gput_right:Ne \g__numodel_table_tl
+      { { \tl_use:N \g__numodel_tblrenv_tl } }
   }
 
 \NewDocumentCommand{\textmodel}{ O{} }{%
   \typeout{TEXTMODEL~start}
   \tl_clear:N \l__numodel_cmd_prefix_tl
   \tl_clear:N \l__numodel_cmd_units_tl
+  \tl_clear:N \l__numodel_cmd_tblrenv_tl
   \keys_set:nn { numodel / cmd } {#1}
   \__numodel_resolve_eff_prefix:
   % Temporary units override: save the global value, apply the key
@@ -2326,6 +2416,10 @@ end
         { \bool_gset_true:N  \g__numodel_units_bool }
         { \bool_gset_false:N \g__numodel_units_bool }
     }
+  % Same dance for tblrenv: save, apply per-call override, restore.
+  \tl_set_eq:NN \l__numodel_saved_tblrenv_tl \g__numodel_tblrenv_tl
+  \tl_if_empty:NF \l__numodel_cmd_tblrenv_tl
+    { \tl_gset_eq:NN \g__numodel_tblrenv_tl \l__numodel_cmd_tblrenv_tl }
   \__numodel_with_prefix:Nn \l__numodel_eff_prefix_tl
     {
       \group_begin:
@@ -2336,9 +2430,11 @@ end
       \group_end:
     }%
   \bool_gset_eq:NN \g__numodel_units_bool \l__numodel_saved_units_bool
+  \tl_gset_eq:NN \g__numodel_tblrenv_tl \l__numodel_saved_tblrenv_tl
   \typeout{TEXTMODEL~done}
 }
 \bool_new:N \l__numodel_saved_units_bool
+\tl_new:N \l__numodel_saved_tblrenv_tl
 
 % ====================================================================
 % \computemodel
@@ -3490,7 +3586,7 @@ end
 %
 %    \begin{macrocode}
 %<*EN>
-\ProvidesExplFile{numodel-EN.def}{2026/05/17}{0.3.0}
+\ProvidesExplFile{numodel-EN.def}{2026/05/19}{0.4.0}
   {numodel~keyword~table~--~English~(XMILE)}
 \cs_new:Npn \__numodel_kw_EN_if:           { IF~ }
 \cs_new:Npn \__numodel_kw_EN_then:         { ~THEN~ }
@@ -3515,6 +3611,8 @@ end
 \cs_new:Npn \__numodel_kw_EN_stop:         { ~STOP~ }
 \cs_new:Npn \__numodel_kw_EN_th_model:     { model }
 \cs_new:Npn \__numodel_kw_EN_th_initvals:  { initial~values }
+\cs_new:Npn \__numodel_kw_EN_contfoot:     { Continued~on~next~page }
+\cs_new:Npn \__numodel_kw_EN_conthead:     { (Continued) }
 \cs_new:Npn \__numodel_kw_EN_dsep_default: { point }
 %</EN>
 %    \end{macrocode}
@@ -3525,7 +3623,7 @@ end
 %
 %    \begin{macrocode}
 %<*NL>
-\ProvidesExplFile{numodel-NL.def}{2026/05/17}{0.3.0}
+\ProvidesExplFile{numodel-NL.def}{2026/05/19}{0.4.0}
   {numodel~keyword~table~--~Dutch~(CoachTaal)}
 \cs_new:Npn \__numodel_kw_NL_if:           { Als~ }
 \cs_new:Npn \__numodel_kw_NL_then:         { ~Dan~ }
@@ -3550,6 +3648,8 @@ end
 \cs_new:Npn \__numodel_kw_NL_stop:         { ~Stop~ }
 \cs_new:Npn \__numodel_kw_NL_th_model:     { model }
 \cs_new:Npn \__numodel_kw_NL_th_initvals:  { startwaarden }
+\cs_new:Npn \__numodel_kw_NL_contfoot:     { Wordt~vervolgd~op~volgende~pagina }
+\cs_new:Npn \__numodel_kw_NL_conthead:     { (Vervolg) }
 \cs_new:Npn \__numodel_kw_NL_dsep_default: { comma }
 %</NL>
 %    \end{macrocode}

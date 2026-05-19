@@ -1,0 +1,7 @@
+We moeten zorgen dat de gebruiker de omgeving talltblr of tblr kan gebruiken als de tabel in een omgeving staat die de page break verhindert, zoals subfigure. Ik wil die setting kunnen veranderen met een key in \textmodel, en ook globaal met \usepackage of \numodelsetup. Een geschikte key lijkt me tblrenv = | tblr | longtblr (default) | talltblr |
+
+Verklein de verticale regelafstand met \SetTblrInner{rowsep=0pt}. Gewoon 1x globaal instellen aan het begin, gebruiker kan het naar believen aanpassen. Wel vermelden in handleiding dat dit zo is.
+
+Pas de lange tabel in numodel\numodel.dtx vanaf regel 469 % \begin{longtable}{@{} l l l @{}}, aan naar een tabularray longtblr. 
+
+Changelog aanpassen met tabelverandering

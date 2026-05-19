@@ -5,56 +5,38 @@ All notable changes to `numodel` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased] — 0.4.0
+## [0.4.0] — 2026-05-19
 
 ### Added
 - Expression reference table in the manual (`\subsection{Expression reference}`)
   listing all l3fp operators and functions with their XMILE and CoachTaal
-  equivalents, including notes on constructions for functions not natively
-  available in l3fp (hyperbolic functions, base-10 logarithm, modulo).
-  Cross-checked against `interface3.pdf` §30.13 (l3fp) and the Coach 7
-  NL Guide (CoachTaal standard math functions and reserved-words list).
-  Compared to early drafts the table now also covers `cot`/`csc`/`sec`
-  and their inverses (radians and degrees, 1- and 2-argument forms where
-  applicable), `fact`, `logb`, `randint`, and the constants `deg`,
-  `true`, `false`.
+  equivalents.
 - Display translation for eight more `\fp_eval` functions inside
   `\mrule` bodies: `sqrt`, `exp`, `ln`, `sin`, `cos`, `tan`, `asin`,
-  `acos`. Under `syntax=english` these render as `SQRT(...)`,
-  `EXP(...)`, `LN(...)`, `SIN(...)`, `COS(...)`, `TAN(...)`,
-  `ARCSIN(...)`, `ARCCOS(...)`; under `syntax=coachtaal` as `Sqrt(...)`,
-  `Exp(...)`, `Ln(...)`, `Sin(...)`, `Cos(...)`, `Tan(...)`,
-  `Arcsin(...)`, `Arccos(...)`. `atan` is intentionally left
-  untranslated because its 1-argument form (`atan(x)`) and 2-argument
-  form (`atan(y,x)`) map to different XMILE keywords (`ARCTAN` vs
-  `ARCTAN2`); similarly `min`/`max` are left untranslated because
-  CoachTaal uses `;` as argument separator.
-- `numodel/tests/expr-render-test.tex` — visual inspection test that
-  declares one variable and one rule per l3fp operator and function,
-  then renders the model under both `syntax=EN` and `syntax=NL` on
-  separate prefixes, so the translated forms can be compared
-  side-by-side. `\computemodel` also runs against each prefix to
-  verify that every expression evaluates without error.
+  `acos`
+- `\textmodel` now renders through `tabularray`'s `longtblr` (was
+  plain `tabular`).  The table breaks across pages when long, the
+  column header repeats on each continuation page, and continuation
+  markers ("(Continued)" at the top, "Continued on next page" at the
+  bottom) are localised to the current `syntax` (CoachTaal:
+  "(Vervolg)" / "Wordt vervolgd op volgende pagina").
+- `tblrenv` key for `\numodelsetup`, `\usepackage[tblrenv=...]{numodel}`,
+  and `\textmodel[tblrenv=...]`.  Values: `tblr`, `longtblr` (default),
+  `talltblr`.  Picks which `tabularray` environment wraps the table.
+  Use `tblr` or `talltblr` when `\textmodel` sits inside an enclosing
+  environment that already suppresses page breaks (`subfigure`,
+  `minipage`, …); the default `longtblr` would otherwise emit
+  spurious continuation markers in that setting.  Like `units`, the
+  per-call form overrides the global only for that one render and the
+  global state is restored afterwards.
 
-### Fixed
-- Expression reference, CoachTaal column: replaced several invented
-  keywords with the names actually in the Coach 7 reserved-words list:
-  `Wortel(x)` → `Sqrt(x)`, `Geheel(x)` → `Entier(x)` (for `floor`) or
-  derived (for `trunc`/`ceil`), `Afronden(x,0)` → `Round(x)`,
-  `Rest(x,y)` → derived `x - Entier(x/y)*y` (CoachTaal has no native
-  modulo). Function names in the CoachTaal column are now capitalised
-  (`Sin`/`Cos`/`Tan`/`Arcsin`/`Arccos`/`Arctan`) and argument lists use
-  semicolons (`Min(x;y)`, `Max(x;y)`). The constant `Pi` is capitalised;
-  `e` is shown as the derived `Exp(1)` (CoachTaal has no `e` constant);
-  `true`/`false` map to the keywords `Aan` (255) / `Uit` (0). `\verb|Als ... Dan ... Anders ...|`
-  blocks now terminate with `EindAls`. `RANDOM(lo,hi)` maps to the
-  derived `lo + (hi-lo)*Rand`, and `rand()` maps to the native `Rand`
-  (previously labelled "not supported").
-- Expression reference, degree-to-radian conversions: corrected the
-  derived forms for `asind`/`acosd`/`atand` from `360/PI*...` to
-  `180/PI*...` (the previous factor was off by 2). Normalised the
-  forward conversions from `2*PI/360*x` to the equivalent `PI/180*x`
-  throughout the table for consistency.
+### Changed
+- `numodel` now issues `\SetTblrInner{rowsep=0pt}` on package load so
+  the `\textmodel` rule listing renders compactly.  This applies to
+  *every* `tabularray` table in the document; users who want the
+  default tabularray spacing back in their own tables can issue
+  `\SetTblrInner{rowsep=2pt}` (or any other value) anywhere in their
+  document.
 
 ## [0.3.0] — 2026-05-17
 

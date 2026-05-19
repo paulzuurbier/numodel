@@ -1,0 +1,141 @@
+% Lift tijd v1.tex
+% Stand-alone reproductie van een page-break / line-break probleem:
+% de \textmodel-tabel binnen een subfigure (naast \graphicmodel) krijgt
+% een onnodige afbreking als de figuur naar pagina 2 wordt geduwd door
+% voorafgaande tekst en een question/solution-blok.
+%
+% Compileren: lualatex "Lift tijd v1.tex"
+
+\documentclass{exam}
+\printanswers
+\usepackage[syntax=NL]{numodel}
+\usepackage{subcaption}
+\usepackage{geometry}
+\geometry{a4paper,margin=2cm}
+
+\numodelsetup{gridmaxx=4}
+
+\begin{document}
+
+\subsection*{Personenlift}
+
+\newmodelprefix{lift}
+
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.03}{\s}{1}{systeem}
+\mvar{Tmax}{T}{5.6}{\s}{2}{systeem}
+
+\mvar{J}{j}{1.1}{\m\per\s\cubed}{2}{systeem}
+\mvar{Da}{da}{\liftJ * \liftDt}{\m\per\s\squared}{2}{constante}
+\mvar{G}{g}{9.81}{\m\per\s\squared}{3}{constante}
+\mvar{Mcab}{m_{cab}}{700}{\kg}{3}{constante}
+\mvar{Mcon}{m_{con}}{400}{\kg}{3}{constante}
+\mvar{Frol}{F_{rol}}{40}{\N}{2}{constante}
+
+\mvar{FzCab}{F_{Z,cab}}{}{\N}{3}{hulp}
+\mvar{FzCon}{F_{Z,con}}{}{\N}{3}{hulp}
+\mvar{FzNet}{F_{Z,net}}{}{\N}{3}{hulp}
+\mvar{Fmotor}{F_{motor}}{}{\N}{3}{hulp}
+
+\mvar{A}{a}{0}{\m\per\s\squared}{2}{voorraad}
+\mvar{V}{v}{0}{\m\per\s}{1}{voorraad}
+\mvar{H}{h}{0}{\m}{1}{voorraad}
+
+\mrule{FzCab}{\liftMcab * \liftG}
+\mrule{FzCon}{\liftMcon * \liftG}
+\mrule{FzNet}{\liftFzCab - \liftFzCon}
+\mrule*{A}{(\liftT < \liftTmax / 4) || (\liftT > \liftTmax * 3 / 4) ? \liftA + \liftDa : \liftA - \liftDa}
+\mrule{V}{\liftV + \liftA * \liftDt}
+\mrule[aliasright=\cdots]{H}{\liftH + \liftV * \liftDt}
+\mrule[aliasright=\cdots]{Fmotor}{(\liftMcab + \liftMcon) * \liftA + \liftFzNet + \liftFrol}
+\mrule{T}{\liftT + \liftDt}
+\mstop{\liftT >= \liftTmax}
+
+Een personenlift beweegt omhoog in een liftschacht. De lift hangt aan een
+kabel die via een katrol verbonden is met een contragewicht. De katrol
+wordt aangedreven door de liftmotor.
+
+De gegevens over de lift staan in standaard eenheden bij de startwaarden
+van het tekstuele model; $dt$ is de tijdstap waarmee het model rekent,
+$v$ is de (start)snelheid, $a$ is de (start)versnelling, $h$ is de
+(start)hoogte, $m_{\text{cab}}$ en $m_{\text{con}}$ zijn de massa's van
+respectievelijk de cabine met passagiers en het contragewicht, $g$ is de
+valversnelling, $T$ is de totale looptijd van het model, en
+$F_{\text{rol}}$ is de constante wrijvingskracht in het liftsysteem. De
+variabele $j$ noemt men de ruk (jerk), $j=a'(t)$ dat is de toename van
+de versnelling per seconde, hieruit volgt de toename van de versnelling
+per tijdstap, $da = j \cdot dt$.
+
+Bij een systeem zonder aandrijving of rolwrijving bij de katrollen is de
+spankracht hetzelfde in de hele kabel. In dit geval is er wel
+aandrijving, daardoor kan er verschil zijn tussen de spankracht in de
+kabel aan de kant van de cabine en aan de kant van het contragewicht.
+
+Op een bepaald moment versnelt de lift met $\qty{0,3}{\m\per\second\squared}$
+omhoog.
+
+\begin{questions}
+
+\question[4]
+\textbf{Bereken} de spankracht aan de kant van het contragewicht.
+\textbf{Noteer} de uitkomst met de juiste significantie.
+
+\begin{solution}
+  \begin{itemize}
+    \item Inzicht dat $F_{res} = F_Z - F_{span}$
+    \item Gebruik van $F_Z = m_{con}\,g$ en $F_{res} = m_{con}\,a$
+    \item Completeren $F_{span} = F_Z - F_{res} = m_{con}\,g - m_{con}\,a$
+    \item Significantie van twee (of consequent met alternatieve berekening).
+  \end{itemize}
+\end{solution}
+
+De motor van de lift moet voldoende vermogen leveren om de cabine
+omhoog te bewegen tegen de zwaartekracht in, en om de versnelling van
+de cabine te realiseren.  Het contragewicht zorgt ervoor dat een
+groot deel van het gewicht van de cabine wordt gecompenseerd, zodat
+de motor minder kracht hoeft te leveren.  De netto kracht die de
+motor moet leveren hangt af van het verschil tussen de
+zwaartekrachten op cabine en contragewicht, de versnelling die de
+lift maakt, en de rolwrijving in het systeem.
+
+\question[2]
+\textbf{Leg uit} waarom een contragewicht het energieverbruik van de
+liftmotor verlaagt.
+
+\begin{solution}
+  \begin{itemize}
+    \item Inzicht dat het contragewicht de zwaartekracht op de cabine
+      gedeeltelijk compenseert.
+    \item Completeren: de motor hoeft alleen de \emph{netto}
+      zwaartekracht plus de versnellingskracht en de rolwrijving te
+      leveren, niet de volle zwaartekracht op de cabine.
+  \end{itemize}
+\end{solution}
+
+De snelheid en de hoogte van de lift als functie van de tijd worden
+gemodelleerd met het computermodel in figuur~\ref{fig:lift-model}.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[c]{0.50\textwidth}
+\centering
+\textmodel[tblrenv=tblr]
+\caption{Tekstueel model met SI-eenheden}
+\label{fig:lift-model-tekstueel}
+\end{subfigure}%
+\hfill
+\begin{subfigure}[c]{0.50\textwidth}
+\centering
+\graphicmodel
+\caption{Grafisch model}
+\label{fig:lift-model-grafisch}
+\end{subfigure}
+\caption{Computermodel voor de personenlift}
+\label{fig:lift-model}
+\end{figure}
+
+\computemodel
+
+\end{questions}
+
+\end{document}

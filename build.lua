@@ -34,17 +34,21 @@ excludefiles = {
 -- other).  The TDS view is always laid out by TDS rules regardless.
 flatten = false
 
--- Ship a .tds.zip inside the upload archive so TeX Live can install
--- the package directly without re-running docstrip.
-packtdszip = true
+-- Do NOT ship a .tds.zip inside the upload archive: CTAN does not
+-- require it and Erik Braun (CTAN maintainer) has asked us to omit it
+-- unless a TeX distribution explicitly demands it.
+packtdszip = false
 
 -- Tagging ----------------------------------------------------------------
 
 -- Single source of truth for the current release.  Read by
 -- update_tag() so a single `l3build tag` call propagates version and
--- date into every source file that carries them.
-release_date = "2026/05/17"
-release_tag  = "0.3.0"
+-- date into every source file that carries them.  Per CTAN bundle
+-- maintenance guidance, every component of the bundle uses this same
+-- version; we always upload the entire bundle together to keep
+-- numodel and numodel-plot in sync.
+release_date = "2026/05/19"
+release_tag  = "0.4.0"
 
 function update_tag(file, content, tagname, tagdate)
   -- l3build passes the date as YYYY-MM-DD; LaTeX provides expect
@@ -85,8 +89,11 @@ end
 ctanpkg     = "numodel-bundle"
 ctanreadme  = "README.md"
 
--- Read the release announcement from release-<tag>.txt so a fresh
--- file per release is picked up automatically by `l3build upload`.
+-- Read the release announcement from release-<tag>.txt when present,
+-- so a fresh file per release is picked up automatically by
+-- `l3build upload`.  For releases where no announcement should be
+-- sent (e.g. 0.4.0), simply omit the file; the upload then proceeds
+-- with an empty `announcement` field.
 local function read_release_notes()
   local fname = "release-" .. release_tag .. ".txt"
   local f = io.open(fname, "r")
