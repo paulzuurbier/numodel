@@ -1,8 +1,8 @@
 This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  23 MAY 2026 20:00
  restricted system commands enabled.
  file:line:error style messages enabled.
-**c:/numodel-bundle/numodel/examples/test-ptc-heuristic.tex
-(c:/numodel-bundle/numodel/examples/test-ptc-heuristic.tex
+**c:/numodel-bundle/numodel/examples/test-shared-inflow.tex
+(c:/numodel-bundle/numodel/examples/test-shared-inflow.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
 Lua module: luaotfload 2024-12-03 v3.29 Lua based OpenType font support
@@ -630,27 +630,27 @@ File: numodel-EN.def 2026/05/23 v0.5.0-pre numodel keyword table -- English (XMI
 \l__numodel_numstarts_int=\count387
 \l__numodel_yidx_int=\count388
 )
-Package translations Info: No language package found. I am going to use `english' as default language. on input line 11.
+Package translations Info: No language package found. I am going to use `english' as default language. on input line 13.
 
-No file test-ptc-heuristic.aux.
+No file test-shared-inflow.aux.
 
-\openout1 = test-ptc-heuristic.aux
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
+\openout1 = test-shared-inflow.aux
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
 (c:/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count389
@@ -672,616 +672,160 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 )) (c:/texlive/2025/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl
 File: translations-basic-dictionary-english.trsl (english translation file `translations-basic-dictionary')
 )
-Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 11.
+Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 13.
 
 Package pgfplots notification 'compat/show suggested version=true': document has been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
 
-NEWPREFIX start: ptc
+NEWPREFIX start: share
 NEWPREFIX save current: 
 NEWPREFIX register
 NEWPREFIX init_backup
-\g__numodel_ptc_rulecounter_int=\count395
-\g__numodel_ptc_steps_int=\count396
+\g__numodel_share_rulecounter_int=\count395
+\g__numodel_share_steps_int=\count396
 NEWPREFIX lua_init
 NEWPREFIX clear_state
 NEWPREFIX set_current
-NEWPREFIX done: ptc
+NEWPREFIX done: share
 MVAR start: T
 MVAR before-keys-set
 MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcT
+MVAR eff: share
+MVAR body fullname: shareT
 MVAR done: T
 MVAR start: Dt
 MVAR before-keys-set
 MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcDt
+MVAR eff: share
+MVAR body fullname: shareDt
 MVAR done: Dt
-MVAR start: Ub
+MVAR start: R
 MVAR before-keys-set
 MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcUb
-MVAR done: Ub
-MVAR start: Rnul
+MVAR eff: share
+MVAR body fullname: shareR
+MVAR done: R
+MVAR start: Va
 MVAR before-keys-set
 MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcRnul
-MVAR done: Rnul
-MVAR start: Tnul
+MVAR eff: share
+MVAR body fullname: shareVa
+MVAR done: Va
+MVAR start: Vb
 MVAR before-keys-set
 MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcTnul
-MVAR done: Tnul
-MVAR start: Wtc
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcWtc
-MVAR done: Wtc
-MVAR start: SB
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcSB
-MVAR done: SB
-MVAR start: Mc
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcMc
-MVAR done: Mc
-MVAR start: I
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcI
-MVAR done: I
-MVAR start: Rpar
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcRpar
-MVAR done: Rpar
-MVAR start: Rser
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcRser
-MVAR done: Rser
-MVAR start: Upar
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcUpar
-MVAR done: Upar
-MVAR start: User
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcUser
-MVAR done: User
-MVAR start: Ppar
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcPpar
-MVAR done: Ppar
-MVAR start: Pser
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcPser
-MVAR done: Pser
-MVAR start: Tpar
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcTpar
-MVAR done: Tpar
-MVAR start: Tser
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcTser
-MVAR done: Tser
-MRULE start: I
-VTD input: \ptcUb / (\ptcRser + \ptcRpar / 2)
-VTD seq: ptcT|ptcDt|ptcUb|ptcRnul|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRpar|ptcRser|ptcUpar|ptcUser|ptcPpar|ptcPser|ptcTpar|ptcTser
-VTD iter: ptcT
-VTD replace \c {ptcT} with t
-VTD iter: ptcDt
-VTD replace \c {ptcDt} with dt
-VTD iter: ptcUb
-VTD replace \c {ptcUb} with U_b
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
-VTD iter: ptcTnul
-VTD replace \c {ptcTnul} with T_0
-VTD iter: ptcWtc
-VTD replace \c {ptcWtc} with \alpha 
-VTD iter: ptcSB
-VTD replace \c {ptcSB} with \varepsilon \sigma A
-VTD iter: ptcMc
-VTD replace \c {ptcMc} with mc
-VTD iter: ptcI
-VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
-VTD iter: ptcRser
-VTD replace \c {ptcRser} with R_3
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
-VTD iter: ptcUser
-VTD replace \c {ptcUser} with U_3
-VTD iter: ptcPpar
-VTD replace \c {ptcPpar} with P_{1,2}
-VTD iter: ptcPser
-VTD replace \c {ptcPser} with P_3
-VTD iter: ptcTpar
-VTD replace \c {ptcTpar} with T_{1,2}
-VTD iter: ptcTser
-VTD replace \c {ptcTser} with T_3
-MRULE rhs after: U_b/ (R_3+ R_{1,2}/ 2)
-MRULE display: I\,=\,U_b/ (R_3+ R_{1,2}/ 2)
-MRULE done: I
-MRULE start: Upar
-VTD input: \ptcI * \ptcRpar / 2
-VTD seq: ptcT|ptcDt|ptcUb|ptcRnul|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRpar|ptcRser|ptcUpar|ptcUser|ptcPpar|ptcPser|ptcTpar|ptcTser
-VTD iter: ptcT
-VTD replace \c {ptcT} with t
-VTD iter: ptcDt
-VTD replace \c {ptcDt} with dt
-VTD iter: ptcUb
-VTD replace \c {ptcUb} with U_b
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
-VTD iter: ptcTnul
-VTD replace \c {ptcTnul} with T_0
-VTD iter: ptcWtc
-VTD replace \c {ptcWtc} with \alpha 
-VTD iter: ptcSB
-VTD replace \c {ptcSB} with \varepsilon \sigma A
-VTD iter: ptcMc
-VTD replace \c {ptcMc} with mc
-VTD iter: ptcI
-VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
-VTD iter: ptcRser
-VTD replace \c {ptcRser} with R_3
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
-VTD iter: ptcUser
-VTD replace \c {ptcUser} with U_3
-VTD iter: ptcPpar
-VTD replace \c {ptcPpar} with P_{1,2}
-VTD iter: ptcPser
-VTD replace \c {ptcPser} with P_3
-VTD iter: ptcTpar
-VTD replace \c {ptcTpar} with T_{1,2}
-VTD iter: ptcTser
-VTD replace \c {ptcTser} with T_3
-MRULE rhs after: I\cdot   R_{1,2}/ 2
-MRULE display: U_{1,2}\,=\,I\cdot   R_{1,2}/ 2
-MRULE done: Upar
-MRULE start: User
-VTD input: \ptcI * \ptcRser 
-VTD seq: ptcT|ptcDt|ptcUb|ptcRnul|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRpar|ptcRser|ptcUpar|ptcUser|ptcPpar|ptcPser|ptcTpar|ptcTser
-VTD iter: ptcT
-VTD replace \c {ptcT} with t
-VTD iter: ptcDt
-VTD replace \c {ptcDt} with dt
-VTD iter: ptcUb
-VTD replace \c {ptcUb} with U_b
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
-VTD iter: ptcTnul
-VTD replace \c {ptcTnul} with T_0
-VTD iter: ptcWtc
-VTD replace \c {ptcWtc} with \alpha 
-VTD iter: ptcSB
-VTD replace \c {ptcSB} with \varepsilon \sigma A
-VTD iter: ptcMc
-VTD replace \c {ptcMc} with mc
-VTD iter: ptcI
-VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
-VTD iter: ptcRser
-VTD replace \c {ptcRser} with R_3
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
-VTD iter: ptcUser
-VTD replace \c {ptcUser} with U_3
-VTD iter: ptcPpar
-VTD replace \c {ptcPpar} with P_{1,2}
-VTD iter: ptcPser
-VTD replace \c {ptcPser} with P_3
-VTD iter: ptcTpar
-VTD replace \c {ptcTpar} with T_{1,2}
-VTD iter: ptcTser
-VTD replace \c {ptcTser} with T_3
-MRULE rhs after: I\cdot   R_3
-MRULE display: U_3\,=\,I\cdot   R_3
-MRULE done: User
-MRULE start: Ppar
-VTD input: \ptcI ^2 * \ptcRpar / 4
-VTD seq: ptcT|ptcDt|ptcUb|ptcRnul|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRpar|ptcRser|ptcUpar|ptcUser|ptcPpar|ptcPser|ptcTpar|ptcTser
-VTD iter: ptcT
-VTD replace \c {ptcT} with t
-VTD iter: ptcDt
-VTD replace \c {ptcDt} with dt
-VTD iter: ptcUb
-VTD replace \c {ptcUb} with U_b
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
-VTD iter: ptcTnul
-VTD replace \c {ptcTnul} with T_0
-VTD iter: ptcWtc
-VTD replace \c {ptcWtc} with \alpha 
-VTD iter: ptcSB
-VTD replace \c {ptcSB} with \varepsilon \sigma A
-VTD iter: ptcMc
-VTD replace \c {ptcMc} with mc
-VTD iter: ptcI
-VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
-VTD iter: ptcRser
-VTD replace \c {ptcRser} with R_3
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
-VTD iter: ptcUser
-VTD replace \c {ptcUser} with U_3
-VTD iter: ptcPpar
-VTD replace \c {ptcPpar} with P_{1,2}
-VTD iter: ptcPser
-VTD replace \c {ptcPser} with P_3
-VTD iter: ptcTpar
-VTD replace \c {ptcTpar} with T_{1,2}
-VTD iter: ptcTser
-VTD replace \c {ptcTser} with T_3
-MRULE rhs after: I^2 \cdot   R_{1,2}/ 4
-MRULE display: P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4
-MRULE done: Ppar
-MRULE start: Pser
-VTD input: \ptcI ^2 * \ptcRser 
-VTD seq: ptcT|ptcDt|ptcUb|ptcRnul|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRpar|ptcRser|ptcUpar|ptcUser|ptcPpar|ptcPser|ptcTpar|ptcTser
-VTD iter: ptcT
-VTD replace \c {ptcT} with t
-VTD iter: ptcDt
-VTD replace \c {ptcDt} with dt
-VTD iter: ptcUb
-VTD replace \c {ptcUb} with U_b
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
-VTD iter: ptcTnul
-VTD replace \c {ptcTnul} with T_0
-VTD iter: ptcWtc
-VTD replace \c {ptcWtc} with \alpha 
-VTD iter: ptcSB
-VTD replace \c {ptcSB} with \varepsilon \sigma A
-VTD iter: ptcMc
-VTD replace \c {ptcMc} with mc
-VTD iter: ptcI
-VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
-VTD iter: ptcRser
-VTD replace \c {ptcRser} with R_3
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
-VTD iter: ptcUser
-VTD replace \c {ptcUser} with U_3
-VTD iter: ptcPpar
-VTD replace \c {ptcPpar} with P_{1,2}
-VTD iter: ptcPser
-VTD replace \c {ptcPser} with P_3
-VTD iter: ptcTpar
-VTD replace \c {ptcTpar} with T_{1,2}
-VTD iter: ptcTser
-VTD replace \c {ptcTser} with T_3
-MRULE rhs after: I^2 \cdot   R_3
-MRULE display: P_3\,=\,I^2 \cdot   R_3
-MRULE done: Pser
-MRULE start: Tpar
-VTD input: \ptcTpar + (\ptcPpar - \ptcSB * \ptcTpar ^4) * \ptcDt / \ptcMc 
-VTD seq: ptcT|ptcDt|ptcUb|ptcRnul|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRpar|ptcRser|ptcUpar|ptcUser|ptcPpar|ptcPser|ptcTpar|ptcTser
-VTD iter: ptcT
-VTD replace \c {ptcT} with t
-VTD iter: ptcDt
-VTD replace \c {ptcDt} with dt
-VTD iter: ptcUb
-VTD replace \c {ptcUb} with U_b
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
-VTD iter: ptcTnul
-VTD replace \c {ptcTnul} with T_0
-VTD iter: ptcWtc
-VTD replace \c {ptcWtc} with \alpha 
-VTD iter: ptcSB
-VTD replace \c {ptcSB} with \varepsilon \sigma A
-VTD iter: ptcMc
-VTD replace \c {ptcMc} with mc
-VTD iter: ptcI
-VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
-VTD iter: ptcRser
-VTD replace \c {ptcRser} with R_3
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
-VTD iter: ptcUser
-VTD replace \c {ptcUser} with U_3
-VTD iter: ptcPpar
-VTD replace \c {ptcPpar} with P_{1,2}
-VTD iter: ptcPser
-VTD replace \c {ptcPser} with P_3
-VTD iter: ptcTpar
-VTD replace \c {ptcTpar} with T_{1,2}
-VTD iter: ptcTser
-VTD replace \c {ptcTser} with T_3
-MRULE rhs after: T_{1,2}+ (P_{1,2}- \varepsilon \sigma A\cdot   T_{1,2}^4) \cdot   dt/ mc
-MRULE display: T_{1,2}\,=\,T_{1,2}+ (P_{1,2}- \varepsilon \sigma A\cdot   T_{1,2}^4) \cdot   dt/ mc
-MRULE done: Tpar
-MRULE start: Tser
-VTD input: \ptcTser + (\ptcPser - \ptcSB * \ptcTser ^4) * \ptcDt / \ptcMc 
-VTD seq: ptcT|ptcDt|ptcUb|ptcRnul|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRpar|ptcRser|ptcUpar|ptcUser|ptcPpar|ptcPser|ptcTpar|ptcTser
-VTD iter: ptcT
-VTD replace \c {ptcT} with t
-VTD iter: ptcDt
-VTD replace \c {ptcDt} with dt
-VTD iter: ptcUb
-VTD replace \c {ptcUb} with U_b
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
-VTD iter: ptcTnul
-VTD replace \c {ptcTnul} with T_0
-VTD iter: ptcWtc
-VTD replace \c {ptcWtc} with \alpha 
-VTD iter: ptcSB
-VTD replace \c {ptcSB} with \varepsilon \sigma A
-VTD iter: ptcMc
-VTD replace \c {ptcMc} with mc
-VTD iter: ptcI
-VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
-VTD iter: ptcRser
-VTD replace \c {ptcRser} with R_3
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
-VTD iter: ptcUser
-VTD replace \c {ptcUser} with U_3
-VTD iter: ptcPpar
-VTD replace \c {ptcPpar} with P_{1,2}
-VTD iter: ptcPser
-VTD replace \c {ptcPser} with P_3
-VTD iter: ptcTpar
-VTD replace \c {ptcTpar} with T_{1,2}
-VTD iter: ptcTser
-VTD replace \c {ptcTser} with T_3
-MRULE rhs after: T_3+ (P_3- \varepsilon \sigma A\cdot   T_3^4) \cdot   dt/ mc
-MRULE display: T_3\,=\,T_3+ (P_3- \varepsilon \sigma A\cdot   T_3^4) \cdot   dt/ mc
-MRULE done: Tser
-MRULE start: Rpar
-VTD input: \ptcRnul * (1 + \ptcWtc * (\ptcTpar - \ptcTnul ))
-VTD seq: ptcT|ptcDt|ptcUb|ptcRnul|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRpar|ptcRser|ptcUpar|ptcUser|ptcPpar|ptcPser|ptcTpar|ptcTser
-VTD iter: ptcT
-VTD replace \c {ptcT} with t
-VTD iter: ptcDt
-VTD replace \c {ptcDt} with dt
-VTD iter: ptcUb
-VTD replace \c {ptcUb} with U_b
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
-VTD iter: ptcTnul
-VTD replace \c {ptcTnul} with T_0
-VTD iter: ptcWtc
-VTD replace \c {ptcWtc} with \alpha 
-VTD iter: ptcSB
-VTD replace \c {ptcSB} with \varepsilon \sigma A
-VTD iter: ptcMc
-VTD replace \c {ptcMc} with mc
-VTD iter: ptcI
-VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
-VTD iter: ptcRser
-VTD replace \c {ptcRser} with R_3
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
-VTD iter: ptcUser
-VTD replace \c {ptcUser} with U_3
-VTD iter: ptcPpar
-VTD replace \c {ptcPpar} with P_{1,2}
-VTD iter: ptcPser
-VTD replace \c {ptcPser} with P_3
-VTD iter: ptcTpar
-VTD replace \c {ptcTpar} with T_{1,2}
-VTD iter: ptcTser
-VTD replace \c {ptcTser} with T_3
-MRULE rhs after: R_0\cdot   (1 + \alpha \cdot   (T_{1,2}- T_0))
-MRULE display: R_{1,2}\,=\,R_0\cdot   (1 + \alpha \cdot   (T_{1,2}- T_0))
-MRULE done: Rpar
-MRULE start: Rser
-VTD input: \ptcRnul * (1 + \ptcWtc * (\ptcTser - \ptcTnul ))
-VTD seq: ptcT|ptcDt|ptcUb|ptcRnul|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRpar|ptcRser|ptcUpar|ptcUser|ptcPpar|ptcPser|ptcTpar|ptcTser
-VTD iter: ptcT
-VTD replace \c {ptcT} with t
-VTD iter: ptcDt
-VTD replace \c {ptcDt} with dt
-VTD iter: ptcUb
-VTD replace \c {ptcUb} with U_b
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
-VTD iter: ptcTnul
-VTD replace \c {ptcTnul} with T_0
-VTD iter: ptcWtc
-VTD replace \c {ptcWtc} with \alpha 
-VTD iter: ptcSB
-VTD replace \c {ptcSB} with \varepsilon \sigma A
-VTD iter: ptcMc
-VTD replace \c {ptcMc} with mc
-VTD iter: ptcI
-VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
-VTD iter: ptcRser
-VTD replace \c {ptcRser} with R_3
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
-VTD iter: ptcUser
-VTD replace \c {ptcUser} with U_3
-VTD iter: ptcPpar
-VTD replace \c {ptcPpar} with P_{1,2}
-VTD iter: ptcPser
-VTD replace \c {ptcPser} with P_3
-VTD iter: ptcTpar
-VTD replace \c {ptcTpar} with T_{1,2}
-VTD iter: ptcTser
-VTD replace \c {ptcTser} with T_3
-MRULE rhs after: R_0\cdot   (1 + \alpha \cdot   (T_3- T_0))
-MRULE display: R_3\,=\,R_0\cdot   (1 + \alpha \cdot   (T_3- T_0))
-MRULE done: Rser
+MVAR eff: share
+MVAR body fullname: shareVb
+MVAR done: Vb
+MRULE start: R
+VTD input: 5
+VTD seq: shareT|shareDt|shareR|shareVa|shareVb
+VTD iter: shareT
+VTD replace \c {shareT} with t
+VTD iter: shareDt
+VTD replace \c {shareDt} with dt
+VTD iter: shareR
+VTD replace \c {shareR} with r
+VTD iter: shareVa
+VTD replace \c {shareVa} with V_1
+VTD iter: shareVb
+VTD replace \c {shareVb} with V_2
+MRULE rhs after: 5
+MRULE display: r\,=\,5
+MRULE done: R
+MRULE start: Va
+VTD input: \shareVa + \shareR * \shareDt 
+VTD seq: shareT|shareDt|shareR|shareVa|shareVb
+VTD iter: shareT
+VTD replace \c {shareT} with t
+VTD iter: shareDt
+VTD replace \c {shareDt} with dt
+VTD iter: shareR
+VTD replace \c {shareR} with r
+VTD iter: shareVa
+VTD replace \c {shareVa} with V_1
+VTD iter: shareVb
+VTD replace \c {shareVb} with V_2
+MRULE rhs after: V_1+ r\cdot   dt
+MRULE display: V_1\,=\,V_1+ r\cdot   dt
+MRULE done: Va
+MRULE start: Vb
+VTD input: \shareVb + \shareR * \shareDt 
+VTD seq: shareT|shareDt|shareR|shareVa|shareVb
+VTD iter: shareT
+VTD replace \c {shareT} with t
+VTD iter: shareDt
+VTD replace \c {shareDt} with dt
+VTD iter: shareR
+VTD replace \c {shareR} with r
+VTD iter: shareVa
+VTD replace \c {shareVa} with V_1
+VTD iter: shareVb
+VTD replace \c {shareVb} with V_2
+MRULE rhs after: V_2+ r\cdot   dt
+MRULE display: V_2\,=\,V_2+ r\cdot   dt
+MRULE done: Vb
 MRULE start: T
-VTD input: \ptcT + \ptcDt 
-VTD seq: ptcT|ptcDt|ptcUb|ptcRnul|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRpar|ptcRser|ptcUpar|ptcUser|ptcPpar|ptcPser|ptcTpar|ptcTser
-VTD iter: ptcT
-VTD replace \c {ptcT} with t
-VTD iter: ptcDt
-VTD replace \c {ptcDt} with dt
-VTD iter: ptcUb
-VTD replace \c {ptcUb} with U_b
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
-VTD iter: ptcTnul
-VTD replace \c {ptcTnul} with T_0
-VTD iter: ptcWtc
-VTD replace \c {ptcWtc} with \alpha 
-VTD iter: ptcSB
-VTD replace \c {ptcSB} with \varepsilon \sigma A
-VTD iter: ptcMc
-VTD replace \c {ptcMc} with mc
-VTD iter: ptcI
-VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
-VTD iter: ptcRser
-VTD replace \c {ptcRser} with R_3
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
-VTD iter: ptcUser
-VTD replace \c {ptcUser} with U_3
-VTD iter: ptcPpar
-VTD replace \c {ptcPpar} with P_{1,2}
-VTD iter: ptcPser
-VTD replace \c {ptcPser} with P_3
-VTD iter: ptcTpar
-VTD replace \c {ptcTpar} with T_{1,2}
-VTD iter: ptcTser
-VTD replace \c {ptcTser} with T_3
+VTD input: \shareT + \shareDt 
+VTD seq: shareT|shareDt|shareR|shareVa|shareVb
+VTD iter: shareT
+VTD replace \c {shareT} with t
+VTD iter: shareDt
+VTD replace \c {shareDt} with dt
+VTD iter: shareR
+VTD replace \c {shareR} with r
+VTD iter: shareVa
+VTD replace \c {shareVa} with V_1
+VTD iter: shareVb
+VTD replace \c {shareVb} with V_2
 MRULE rhs after: t+ dt
 MRULE display: t\,=\,t+ dt
 MRULE done: T
 MSTOP start
-VTD input: \ptcT >= 0.3
-VTD seq: ptcT|ptcDt|ptcUb|ptcRnul|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRpar|ptcRser|ptcUpar|ptcUser|ptcPpar|ptcPser|ptcTpar|ptcTser
-VTD iter: ptcT
-VTD replace \c {ptcT} with t
-VTD iter: ptcDt
-VTD replace \c {ptcDt} with dt
-VTD iter: ptcUb
-VTD replace \c {ptcUb} with U_b
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
-VTD iter: ptcTnul
-VTD replace \c {ptcTnul} with T_0
-VTD iter: ptcWtc
-VTD replace \c {ptcWtc} with \alpha 
-VTD iter: ptcSB
-VTD replace \c {ptcSB} with \varepsilon \sigma A
-VTD iter: ptcMc
-VTD replace \c {ptcMc} with mc
-VTD iter: ptcI
-VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
-VTD iter: ptcRser
-VTD replace \c {ptcRser} with R_3
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
-VTD iter: ptcUser
-VTD replace \c {ptcUser} with U_3
-VTD iter: ptcPpar
-VTD replace \c {ptcPpar} with P_{1,2}
-VTD iter: ptcPser
-VTD replace \c {ptcPser} with P_3
-VTD iter: ptcTpar
-VTD replace \c {ptcTpar} with T_{1,2}
-VTD iter: ptcTser
-VTD replace \c {ptcTser} with T_3
+VTD input: \shareT >= 5
+VTD seq: shareT|shareDt|shareR|shareVa|shareVb
+VTD iter: shareT
+VTD replace \c {shareT} with t
+VTD iter: shareDt
+VTD replace \c {shareDt} with dt
+VTD iter: shareR
+VTD replace \c {shareR} with r
+VTD iter: shareVa
+VTD replace \c {shareVa} with V_1
+VTD iter: shareVb
+VTD replace \c {shareVb} with V_2
 MSTOP done
 TEXTMODEL start
-BUILD_TABLE rules: I\,=\,U_b/ (R_3+ R_{1,2}/ 2)|U_{1,2}\,=\,I\cdot   R_{1,2}/ 2|U_3\,=\,I\cdot   R_3|P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4|P_3\,=\,I^2 \cdot   R_3|T_{1,2}\,=\,T_{1,2}+ (P_{1,2}- \varepsilon \sigma A\cdot   T_{1,2}^4) \cdot   dt/ mc|T_3\,=\,T_3+ (P_3- \varepsilon \sigma A\cdot   T_3^4) \cdot   dt/ mc|R_{1,2}\,=\,R_0\cdot   (1 + \alpha \cdot   (T_{1,2}- T_0))|R_3\,=\,R_0\cdot   (1 + \alpha \cdot   (T_3- T_0))|t\,=\,t+ dt|\protect \protect \unhbox \voidb@x \hbox {IF }t\geqslant   0.3\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF}
-BUILD_TABLE types: rule|rule|rule|rule|rule|rule|rule|rule|rule|rule|rule
-BUILD_TABLE numrules: 11
-BUILD_TABLE numstarts: 17
+BUILD_TABLE rules: r\,=\,5|V_1\,=\,V_1+ r\cdot   dt|V_2\,=\,V_2+ r\cdot   dt|t\,=\,t+ dt|\protect \protect \unhbox \voidb@x \hbox {IF }t\geqslant   5\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF}
+BUILD_TABLE types: rule|rule|rule|rule|rule
+BUILD_TABLE numrules: 5
+BUILD_TABLE numstarts: 5
 BUILD_TABLE before-step table: \begin {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline 
 BUILD_TABLE iter row: 0
 BUILD_TABLE row: 1type: rule
-BUILD_TABLE emit rule num: 1content: I\,=\,U_b/ (R_3+ R_{1,2}/ 2)
-BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&
+BUILD_TABLE emit rule num: 1content: r\,=\,5
+BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$r\,=\,5$&
 BUILD_TABLE iter row: 1
 BUILD_TABLE row: 2type: rule
-BUILD_TABLE emit rule num: 2content: U_{1,2}\,=\,I\cdot   R_{1,2}/ 2
-BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&
+BUILD_TABLE emit rule num: 2content: V_1\,=\,V_1+ r\cdot   dt
+BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$r\,=\,5$&$t=\shareTqty $\\\rule {0pt}{2.6ex}2&$V_1\,=\,V_1+ r\cdot   dt$&
 BUILD_TABLE iter row: 2
 BUILD_TABLE row: 3type: rule
-BUILD_TABLE emit rule num: 3content: U_3\,=\,I\cdot   R_3
-BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&
+BUILD_TABLE emit rule num: 3content: V_2\,=\,V_2+ r\cdot   dt
+BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$r\,=\,5$&$t=\shareTqty $\\\rule {0pt}{2.6ex}2&$V_1\,=\,V_1+ r\cdot   dt$&$dt=\shareDtqty $\\\rule {0pt}{2.6ex}3&$V_2\,=\,V_2+ r\cdot   dt$&
 BUILD_TABLE iter row: 3
 BUILD_TABLE row: 4type: rule
-BUILD_TABLE emit rule num: 4content: P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4
-BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&
+BUILD_TABLE emit rule num: 4content: t\,=\,t+ dt
+BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$r\,=\,5$&$t=\shareTqty $\\\rule {0pt}{2.6ex}2&$V_1\,=\,V_1+ r\cdot   dt$&$dt=\shareDtqty $\\\rule {0pt}{2.6ex}3&$V_2\,=\,V_2+ r\cdot   dt$&$r=\shareRqty $\\\rule {0pt}{2.6ex}4&$t\,=\,t+ dt$&
 BUILD_TABLE iter row: 4
 BUILD_TABLE row: 5type: rule
-BUILD_TABLE emit rule num: 5content: P_3\,=\,I^2 \cdot   R_3
-BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&
-BUILD_TABLE iter row: 5
-BUILD_TABLE row: 6type: rule
-BUILD_TABLE emit rule num: 6content: T_{1,2}\,=\,T_{1,2}+ (P_{1,2}- \varepsilon \sigma A\cdot   T_{1,2}^4) \cdot   dt/ mc
-BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ (P_{1,2}- \varepsilon \sigma A\cdot   T_{1,2}^4) \cdot   dt/ mc$&
-BUILD_TABLE iter row: 6
-BUILD_TABLE row: 7type: rule
-BUILD_TABLE emit rule num: 7content: T_3\,=\,T_3+ (P_3- \varepsilon \sigma A\cdot   T_3^4) \cdot   dt/ mc
-BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ (P_{1,2}- \varepsilon \sigma A\cdot   T_{1,2}^4) \cdot   dt/ mc$&$\alpha =\ptcWtcqty $\\\rule {0pt}{2.6ex}7&$T_3\,=\,T_3+ (P_3- \varepsilon \sigma A\cdot   T_3^4) \cdot   dt/ mc$&
-BUILD_TABLE iter row: 7
-BUILD_TABLE row: 8type: rule
-BUILD_TABLE emit rule num: 8content: R_{1,2}\,=\,R_0\cdot   (1 + \alpha \cdot   (T_{1,2}- T_0))
-BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ (P_{1,2}- \varepsilon \sigma A\cdot   T_{1,2}^4) \cdot   dt/ mc$&$\alpha =\ptcWtcqty $\\\rule {0pt}{2.6ex}7&$T_3\,=\,T_3+ (P_3- \varepsilon \sigma A\cdot   T_3^4) \cdot   dt/ mc$&$\varepsilon \sigma A=\ptcSBqty $\\\rule {0pt}{2.6ex}8&$R_{1,2}\,=\,R_0\cdot   (1 + \alpha \cdot   (T_{1,2}- T_0))$&
-BUILD_TABLE iter row: 8
-BUILD_TABLE row: 9type: rule
-BUILD_TABLE emit rule num: 9content: R_3\,=\,R_0\cdot   (1 + \alpha \cdot   (T_3- T_0))
-BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ (P_{1,2}- \varepsilon \sigma A\cdot   T_{1,2}^4) \cdot   dt/ mc$&$\alpha =\ptcWtcqty $\\\rule {0pt}{2.6ex}7&$T_3\,=\,T_3+ (P_3- \varepsilon \sigma A\cdot   T_3^4) \cdot   dt/ mc$&$\varepsilon \sigma A=\ptcSBqty $\\\rule {0pt}{2.6ex}8&$R_{1,2}\,=\,R_0\cdot   (1 + \alpha \cdot   (T_{1,2}- T_0))$&$mc=\ptcMcqty $\\\rule {0pt}{2.6ex}9&$R_3\,=\,R_0\cdot   (1 + \alpha \cdot   (T_3- T_0))$&
-BUILD_TABLE iter row: 9
-BUILD_TABLE row: 10type: rule
-BUILD_TABLE emit rule num: 10content: t\,=\,t+ dt
-BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ (P_{1,2}- \varepsilon \sigma A\cdot   T_{1,2}^4) \cdot   dt/ mc$&$\alpha =\ptcWtcqty $\\\rule {0pt}{2.6ex}7&$T_3\,=\,T_3+ (P_3- \varepsilon \sigma A\cdot   T_3^4) \cdot   dt/ mc$&$\varepsilon \sigma A=\ptcSBqty $\\\rule {0pt}{2.6ex}8&$R_{1,2}\,=\,R_0\cdot   (1 + \alpha \cdot   (T_{1,2}- T_0))$&$mc=\ptcMcqty $\\\rule {0pt}{2.6ex}9&$R_3\,=\,R_0\cdot   (1 + \alpha \cdot   (T_3- T_0))$&$I=\ptcIqty $\\\rule {0pt}{2.6ex}10&$t\,=\,t+ dt$&
-BUILD_TABLE iter row: 10
-BUILD_TABLE row: 11type: rule
-BUILD_TABLE emit rule num: 11content: \protect \protect \unhbox \voidb@x \hbox {IF }t\geqslant   0.3\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF}
-BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ (P_{1,2}- \varepsilon \sigma A\cdot   T_{1,2}^4) \cdot   dt/ mc$&$\alpha =\ptcWtcqty $\\\rule {0pt}{2.6ex}7&$T_3\,=\,T_3+ (P_3- \varepsilon \sigma A\cdot   T_3^4) \cdot   dt/ mc$&$\varepsilon \sigma A=\ptcSBqty $\\\rule {0pt}{2.6ex}8&$R_{1,2}\,=\,R_0\cdot   (1 + \alpha \cdot   (T_{1,2}- T_0))$&$mc=\ptcMcqty $\\\rule {0pt}{2.6ex}9&$R_3\,=\,R_0\cdot   (1 + \alpha \cdot   (T_3- T_0))$&$I=\ptcIqty $\\\rule {0pt}{2.6ex}10&$t\,=\,t+ dt$&$R_{1,2}=\ptcRparqty $\\\rule {0pt}{2.6ex}11&$\protect \protect \unhbox \voidb@x \hbox {IF }t\geqslant   0.3\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF}$&
-TEXTMODEL table: \begin {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ (P_{1,2}- \varepsilon \sigma A\cdot   T_{1,2}^4) \cdot   dt/ mc$&$\alpha =\ptcWtcqty $\\\rule {0pt}{2.6ex}7&$T_3\,=\,T_3+ (P_3- \varepsilon \sigma A\cdot   T_3^4) \cdot   dt/ mc$&$\varepsilon \sigma A=\ptcSBqty $\\\rule {0pt}{2.6ex}8&$R_{1,2}\,=\,R_0\cdot   (1 + \alpha \cdot   (T_{1,2}- T_0))$&$mc=\ptcMcqty $\\\rule {0pt}{2.6ex}9&$R_3\,=\,R_0\cdot   (1 + \alpha \cdot   (T_3- T_0))$&$I=\ptcIqty $\\\rule {0pt}{2.6ex}10&$t\,=\,t+ dt$&$R_{1,2}=\ptcRparqty $\\\rule {0pt}{2.6ex}11&$\protect \protect \unhbox \voidb@x \hbox {IF }t\geqslant   0.3\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF}$&$R_3=\ptcRserqty $\\&&$U_{1,2}=\ptcUparqty $\\&&$U_3=\ptcUserqty $\\&&$P_{1,2}=\ptcPparqty $\\&&$P_3=\ptcPserqty $\\&&$T_{1,2}=\ptcTparqty $\\&&$T_3=\ptcTserqty $\\\end {longtblr}
-LaTeX Font Info:    Trying to load font information for U+msa on input line 48.
+BUILD_TABLE emit rule num: 5content: \protect \protect \unhbox \voidb@x \hbox {IF }t\geqslant   5\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF}
+BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$r\,=\,5$&$t=\shareTqty $\\\rule {0pt}{2.6ex}2&$V_1\,=\,V_1+ r\cdot   dt$&$dt=\shareDtqty $\\\rule {0pt}{2.6ex}3&$V_2\,=\,V_2+ r\cdot   dt$&$r=\shareRqty $\\\rule {0pt}{2.6ex}4&$t\,=\,t+ dt$&$V_1=\shareVaqty $\\\rule {0pt}{2.6ex}5&$\protect \protect \unhbox \voidb@x \hbox {IF }t\geqslant   5\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF}$&
+TEXTMODEL table: \begin {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$r\,=\,5$&$t=\shareTqty $\\\rule {0pt}{2.6ex}2&$V_1\,=\,V_1+ r\cdot   dt$&$dt=\shareDtqty $\\\rule {0pt}{2.6ex}3&$V_2\,=\,V_2+ r\cdot   dt$&$r=\shareRqty $\\\rule {0pt}{2.6ex}4&$t\,=\,t+ dt$&$V_1=\shareVaqty $\\\rule {0pt}{2.6ex}5&$\protect \protect \unhbox \voidb@x \hbox {IF }t\geqslant   5\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF}$&$V_2=\shareVbqty $\\\end {longtblr}
+LaTeX Font Info:    Trying to load font information for U+msa on input line 31.
 (c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 48.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 31.
  (c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
@@ -1289,23 +833,11 @@ TEXTMODEL done
 BUILD: step 0 reset auto-positions
 BUILD: step 1 lua layout writeback
 BUILD: step 2 tikzpicture
-NODE: ptcT
-NODE: ptcDt
-NODE: ptcUb
-NODE: ptcRnul
-NODE: ptcTnul
-NODE: ptcWtc
-NODE: ptcSB
-NODE: ptcMc
-NODE: ptcI
-NODE: ptcRpar
-NODE: ptcRser
-NODE: ptcUpar
-NODE: ptcUser
-NODE: ptcPpar
-NODE: ptcPser
-NODE: ptcTpar
-NODE: ptcTser
+NODE: shareT
+NODE: shareDt
+NODE: shareR
+NODE: shareVa
+NODE: shareVb
 BUILD: step 5 stock-valve nodes
 BUILD: step 6 flow arrows
 BUILD: step 6a valve nodes
@@ -1313,7 +845,7 @@ BUILD: step 6b+7 causal arrows (Lua)
 BUILD: step 8 done
 [1
 
-{c:/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] (./test-ptc-heuristic.aux)
+{c:/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./test-shared-inflow.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1321,19 +853,19 @@ L3 programming layer <2026-01-19>
 )
 
 Here is how much of LuaTeX's memory you used:
- 33844 strings out of 476076
- 100000,1648299 words of node,token memory allocated
+ 33104 strings out of 476076
+ 100000,1373583 words of node,token memory allocated
  505 words of node memory still in use:
    6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 8 attribute, 54 glue_spec, 8 attribute_list, 2 write nodes
-   avail lists: 1:1,2:4036,3:1271,4:10,5:72,6:118,7:3228,8:31,9:2096,10:5,11:18
- 55511 multiletter control sequences out of 65536+600000
- 50 fonts using 3242727 bytes
- 117i,7n,124p,782b,1834s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmroman10-bold.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmroman12-bold.otf><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on test-ptc-heuristic.pdf (2 pages, 115091 bytes).
+   avail lists: 1:1,2:1122,3:263,4:10,5:52,6:46,7:1308,8:10,9:782,10:3,11:18
+ 54771 multiletter control sequences out of 65536+600000
+ 55 fonts using 3483223 bytes
+ 117i,7n,124p,782b,1462s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmroman10-bold.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmroman12-bold.otf><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb>
+Output written on test-shared-inflow.pdf (1 page, 80888 bytes).
 
-PDF statistics: 83 PDF objects out of 1000 (max. 8388607)
- 57 compressed objects within 1 object stream
+PDF statistics: 68 PDF objects out of 1000 (max. 8388607)
+ 46 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 1048576)
  16 words of extra memory for PDF output out of 10000 (max. 100000000)
 

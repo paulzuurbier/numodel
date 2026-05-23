@@ -1,4 +1,4 @@
-This is LuaTeX, Version 1.24.0 (TeX Live 2026)  (format=luatex 2026.4.10)  23 MAY 2026 17:31
+This is LuaTeX, Version 1.24.0 (TeX Live 2026)  (format=luatex 2026.4.10)  23 MAY 2026 19:39
  restricted system commands enabled.
 **numodel.ins
 (./numodel.ins (c:/texlive/2025/texmf-dist/tex/latex/base/docstrip.tex
@@ -62,8 +62,8 @@ Processing file numodel.dtx (package) -> numodel.sty
                             (EN) -> numodel-EN.def
                             (NL) -> numodel-NL.def
 File numodel.dtx ended by \endinput.
-Lines  processed: 3924
-Comments removed: 1627
+Lines  processed: 3926
+Comments removed: 1629
 Comments  passed: 0
 Codelines passed: 2289
 

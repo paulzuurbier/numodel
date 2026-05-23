@@ -41,48 +41,13 @@ packtdszip = false
 
 -- Tagging ----------------------------------------------------------------
 
--- Single source of truth for the current release.  Read by
--- update_tag() so a single `l3build tag` call propagates version and
--- date into every source file that carries them.  Per CTAN bundle
--- maintenance guidance, every component of the bundle uses this same
--- version; we always upload the entire bundle together to keep
--- numodel and numodel-plot in sync.
-release_date = "2026/05/19"
-release_tag  = "0.4.0"
-
-function update_tag(file, content, tagname, tagdate)
-  -- l3build passes the date as YYYY-MM-DD; LaTeX provides expect
-  -- YYYY/MM/DD, so normalize here.
-  tagdate = (tagdate or release_date):gsub("%-", "/")
-  tagname = tagname or release_tag
-
-  if file:match("%.dtx$") then
-    -- \ProvidesPackage{...}[YYYY/MM/DD vX.Y.Z ...]  and
-    -- \ProvidesFile{...}[YYYY/MM/DD vX.Y.Z ...]   (used by \GetFileInfo
-    -- in the driver to populate \fileversion / \filedate in the title
-    -- footnote).
-    content = content:gsub(
-      "(\\Provides[A-Za-z]+{[^}]+}%[)%d%d%d%d/%d%d/%d%d v[%d.]+",
-      "%1" .. tagdate .. " v" .. tagname)
-    -- \ProvidesExplFile{...}{YYYY/MM/DD}{vX.Y.Z}{...}
-    content = content:gsub(
-      "(\\ProvidesExplFile{[^}]+}){%d%d%d%d/%d%d/%d%d}{[v]?[%d.]+}",
-      "%1{" .. tagdate .. "}{" .. tagname .. "}")
-  elseif file:match("%.ins$") then
-    -- copyright year line
-    content = content:gsub(
-      "Copyright %(C%) %d%d%d%d",
-      "Copyright (C) " .. tagdate:sub(1, 4))
-  elseif file:match("%.lua$") then
-    -- header comment with version line, format
-    --   -- numodel.lua  vX.Y.Z  YYYY/MM/DD
-    content = content:gsub(
-      "(%-%-%s+numodel[^\n]-%s+)v[%d.]+%s+%d%d%d%d/%d%d/%d%d",
-      "%1v" .. tagname .. "  " .. tagdate)
-  end
-
-  return content
-end
+-- Single source of truth for `release_tag`, `release_date`,
+-- `tagfiles`, and `update_tag`.  Lives in tagsetup.lua at the bundle
+-- root so the bundle config AND each module config can dofile it
+-- and share the same release-bump behaviour -- `l3build tag X.Y.Z`
+-- then rewrites every version/date string across the whole project
+-- from one source.  See tagsetup.lua for the release-bump workflow.
+dofile("tagsetup.lua")
 
 -- CTAN upload ------------------------------------------------------------
 

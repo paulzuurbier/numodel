@@ -12,8 +12,8 @@ modules:
 `numodel` depends on `numodel-plot` for its `\diagrammodel` command;
 both modules ship together.
 
-The bundle is pre-1.0 (current release `v0.2.0`); breaking changes
-may still occur.
+The bundle is pre-1.0 (current release `v0.5.0-pre`); breaking
+changes may still occur.
 
 ## Build workflow
 
@@ -34,17 +34,29 @@ directory and running the same target.
 
 ### Releasing a new version
 
-Update `release_date` and `release_tag` in [`build.lua`](build.lua),
-then run
+The single source of truth for the release tag and date lives in
+[`tagsetup.lua`](tagsetup.lua) at the bundle root; the bundle
+`build.lua` and both module `build.lua`s dofile it so a single
+`l3build tag` run propagates the values everywhere.  To bump:
 
 ```
-l3build tag
+l3build tag 0.6.0 -d 2026-08-01
 ```
 
-to propagate the new date+version into every source file that carries
-them (`.dtx` `\ProvidesPackage`, `\ProvidesExplFile`, `numodel.lua`
-header).  Move the `## [Unreleased]` heading in each module's
-`CHANGELOG.md` to the new version section by hand.
+(use a pre-release suffix such as `0.6.0-pre` or `1.0.0-rc.1` if
+needed — `tagsetup.lua`'s patterns accept them).  This rewrites:
+
+- `\ProvidesFile` / `\ProvidesPackage` / `\ProvidesExplFile` headers
+  in every `.dtx`
+- `Copyright (C) YYYY` lines in every `.ins`
+- the version line in `numodel.lua`'s header comment
+- the `release_tag` / `release_date` constants in `tagsetup.lua`
+  itself, so the next run starts from the freshly-released values
+
+After tagging, hand-edit `CHANGELOG.md` in the bundle root, in
+`numodel/`, and in `numodel-plot/` to describe what changed
+(changelog content is inherently human-authored, so it stays
+manual), and re-run `l3build doc` to refresh the typeset PDFs.
 
 ### Per-module Lua-level tests
 
@@ -63,7 +75,10 @@ These tests are independent of the l3build regression tests in
 
 ```
 numodel-bundle/
-  build.lua           bundle-level configuration (CTAN metadata, update_tag)
+  build.lua           bundle-level configuration (CTAN metadata, packaging)
+  tagsetup.lua        single source of truth for release_tag/release_date
+                      plus the update_tag function; dofile'd by all
+                      build.lua's so `l3build tag` propagates everywhere
   support/            shared support files (currently empty)
   numodel/
     build.lua         module configuration

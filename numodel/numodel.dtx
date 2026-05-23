@@ -3816,25 +3816,27 @@ end
 % === Macro: curved inflow branch for a shared valve ===
 % Used when one inflow valve feeds more than one stock.  The primary
 % target is drawn with the standard straight \flowarrow; every
-% secondary target is drawn with this macro, which arcs over the
-% intervening stock(s) using the same `bend left=30' style as the
-% curved causal arrows.
+% secondary target is drawn with this macro, which arcs UNDER the
+% intervening stock(s).  Stocks sit on the bottom row of the
+% Forrester diagram, so the area below is empty -- routing the
+% branch below avoids collisions with the aux/const rows and the
+% causal arrows that live above.  Both endpoints are passed
+% unanchored so TikZ picks the border-intersection that best
+% matches the curve's tangent at each end.
 % Usage: \flowarrowbent{<valve-coord>}{<target-stock>}
 \newcommand{\flowarrowbent}[2]{%
-	\draw[\nmflowtip] (#1) to[bend left=30] ([xshift=0.5mm]#2.west);%
+	\draw[\nmflowtip] (#1) to[bend right=30] (#2);%
 }
 
 % === Macro: curved outflow branch for a shared valve ===
 % Mirror of \flowarrowbent.  Used when one outflow valve drains more
-% than one stock.  The primary source is drawn with the standard
-% straight \flowoutarrow into the valve placed at its right; every
-% additional source is drawn with this macro, which arcs over the
-% intervening stocks and ends at the shared valve itself (the valve
-% node draws on top, merging the curve into the valve like the
-% straight outflow line does).
+% than one stock.  Routes the branch BELOW the intervening stocks
+% (same rationale as the inflow variant: nothing else lives below
+% the stocks row).  Endpoints unanchored so TikZ chooses the
+% cleanest border intersection.
 % Usage: \flowoutarrowbent{<source-stock>}{<valve-coord>}
 \newcommand{\flowoutarrowbent}[2]{%
-	\draw[\nmflowtip] (#1.east) to[bend left=30] (#2);%
+	\draw[\nmflowtip] (#1) to[bend right=30] (#2);%
 }
 %</package>
 %    \end{macrocode}

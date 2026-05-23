@@ -338,7 +338,7 @@ De hete-limietoplossing is een asymptotische benadering. Om de uitkomst te toets
 
 De gloeidraden zijn wolfraam ($\alpha = \qty{5.2e-3}{\per\K}$), gemodelleerd op het examenwerkpunt $U_{nom} = \qty{12}{\V}$, $P_{nom} = \qty{2.4}{\W}$. De bronspanning is $U_b = \qty{18}{\V}$. De voorraadgrootheden zijn de temperaturen $T_p$ en $T_3$. Hun toename per tijdstap volgt uit de warmtebalans --- het opgenomen elektrische vermogen min het uitgestraalde stralingsvermogen, gedeeld door de warmtecapaciteit $mc$ van de draad. De hulpgrootheden $R$, $U$, $I$ en $P$ volgen elke stap uit de actuele temperaturen.
 
-Het model is overgenomen van Arno Rijnders, uit zijn opmerking op Facebook. Echter de startwaarden zijn aangepast zodat de hete limiet bereikt wordt. De temperatuurcoëfficiënt is afhankelijk van de temperatuur, in het model is de constante waarde daarom iets naar boven verschoven, zodat de modelregels hetzelfde konden blijven.
+Het model is overgenomen van Arno Rijnders, uit zijn opmerking op Facebook. De startwaarden zijn aangepast zodat de hete limiet bereikt wordt. De temperatuurcoëfficiënt $\alpha$ is temperatuurafhankelijk, in het model is de constante waarde iets naar boven verschoven, zonder modelregels aan te passen.
 
 \numodelsetup{diagram-style=tight}
 
@@ -349,18 +349,18 @@ Het model is overgenomen van Arno Rijnders, uit zijn opmerking op Facebook. Echt
 \mvar{Dt}{dt}{1e-4}{\s}{1}{system}
 
 % --- constanten (wolfraam, 12 V / 2.4 W werkpunt = examenwaarden) ---
-\mvar{Rnul}{R_0}{5.0}{\ohm}{2}{constant}
 \mvar{Ub}{U_b}{18}{\V}{2}{constant}
 \mvar{Tnul}{T_0}{293}{\K}{3}{constant}
+\mvar{Rnul}{R_0}{5.0}{\ohm}{2}{constant}
 \mvar{Wtc}{\alpha}{5.2e-3}{\per\K}{2}{constant}
 \mvar{SB}{\varepsilon\sigma A}{7.14e-14}{}{3}{constant}
 \mvar{Mc}{mc}{3e-5}{\joule\per\K}{1}{constant}
 
 % --- hulpvariabelen ---
-\mvar{Upar}{U_{1,2}}{0}{\V}{3}{hulp}
 \mvar{I}{I}{0}{\A}{4}{hulp}
-\mvar{Rpar}{R_{1,2}}{5.0}{\ohm}{2}{hulp}
 \mvar{Rser}{R_3}{5.0}{\ohm}{2}{hulp}
+\mvar{Rpar}{R_{1,2}}{5.0}{\ohm}{2}{hulp}
+\mvar{Upar}{U_{1,2}}{0}{\V}{3}{hulp}
 \mvar{User}{U_3}{0}{\V}{3}{hulp}
 \mvar{Pser}{P_3}{0}{\W}{3}{hulp}
 \mvar{Ppar}{P_{1,2}}{0}{\W}{3}{hulp}
@@ -522,35 +522,88 @@ nominale werkpunt ($a = I_{nom}/U_{nom}^{\,b}$) en in te vullen. Tabel~%
 \defqty{empPser}{3.012}{\W}{4}
 \defqty{empPpar}{0.449}{\W}{3}
 
+\newpage
+\section*{Verificatie -- directe schakelingmeting}
+
+De vierde en meest concrete route is om de schakeling \emph{daadwerkelijk}
+te bouwen en spanningen en stromen rechtstreeks af te lezen. Deze meting
+is uitgevoerd door collega Marjan den Boer, eveneens gedeeld in een
+opmerking op Facebook, met drie identieke Conrad-gloeilampjes
+($U_{nom} = \qty{12}{\V}$, $I_{nom} = \qty{200}{\mA}$, dus
+$P_{nom} = \qty{2.4}{\W}$ -- precies het nominale werkpunt dat de
+modellen aannemen) en een bronspanning van $U_b = \qty{18.0}{\V}$. De
+afgelezen waarden:
+
+\defqty{mesUb}{18.0}{\V}{3}
+\defqty{mesUser}{13.9}{\V}{3}
+\defqty{mesIser}{0.15}{\A}{2}
+\defqty{mesUpar}{4.0}{\V}{2}
+\defqty{mesIpar}{0.07}{\A}{2}
+% Vermogens uit U * I:
+%   P_3   = 13.9 * 0.15 = 2.085 W
+%   P_1,2 =  4.0 * 0.07 = 0.28  W per draad
+\defqty{mesPser}{2.085}{\W}{2}
+\defqty{mesPpar}{0.28}{\W}{2}
+
+\begin{itemize}
+  \item Lamp~3 (de serielamp): $U_3 = \mesUserq$, $I_3 = \mesIserq$,
+    dus $P_3 \approx \mesPserq$.
+  \item Lamp~1 en lamp~2 (parallel): elk $U_{1,2} = \mesUparq$,
+    $I_{1,2} = \mesIparq$, dus $P_{1,2} \approx \mesPparq$ per draad.
+\end{itemize}
+
+\noindent
+Een eerste sanity check: $U_3 + U_{1,2} = \mesUserq + \mesUparq \approx
+\qty{17.9}{\V}$, in overeenstemming met de bronspanning van
+$\mesUbq$ binnen de aflees-precisie. En de stroombalans klopt: de
+parallelle takken voeren samen $2 \times \mesIparq = \qty{0.14}{\A}$,
+nagenoeg gelijk aan de hoofdstroom $\mesIserq$ door lamp~3.
+
+Tabel~\ref{tab:drieroutes} zet alle vier de routes naast elkaar.
+
 \begin{table}[H]
 \centering
-\begin{tabular}{lccc}
+\begin{tabular}{lcccc}
 \toprule
-Grootheid & Hete limiet & Euler-model & Empirisch \\
-          & ($b=3/5$, analytisch) & (numeriek) & ($b=0{,}573$, gemeten) \\
+Grootheid & Hete limiet & Euler-model & Empirisch & Meting \\
+          & ($b=3/5$, analytisch) & (numeriek) & ($b=0{,}573$, gemeten) & (Conrad-lampjes) \\
 \midrule
-$I$       & $\anaIq$    & $\qty{\modI}{\A}$    & $\empIq$    \\
-$U_3$     & $\anaUserq$ & $\qty{\modUser}{\V}$ & $\empUserq$ \\
-$U_{1,2}$ & $\anaUparq$ & $\qty{\modUpar}{\V}$ & $\empUparq$ \\
-$P_3$     & $\anaPserq$ & $\qty{\modPser}{\W}$ & $\empPserq$ \\
-$P_{1,2}$ & $\anaPparq$ & $\qty{\modPpar}{\W}$ & $\empPparq$ \\
+$I$       & $\anaIq$    & $\qty{\modI}{\A}$    & $\empIq$    & $\mesIserq$  \\
+$U_3$     & $\anaUserq$ & $\qty{\modUser}{\V}$ & $\empUserq$ & $\mesUserq$  \\
+$U_{1,2}$ & $\anaUparq$ & $\qty{\modUpar}{\V}$ & $\empUparq$ & $\mesUparq$  \\
+$P_3$     & $\anaPserq$ & $\qty{\modPser}{\W}$ & $\empPserq$ & $\mesPserq$  \\
+$P_{1,2}$ & $\anaPparq$ & $\qty{\modPpar}{\W}$ & $\empPparq$ & $\mesPparq$  \\
 \bottomrule
 \end{tabular}
-\caption{Drie onafhankelijke routes naar dezelfde eindtoestand voor
+\caption{Vier onafhankelijke routes naar dezelfde eindtoestand voor
 $U_b = \qty{18}{\V}$ en examenlampen ($U_{nom} = \qty{12}{\V}$,
 $P_{nom} = \qty{2.4}{\W}$). De hete limiet leidt de machtsexponent
 $b = 3/5$ af uit de stralingsfysica; het Euler-model lost het volledige
 stelsel numeriek op; de empirische route meet de exponent rechtstreeks aan
-een gloeilampje ($b = 0{,}573$).}
+een gloeilampje ($b = 0{,}573$); de meting van Marjan den Boer leest
+spanning en stroom rechtstreeks van de gebouwde schakeling af.}
 \label{tab:drieroutes}
 \end{table}
 
-Drie routes --- een analytische benadering, een numerieke simulatie en een
-directe meting --- die langs volledig verschillende wegen op vrijwel
-dezelfde eindtoestand uitkomen. Dat $U_3$ in alle drie de gevallen rond
-$\qty{13.8}{\V}$ uitkomt, ruim boven de $\qty{12}{\V}$ van het nominale
-werkpunt, maakt het examenantwoord onomstotelijk: lamp~3 brandt op een te
-hoog vermogen.
+Vier routes --- een analytische benadering, een numerieke simulatie, een
+empirische I-U-fit en een directe schakelingmeting --- die langs volledig
+verschillende wegen op vrijwel dezelfde \emph{spanning} over draad~3
+uitkomen: $U_3 \approx \qty{13.9}{\V}$ in alle vier de gevallen. Voor de
+\emph{stroom} (en dus het vermogen) ligt de meting echter zo'n 30\,\%
+onder de drie modelvoorspellingen: $\qty{0.15}{\A}$ tegenover de
+voorspelde $\approx \qty{0.22}{\A}$, en $P_3 \approx \qty{2.1}{\W}$
+tegenover voorspelde $\approx \qty{3.0}{\W}$. Een aannemelijke verklaring
+is dat de temperatuurco\"effici\"ent $\alpha$ van wolfraam zelf
+temperatuur-afhankelijk is: bij de hoge werktemperatuur van draad~3 ligt
+$\alpha$ in werkelijkheid lager dan de constante laboratoriumwaarde die
+in het Euler-model ($\alpha = \qty{5.2e-3}{\per\K}$) is ingevuld, zodat
+de weerstandsstijging --- en daarmee de stroomdaling --- in de praktijk
+sterker uitvalt. De kwalitatieve eindconclusie blijft overeind: lamp~3
+brandt op een vermogen dat ruim \emph{onder} $P_{nom} = \qty{2.4}{\W}$
+ligt~--- maar volgens de modellen \emph{er ruim boven}. De meting tilt
+het verhaal dus weer een laag omhoog: de hete-limietassumpties bieden de
+juiste schaling van de \emph{spanning}, maar overschatten de absolute
+\emph{stroom} merkbaar.
 
 \end{questions}
 \end{document}

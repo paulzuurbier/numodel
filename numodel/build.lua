@@ -10,6 +10,12 @@ bundle  = "numodel-bundle"
 module  = "numodel"
 maindir = ".."
 
+-- Tagging: share `release_tag` / `release_date` / `tagfiles` /
+-- `update_tag` with the bundle and the sibling module, so a single
+-- `l3build tag` propagates everywhere from one source.  See
+-- ../tagsetup.lua for the workflow.
+dofile(maindir .. "/tagsetup.lua")
+
 -- Engines / formats ------------------------------------------------------
 
 -- numodel depends on LuaTeX features (luacode, the Lua iteration

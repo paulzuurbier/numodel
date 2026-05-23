@@ -1,18 +1,15 @@
-This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  23 MAY 2026 17:24
+This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  23 MAY 2026 20:03
  restricted system commands enabled.
-**"Artikel gloeilamp.tex"
-("./Artikel gloeilamp.tex"
+ file:line:error style messages enabled.
+**"c:/numodel-bundle/docs/Artikel gloeilamp.tex"
+("c:/numodel-bundle/docs/Artikel gloeilamp.tex"
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
 Lua module: luaotfload 2024-12-03 v3.29 Lua based OpenType font support
 Lua module: lualibs 2023-07-13 v2.76 ConTeXt Lua standard libraries.
-Lua module: lualibs-extended 2023-07-13 v2.76 ConTeXt Lua libraries -- extended 
-collection.
-luaotfload | conf : Root cache directory is "C:/Users/paulz/.texlive2026/texmf-v
-ar/luatex-cache/generic/names".
-luaotfload | init : Loading fontloader "fontloader-2023-12-28.lua" from kpse-res
-olved path "c:/texlive/2025/texmf-dist/tex/luatex/luaotfload/fontloader-2023-12-
-28.lua".
+Lua module: lualibs-extended 2023-07-13 v2.76 ConTeXt Lua libraries -- extended collection.
+luaotfload | conf : Root cache directory is "C:/Users/paulz/.texlive2026/texmf-var/luatex-cache/generic/names".
+luaotfload | init : Loading fontloader "fontloader-2023-12-28.lua" from kpse-resolved path "c:/texlive/2025/texmf-dist/tex/luatex/luaotfload/fontloader-2023-12-28.lua".
 Lua-only attribute luaotfload@noligature = 1
 luaotfload | init : Context OpenType loader version 3.134
 Inserting `luaotfload.node_processor' in `pre_linebreak_filter'.
@@ -20,8 +17,7 @@ Inserting `luaotfload.node_processor' in `hpack_filter'.
 Inserting `luaotfload.glyph_stream' in `glyph_stream_provider'.
 Inserting `luaotfload.define_font' in `define_font'.
 Lua-only attribute luaotfload_color_attribute = 2
-luaotfload | conf : Root cache directory is "C:/Users/paulz/.texlive2026/texmf-v
-ar/luatex-cache/generic/names".
+luaotfload | conf : Root cache directory is "C:/Users/paulz/.texlive2026/texmf-var/luatex-cache/generic/names".
 Inserting `luaotfload.harf.strip_prefix' in `find_opentype_file'.
 Inserting `luaotfload.harf.strip_prefix' in `find_truetype_file'.
 Removing  `luaotfload.glyph_stream' from `glyph_stream_provider'.
@@ -39,18 +35,15 @@ Inserting `luaotfload.aux.fixup_fontdata' in `luaotfload.patch_font_unsafe'.
 Inserting `luaotfload.aux.set_capheight' in `luaotfload.patch_font'.
 Inserting `luaotfload.aux.set_xheight' in `luaotfload.patch_font'.
 Inserting `luaotfload.rewrite_fontname' in `luaotfload.patch_font'.
-Inserting `tracingstacklevels' in `input_level_string'. (c:/texlive/2025/texmf-
-dist/tex/latex/exam/exam.cls
+Inserting `tracingstacklevels' in `input_level_string'. (c:/texlive/2025/texmf-dist/tex/latex/exam/exam.cls
 Document Class: exam 2023/07/09 Version 2.704 by Philip Hirschhorn
 (c:/texlive/2025/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
-)
-(c:/texlive/2025/texmf-dist/tex/latex/base/article.cls
+) (c:/texlive/2025/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
 (c:/texlive/2025/texmf-dist/tex/latex/base/size11.clo
 File: size11.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
-luaotfload | db : Font names database loaded from C:/Users/paulz/.texlive2026/te
-xmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz)
+luaotfload | db : Font names database loaded from C:/Users/paulz/.texlive2026/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz)
 \c@part=\count273
 \c@section=\count274
 \c@subsection=\count275
@@ -139,23 +132,17 @@ xmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz)
 \@sollistdepth=\count322
 \exam@FrameRule=\dimen149
 \exam@FrameSep=\dimen150
-)
-(c:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec.sty
-(c:/texlive/2025/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
-(c:/texlive/2025/texmf-dist/tex/latex/l3kernel/expl3.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec.sty (c:/texlive/2025/texmf-dist/tex/latex/l3packages/xparse/xparse.sty (c:/texlive/2025/texmf-dist/tex/latex/l3kernel/expl3.sty
 Package: expl3 2026-01-19 L3 programming layer (loader) 
-
-(c:/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-luatex.def
+ (c:/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-luatex.def
 File: l3backend-luatex.def 2025-10-09 L3 backend support: PDF output (LuaTeX)
 \l__color_backend_stack_int=\count323
 Inserting `l3color' in `luaotfload.parse_color'.))
 Package: xparse 2025-10-09 L3 Experimental document command parser
 )
 Package: fontspec 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTeX
-Lua module: fontspec 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTeX
-(c:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec-luatex.sty
-Package: fontspec-luatex 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaT
-eX
+Lua module: fontspec 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTeX (c:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec-luatex.sty
+Package: fontspec-luatex 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTeX
 \l__fontspec_script_int=\count324
 \l__fontspec_language_int=\count325
 \l__fontspec_strnum_int=\count326
@@ -170,83 +157,60 @@ eX
 \l__fontspec_tmpa_dim=\dimen151
 \l__fontspec_tmpb_dim=\dimen152
 \l__fontspec_tmpc_dim=\dimen153
-
-(c:/texlive/2025/texmf-dist/tex/latex/base/fontenc.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
-)
-(c:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec.cfg)))
-(c:/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec.cfg))) (c:/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2026-01-29 v7.01p Hypertext links for LaTeX
-
-(c:/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty
+ (c:/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
-)
-(c:/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
 \KV@toks@=\toks22
-)
-(c:/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
 Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
-)
-(c:/texlive/2025/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+) (c:/texlive/2025/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
 Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+) (c:/texlive/2025/texmf-dist/tex/generic/pdfescape/pdfescape.sty
 Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
-
-(c:/texlive/2025/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+ (c:/texlive/2025/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
 Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
-Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
-)
-
-(c:/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+) (c:/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO)
+ (c:/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty
 Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
 )
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
 \pdftexcmds@toks=\toks23
-))
-(c:/texlive/2025/texmf-dist/tex/latex/hycolor/hycolor.sty
+)) (c:/texlive/2025/texmf-dist/tex/latex/hycolor/hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
-)
-(c:/texlive/2025/texmf-dist/tex/latex/hyperref/nameref.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2026-01-29 v2.58 Cross-referencing by name of section
-
-(c:/texlive/2025/texmf-dist/tex/latex/refcount/refcount.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/refcount/refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
-)
-(c:/texlive/2025/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+) (c:/texlive/2025/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
-
-(c:/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
 \c@section@level=\count335
-)
-(c:/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count336
-)
-(c:/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty
-Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
-)
+) (c:/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty
+Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO)
 )
 \@linkdim=\dimen154
 \Hy@linkcounter=\count337
 \Hy@pagecounter=\count338
-
-(c:/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def
+ (c:/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2026-01-29 v7.01p Hyperref: PDFDocEncoding definition (HO)
-)
-(c:/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty
+) (c:/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
 \Hy@SavedSpaceFactor=\count339
-
-(c:/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def
+ (c:/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2026-01-29 v7.01p Hyperref: PDF Unicode definition (HO)
 )
 Package hyperref Info: Hyper figures OFF on input line 4201.
@@ -257,20 +221,16 @@ Package hyperref Info: Backreferencing OFF on input line 4221.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4468.
 \c@Hy@tempcnt=\count340
-
-(c:/texlive/2025/texmf-dist/tex/latex/url/url.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip17
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4807.
 \XeTeXLinkMargin=\dimen155
-
-(c:/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
+ (c:/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
-
-(c:/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
-Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
-)
+ (c:/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
 ))
 \Fld@menulength=\count341
 \Field@Width=\dimen156
@@ -287,27 +247,21 @@ Package hyperref Info: PDF/A mode OFF on input line 6114.
 \c@Hfootnote=\count344
 )
 Package hyperref Info: Driver (autodetected): hluatex.
-
-(c:/texlive/2025/texmf-dist/tex/latex/hyperref/hluatex.def
+ (c:/texlive/2025/texmf-dist/tex/latex/hyperref/hluatex.def
 File: hluatex.def 2026-01-29 v7.01p Hyperref driver for luaTeX
 \Fld@listcount=\count345
 \c@bookmark@seq@number=\count346
-
-(c:/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
-
-(c:/texlive/2025/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+ (c:/texlive/2025/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
 Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 )
-Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
-84.
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 284.
 )
 \Hy@SectionHShift=\skip76
-)
-(c:/texlive/2025/texmf-dist/tex/latex/caption/caption.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/caption/caption.sty
 Package: caption 2023/08/05 v3.6o Customizing captions (AR)
-
-(c:/texlive/2025/texmf-dist/tex/latex/caption/caption3.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
 \caption@tempdima=\dimen158
 \captionmargin=\dimen159
@@ -322,8 +276,7 @@ Package caption Info: Standard document class detected.
 \c@caption@flags=\count347
 \c@continuedfloat=\count348
 Package caption Info: hyperref package is loaded.
-)
-(c:/texlive/2025/texmf-dist/tex/latex/siunitx/siunitx.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/siunitx/siunitx.sty
 Package: siunitx 2025-07-09 v3.4.14 A comprehensive (SI) units package
 \l__siunitx_number_uncert_offset_int=\count349
 \l__siunitx_number_exponent_fixed_int=\count350
@@ -339,15 +292,11 @@ Package: siunitx 2025-07-09 v3.4.14 A comprehensive (SI) units package
 \l__siunitx_angle_marker_box=\box54
 \l__siunitx_angle_unit_box=\box55
 \l__siunitx_compound_count_int=\count359
-
-(c:/texlive/2025/texmf-dist/tex/latex/translations/translations.sty
-Package: translations 2022/02/05 v1.12 internationalization of LaTeX2e packages
- (CN)
-)
-(c:/texlive/2025/texmf-dist/tex/latex/amsmath/amstext.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/translations/translations.sty
+Package: translations 2022/02/05 v1.12 internationalization of LaTeX2e packages (CN)
+) (c:/texlive/2025/texmf-dist/tex/latex/amsmath/amstext.sty
 Package: amstext 2024/11/17 v2.01 AMS text
-
-(c:/texlive/2025/texmf-dist/tex/latex/amsmath/amsgen.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks24
 \ex@=\dimen167
@@ -365,8 +314,7 @@ File: amsgen.sty 1999/11/30 v2.0 generic functions
 \l__siunitx_unit_tmp_int=\count360
 \l__siunitx_unit_position_int=\count361
 \l__siunitx_unit_total_int=\count362
-
-(c:/texlive/2025/texmf-dist/tex/latex/tools/array.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/tools/array.sty
 Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
 \col@sep=\dimen172
 \ar@mcellbox=\box62
@@ -375,8 +323,7 @@ Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
 \extratabsurround=\skip77
 \backup@length=\skip78
 \ar@cellbox=\box63
-))
-(c:/texlive/2025/texmf-dist/tex/latex/amsmath/amsmath.sty
+)) (c:/texlive/2025/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2025/07/09 v2.17z AMS math features
 \@mathmargin=\skip79
 
@@ -384,8 +331,7 @@ For additional information on amsmath, use the `?' option.
 (c:/texlive/2025/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen174
-)
-(c:/texlive/2025/texmf-dist/tex/latex/amsmath/amsopn.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
 \inf@bad=\count363
@@ -435,348 +381,191 @@ LaTeX Info: Redefining \Relbar on input line 970.
 \mathdisplay@stack=\toks29
 LaTeX Info: Redefining \[ on input line 2950.
 LaTeX Info: Redefining \] on input line 2951.
-)
-(c:/texlive/2025/texmf-dist/tex/latex/amsfonts/amssymb.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
-
-(c:/texlive/2025/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
-))
-(c:/texlive/2025/texmf-dist/tex/latex/unicode-math/unicode-math.sty
+)) (c:/texlive/2025/texmf-dist/tex/latex/unicode-math/unicode-math.sty
 Package: unicode-math 2023/08/13 v0.8r Unicode maths in XeLaTeX and LuaLaTeX
-
-(c:/texlive/2025/texmf-dist/tex/latex/unicode-math/unicode-math-luatex.sty
-Package: unicode-math-luatex 2023/08/13 v0.8r Unicode maths in XeLaTeX and LuaL
-aTeX
-
-(c:/texlive/2025/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/unicode-math/unicode-math-luatex.sty
+Package: unicode-math-luatex 2023/08/13 v0.8r Unicode maths in XeLaTeX and LuaLaTeX
+ (c:/texlive/2025/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
 Package: l3keys2e 2025-10-09 LaTeX2e option processing using LaTeX3 keys
-)
-(c:/texlive/2025/texmf-dist/tex/latex/base/fix-cm.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/base/fix-cm.sty
 Package: fix-cm 2020/11/24 v1.1t fixes to LaTeX
-
-(c:/texlive/2025/texmf-dist/tex/latex/base/ts1enc.def
+ (c:/texlive/2025/texmf-dist/tex/latex/base/ts1enc.def
 File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding TS1 on input line 47.
-LaTeX Encoding Info:    Redeclaring text command \capitalcedilla (encoding TS1)
- on input line 49.
-LaTeX Encoding Info:    Redeclaring text command \capitalogonek (encoding TS1) 
-on input line 52.
-LaTeX Encoding Info:    Redeclaring text command \capitalgrave (encoding TS1) o
-n input line 55.
-LaTeX Encoding Info:    Redeclaring text command \capitalacute (encoding TS1) o
-n input line 56.
-LaTeX Encoding Info:    Redeclaring text command \capitalcircumflex (encoding T
-S1) on input line 57.
-LaTeX Encoding Info:    Redeclaring text command \capitaltilde (encoding TS1) o
-n input line 58.
-LaTeX Encoding Info:    Redeclaring text command \capitaldieresis (encoding TS1
-) on input line 59.
-LaTeX Encoding Info:    Redeclaring text command \capitalhungarumlaut (encoding
- TS1) on input line 60.
-LaTeX Encoding Info:    Redeclaring text command \capitalring (encoding TS1) on
- input line 61.
-LaTeX Encoding Info:    Redeclaring text command \capitalcaron (encoding TS1) o
-n input line 62.
-LaTeX Encoding Info:    Redeclaring text command \capitalbreve (encoding TS1) o
-n input line 63.
-LaTeX Encoding Info:    Redeclaring text command \capitalmacron (encoding TS1) 
-on input line 64.
-LaTeX Encoding Info:    Redeclaring text command \capitaldotaccent (encoding TS
-1) on input line 65.
-LaTeX Encoding Info:    Redeclaring text command \t (encoding TS1) on input lin
-e 66.
-LaTeX Encoding Info:    Redeclaring text command \capitaltie (encoding TS1) on 
-input line 67.
-LaTeX Encoding Info:    Redeclaring text command \newtie (encoding TS1) on inpu
-t line 68.
-LaTeX Encoding Info:    Redeclaring text command \capitalnewtie (encoding TS1) 
-on input line 69.
-LaTeX Encoding Info:    Redeclaring text symbol \textcapitalcompwordmark (encod
-ing TS1) on input line 70.
-LaTeX Encoding Info:    Redeclaring text symbol \textascendercompwordmark (enco
-ding TS1) on input line 71.
-LaTeX Encoding Info:    Redeclaring text symbol \textquotestraightbase (encodin
-g TS1) on input line 72.
-LaTeX Encoding Info:    Redeclaring text symbol \textquotestraightdblbase (enco
-ding TS1) on input line 73.
-LaTeX Encoding Info:    Redeclaring text symbol \texttwelveudash (encoding TS1)
- on input line 74.
-LaTeX Encoding Info:    Redeclaring text symbol \textthreequartersemdash (encod
-ing TS1) on input line 75.
-LaTeX Encoding Info:    Redeclaring text symbol \textleftarrow (encoding TS1) o
-n input line 76.
-LaTeX Encoding Info:    Redeclaring text symbol \textrightarrow (encoding TS1) 
-on input line 77.
-LaTeX Encoding Info:    Redeclaring text symbol \textblank (encoding TS1) on in
-put line 78.
-LaTeX Encoding Info:    Redeclaring text symbol \textdollar (encoding TS1) on i
-nput line 79.
-LaTeX Encoding Info:    Redeclaring text symbol \textquotesingle (encoding TS1)
- on input line 80.
-LaTeX Encoding Info:    Redeclaring text command \textasteriskcentered (encodin
-g TS1) on input line 81.
-LaTeX Encoding Info:    Redeclaring text symbol \textdblhyphen (encoding TS1) o
-n input line 92.
-LaTeX Encoding Info:    Redeclaring text symbol \textfractionsolidus (encoding 
-TS1) on input line 93.
-LaTeX Encoding Info:    Redeclaring text symbol \textzerooldstyle (encoding TS1
-) on input line 94.
-LaTeX Encoding Info:    Redeclaring text symbol \textoneoldstyle (encoding TS1)
- on input line 95.
-LaTeX Encoding Info:    Redeclaring text symbol \texttwooldstyle (encoding TS1)
- on input line 96.
-LaTeX Encoding Info:    Redeclaring text symbol \textthreeoldstyle (encoding TS
-1) on input line 97.
-LaTeX Encoding Info:    Redeclaring text symbol \textfouroldstyle (encoding TS1
-) on input line 98.
-LaTeX Encoding Info:    Redeclaring text symbol \textfiveoldstyle (encoding TS1
-) on input line 99.
-LaTeX Encoding Info:    Redeclaring text symbol \textsixoldstyle (encoding TS1)
- on input line 100.
-LaTeX Encoding Info:    Redeclaring text symbol \textsevenoldstyle (encoding TS
-1) on input line 101.
-LaTeX Encoding Info:    Redeclaring text symbol \texteightoldstyle (encoding TS
-1) on input line 102.
-LaTeX Encoding Info:    Redeclaring text symbol \textnineoldstyle (encoding TS1
-) on input line 103.
-LaTeX Encoding Info:    Redeclaring text symbol \textlangle (encoding TS1) on i
-nput line 104.
-LaTeX Encoding Info:    Redeclaring text symbol \textminus (encoding TS1) on in
-put line 105.
-LaTeX Encoding Info:    Redeclaring text symbol \textrangle (encoding TS1) on i
-nput line 106.
-LaTeX Encoding Info:    Redeclaring text symbol \textmho (encoding TS1) on inpu
-t line 107.
-LaTeX Encoding Info:    Redeclaring text symbol \textbigcircle (encoding TS1) o
-n input line 108.
-LaTeX Encoding Info:    Redeclaring text command \textcircled (encoding TS1) on
- input line 109.
-LaTeX Encoding Info:    Redeclaring text symbol \textohm (encoding TS1) on inpu
-t line 115.
-LaTeX Encoding Info:    Redeclaring text symbol \textlbrackdbl (encoding TS1) o
-n input line 116.
-LaTeX Encoding Info:    Redeclaring text symbol \textrbrackdbl (encoding TS1) o
-n input line 117.
-LaTeX Encoding Info:    Redeclaring text symbol \textuparrow (encoding TS1) on 
-input line 118.
-LaTeX Encoding Info:    Redeclaring text symbol \textdownarrow (encoding TS1) o
-n input line 119.
-LaTeX Encoding Info:    Redeclaring text symbol \textasciigrave (encoding TS1) 
-on input line 120.
-LaTeX Encoding Info:    Redeclaring text symbol \textborn (encoding TS1) on inp
-ut line 121.
-LaTeX Encoding Info:    Redeclaring text symbol \textdivorced (encoding TS1) on
- input line 122.
-LaTeX Encoding Info:    Redeclaring text symbol \textdied (encoding TS1) on inp
-ut line 123.
-LaTeX Encoding Info:    Redeclaring text symbol \textleaf (encoding TS1) on inp
-ut line 124.
-LaTeX Encoding Info:    Redeclaring text symbol \textmarried (encoding TS1) on 
-input line 125.
-LaTeX Encoding Info:    Redeclaring text symbol \textmusicalnote (encoding TS1)
- on input line 126.
-LaTeX Encoding Info:    Redeclaring text symbol \texttildelow (encoding TS1) on
- input line 127.
-LaTeX Encoding Info:    Redeclaring text symbol \textdblhyphenchar (encoding TS
-1) on input line 128.
-LaTeX Encoding Info:    Redeclaring text symbol \textasciibreve (encoding TS1) 
-on input line 129.
-LaTeX Encoding Info:    Redeclaring text symbol \textasciicaron (encoding TS1) 
-on input line 130.
-LaTeX Encoding Info:    Redeclaring text symbol \textacutedbl (encoding TS1) on
- input line 131.
-LaTeX Encoding Info:    Redeclaring text symbol \textgravedbl (encoding TS1) on
- input line 132.
-LaTeX Encoding Info:    Redeclaring text symbol \textdagger (encoding TS1) on i
-nput line 133.
-LaTeX Encoding Info:    Redeclaring text symbol \textdaggerdbl (encoding TS1) o
-n input line 134.
-LaTeX Encoding Info:    Redeclaring text symbol \textbardbl (encoding TS1) on i
-nput line 135.
-LaTeX Encoding Info:    Redeclaring text symbol \textperthousand (encoding TS1)
- on input line 136.
-LaTeX Encoding Info:    Redeclaring text symbol \textbullet (encoding TS1) on i
-nput line 137.
-LaTeX Encoding Info:    Redeclaring text symbol \textcelsius (encoding TS1) on 
-input line 138.
-LaTeX Encoding Info:    Redeclaring text symbol \textdollaroldstyle (encoding T
-S1) on input line 139.
-LaTeX Encoding Info:    Redeclaring text symbol \textcentoldstyle (encoding TS1
-) on input line 140.
-LaTeX Encoding Info:    Redeclaring text symbol \textflorin (encoding TS1) on i
-nput line 141.
-LaTeX Encoding Info:    Redeclaring text symbol \textcolonmonetary (encoding TS
-1) on input line 142.
-LaTeX Encoding Info:    Redeclaring text symbol \textwon (encoding TS1) on inpu
-t line 143.
-LaTeX Encoding Info:    Redeclaring text symbol \textnaira (encoding TS1) on in
-put line 144.
-LaTeX Encoding Info:    Redeclaring text symbol \textguarani (encoding TS1) on 
-input line 145.
-LaTeX Encoding Info:    Redeclaring text symbol \textpeso (encoding TS1) on inp
-ut line 146.
-LaTeX Encoding Info:    Redeclaring text symbol \textlira (encoding TS1) on inp
-ut line 147.
-LaTeX Encoding Info:    Redeclaring text symbol \textrecipe (encoding TS1) on i
-nput line 148.
-LaTeX Encoding Info:    Redeclaring text symbol \textinterrobang (encoding TS1)
- on input line 149.
-LaTeX Encoding Info:    Redeclaring text symbol \textinterrobangdown (encoding 
-TS1) on input line 150.
-LaTeX Encoding Info:    Redeclaring text symbol \textdong (encoding TS1) on inp
-ut line 151.
-LaTeX Encoding Info:    Redeclaring text symbol \texttrademark (encoding TS1) o
-n input line 152.
-LaTeX Encoding Info:    Redeclaring text symbol \textpertenthousand (encoding T
-S1) on input line 153.
-LaTeX Encoding Info:    Redeclaring text symbol \textpilcrow (encoding TS1) on 
-input line 154.
-LaTeX Encoding Info:    Redeclaring text symbol \textbaht (encoding TS1) on inp
-ut line 155.
-LaTeX Encoding Info:    Redeclaring text symbol \textnumero (encoding TS1) on i
-nput line 156.
-LaTeX Encoding Info:    Redeclaring text symbol \textdiscount (encoding TS1) on
- input line 157.
-LaTeX Encoding Info:    Redeclaring text symbol \textestimated (encoding TS1) o
-n input line 158.
-LaTeX Encoding Info:    Redeclaring text symbol \textopenbullet (encoding TS1) 
-on input line 159.
-LaTeX Encoding Info:    Redeclaring text symbol \textservicemark (encoding TS1)
- on input line 160.
-LaTeX Encoding Info:    Redeclaring text symbol \textlquill (encoding TS1) on i
-nput line 161.
-LaTeX Encoding Info:    Redeclaring text symbol \textrquill (encoding TS1) on i
-nput line 162.
-LaTeX Encoding Info:    Redeclaring text symbol \textcent (encoding TS1) on inp
-ut line 163.
-LaTeX Encoding Info:    Redeclaring text symbol \textsterling (encoding TS1) on
- input line 164.
-LaTeX Encoding Info:    Redeclaring text symbol \textcurrency (encoding TS1) on
- input line 165.
-LaTeX Encoding Info:    Redeclaring text symbol \textyen (encoding TS1) on inpu
-t line 166.
-LaTeX Encoding Info:    Redeclaring text symbol \textbrokenbar (encoding TS1) o
-n input line 167.
-LaTeX Encoding Info:    Redeclaring text symbol \textsection (encoding TS1) on 
-input line 168.
-LaTeX Encoding Info:    Redeclaring text symbol \textasciidieresis (encoding TS
-1) on input line 169.
-LaTeX Encoding Info:    Redeclaring text symbol \textcopyright (encoding TS1) o
-n input line 170.
-LaTeX Encoding Info:    Redeclaring text symbol \textordfeminine (encoding TS1)
- on input line 171.
-LaTeX Encoding Info:    Redeclaring text symbol \textcopyleft (encoding TS1) on
- input line 172.
-LaTeX Encoding Info:    Redeclaring text symbol \textlnot (encoding TS1) on inp
-ut line 173.
-LaTeX Encoding Info:    Redeclaring text symbol \textcircledP (encoding TS1) on
- input line 174.
-LaTeX Encoding Info:    Redeclaring text symbol \textregistered (encoding TS1) 
-on input line 175.
-LaTeX Encoding Info:    Redeclaring text symbol \textasciimacron (encoding TS1)
- on input line 176.
-LaTeX Encoding Info:    Redeclaring text symbol \textdegree (encoding TS1) on i
-nput line 177.
-LaTeX Encoding Info:    Redeclaring text symbol \textpm (encoding TS1) on input
- line 178.
-LaTeX Encoding Info:    Redeclaring text symbol \texttwosuperior (encoding TS1)
- on input line 179.
-LaTeX Encoding Info:    Redeclaring text symbol \textthreesuperior (encoding TS
-1) on input line 180.
-LaTeX Encoding Info:    Redeclaring text symbol \textasciiacute (encoding TS1) 
-on input line 181.
-LaTeX Encoding Info:    Redeclaring text symbol \textmu (encoding TS1) on input
- line 182.
-LaTeX Encoding Info:    Redeclaring text symbol \textparagraph (encoding TS1) o
-n input line 183.
-LaTeX Encoding Info:    Redeclaring text symbol \textperiodcentered (encoding T
-S1) on input line 184.
-LaTeX Encoding Info:    Redeclaring text symbol \textreferencemark (encoding TS
-1) on input line 185.
-LaTeX Encoding Info:    Redeclaring text symbol \textonesuperior (encoding TS1)
- on input line 186.
-LaTeX Encoding Info:    Redeclaring text symbol \textordmasculine (encoding TS1
-) on input line 187.
-LaTeX Encoding Info:    Redeclaring text symbol \textsurd (encoding TS1) on inp
-ut line 188.
-LaTeX Encoding Info:    Redeclaring text symbol \textonequarter (encoding TS1) 
-on input line 189.
-LaTeX Encoding Info:    Redeclaring text symbol \textonehalf (encoding TS1) on 
-input line 190.
-LaTeX Encoding Info:    Redeclaring text symbol \textthreequarters (encoding TS
-1) on input line 191.
-LaTeX Encoding Info:    Redeclaring text symbol \texteuro (encoding TS1) on inp
-ut line 192.
-LaTeX Encoding Info:    Redeclaring text symbol \texttimes (encoding TS1) on in
-put line 193.
-LaTeX Encoding Info:    Redeclaring text symbol \textdiv (encoding TS1) on inpu
-t line 194.
-))
-(c:/texlive/2025/texmf-dist/tex/lualatex/lualatex-math/lualatex-math.sty
-Package: lualatex-math 2022/01/01 v1.12 Patches for mathematics typesetting wit
-h LuaLaTeX
-Lua module: lualatex-math 2013/08/03 v1.3 Patches for mathematics typesetting wi
-th LuaLaTeX)
+LaTeX Encoding Info:    Redeclaring text command \capitalcedilla (encoding TS1) on input line 49.
+LaTeX Encoding Info:    Redeclaring text command \capitalogonek (encoding TS1) on input line 52.
+LaTeX Encoding Info:    Redeclaring text command \capitalgrave (encoding TS1) on input line 55.
+LaTeX Encoding Info:    Redeclaring text command \capitalacute (encoding TS1) on input line 56.
+LaTeX Encoding Info:    Redeclaring text command \capitalcircumflex (encoding TS1) on input line 57.
+LaTeX Encoding Info:    Redeclaring text command \capitaltilde (encoding TS1) on input line 58.
+LaTeX Encoding Info:    Redeclaring text command \capitaldieresis (encoding TS1) on input line 59.
+LaTeX Encoding Info:    Redeclaring text command \capitalhungarumlaut (encoding TS1) on input line 60.
+LaTeX Encoding Info:    Redeclaring text command \capitalring (encoding TS1) on input line 61.
+LaTeX Encoding Info:    Redeclaring text command \capitalcaron (encoding TS1) on input line 62.
+LaTeX Encoding Info:    Redeclaring text command \capitalbreve (encoding TS1) on input line 63.
+LaTeX Encoding Info:    Redeclaring text command \capitalmacron (encoding TS1) on input line 64.
+LaTeX Encoding Info:    Redeclaring text command \capitaldotaccent (encoding TS1) on input line 65.
+LaTeX Encoding Info:    Redeclaring text command \t (encoding TS1) on input line 66.
+LaTeX Encoding Info:    Redeclaring text command \capitaltie (encoding TS1) on input line 67.
+LaTeX Encoding Info:    Redeclaring text command \newtie (encoding TS1) on input line 68.
+LaTeX Encoding Info:    Redeclaring text command \capitalnewtie (encoding TS1) on input line 69.
+LaTeX Encoding Info:    Redeclaring text symbol \textcapitalcompwordmark (encoding TS1) on input line 70.
+LaTeX Encoding Info:    Redeclaring text symbol \textascendercompwordmark (encoding TS1) on input line 71.
+LaTeX Encoding Info:    Redeclaring text symbol \textquotestraightbase (encoding TS1) on input line 72.
+LaTeX Encoding Info:    Redeclaring text symbol \textquotestraightdblbase (encoding TS1) on input line 73.
+LaTeX Encoding Info:    Redeclaring text symbol \texttwelveudash (encoding TS1) on input line 74.
+LaTeX Encoding Info:    Redeclaring text symbol \textthreequartersemdash (encoding TS1) on input line 75.
+LaTeX Encoding Info:    Redeclaring text symbol \textleftarrow (encoding TS1) on input line 76.
+LaTeX Encoding Info:    Redeclaring text symbol \textrightarrow (encoding TS1) on input line 77.
+LaTeX Encoding Info:    Redeclaring text symbol \textblank (encoding TS1) on input line 78.
+LaTeX Encoding Info:    Redeclaring text symbol \textdollar (encoding TS1) on input line 79.
+LaTeX Encoding Info:    Redeclaring text symbol \textquotesingle (encoding TS1) on input line 80.
+LaTeX Encoding Info:    Redeclaring text command \textasteriskcentered (encoding TS1) on input line 81.
+LaTeX Encoding Info:    Redeclaring text symbol \textdblhyphen (encoding TS1) on input line 92.
+LaTeX Encoding Info:    Redeclaring text symbol \textfractionsolidus (encoding TS1) on input line 93.
+LaTeX Encoding Info:    Redeclaring text symbol \textzerooldstyle (encoding TS1) on input line 94.
+LaTeX Encoding Info:    Redeclaring text symbol \textoneoldstyle (encoding TS1) on input line 95.
+LaTeX Encoding Info:    Redeclaring text symbol \texttwooldstyle (encoding TS1) on input line 96.
+LaTeX Encoding Info:    Redeclaring text symbol \textthreeoldstyle (encoding TS1) on input line 97.
+LaTeX Encoding Info:    Redeclaring text symbol \textfouroldstyle (encoding TS1) on input line 98.
+LaTeX Encoding Info:    Redeclaring text symbol \textfiveoldstyle (encoding TS1) on input line 99.
+LaTeX Encoding Info:    Redeclaring text symbol \textsixoldstyle (encoding TS1) on input line 100.
+LaTeX Encoding Info:    Redeclaring text symbol \textsevenoldstyle (encoding TS1) on input line 101.
+LaTeX Encoding Info:    Redeclaring text symbol \texteightoldstyle (encoding TS1) on input line 102.
+LaTeX Encoding Info:    Redeclaring text symbol \textnineoldstyle (encoding TS1) on input line 103.
+LaTeX Encoding Info:    Redeclaring text symbol \textlangle (encoding TS1) on input line 104.
+LaTeX Encoding Info:    Redeclaring text symbol \textminus (encoding TS1) on input line 105.
+LaTeX Encoding Info:    Redeclaring text symbol \textrangle (encoding TS1) on input line 106.
+LaTeX Encoding Info:    Redeclaring text symbol \textmho (encoding TS1) on input line 107.
+LaTeX Encoding Info:    Redeclaring text symbol \textbigcircle (encoding TS1) on input line 108.
+LaTeX Encoding Info:    Redeclaring text command \textcircled (encoding TS1) on input line 109.
+LaTeX Encoding Info:    Redeclaring text symbol \textohm (encoding TS1) on input line 115.
+LaTeX Encoding Info:    Redeclaring text symbol \textlbrackdbl (encoding TS1) on input line 116.
+LaTeX Encoding Info:    Redeclaring text symbol \textrbrackdbl (encoding TS1) on input line 117.
+LaTeX Encoding Info:    Redeclaring text symbol \textuparrow (encoding TS1) on input line 118.
+LaTeX Encoding Info:    Redeclaring text symbol \textdownarrow (encoding TS1) on input line 119.
+LaTeX Encoding Info:    Redeclaring text symbol \textasciigrave (encoding TS1) on input line 120.
+LaTeX Encoding Info:    Redeclaring text symbol \textborn (encoding TS1) on input line 121.
+LaTeX Encoding Info:    Redeclaring text symbol \textdivorced (encoding TS1) on input line 122.
+LaTeX Encoding Info:    Redeclaring text symbol \textdied (encoding TS1) on input line 123.
+LaTeX Encoding Info:    Redeclaring text symbol \textleaf (encoding TS1) on input line 124.
+LaTeX Encoding Info:    Redeclaring text symbol \textmarried (encoding TS1) on input line 125.
+LaTeX Encoding Info:    Redeclaring text symbol \textmusicalnote (encoding TS1) on input line 126.
+LaTeX Encoding Info:    Redeclaring text symbol \texttildelow (encoding TS1) on input line 127.
+LaTeX Encoding Info:    Redeclaring text symbol \textdblhyphenchar (encoding TS1) on input line 128.
+LaTeX Encoding Info:    Redeclaring text symbol \textasciibreve (encoding TS1) on input line 129.
+LaTeX Encoding Info:    Redeclaring text symbol \textasciicaron (encoding TS1) on input line 130.
+LaTeX Encoding Info:    Redeclaring text symbol \textacutedbl (encoding TS1) on input line 131.
+LaTeX Encoding Info:    Redeclaring text symbol \textgravedbl (encoding TS1) on input line 132.
+LaTeX Encoding Info:    Redeclaring text symbol \textdagger (encoding TS1) on input line 133.
+LaTeX Encoding Info:    Redeclaring text symbol \textdaggerdbl (encoding TS1) on input line 134.
+LaTeX Encoding Info:    Redeclaring text symbol \textbardbl (encoding TS1) on input line 135.
+LaTeX Encoding Info:    Redeclaring text symbol \textperthousand (encoding TS1) on input line 136.
+LaTeX Encoding Info:    Redeclaring text symbol \textbullet (encoding TS1) on input line 137.
+LaTeX Encoding Info:    Redeclaring text symbol \textcelsius (encoding TS1) on input line 138.
+LaTeX Encoding Info:    Redeclaring text symbol \textdollaroldstyle (encoding TS1) on input line 139.
+LaTeX Encoding Info:    Redeclaring text symbol \textcentoldstyle (encoding TS1) on input line 140.
+LaTeX Encoding Info:    Redeclaring text symbol \textflorin (encoding TS1) on input line 141.
+LaTeX Encoding Info:    Redeclaring text symbol \textcolonmonetary (encoding TS1) on input line 142.
+LaTeX Encoding Info:    Redeclaring text symbol \textwon (encoding TS1) on input line 143.
+LaTeX Encoding Info:    Redeclaring text symbol \textnaira (encoding TS1) on input line 144.
+LaTeX Encoding Info:    Redeclaring text symbol \textguarani (encoding TS1) on input line 145.
+LaTeX Encoding Info:    Redeclaring text symbol \textpeso (encoding TS1) on input line 146.
+LaTeX Encoding Info:    Redeclaring text symbol \textlira (encoding TS1) on input line 147.
+LaTeX Encoding Info:    Redeclaring text symbol \textrecipe (encoding TS1) on input line 148.
+LaTeX Encoding Info:    Redeclaring text symbol \textinterrobang (encoding TS1) on input line 149.
+LaTeX Encoding Info:    Redeclaring text symbol \textinterrobangdown (encoding TS1) on input line 150.
+LaTeX Encoding Info:    Redeclaring text symbol \textdong (encoding TS1) on input line 151.
+LaTeX Encoding Info:    Redeclaring text symbol \texttrademark (encoding TS1) on input line 152.
+LaTeX Encoding Info:    Redeclaring text symbol \textpertenthousand (encoding TS1) on input line 153.
+LaTeX Encoding Info:    Redeclaring text symbol \textpilcrow (encoding TS1) on input line 154.
+LaTeX Encoding Info:    Redeclaring text symbol \textbaht (encoding TS1) on input line 155.
+LaTeX Encoding Info:    Redeclaring text symbol \textnumero (encoding TS1) on input line 156.
+LaTeX Encoding Info:    Redeclaring text symbol \textdiscount (encoding TS1) on input line 157.
+LaTeX Encoding Info:    Redeclaring text symbol \textestimated (encoding TS1) on input line 158.
+LaTeX Encoding Info:    Redeclaring text symbol \textopenbullet (encoding TS1) on input line 159.
+LaTeX Encoding Info:    Redeclaring text symbol \textservicemark (encoding TS1) on input line 160.
+LaTeX Encoding Info:    Redeclaring text symbol \textlquill (encoding TS1) on input line 161.
+LaTeX Encoding Info:    Redeclaring text symbol \textrquill (encoding TS1) on input line 162.
+LaTeX Encoding Info:    Redeclaring text symbol \textcent (encoding TS1) on input line 163.
+LaTeX Encoding Info:    Redeclaring text symbol \textsterling (encoding TS1) on input line 164.
+LaTeX Encoding Info:    Redeclaring text symbol \textcurrency (encoding TS1) on input line 165.
+LaTeX Encoding Info:    Redeclaring text symbol \textyen (encoding TS1) on input line 166.
+LaTeX Encoding Info:    Redeclaring text symbol \textbrokenbar (encoding TS1) on input line 167.
+LaTeX Encoding Info:    Redeclaring text symbol \textsection (encoding TS1) on input line 168.
+LaTeX Encoding Info:    Redeclaring text symbol \textasciidieresis (encoding TS1) on input line 169.
+LaTeX Encoding Info:    Redeclaring text symbol \textcopyright (encoding TS1) on input line 170.
+LaTeX Encoding Info:    Redeclaring text symbol \textordfeminine (encoding TS1) on input line 171.
+LaTeX Encoding Info:    Redeclaring text symbol \textcopyleft (encoding TS1) on input line 172.
+LaTeX Encoding Info:    Redeclaring text symbol \textlnot (encoding TS1) on input line 173.
+LaTeX Encoding Info:    Redeclaring text symbol \textcircledP (encoding TS1) on input line 174.
+LaTeX Encoding Info:    Redeclaring text symbol \textregistered (encoding TS1) on input line 175.
+LaTeX Encoding Info:    Redeclaring text symbol \textasciimacron (encoding TS1) on input line 176.
+LaTeX Encoding Info:    Redeclaring text symbol \textdegree (encoding TS1) on input line 177.
+LaTeX Encoding Info:    Redeclaring text symbol \textpm (encoding TS1) on input line 178.
+LaTeX Encoding Info:    Redeclaring text symbol \texttwosuperior (encoding TS1) on input line 179.
+LaTeX Encoding Info:    Redeclaring text symbol \textthreesuperior (encoding TS1) on input line 180.
+LaTeX Encoding Info:    Redeclaring text symbol \textasciiacute (encoding TS1) on input line 181.
+LaTeX Encoding Info:    Redeclaring text symbol \textmu (encoding TS1) on input line 182.
+LaTeX Encoding Info:    Redeclaring text symbol \textparagraph (encoding TS1) on input line 183.
+LaTeX Encoding Info:    Redeclaring text symbol \textperiodcentered (encoding TS1) on input line 184.
+LaTeX Encoding Info:    Redeclaring text symbol \textreferencemark (encoding TS1) on input line 185.
+LaTeX Encoding Info:    Redeclaring text symbol \textonesuperior (encoding TS1) on input line 186.
+LaTeX Encoding Info:    Redeclaring text symbol \textordmasculine (encoding TS1) on input line 187.
+LaTeX Encoding Info:    Redeclaring text symbol \textsurd (encoding TS1) on input line 188.
+LaTeX Encoding Info:    Redeclaring text symbol \textonequarter (encoding TS1) on input line 189.
+LaTeX Encoding Info:    Redeclaring text symbol \textonehalf (encoding TS1) on input line 190.
+LaTeX Encoding Info:    Redeclaring text symbol \textthreequarters (encoding TS1) on input line 191.
+LaTeX Encoding Info:    Redeclaring text symbol \texteuro (encoding TS1) on input line 192.
+LaTeX Encoding Info:    Redeclaring text symbol \texttimes (encoding TS1) on input line 193.
+LaTeX Encoding Info:    Redeclaring text symbol \textdiv (encoding TS1) on input line 194.
+)) (c:/texlive/2025/texmf-dist/tex/lualatex/lualatex-math/lualatex-math.sty
+Package: lualatex-math 2022/01/01 v1.12 Patches for mathematics typesetting with LuaLaTeX
+Lua module: lualatex-math 2013/08/03 v1.3 Patches for mathematics typesetting with LuaLaTeX)
 \g__um_fam_int=\count375
 \g__um_fonts_used_int=\count376
 \l__um_primecount_int=\count377
 \g__um_primekern_muskip=\muskip19
-
-(c:/texlive/2025/texmf-dist/tex/latex/unicode-math/unicode-math-table.tex)))
-(c:/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/unicode-math/unicode-math-table.tex))) (c:/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
-
-(c:/texlive/2025/texmf-dist/tex/latex/graphics/graphics.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
-
-(c:/texlive/2025/texmf-dist/tex/latex/graphics/trig.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
-)
-(c:/texlive/2025/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+) (c:/texlive/2025/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: luatex.def on input line 106.
-
-(c:/texlive/2025/texmf-dist/tex/latex/graphics-def/luatex.def
+ (c:/texlive/2025/texmf-dist/tex/latex/graphics-def/luatex.def
 File: luatex.def 2025/09/29 v1.2f Graphics/color driver for luatex
 ))
 \Gin@req@height=\dimen182
 \Gin@req@width=\dimen183
-)
-(c:/texlive/2025/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
-(c:/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty
-(c:/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
+) (c:/texlive/2025/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty (c:/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty (c:/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty (c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
 \pgfutil@everybye=\toks30
 \pgfutil@tempdima=\dimen184
 \pgfutil@tempdimb=\dimen185
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
 \pgfutil@abb=\box66
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/pgf.revision.tex)
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgf/pgf.revision.tex)
 Package: pgfrcs 2025-08-29 v3.1.11a (3.1.11a)
 ))
 Package: pgf 2025-08-29 v3.1.11a (3.1.11a)
-
-(c:/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty
-(c:/texlive/2025/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
+ (c:/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty (c:/texlive/2025/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty (c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
 Package: pgfsys 2025-08-29 v3.1.11a (3.1.11a)
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
 \pgfkeys@pathtoks=\toks31
 \pgfkeys@temptoks=\toks32
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeyslibraryfiltered.co
-de.tex
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeyslibraryfiltered.code.tex
 \pgfkeys@tmptoks=\toks33
 ))
 \pgf@x=\dimen186
@@ -803,29 +592,23 @@ de.tex
 File: pgf.cfg 2025-08-29 v3.1.11a (3.1.11a)
 )
 Driver file for pgf: pgfsys-luatex.def
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-luatex.def
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-luatex.def
 File: pgfsys-luatex.def 2025-08-29 v3.1.11a (3.1.11a)
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-pdf.def
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-pdf.def
 File: pgfsys-common-pdf.def 2025-08-29 v3.1.11a (3.1.11a)
-)))
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
+))) (c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
 File: pgfsyssoftpath.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgfsyssoftpath@smallbuffer@items=\count383
 \pgfsyssoftpath@bigbuffer@items=\count384
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
 File: pgfsysprotocol.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 )) (c:/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
-
-(c:/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg
+ (c:/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package xcolor Info: Driver file: luatex.def on input line 274.
-
-(c:/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+ (c:/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx)
 Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
 Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
 Package xcolor Info: Model `RGB' extended on input line 1365.
@@ -835,43 +618,18 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
 Package: pgfcore 2025-08-29 v3.1.11a (3.1.11a)
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
 \pgfmath@dimen=\dimen196
 \pgfmath@count=\count385
 \pgfmath@box=\box67
 \pgfmath@toks=\toks37
 \pgfmath@stack@operand=\toks38
 \pgfmath@stack@operation=\toks39
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.te
-x)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric
-.code.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.t
-ex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.co
-de.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.te
-x)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerarithm
-etics.code.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
 \c@pgfmathroundto@lastzeros=\count386
-))
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfint.code.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
+)) (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfint.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
 File: pgfcorepoints.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgf@picminx=\dimen197
 \pgf@picmaxx=\dimen198
@@ -887,109 +645,75 @@ File: pgfcorepoints.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgf@yy=\dimen264
 \pgf@zx=\dimen265
 \pgf@zy=\dimen266
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.cod
-e.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex
 File: pgfcorepathconstruct.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgf@path@lastx=\dimen267
 \pgf@path@lasty=\dimen268
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code.te
-x
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code.tex
 File: pgfcorepathusage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgf@shorten@end@additional=\dimen269
 \pgf@shorten@start@additional=\dimen270
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
 File: pgfcorescopes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgfpic=\box68
 \pgf@hbox=\box69
 \pgf@layerbox@main=\box70
 \pgf@picture@serial@count=\count387
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code
-.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex
 File: pgfcoregraphicstate.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgflinewidth=\dimen271
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformations.c
-ode.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformations.code.tex
 File: pgfcoretransformations.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgf@pt@x=\dimen272
 \pgf@pt@y=\dimen273
 \pgf@pt@temp=\dimen274
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
 File: pgfcorequick.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex
 File: pgfcoreobjects.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathprocessing.co
-de.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathprocessing.code.tex
 File: pgfcorepathprocessing.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex
 File: pgfcorearrows.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgfarrowsep=\dimen275
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
 File: pgfcoreshade.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgf@max=\dimen276
 \pgf@sys@shading@range@num=\count388
 \pgf@shadingcount=\count389
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
 File: pgfcoreimage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
 File: pgfcoreexternal.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgfexternal@startupbox=\box71
 ) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex
 File: pgfcorelayers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.code
-.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.code.tex
 File: pgfcoretransparency.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.code.tex
 File: pgfcorepatterns.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorerdf.code.tex
 File: pgfcorerdf.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-))) (c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.te
-x
+))) (c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.tex
 File: pgfmoduleshapes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgfnodeparttextbox=\box72
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex
 File: pgfmoduleplot.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-)
-(c:/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.st
-y
+) (c:/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty
 Package: pgfcomp-version-0-65 2025-08-29 v3.1.11a (3.1.11a)
 \pgf@nodesepstart=\dimen277
 \pgf@nodesepend=\dimen278
-)
-(c:/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18.st
-y
+) (c:/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty
 Package: pgfcomp-version-1-18 2025-08-29 v3.1.11a (3.1.11a)
-)) (c:/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgffor.sty
-(c:/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex))
-(c:/texlive/2025/texmf-dist/tex/latex/pgf/math/pgfmath.sty
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex))
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
+)) (c:/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgffor.sty (c:/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty (c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex)) (c:/texlive/2025/texmf-dist/tex/latex/pgf/math/pgfmath.sty (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)) (c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
 Package: pgffor 2025-08-29 v3.1.11a (3.1.11a)
 \pgffor@iter=\dimen279
 \pgffor@skip=\dimen280
 \pgffor@stack=\toks40
 \pgffor@toks=\toks41
-))
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
+)) (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
 Package: tikz 2025-08-29 v3.1.11a (3.1.11a)
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers.co
-de.tex
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex
 File: pgflibraryplothandlers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgf@plot@mark@count=\count390
 \pgfplotmarksize=\dimen281
@@ -1010,49 +734,33 @@ File: pgflibraryplothandlers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \tikznumberofchildren=\count392
 \tikznumberofcurrentchild=\count393
 \tikz@fig@count=\count394
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
 File: pgfmodulematrix.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgfmatrixcurrentrow=\count395
 \pgfmatrixcurrentcolumn=\count396
 \pgf@matrix@numberofcolumns=\count397
 )
 \tikz@expandcount=\count398
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
-brarytopaths.code.tex
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex
 File: tikzlibrarytopaths.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-)))
-(c:/texlive/2025/texmf-dist/tex/latex/circuitikz/circuitikz.sty
-Package: circuitikz 2026/02/04{} The CircuiTikz circuit drawing package version
- 1.8.5
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
-brarycalc.code.tex
+))) (c:/texlive/2025/texmf-dist/tex/latex/circuitikz/circuitikz.sty
+Package: circuitikz 2026/02/04{} The CircuiTikz circuit drawing package version 1.8.5
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex
 File: tikzlibrarycalc.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.meta.cod
-e.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.meta.code.tex
 File: pgflibraryarrows.meta.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgfarrowinset=\dimen290
 \pgfarrowlength=\dimen291
 \pgfarrowwidth=\dimen292
 \pgfarrowlinewidth=\dimen293
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
-brarybending.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarybending.code.tex
 File: tikzlibrarybending.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmodulebending.code.tex
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmodulebending.code.tex
 File: pgfmodulebending.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmodulenonlineartransform
-ations.code.tex
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmodulenonlineartransformations.code.tex
 File: pgfmodulenonlineartransformations.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgftransformnonlinearflatness=\dimen294
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibrarycurvilinear.cod
-e.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibrarycurvilinear.code.tex
 File: pgflibrarycurvilinear.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgf@curvilinear@time@a=\dimen295
 \pgf@curvilinear@length@a=\dimen296
@@ -1061,11 +769,7 @@ File: pgflibrarycurvilinear.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgf@curvilinear@length@d=\dimen299
 )
 \pgf@arrows@the@rigidity=\dimen300
-))
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
-braryfpu.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryfpu.code.tex))
-(c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcirc.defines.tex
+)) (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfpu.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryfpu.code.tex)) (c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcirc.defines.tex
 \pgf@circ@count@a=\count399
 \pgf@circ@count@b=\count400
 \pgf@circ@count@c=\count401
@@ -1080,35 +784,20 @@ braryfpu.code.tex
 \pgf@circ@Rlen=\dimen309
 \pgf@circ@scaled@Rlen=\dimen310
 \pgfstartlinewidth=\dimen311
-)
-(c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircutils.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircutils.tex
 \ctikz@scratchbox=\box77
-)
-(c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircpath.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircpath.tex
 \ctikz@vif@count=\count402
-)
-(c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircshapes.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircmonopoles.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircbipoles.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcirctripoles.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircshapes.tex) (c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircmonopoles.tex) (c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircbipoles.tex) (c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcirctripoles.tex
 \pgf@circ@res@count=\count403
-)
-(c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircquadpoles.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircmultipoles.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcirclabel.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircvoltage.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircquadpoles.tex) (c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircmultipoles.tex) (c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcirclabel.tex) (c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircvoltage.tex
 \pgfcirc@labelshift=\dimen312
-)
-(c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcirccurrent.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircflow.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/xstring/xstring.sty
-(c:/texlive/2025/texmf-dist/tex/generic/xstring/xstring.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcirccurrent.tex) (c:/texlive/2025/texmf-dist/tex/generic/circuitikz/pgfcircflow.tex) (c:/texlive/2025/texmf-dist/tex/generic/xstring/xstring.sty (c:/texlive/2025/texmf-dist/tex/generic/xstring/xstring.tex
 \xs_counta=\count404
 \xs_countb=\count405
 )
 Package: xstring 2023/08/22 v1.86 String manipulations (CT)
-))
-(c:/texlive/2025/texmf-dist/tex/latex/booktabs/booktabs.sty
+)) (c:/texlive/2025/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \heavyrulewidth=\dimen313
 \lightrulewidth=\dimen314
@@ -1127,12 +816,9 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \@thisruleclass=\count408
 \@lastruleclass=\count409
 \@thisrulewidth=\dimen325
-)
-(c:/texlive/2025/texmf-dist/tex/generic/babel/babel.sty
-Package: babel 2026/03/08 v26.4 The multilingual framework for LuaLaTeX, pdfLaT
-eX and XeLaTeX
-
-(c:/texlive/2025/texmf-dist/tex/generic/babel/luababel.def
+) (c:/texlive/2025/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2026/03/08 v26.4 The multilingual framework for LuaLaTeX, pdfLaTeX and XeLaTeX
+ (c:/texlive/2025/texmf-dist/tex/generic/babel/luababel.def
 \bbl@readstream=\read3
 \l@dumylang=\language2
 Package babel Info: Non-standard hyphenation setup on input line 118.
@@ -1229,47 +915,30 @@ Package babel Info: Non-standard hyphenation setup on input line 118.
 \bbl@pattcodes=\catcodetable15
 )
 \babel@savecnt=\count410
-LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input li
-ne 2078.
-LaTeX Encoding Info:    Redeclaring text command \IJ (encoding OT1) on input li
-ne 2080.
-LaTeX Encoding Info:    Redeclaring text command \ij (encoding T1) on input lin
-e 2082.
-LaTeX Encoding Info:    Redeclaring text command \IJ (encoding T1) on input lin
-e 2083.
-LaTeX Encoding Info:    Ignoring declaration for text command \ij (encoding ?) 
-on input line 2084.
-LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?) 
-on input line 2086.
-LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) 
-on input line 2111.
+LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input line 2078.
+LaTeX Encoding Info:    Redeclaring text command \IJ (encoding OT1) on input line 2080.
+LaTeX Encoding Info:    Redeclaring text command \ij (encoding T1) on input line 2082.
+LaTeX Encoding Info:    Redeclaring text command \IJ (encoding T1) on input line 2083.
+LaTeX Encoding Info:    Ignoring declaration for text command \ij (encoding ?) on input line 2084.
+LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?) on input line 2086.
+LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) on input line 2111.
 \U@D=\dimen326
 \l@unhyphenated=\language92
-
-(c:/texlive/2025/texmf-dist/tex/generic/babel/luababel.def
+ (c:/texlive/2025/texmf-dist/tex/generic/babel/luababel.def
 \bbl@attr@locale=\attribute4
-)
-(c:/texlive/2025/texmf-dist/tex/generic/babel/locale/nl/babel-dutch.tex)
+) (c:/texlive/2025/texmf-dist/tex/generic/babel/locale/nl/babel-dutch.tex)
 Package babel Info: Importing font and identification data for dutch
 (babel)             from babel-nl.ini. Reported on input line 4330.
-
-(c:/texlive/2025/texmf-dist/tex/generic/babel-dutch/dutch.ldf
+ (c:/texlive/2025/texmf-dist/tex/generic/babel-dutch/dutch.ldf
 Language: dutch 2021/08/29 v3.8l Dutch support from the babel system
 Package babel Info: Making " an active character on input line 127.
-
-(c:/texlive/2025/texmf-dist/tex/generic/hyph-utf8/loadhyph/loadhyph-nl.tex
-UTF-8 Dutch hyphenation patterns
-(c:/texlive/2025/texmf-dist/tex/generic/hyph-utf8/patterns/tex/hyph-nl.tex))))
-(c:/texlive/2025/texmf-dist/tex/lualatex/luacode/luacode.sty
+ (c:/texlive/2025/texmf-dist/tex/generic/hyph-utf8/loadhyph/loadhyph-nl.tex UTF-8 Dutch hyphenation patterns (c:/texlive/2025/texmf-dist/tex/generic/hyph-utf8/patterns/tex/hyph-nl.tex)))) (c:/texlive/2025/texmf-dist/tex/lualatex/luacode/luacode.sty
 Package: luacode 2012/01/23 v1.2a lua-in-tex helpers (mpg)
-
-(c:/texlive/2025/texmf-dist/tex/generic/iftex/ifluatex.sty
+ (c:/texlive/2025/texmf-dist/tex/generic/iftex/ifluatex.sty
 Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
-)
-(c:/texlive/2025/texmf-dist/tex/luatex/luatexbase/luatexbase.sty
+) (c:/texlive/2025/texmf-dist/tex/luatex/luatexbase/luatexbase.sty
 Package: luatexbase 2015/10/04 v1.3 luatexbase interface to LuaTeX 
-
-(c:/texlive/2025/texmf-dist/tex/luatex/ctablestack/ctablestack.sty
+ (c:/texlive/2025/texmf-dist/tex/luatex/ctablestack/ctablestack.sty
 Package: ctablestack 2015/10/01 v1.0 Catcode table stable support
 \@catcodetablestackcnt=\count411
 )
@@ -1278,32 +947,25 @@ Package: ctablestack 2015/10/01 v1.0 Catcode table stable support
 )
 \luacode@lines=\toks42
 \luacode@table@soft=\catcodetable18
-)
-(c:/texlive/2025/texmf-dist/tex/latex/float/float.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count412
 \float@exts=\toks43
 \float@box=\box78
 \@float@everytoks=\toks44
 \@floatcapt=\box79
-)
-(c:/texlive/2025/texmf-dist/tex/latex/ncctools/nccmath.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/ncctools/nccmath.sty
 Package: nccmath 2006/01/20 v1.3 Additional Math Commands (NCC)
 \NCC@fracrulewidth=\dimen327
-)
-(c:/texlive/2025/texmf-dist/tex/latex/mdframed/mdframed.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/mdframed/mdframed.sty
 Package: mdframed 2013/07/01 1.9b: mdframed
-
-(c:/texlive/2025/texmf-dist/tex/latex/zref/zref-abspage.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/zref/zref-abspage.sty
 Package: zref-abspage 2026-03-07 v2.37 Module abspage for zref (HO)
-
-(c:/texlive/2025/texmf-dist/tex/latex/zref/zref-base.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/zref/zref-base.sty
 Package: zref-base 2026-03-07 v2.37 Module base for zref (HO)
-
-(c:/texlive/2025/texmf-dist/tex/generic/etexcmds/etexcmds.sty
+ (c:/texlive/2025/texmf-dist/tex/generic/etexcmds/etexcmds.sty
 Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
-)
-(c:/texlive/2025/texmf-dist/tex/latex/auxhook/auxhook.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/auxhook/auxhook.sty
 Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
 )
 Package zref Info: New property list: main on input line 767.
@@ -1312,8 +974,7 @@ Package zref Info: New property: page on input line 769.
 )
 \c@abspage=\count413
 Package zref Info: New property: abspage on input line 67.
-)
-(c:/texlive/2025/texmf-dist/tex/latex/needspace/needspace.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/needspace/needspace.sty
 Package: needspace 2025/03/13 v1.3e reserve vertical space
 )
 \mdf@templength=\skip82
@@ -1357,8 +1018,7 @@ Package: needspace 2025/03/13 v1.3e reserve vertical space
 \mdf@subsubtitlebelowskip@length=\skip119
 \mdf@subsubtitleinneraboveskip@length=\skip120
 \mdf@subsubtitleinnerbelowskip@length=\skip121
-
-(c:/texlive/2025/texmf-dist/tex/latex/mdframed/md-frame-0.mdf
+ (c:/texlive/2025/texmf-dist/tex/latex/mdframed/md-frame-0.mdf
 File: md-frame-0.mdf 2013/07/01\ 1.9b: md-frame-0
 )
 \mdf@frametitlebox=\box80
@@ -1404,23 +1064,15 @@ File: md-frame-0.mdf 2013/07/01\ 1.9b: md-frame-0
 \c@mdf@env@ii=\count418
 \c@mdf@zref@counter=\count419
 Package zref Info: New property: mdf@pagevalue on input line 895.
-)
-(c:/Users/paulz/texmf/tex/latex/numodel-bundle/numodel/numodel.sty
-Package: numodel 2026/05/19 v0.4.0 Numerical physics models with Euler integrat
-ion and Forrester diagrams
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
-braryshapes.symbols.code.tex
+) (c:/Users/paulz/texmf/tex/latex/numodel-bundle/numodel/numodel.sty
+Package: numodel 2026/05/23 v0.5.0-pre Numerical physics models with Euler integration and Forrester diagrams
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.symbols.code.tex
 File: tikzlibraryshapes.symbols.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.s
-ymbols.code.tex
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.symbols.code.tex
 File: pgflibraryshapes.symbols.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-))
-(c:/texlive/2025/texmf-dist/tex/latex/tabularray/tabularray.sty
+)) (c:/texlive/2025/texmf-dist/tex/latex/tabularray/tabularray.sty
 Package: tabularray 2025-11-27 v2025C Typeset tabulars and arrays with LaTeX3
-
-(c:/texlive/2025/texmf-dist/tex/latex/ninecolors/ninecolors.sty
+ (c:/texlive/2025/texmf-dist/tex/latex/ninecolors/ninecolors.sty
 Package: ninecolors 2022-02-13 v2022D Select colors with proper color contrast
 )
 \g__tblr_nohyper_int=\count420
@@ -1548,15 +1200,11 @@ Package: ninecolors 2022-02-13 v2022D Select colors with proper color contrast
 \l__tblr_last_cell_table_dp_dim=\dimen384
 \l__tblr_last_vline_wd_dim=\dimen385
 \l__tblr_tikz_node_box=\box112
-)
-(c:/Users/paulz/texmf/tex/latex/numodel-bundle/numodel-plot/numodel-plot.sty
-Package: numodel-plot 2026/05/19 v0.4.0 Auto-sizing PGFPlots engine
-
-(c:/texlive/2025/texmf-dist/tex/latex/pgfplots/pgfplots.sty
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.revision.tex)
+) (c:/Users/paulz/texmf/tex/latex/numodel-bundle/numodel-plot/numodel-plot.sty
+Package: numodel-plot 2026/05/23 v0.5.0-pre Auto-sizing PGFPlots engine
+ (c:/texlive/2025/texmf-dist/tex/latex/pgfplots/pgfplots.sty (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.revision.tex)
 Package: pgfplots 2025/08/14 v1.18.2 Data Visualization (1.18.2)
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.code.tex
+ (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.code.tex
 (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotscore.code.tex
 Package pgfplots info on input line 124: Initializing with LUA version Lua 5.3
 \pgfplots@luabackend@table=\catcodetable19
@@ -1566,68 +1214,18 @@ Package pgfplots info on input line 124: Initializing with LUA version Lua 5.3
 \pgfplots@tmpa=\dimen386
 \c@pgfplots@coordindex=\count459
 \c@pgfplots@scanlineindex=\count460
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/sys/pgfplotssysgeneric.code.te
-x))
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/pgfplotslibrary.code.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfs
-upp_loader.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfs
-upp_pgfutil-common-lists.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/luamath/pgflibraryluamath
-.code.tex)
-Package pgfplots info on input line 292: luamath library shipped with pgf 3.1.1
-1a is up-to-date
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.code.tex
-Package pgfplots info on input line 82: Found new luatex: initializing lua comm
-ands instead of write18 (shell-escape)
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsliststru
-cture.code.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsliststru
-ctureext.code.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsarray.co
-de.tex
+ (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/sys/pgfplotssysgeneric.code.tex)) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/pgfplotslibrary.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_loader.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_pgfutil-common-lists.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/luamath/pgflibraryluamath.code.tex)
+Package pgfplots info on input line 292: luamath library shipped with pgf 3.1.11a is up-to-date
+) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.code.tex
+Package pgfplots info on input line 82: Found new luatex: initializing lua commands instead of write18 (shell-escape)
+ (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsliststructure.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsliststructureext.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsarray.code.tex
 \c@pgfplotsarray@tmp=\count461
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsmatrix.c
-ode.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/numtable/pgfplotstableshared.c
-ode.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsmatrix.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/numtable/pgfplotstableshared.code.tex
 \c@pgfplotstable@counta=\count462
 \t@pgfplotstable@a=\toks48
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsdeque.co
-de.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.data.code.
-tex))
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.verb.code.te
-x)
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/pgflibrarypgfplots.surfsh
-ading.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsdeque.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.data.code.tex)) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.verb.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/pgflibrarypgfplots.surfshading.code.tex
 \c@pgfplotslibrarysurf@no=\count463
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/sys/pgflibrarypgfplots.surfsha
-ding.pgfsys-luatex.def)))
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotscolormap.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotscolor.code.tex))
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsstackedplots.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsplothandlers.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplothandler.code.t
-ex
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplotimage.code.tex
-))) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.scaling.code.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotscoordprocessing.code.t
-ex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.errorbars.code.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.markers.code.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsticks.code.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.paths.code.tex)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
-brarydecorations.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduledecorations.code.t
-ex
+ (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/sys/pgflibrarypgfplots.surfshading.pgfsys-luatex.def))) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotscolormap.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotscolor.code.tex)) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsstackedplots.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsplothandlers.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplothandler.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplotimage.code.tex))) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.scaling.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotscoordprocessing.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.errorbars.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.markers.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsticks.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.paths.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduledecorations.code.tex
 \pgfdecoratedcompleteddistance=\dimen387
 \pgfdecoratedremainingdistance=\dimen388
 \pgfdecoratedinputsegmentcompleteddistance=\dimen389
@@ -1638,17 +1236,7 @@ ex
 \pgfdecorationsegmentlength=\dimen393
 )
 \tikz@lib@dec@box=\box113
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
-brarydecorations.pathmorphing.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydec
-orations.pathmorphing.code.tex))
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
-brarydecorations.pathreplacing.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydec
-orations.pathreplacing.code.tex))
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.conto
-urlua.code.tex)
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathmorphing.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydecorations.pathmorphing.code.tex)) (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathreplacing.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydecorations.pathreplacing.code.tex)) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.contourlua.code.tex)
 \pgfplots@numplots=\count465
 \pgfplots@xmin@reg=\dimen394
 \pgfplots@xmax@reg=\dimen395
@@ -1656,43 +1244,21 @@ urlua.code.tex)
 \pgfplots@ymax@reg=\dimen397
 \pgfplots@zmin@reg=\dimen398
 \pgfplots@zmax@reg=\dimen399
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
-braryplotmarks.code.tex
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryplotmarks.code.tex
 File: tikzlibraryplotmarks.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryplotmarks.code.
-tex
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryplotmarks.code.tex
 File: pgflibraryplotmarks.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-)))
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.fillb
-etween.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfcontrib/tikzlibraryfillbetw
-een.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
-braryintersections.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryintersections.c
-ode.tex
+))) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.fillbetween.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfcontrib/tikzlibraryfillbetween.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryintersections.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryintersections.code.tex
 \pgf@intersect@solutions=\count466
-))
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfcontrib/tikzlibrarydecorati
-ons.softclip.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfcontrib/pgflibraryfillbetwe
-en.code.tex)))
-(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.decor
-ations.softclip.code.tex)))
+)) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfcontrib/tikzlibrarydecorations.softclip.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfcontrib/pgflibraryfillbetween.code.tex))) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.decorations.softclip.code.tex)))
 \g_mrule_counter_int=\count467
 \g_numodel_steps_int=\count468
 \g_numodel_maxiter_int=\count469
 \g_numodel_gridmaxx_int=\count470
-
-(c:/Users/paulz/texmf/tex/latex/numodel-bundle/numodel/numodel-EN.def
-File: numodel-EN.def 2026/05/19 v0.4.0 numodel keyword table -- English (XMILE)
-
-)
-(c:/Users/paulz/texmf/tex/latex/numodel-bundle/numodel/numodel-NL.def
-File: numodel-NL.def 2026/05/19 v0.4.0 numodel keyword table -- Dutch (CoachTaa
-l)
+ (c:/Users/paulz/texmf/tex/latex/numodel-bundle/numodel/numodel-EN.def
+File: numodel-EN.def 2026/05/23 v0.5.0-pre numodel keyword table -- English (XMILE)
+) (c:/Users/paulz/texmf/tex/latex/numodel-bundle/numodel/numodel-NL.def
+File: numodel-NL.def 2026/05/23 v0.5.0-pre numodel keyword table -- Dutch (CoachTaal)
 )
 \l__numodel_row_int=\count471
 \l__numodel_dispnum_int=\count472
@@ -1701,8 +1267,7 @@ l)
 \l__numodel_numstarts_int=\count475
 \l__numodel_yidx_int=\count476
 )
-luaotfload | cache : Lookup cache loaded from C:/Users/paulz/.texlive2026/texmf-
-var/luatex-cache/generic/names/luaotfload-lookup-cache.luc.
+luaotfload | cache : Lookup cache loaded from C:/Users/paulz/.texlive2026/texmf-var/luatex-cache/generic/names/luaotfload-lookup-cache.luc.
 
 Package fontspec Info: 
 (fontspec)             Font family 'Arial(0)' created for font 'Arial' with
@@ -1712,23 +1277,17 @@ Package fontspec Info:
 (fontspec)             series/shapes:
 (fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <->"name:Arial:mode=node;script=latn;language=dflt;+tlig
-;"
+(fontspec)             <->"name:Arial:mode=node;script=latn;language=dflt;+tlig;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.:
-(fontspec)             <->"name:Arial:mode=node;script=latn;language=dflt;+tlig
-;+smcp;"
+(fontspec)             <->"name:Arial:mode=node;script=latn;language=dflt;+tlig;+smcp;"
 (fontspec)             - 'bold' (b/n) with NFSS spec.:
-(fontspec)             <->"name:Arial/B:mode=node;script=latn;language=dflt;+tl
-ig;"
+(fontspec)             <->"name:Arial/B:mode=node;script=latn;language=dflt;+tlig;"
 (fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.:
-(fontspec)             <->"name:Arial/B:mode=node;script=latn;language=dflt;+tl
-ig;+smcp;"
+(fontspec)             <->"name:Arial/B:mode=node;script=latn;language=dflt;+tlig;+smcp;"
 (fontspec)             - 'italic' (m/it) with NFSS spec.:
-(fontspec)             <->"name:Arial/I:mode=node;script=latn;language=dflt;+tl
-ig;"
+(fontspec)             <->"name:Arial/I:mode=node;script=latn;language=dflt;+tlig;"
 (fontspec)             - 'bold italic' (b/it) with NFSS spec.:
-(fontspec)             <->"name:Arial/BI:mode=node;script=latn;language=dflt;+t
-lig;"
+(fontspec)             <->"name:Arial/BI:mode=node;script=latn;language=dflt;+tlig;"
 
 
 Package fontspec Info: 
@@ -1741,13 +1300,11 @@ Package fontspec Info:
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
 (fontspec)             <->"name:Arial:mode=base;script=latn;language=dflt;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.:
-(fontspec)             <->"name:Arial:mode=base;script=latn;language=dflt;+smcp
-;"
+(fontspec)             <->"name:Arial:mode=base;script=latn;language=dflt;+smcp;"
 (fontspec)             - 'bold' (b/n) with NFSS spec.:
 (fontspec)             <->"name:Arial/B:mode=base;script=latn;language=dflt;"
 (fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.:
-(fontspec)             <->"name:Arial/B:mode=base;script=latn;language=dflt;+sm
-cp;"
+(fontspec)             <->"name:Arial/B:mode=base;script=latn;language=dflt;+smcp;"
 (fontspec)             - 'italic' (m/it) with NFSS spec.:
 (fontspec)             <->"name:Arial/I:mode=base;script=latn;language=dflt;"
 (fontspec)             - 'bold italic' (b/it) with NFSS spec.:
@@ -1763,151 +1320,114 @@ LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
 Package fontspec Info: 
 (fontspec)             Font family 'LeteSansMath(0)' created for font 'Lete
 (fontspec)             Sans Math' with options
-(fontspec)             [Renderer=Basic,BoldItalicFont={},ItalicFont={},SmallCap
-sFont={},Script=Math,RawFeature={mathfontdimen=xetex}].
+(fontspec)             [Renderer=Basic,BoldItalicFont={},ItalicFont={},SmallCapsFont={},Script=Math,RawFeature={mathfontdimen=xetex}].
 (fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
 (fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.: <->"name:Lete Sans
-(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=x
-etex;"
+(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=xetex;"
 (fontspec)             - 'bold' (b/n) with NFSS spec.: <->"name:Lete Sans
-(fontspec)             Math/B:mode=base;script=math;language=dflt;mathfontdimen
-=xetex;"
+(fontspec)             Math/B:mode=base;script=math;language=dflt;mathfontdimen=xetex;"
 
 
 Package fontspec Info: 
 (fontspec)             Font family 'LeteSansMath(1)' created for font 'Lete
 (fontspec)             Sans Math' with options
-(fontspec)             [Renderer=Basic,BoldItalicFont={},ItalicFont={},SmallCap
-sFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.84375-9.3075,Font=Let
-e
+(fontspec)             [Renderer=Basic,BoldItalicFont={},ItalicFont={},SmallCapsFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.84375-9.3075,Font=Lete
 (fontspec)             Sans Math,Style=MathScript},{Size=-6.84375,Font=Lete
 (fontspec)             Sans
-(fontspec)             Math,Style=MathScriptScript}},RawFeature={mathfontdimen=
-xetex}].
+(fontspec)             Math,Style=MathScriptScript}},RawFeature={mathfontdimen=xetex}].
 (fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
 (fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.: <9.3075->"name:Lete
 (fontspec)             Sans
-(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=x
-etex;"<6.84375-9.3075>"name:Lete
+(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=xetex;"<6.84375-9.3075>"name:Lete
 (fontspec)             Sans
-(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=x
-etex;+ssty=0;"<-6.84375>"name:Lete
+(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=xetex;+ssty=0;"<-6.84375>"name:Lete
 (fontspec)             Sans
-(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=x
-etex;+ssty=1;"
+(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=xetex;+ssty=1;"
 (fontspec)             - 'bold' (b/n) with NFSS spec.: <->"name:Lete Sans
-(fontspec)             Math/B:mode=base;script=math;language=dflt;mathfontdimen
-=xetex;"
+(fontspec)             Math/B:mode=base;script=math;language=dflt;mathfontdimen=xetex;"
 
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
 (Font)              `operators' in the math version `normal' on input line 32.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> TU/LeteSansMath(1)/m/n on input line 32
-.
+(Font)                  OT1/cmr/m/n --> TU/LeteSansMath(1)/m/n on input line 32.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
 (Font)              `operators' in the math version `bold' on input line 32.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmr/bx/n --> TU/LeteSansMath(1)/b/n on input line 3
-2.
+(Font)                  OT1/cmr/bx/n --> TU/LeteSansMath(1)/b/n on input line 32.
 
 Package fontspec Info: 
 (fontspec)             Font family 'LeteSansMath(2)' created for font 'Lete
 (fontspec)             Sans Math' with options
-(fontspec)             [Renderer=Basic,BoldItalicFont={},ItalicFont={},SmallCap
-sFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.84375-9.3075,Font=Let
-e
+(fontspec)             [Renderer=Basic,BoldItalicFont={},ItalicFont={},SmallCapsFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.84375-9.3075,Font=Lete
 (fontspec)             Sans Math,Style=MathScript},{Size=-6.84375,Font=Lete
 (fontspec)             Sans
-(fontspec)             Math,Style=MathScriptScript}},RawFeature={mathfontdimen=
-xetex},RawFeature={mathfontdimen=tex2}].
+(fontspec)             Math,Style=MathScriptScript}},RawFeature={mathfontdimen=xetex},RawFeature={mathfontdimen=tex2}].
 (fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
 (fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.: <9.3075->"name:Lete
 (fontspec)             Sans
-(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=x
-etex;mathfontdimen=tex2;"<6.84375-9.3075>"name:Lete
+(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=xetex;mathfontdimen=tex2;"<6.84375-9.3075>"name:Lete
 (fontspec)             Sans
-(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=x
-etex;mathfontdimen=tex2;+ssty=0;"<-6.84375>"name:Lete
+(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=xetex;mathfontdimen=tex2;+ssty=0;"<-6.84375>"name:Lete
 (fontspec)             Sans
-(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=x
-etex;mathfontdimen=tex2;+ssty=1;"
+(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=xetex;mathfontdimen=tex2;+ssty=1;"
 (fontspec)             - 'bold' (b/n) with NFSS spec.: <->"name:Lete Sans
-(fontspec)             Math/B:mode=base;script=math;language=dflt;mathfontdimen
-=xetex;mathfontdimen=tex2;"
+(fontspec)             Math/B:mode=base;script=math;language=dflt;mathfontdimen=xetex;mathfontdimen=tex2;"
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
 (Font)              `symbols' in the math version `normal' on input line 32.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
-(Font)                  OMS/cmsy/m/n --> TU/LeteSansMath(2)/m/n on input line 3
-2.
+(Font)                  OMS/cmsy/m/n --> TU/LeteSansMath(2)/m/n on input line 32.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
 (Font)              `symbols' in the math version `bold' on input line 32.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
-(Font)                  OMS/cmsy/b/n --> TU/LeteSansMath(2)/b/n on input line 3
-2.
+(Font)                  OMS/cmsy/b/n --> TU/LeteSansMath(2)/b/n on input line 32.
 
 Package fontspec Info: 
 (fontspec)             Font family 'LeteSansMath(3)' created for font 'Lete
 (fontspec)             Sans Math' with options
-(fontspec)             [Renderer=Basic,BoldItalicFont={},ItalicFont={},SmallCap
-sFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.84375-9.3075,Font=Let
-e
+(fontspec)             [Renderer=Basic,BoldItalicFont={},ItalicFont={},SmallCapsFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.84375-9.3075,Font=Lete
 (fontspec)             Sans Math,Style=MathScript},{Size=-6.84375,Font=Lete
 (fontspec)             Sans
-(fontspec)             Math,Style=MathScriptScript}},RawFeature={mathfontdimen=
-xetex},RawFeature={mathfontdimen=tex3}].
+(fontspec)             Math,Style=MathScriptScript}},RawFeature={mathfontdimen=xetex},RawFeature={mathfontdimen=tex3}].
 (fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
 (fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.: <9.3075->"name:Lete
 (fontspec)             Sans
-(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=x
-etex;mathfontdimen=tex3;"<6.84375-9.3075>"name:Lete
+(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=xetex;mathfontdimen=tex3;"<6.84375-9.3075>"name:Lete
 (fontspec)             Sans
-(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=x
-etex;mathfontdimen=tex3;+ssty=0;"<-6.84375>"name:Lete
+(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=xetex;mathfontdimen=tex3;+ssty=0;"<-6.84375>"name:Lete
 (fontspec)             Sans
-(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=x
-etex;mathfontdimen=tex3;+ssty=1;"
+(fontspec)             Math:mode=base;script=math;language=dflt;mathfontdimen=xetex;mathfontdimen=tex3;+ssty=1;"
 (fontspec)             - 'bold' (b/n) with NFSS spec.: <->"name:Lete Sans
-(fontspec)             Math/B:mode=base;script=math;language=dflt;mathfontdimen
-=xetex;mathfontdimen=tex3;"
+(fontspec)             Math/B:mode=base;script=math;language=dflt;mathfontdimen=xetex;mathfontdimen=tex3;"
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `normal' on input line 3
-2.
+(Font)              `largesymbols' in the math version `normal' on input line 32.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
-(Font)                  OMX/cmex/m/n --> TU/LeteSansMath(3)/m/n on input line 3
-2.
+(Font)                  OMX/cmex/m/n --> TU/LeteSansMath(3)/m/n on input line 32.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
 (Font)              `largesymbols' in the math version `bold' on input line 32.
-
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
-(Font)                  OMX/cmex/m/n --> TU/LeteSansMath(3)/b/n on input line 3
-2.
+(Font)                  OMX/cmex/m/n --> TU/LeteSansMath(3)/b/n on input line 32.
 LaTeX Font Info:    Trying to load font information for U+msa on input line 32.
-
-
-(c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
+ (c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 32.
-
-
-(c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
+ (c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-("./Artikel gloeilamp.aux"
+) ("./Artikel gloeilamp.aux"
 Package babel Info: 'dutch' activates 'dutch' shorthands.
 (babel)             Reported on input line 9.
 )
@@ -1934,22 +1454,17 @@ LaTeX Font Info:    ... okay on input line 107.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 107.
 LaTeX Font Info:    ... okay on input line 107.
 Package hyperref Info: Link coloring OFF on input line 107.
- ("./Artikel gloeilamp.out")
-("./Artikel gloeilamp.out")
+ ("./Artikel gloeilamp.out") ("./Artikel gloeilamp.out")
 \@outlinefile=\write4
 
 \openout4 = Artikel gloeilamp.out
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
-
-(c:/texlive/2025/texmf-dist/tex/latex/translations/translations-basic-dictionar
-y-dutch.trsl
-File: translations-basic-dictionary-dutch.trsl (dutch translation file `transla
-tions-basic-dictionary')
+ (c:/texlive/2025/texmf-dist/tex/latex/translations/translations-basic-dictionary-dutch.trsl
+File: translations-basic-dictionary-dutch.trsl (dutch translation file `translations-basic-dictionary')
 )
-Package translations Info: loading dictionary `translations-basic-dictionary' f
-or `dutch'. on input line 107.
+Package translations Info: loading dictionary `translations-basic-dictionary' for `dutch'. on input line 107.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
 (Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 107.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
@@ -1973,20 +1488,15 @@ LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 \everyMPtoPDFconversion=\toks50
 ) (c:/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
-Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
-85.
-
-(c:/texlive/2025/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
-File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
-e
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+ (c:/texlive/2025/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-Package pgfplots notification 'compat/show suggested version=true': document ha
-s been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
+Package pgfplots notification 'compat/show suggested version=true': document has been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
 
 [1
 
-{c:/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
-[4] [5] [6]
+{c:/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5] [6]
 NEWPREFIX start: ptc
 NEWPREFIX save current: 
 NEWPREFIX register
@@ -2009,12 +1519,6 @@ MVAR after-keys-set
 MVAR eff: ptc
 MVAR body fullname: ptcDt
 MVAR done: Dt
-MVAR start: Rnul
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcRnul
-MVAR done: Rnul
 MVAR start: Ub
 MVAR before-keys-set
 MVAR after-keys-set
@@ -2027,6 +1531,12 @@ MVAR after-keys-set
 MVAR eff: ptc
 MVAR body fullname: ptcTnul
 MVAR done: Tnul
+MVAR start: Rnul
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: ptc
+MVAR body fullname: ptcRnul
+MVAR done: Rnul
 MVAR start: Wtc
 MVAR before-keys-set
 MVAR after-keys-set
@@ -2045,30 +1555,30 @@ MVAR after-keys-set
 MVAR eff: ptc
 MVAR body fullname: ptcMc
 MVAR done: Mc
-MVAR start: Upar
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcUpar
-MVAR done: Upar
 MVAR start: I
 MVAR before-keys-set
 MVAR after-keys-set
 MVAR eff: ptc
 MVAR body fullname: ptcI
 MVAR done: I
-MVAR start: Rpar
-MVAR before-keys-set
-MVAR after-keys-set
-MVAR eff: ptc
-MVAR body fullname: ptcRpar
-MVAR done: Rpar
 MVAR start: Rser
 MVAR before-keys-set
 MVAR after-keys-set
 MVAR eff: ptc
 MVAR body fullname: ptcRser
 MVAR done: Rser
+MVAR start: Rpar
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: ptc
+MVAR body fullname: ptcRpar
+MVAR done: Rpar
+MVAR start: Upar
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: ptc
+MVAR body fullname: ptcUpar
+MVAR done: Upar
 MVAR start: User
 MVAR before-keys-set
 MVAR after-keys-set
@@ -2101,32 +1611,31 @@ MVAR body fullname: ptcTpar
 MVAR done: Tpar
 MRULE start: I
 VTD input: \ptcUb / (\ptcRser + \ptcRpar / 2)
-VTD seq: ptcT|ptcDt|ptcRnul|ptcUb|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcUpar|ptcI|ptcRp
-ar|ptcRser|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
+VTD seq: ptcT|ptcDt|ptcUb|ptcTnul|ptcRnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRser|ptcRpar|ptcUpar|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
 VTD iter: ptcT
 VTD replace \c {ptcT} with t
 VTD iter: ptcDt
 VTD replace \c {ptcDt} with dt
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcUb
 VTD replace \c {ptcUb} with U_b
 VTD iter: ptcTnul
 VTD replace \c {ptcTnul} with T_0
+VTD iter: ptcRnul
+VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcWtc
 VTD replace \c {ptcWtc} with \mitalpha 
 VTD iter: ptcSB
 VTD replace \c {ptcSB} with \mitvarepsilon \mitsigma A
 VTD iter: ptcMc
 VTD replace \c {ptcMc} with mc
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcI
 VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
 VTD iter: ptcRser
 VTD replace \c {ptcRser} with R_3
+VTD iter: ptcRpar
+VTD replace \c {ptcRpar} with R_{1,2}
+VTD iter: ptcUpar
+VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcUser
 VTD replace \c {ptcUser} with U_3
 VTD iter: ptcPser
@@ -2142,32 +1651,31 @@ MRULE display: I\,=\,U_b/ (R_3+ R_{1,2}/ 2)
 MRULE done: I
 MRULE start: Upar
 VTD input: \ptcI * \ptcRpar / 2
-VTD seq: ptcT|ptcDt|ptcRnul|ptcUb|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcUpar|ptcI|ptcRp
-ar|ptcRser|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
+VTD seq: ptcT|ptcDt|ptcUb|ptcTnul|ptcRnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRser|ptcRpar|ptcUpar|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
 VTD iter: ptcT
 VTD replace \c {ptcT} with t
 VTD iter: ptcDt
 VTD replace \c {ptcDt} with dt
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcUb
 VTD replace \c {ptcUb} with U_b
 VTD iter: ptcTnul
 VTD replace \c {ptcTnul} with T_0
+VTD iter: ptcRnul
+VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcWtc
 VTD replace \c {ptcWtc} with \mitalpha 
 VTD iter: ptcSB
 VTD replace \c {ptcSB} with \mitvarepsilon \mitsigma A
 VTD iter: ptcMc
 VTD replace \c {ptcMc} with mc
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcI
 VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
 VTD iter: ptcRser
 VTD replace \c {ptcRser} with R_3
+VTD iter: ptcRpar
+VTD replace \c {ptcRpar} with R_{1,2}
+VTD iter: ptcUpar
+VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcUser
 VTD replace \c {ptcUser} with U_3
 VTD iter: ptcPser
@@ -2183,32 +1691,31 @@ MRULE display: U_{1,2}\,=\,I\cdot   R_{1,2}/ 2
 MRULE done: Upar
 MRULE start: User
 VTD input: \ptcI * \ptcRser 
-VTD seq: ptcT|ptcDt|ptcRnul|ptcUb|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcUpar|ptcI|ptcRp
-ar|ptcRser|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
+VTD seq: ptcT|ptcDt|ptcUb|ptcTnul|ptcRnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRser|ptcRpar|ptcUpar|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
 VTD iter: ptcT
 VTD replace \c {ptcT} with t
 VTD iter: ptcDt
 VTD replace \c {ptcDt} with dt
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcUb
 VTD replace \c {ptcUb} with U_b
 VTD iter: ptcTnul
 VTD replace \c {ptcTnul} with T_0
+VTD iter: ptcRnul
+VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcWtc
 VTD replace \c {ptcWtc} with \mitalpha 
 VTD iter: ptcSB
 VTD replace \c {ptcSB} with \mitvarepsilon \mitsigma A
 VTD iter: ptcMc
 VTD replace \c {ptcMc} with mc
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcI
 VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
 VTD iter: ptcRser
 VTD replace \c {ptcRser} with R_3
+VTD iter: ptcRpar
+VTD replace \c {ptcRpar} with R_{1,2}
+VTD iter: ptcUpar
+VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcUser
 VTD replace \c {ptcUser} with U_3
 VTD iter: ptcPser
@@ -2224,32 +1731,31 @@ MRULE display: U_3\,=\,I\cdot   R_3
 MRULE done: User
 MRULE start: Ppar
 VTD input: \ptcI ^2 * \ptcRpar / 4
-VTD seq: ptcT|ptcDt|ptcRnul|ptcUb|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcUpar|ptcI|ptcRp
-ar|ptcRser|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
+VTD seq: ptcT|ptcDt|ptcUb|ptcTnul|ptcRnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRser|ptcRpar|ptcUpar|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
 VTD iter: ptcT
 VTD replace \c {ptcT} with t
 VTD iter: ptcDt
 VTD replace \c {ptcDt} with dt
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcUb
 VTD replace \c {ptcUb} with U_b
 VTD iter: ptcTnul
 VTD replace \c {ptcTnul} with T_0
+VTD iter: ptcRnul
+VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcWtc
 VTD replace \c {ptcWtc} with \mitalpha 
 VTD iter: ptcSB
 VTD replace \c {ptcSB} with \mitvarepsilon \mitsigma A
 VTD iter: ptcMc
 VTD replace \c {ptcMc} with mc
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcI
 VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
 VTD iter: ptcRser
 VTD replace \c {ptcRser} with R_3
+VTD iter: ptcRpar
+VTD replace \c {ptcRpar} with R_{1,2}
+VTD iter: ptcUpar
+VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcUser
 VTD replace \c {ptcUser} with U_3
 VTD iter: ptcPser
@@ -2265,32 +1771,31 @@ MRULE display: P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4
 MRULE done: Ppar
 MRULE start: Pser
 VTD input: \ptcI ^2 * \ptcRser 
-VTD seq: ptcT|ptcDt|ptcRnul|ptcUb|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcUpar|ptcI|ptcRp
-ar|ptcRser|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
+VTD seq: ptcT|ptcDt|ptcUb|ptcTnul|ptcRnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRser|ptcRpar|ptcUpar|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
 VTD iter: ptcT
 VTD replace \c {ptcT} with t
 VTD iter: ptcDt
 VTD replace \c {ptcDt} with dt
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcUb
 VTD replace \c {ptcUb} with U_b
 VTD iter: ptcTnul
 VTD replace \c {ptcTnul} with T_0
+VTD iter: ptcRnul
+VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcWtc
 VTD replace \c {ptcWtc} with \mitalpha 
 VTD iter: ptcSB
 VTD replace \c {ptcSB} with \mitvarepsilon \mitsigma A
 VTD iter: ptcMc
 VTD replace \c {ptcMc} with mc
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcI
 VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
 VTD iter: ptcRser
 VTD replace \c {ptcRser} with R_3
+VTD iter: ptcRpar
+VTD replace \c {ptcRpar} with R_{1,2}
+VTD iter: ptcUpar
+VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcUser
 VTD replace \c {ptcUser} with U_3
 VTD iter: ptcPser
@@ -2305,34 +1810,32 @@ MRULE rhs after: I^2 \cdot   R_3
 MRULE display: P_3\,=\,I^2 \cdot   R_3
 MRULE done: Pser
 MRULE start: Tpar
-VTD input: \ptcTpar + \ptcPpar * \ptcDt / \ptcMc - \ptcSB * \ptcTpar ^4 * \ptcD
-t / \ptcMc 
-VTD seq: ptcT|ptcDt|ptcRnul|ptcUb|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcUpar|ptcI|ptcRp
-ar|ptcRser|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
+VTD input: \ptcTpar + \ptcPpar * \ptcDt / \ptcMc - \ptcSB * \ptcTpar ^4 * \ptcDt / \ptcMc 
+VTD seq: ptcT|ptcDt|ptcUb|ptcTnul|ptcRnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRser|ptcRpar|ptcUpar|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
 VTD iter: ptcT
 VTD replace \c {ptcT} with t
 VTD iter: ptcDt
 VTD replace \c {ptcDt} with dt
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcUb
 VTD replace \c {ptcUb} with U_b
 VTD iter: ptcTnul
 VTD replace \c {ptcTnul} with T_0
+VTD iter: ptcRnul
+VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcWtc
 VTD replace \c {ptcWtc} with \mitalpha 
 VTD iter: ptcSB
 VTD replace \c {ptcSB} with \mitvarepsilon \mitsigma A
 VTD iter: ptcMc
 VTD replace \c {ptcMc} with mc
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcI
 VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
 VTD iter: ptcRser
 VTD replace \c {ptcRser} with R_3
+VTD iter: ptcRpar
+VTD replace \c {ptcRpar} with R_{1,2}
+VTD iter: ptcUpar
+VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcUser
 VTD replace \c {ptcUser} with U_3
 VTD iter: ptcPser
@@ -2343,40 +1846,36 @@ VTD iter: ptcTser
 VTD replace \c {ptcTser} with T_3
 VTD iter: ptcTpar
 VTD replace \c {ptcTpar} with T_{1,2}
-MRULE rhs after: T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdo
-t   T_{1,2}^4 \cdot   dt/ mc
-MRULE display: T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mits
-igma A\cdot   T_{1,2}^4 \cdot   dt/ mc
+MRULE rhs after: T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc
+MRULE display: T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc
 MRULE done: Tpar
 MRULE start: Tser
-VTD input: \ptcTser + \ptcPser * \ptcDt / \ptcMc - \ptcSB * \ptcTser ^4 * \ptcD
-t / \ptcMc 
-VTD seq: ptcT|ptcDt|ptcRnul|ptcUb|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcUpar|ptcI|ptcRp
-ar|ptcRser|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
+VTD input: \ptcTser + \ptcPser * \ptcDt / \ptcMc - \ptcSB * \ptcTser ^4 * \ptcDt / \ptcMc 
+VTD seq: ptcT|ptcDt|ptcUb|ptcTnul|ptcRnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRser|ptcRpar|ptcUpar|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
 VTD iter: ptcT
 VTD replace \c {ptcT} with t
 VTD iter: ptcDt
 VTD replace \c {ptcDt} with dt
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcUb
 VTD replace \c {ptcUb} with U_b
 VTD iter: ptcTnul
 VTD replace \c {ptcTnul} with T_0
+VTD iter: ptcRnul
+VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcWtc
 VTD replace \c {ptcWtc} with \mitalpha 
 VTD iter: ptcSB
 VTD replace \c {ptcSB} with \mitvarepsilon \mitsigma A
 VTD iter: ptcMc
 VTD replace \c {ptcMc} with mc
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcI
 VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
 VTD iter: ptcRser
 VTD replace \c {ptcRser} with R_3
+VTD iter: ptcRpar
+VTD replace \c {ptcRpar} with R_{1,2}
+VTD iter: ptcUpar
+VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcUser
 VTD replace \c {ptcUser} with U_3
 VTD iter: ptcPser
@@ -2387,39 +1886,36 @@ VTD iter: ptcTser
 VTD replace \c {ptcTser} with T_3
 VTD iter: ptcTpar
 VTD replace \c {ptcTpar} with T_{1,2}
-MRULE rhs after: T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_3^
-4 \cdot   dt/ mc
-MRULE display: T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot 
-  T_3^4 \cdot   dt/ mc
+MRULE rhs after: T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_3^4 \cdot   dt/ mc
+MRULE display: T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_3^4 \cdot   dt/ mc
 MRULE done: Tser
 MRULE start: Rpar
 VTD input: \ptcRnul * (1 + \ptcWtc * (\ptcTpar - \ptcTnul ))
-VTD seq: ptcT|ptcDt|ptcRnul|ptcUb|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcUpar|ptcI|ptcRp
-ar|ptcRser|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
+VTD seq: ptcT|ptcDt|ptcUb|ptcTnul|ptcRnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRser|ptcRpar|ptcUpar|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
 VTD iter: ptcT
 VTD replace \c {ptcT} with t
 VTD iter: ptcDt
 VTD replace \c {ptcDt} with dt
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcUb
 VTD replace \c {ptcUb} with U_b
 VTD iter: ptcTnul
 VTD replace \c {ptcTnul} with T_0
+VTD iter: ptcRnul
+VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcWtc
 VTD replace \c {ptcWtc} with \mitalpha 
 VTD iter: ptcSB
 VTD replace \c {ptcSB} with \mitvarepsilon \mitsigma A
 VTD iter: ptcMc
 VTD replace \c {ptcMc} with mc
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcI
 VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
 VTD iter: ptcRser
 VTD replace \c {ptcRser} with R_3
+VTD iter: ptcRpar
+VTD replace \c {ptcRpar} with R_{1,2}
+VTD iter: ptcUpar
+VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcUser
 VTD replace \c {ptcUser} with U_3
 VTD iter: ptcPser
@@ -2435,32 +1931,31 @@ MRULE display: R_{1,2}\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_{1,2}- T_0))
 MRULE done: Rpar
 MRULE start: Rser
 VTD input: \ptcRnul * (1 + \ptcWtc * (\ptcTser - \ptcTnul ))
-VTD seq: ptcT|ptcDt|ptcRnul|ptcUb|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcUpar|ptcI|ptcRp
-ar|ptcRser|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
+VTD seq: ptcT|ptcDt|ptcUb|ptcTnul|ptcRnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRser|ptcRpar|ptcUpar|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
 VTD iter: ptcT
 VTD replace \c {ptcT} with t
 VTD iter: ptcDt
 VTD replace \c {ptcDt} with dt
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcUb
 VTD replace \c {ptcUb} with U_b
 VTD iter: ptcTnul
 VTD replace \c {ptcTnul} with T_0
+VTD iter: ptcRnul
+VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcWtc
 VTD replace \c {ptcWtc} with \mitalpha 
 VTD iter: ptcSB
 VTD replace \c {ptcSB} with \mitvarepsilon \mitsigma A
 VTD iter: ptcMc
 VTD replace \c {ptcMc} with mc
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcI
 VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
 VTD iter: ptcRser
 VTD replace \c {ptcRser} with R_3
+VTD iter: ptcRpar
+VTD replace \c {ptcRpar} with R_{1,2}
+VTD iter: ptcUpar
+VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcUser
 VTD replace \c {ptcUser} with U_3
 VTD iter: ptcPser
@@ -2476,32 +1971,31 @@ MRULE display: R_3\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_3- T_0))
 MRULE done: Rser
 MRULE start: T
 VTD input: \ptcT + \ptcDt 
-VTD seq: ptcT|ptcDt|ptcRnul|ptcUb|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcUpar|ptcI|ptcRp
-ar|ptcRser|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
+VTD seq: ptcT|ptcDt|ptcUb|ptcTnul|ptcRnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRser|ptcRpar|ptcUpar|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
 VTD iter: ptcT
 VTD replace \c {ptcT} with t
 VTD iter: ptcDt
 VTD replace \c {ptcDt} with dt
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcUb
 VTD replace \c {ptcUb} with U_b
 VTD iter: ptcTnul
 VTD replace \c {ptcTnul} with T_0
+VTD iter: ptcRnul
+VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcWtc
 VTD replace \c {ptcWtc} with \mitalpha 
 VTD iter: ptcSB
 VTD replace \c {ptcSB} with \mitvarepsilon \mitsigma A
 VTD iter: ptcMc
 VTD replace \c {ptcMc} with mc
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcI
 VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
 VTD iter: ptcRser
 VTD replace \c {ptcRser} with R_3
+VTD iter: ptcRpar
+VTD replace \c {ptcRpar} with R_{1,2}
+VTD iter: ptcUpar
+VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcUser
 VTD replace \c {ptcUser} with U_3
 VTD iter: ptcPser
@@ -2517,32 +2011,31 @@ MRULE display: t\,=\,t+ dt
 MRULE done: T
 MSTOP start
 VTD input: \ptcT >= 0.3
-VTD seq: ptcT|ptcDt|ptcRnul|ptcUb|ptcTnul|ptcWtc|ptcSB|ptcMc|ptcUpar|ptcI|ptcRp
-ar|ptcRser|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
+VTD seq: ptcT|ptcDt|ptcUb|ptcTnul|ptcRnul|ptcWtc|ptcSB|ptcMc|ptcI|ptcRser|ptcRpar|ptcUpar|ptcUser|ptcPser|ptcPpar|ptcTser|ptcTpar
 VTD iter: ptcT
 VTD replace \c {ptcT} with t
 VTD iter: ptcDt
 VTD replace \c {ptcDt} with dt
-VTD iter: ptcRnul
-VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcUb
 VTD replace \c {ptcUb} with U_b
 VTD iter: ptcTnul
 VTD replace \c {ptcTnul} with T_0
+VTD iter: ptcRnul
+VTD replace \c {ptcRnul} with R_0
 VTD iter: ptcWtc
 VTD replace \c {ptcWtc} with \mitalpha 
 VTD iter: ptcSB
 VTD replace \c {ptcSB} with \mitvarepsilon \mitsigma A
 VTD iter: ptcMc
 VTD replace \c {ptcMc} with mc
-VTD iter: ptcUpar
-VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcI
 VTD replace \c {ptcI} with I
-VTD iter: ptcRpar
-VTD replace \c {ptcRpar} with R_{1,2}
 VTD iter: ptcRser
 VTD replace \c {ptcRser} with R_3
+VTD iter: ptcRpar
+VTD replace \c {ptcRpar} with R_{1,2}
+VTD iter: ptcUpar
+VTD replace \c {ptcUpar} with U_{1,2}
 VTD iter: ptcUser
 VTD replace \c {ptcUser} with U_3
 VTD iter: ptcPser
@@ -2555,188 +2048,72 @@ VTD iter: ptcTpar
 VTD replace \c {ptcTpar} with T_{1,2}
 MSTOP done
 TEXTMODEL start
-BUILD_TABLE rules: I\,=\,U_b/ (R_3+ R_{1,2}/ 2)|U_{1,2}\,=\,I\cdot   R_{1,2}/ 2
-|U_3\,=\,I\cdot   R_3|P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4|P_3\,=\,I^2 \cdot   R_
-3|T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot  
- T_{1,2}^4 \cdot   dt/ mc|T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsi
-gma A\cdot   T_3^4 \cdot   dt/ mc|R_{1,2}\,=\,R_0\cdot   (1 + \mitalpha \cdot  
- (T_{1,2}- T_0))|R_3\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_3- T_0))|t\,=\,t+
- dt|\protect \protect \unhbox \voidb@x \hbox {Als }t\geqslant   0.3\protect \pr
-otect \unhbox \voidb@x \hbox { Dan}\protect \protect \unhbox \voidb@x \hbox { S
-top }\protect \protect \unhbox \voidb@x \hbox {EindAls}
+BUILD_TABLE rules: I\,=\,U_b/ (R_3+ R_{1,2}/ 2)|U_{1,2}\,=\,I\cdot   R_{1,2}/ 2|U_3\,=\,I\cdot   R_3|P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4|P_3\,=\,I^2 \cdot   R_3|T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc|T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_3^4 \cdot   dt/ mc|R_{1,2}\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_{1,2}- T_0))|R_3\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_3- T_0))|t\,=\,t+ dt|\protect \protect \unhbox \voidb@x \hbox {Als }t\geqslant   0.3\protect \protect \unhbox \voidb@x \hbox { Dan}\protect \protect \unhbox \voidb@x \hbox { Stop }\protect \protect \unhbox \voidb@x \hbox {EindAls}
 BUILD_TABLE types: rule|rule|rule|rule|rule|rule|rule|rule|rule|rule|rule
 BUILD_TABLE numrules: 11
 BUILD_TABLE numstarts: 17
-BUILD_TABLE before-step table: \begin {tblr}[theme={numodel}]{colspec={r|l|l},r
-owhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline 
+BUILD_TABLE before-step table: \begin {tblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline 
 BUILD_TABLE iter row: 0
 BUILD_TABLE row: 1type: rule
 BUILD_TABLE emit rule num: 1content: I\,=\,U_b/ (R_3+ R_{1,2}/ 2)
-BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowh
-ead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=
-\,U_b/ (R_3+ R_{1,2}/ 2)$&
+BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&
 BUILD_TABLE iter row: 1
 BUILD_TABLE row: 2type: rule
 BUILD_TABLE emit rule num: 2content: U_{1,2}\,=\,I\cdot   R_{1,2}/ 2
-BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowh
-ead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=
-\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdo
-t   R_{1,2}/ 2$&
+BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&
 BUILD_TABLE iter row: 2
 BUILD_TABLE row: 3type: rule
 BUILD_TABLE emit rule num: 3content: U_3\,=\,I\cdot   R_3
-BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowh
-ead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=
-\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdo
-t   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&
+BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&
 BUILD_TABLE iter row: 3
 BUILD_TABLE row: 4type: rule
 BUILD_TABLE emit rule num: 4content: P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4
-BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowh
-ead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=
-\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdo
-t   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$R_
-0=\ptcRnulqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&
+BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&
 BUILD_TABLE iter row: 4
 BUILD_TABLE row: 5type: rule
 BUILD_TABLE emit rule num: 5content: P_3\,=\,I^2 \cdot   R_3
-BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowh
-ead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=
-\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdo
-t   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$R_
-0=\ptcRnulqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$U_b=
-\ptcUbqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&
+BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&
 BUILD_TABLE iter row: 5
 BUILD_TABLE row: 6type: rule
-BUILD_TABLE emit rule num: 6content: T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc
-- \mitvarepsilon \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc
-BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowh
-ead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=
-\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdo
-t   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$R_
-0=\ptcRnulqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$U_b=
-\ptcUbqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$T_0=\ptcTnulqty $\\
-\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon
- \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc$&
+BUILD_TABLE emit rule num: 6content: T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc
+BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc$&
 BUILD_TABLE iter row: 6
 BUILD_TABLE row: 7type: rule
-BUILD_TABLE emit rule num: 7content: T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvareps
-ilon \mitsigma A\cdot   T_3^4 \cdot   dt/ mc
-BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowh
-ead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=
-\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdo
-t   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$R_
-0=\ptcRnulqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$U_b=
-\ptcUbqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$T_0=\ptcTnulqty $\\
-\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon
- \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc$&$\mitalpha =\ptcWtcqty $\\\rule {
-0pt}{2.6ex}7&$T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot  
- T_3^4 \cdot   dt/ mc$&
+BUILD_TABLE emit rule num: 7content: T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_3^4 \cdot   dt/ mc
+BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc$&$\mitalpha =\ptcWtcqty $\\\rule {0pt}{2.6ex}7&$T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_3^4 \cdot   dt/ mc$&
 BUILD_TABLE iter row: 7
 BUILD_TABLE row: 8type: rule
-BUILD_TABLE emit rule num: 8content: R_{1,2}\,=\,R_0\cdot   (1 + \mitalpha \cdo
-t   (T_{1,2}- T_0))
-BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowh
-ead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=
-\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdo
-t   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$R_
-0=\ptcRnulqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$U_b=
-\ptcUbqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$T_0=\ptcTnulqty $\\
-\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon
- \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc$&$\mitalpha =\ptcWtcqty $\\\rule {
-0pt}{2.6ex}7&$T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot  
- T_3^4 \cdot   dt/ mc$&$\mitvarepsilon \mitsigma A=\ptcSBqty $\\\rule {0pt}{2.6
-ex}8&$R_{1,2}\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_{1,2}- T_0))$&
+BUILD_TABLE emit rule num: 8content: R_{1,2}\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_{1,2}- T_0))
+BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc$&$\mitalpha =\ptcWtcqty $\\\rule {0pt}{2.6ex}7&$T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_3^4 \cdot   dt/ mc$&$\mitvarepsilon \mitsigma A=\ptcSBqty $\\\rule {0pt}{2.6ex}8&$R_{1,2}\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_{1,2}- T_0))$&
 BUILD_TABLE iter row: 8
 BUILD_TABLE row: 9type: rule
-BUILD_TABLE emit rule num: 9content: R_3\,=\,R_0\cdot   (1 + \mitalpha \cdot   
-(T_3- T_0))
-BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowh
-ead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=
-\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdo
-t   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$R_
-0=\ptcRnulqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$U_b=
-\ptcUbqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$T_0=\ptcTnulqty $\\
-\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon
- \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc$&$\mitalpha =\ptcWtcqty $\\\rule {
-0pt}{2.6ex}7&$T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot  
- T_3^4 \cdot   dt/ mc$&$\mitvarepsilon \mitsigma A=\ptcSBqty $\\\rule {0pt}{2.6
-ex}8&$R_{1,2}\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_{1,2}- T_0))$&$mc=\ptcMc
-qty $\\\rule {0pt}{2.6ex}9&$R_3\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_3- T_0
-))$&
+BUILD_TABLE emit rule num: 9content: R_3\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_3- T_0))
+BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc$&$\mitalpha =\ptcWtcqty $\\\rule {0pt}{2.6ex}7&$T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_3^4 \cdot   dt/ mc$&$\mitvarepsilon \mitsigma A=\ptcSBqty $\\\rule {0pt}{2.6ex}8&$R_{1,2}\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_{1,2}- T_0))$&$mc=\ptcMcqty $\\\rule {0pt}{2.6ex}9&$R_3\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_3- T_0))$&
 BUILD_TABLE iter row: 9
 BUILD_TABLE row: 10type: rule
 BUILD_TABLE emit rule num: 10content: t\,=\,t+ dt
-BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowh
-ead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=
-\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdo
-t   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$R_
-0=\ptcRnulqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$U_b=
-\ptcUbqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$T_0=\ptcTnulqty $\\
-\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon
- \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc$&$\mitalpha =\ptcWtcqty $\\\rule {
-0pt}{2.6ex}7&$T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot  
- T_3^4 \cdot   dt/ mc$&$\mitvarepsilon \mitsigma A=\ptcSBqty $\\\rule {0pt}{2.6
-ex}8&$R_{1,2}\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_{1,2}- T_0))$&$mc=\ptcMc
-qty $\\\rule {0pt}{2.6ex}9&$R_3\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_3- T_0
-))$&$U_{1,2}=\ptcUparqty $\\\rule {0pt}{2.6ex}10&$t\,=\,t+ dt$&
+BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc$&$\mitalpha =\ptcWtcqty $\\\rule {0pt}{2.6ex}7&$T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_3^4 \cdot   dt/ mc$&$\mitvarepsilon \mitsigma A=\ptcSBqty $\\\rule {0pt}{2.6ex}8&$R_{1,2}\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_{1,2}- T_0))$&$mc=\ptcMcqty $\\\rule {0pt}{2.6ex}9&$R_3\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_3- T_0))$&$I=\ptcIqty $\\\rule {0pt}{2.6ex}10&$t\,=\,t+ dt$&
 BUILD_TABLE iter row: 10
 BUILD_TABLE row: 11type: rule
-BUILD_TABLE emit rule num: 11content: \protect \protect \unhbox \voidb@x \hbox 
-{Als }t\geqslant   0.3\protect \protect \unhbox \voidb@x \hbox { Dan}\protect \
-protect \unhbox \voidb@x \hbox { Stop }\protect \protect \unhbox \voidb@x \hbox
- {EindAls}
-BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowh
-ead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=
-\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdo
-t   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$R_
-0=\ptcRnulqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$U_b=
-\ptcUbqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$T_0=\ptcTnulqty $\\
-\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon
- \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc$&$\mitalpha =\ptcWtcqty $\\\rule {
-0pt}{2.6ex}7&$T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot  
- T_3^4 \cdot   dt/ mc$&$\mitvarepsilon \mitsigma A=\ptcSBqty $\\\rule {0pt}{2.6
-ex}8&$R_{1,2}\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_{1,2}- T_0))$&$mc=\ptcMc
-qty $\\\rule {0pt}{2.6ex}9&$R_3\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_3- T_0
-))$&$U_{1,2}=\ptcUparqty $\\\rule {0pt}{2.6ex}10&$t\,=\,t+ dt$&$I=\ptcIqty $\\\
-rule {0pt}{2.6ex}11&$\protect \protect \unhbox \voidb@x \hbox {Als }t\geqslant 
-  0.3\protect \protect \unhbox \voidb@x \hbox { Dan}\protect \protect \unhbox \
-voidb@x \hbox { Stop }\protect \protect \unhbox \voidb@x \hbox {EindAls}$&
-TEXTMODEL table: \begin {tblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\tex
-tbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3
-+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}
-/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$R_0=\ptcRnulq
-ty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$U_b=\ptcUbqty $
-\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$T_0=\ptcTnulqty $\\\rule {0pt}
-{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mitsigma 
-A\cdot   T_{1,2}^4 \cdot   dt/ mc$&$\mitalpha =\ptcWtcqty $\\\rule {0pt}{2.6ex}
-7&$T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_3^4 \cdo
-t   dt/ mc$&$\mitvarepsilon \mitsigma A=\ptcSBqty $\\\rule {0pt}{2.6ex}8&$R_{1,
-2}\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_{1,2}- T_0))$&$mc=\ptcMcqty $\\\rul
-e {0pt}{2.6ex}9&$R_3\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_3- T_0))$&$U_{1,2
-}=\ptcUparqty $\\\rule {0pt}{2.6ex}10&$t\,=\,t+ dt$&$I=\ptcIqty $\\\rule {0pt}{
-2.6ex}11&$\protect \protect \unhbox \voidb@x \hbox {Als }t\geqslant   0.3\prote
-ct \protect \unhbox \voidb@x \hbox { Dan}\protect \protect \unhbox \voidb@x \hb
-ox { Stop }\protect \protect \unhbox \voidb@x \hbox {EindAls}$&$R_{1,2}=\ptcRpa
-rqty $\\&&$R_3=\ptcRserqty $\\&&$U_3=\ptcUserqty $\\&&$P_3=\ptcPserqty $\\&&$P_
-{1,2}=\ptcPparqty $\\&&$T_3=\ptcTserqty $\\&&$T_{1,2}=\ptcTparqty $\\\end {tblr
-}
+BUILD_TABLE emit rule num: 11content: \protect \protect \unhbox \voidb@x \hbox {Als }t\geqslant   0.3\protect \protect \unhbox \voidb@x \hbox { Dan}\protect \protect \unhbox \voidb@x \hbox { Stop }\protect \protect \unhbox \voidb@x \hbox {EindAls}
+BUILD_TABLE after-emit table tail: {tblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc$&$\mitalpha =\ptcWtcqty $\\\rule {0pt}{2.6ex}7&$T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_3^4 \cdot   dt/ mc$&$\mitvarepsilon \mitsigma A=\ptcSBqty $\\\rule {0pt}{2.6ex}8&$R_{1,2}\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_{1,2}- T_0))$&$mc=\ptcMcqty $\\\rule {0pt}{2.6ex}9&$R_3\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_3- T_0))$&$I=\ptcIqty $\\\rule {0pt}{2.6ex}10&$t\,=\,t+ dt$&$R_3=\ptcRserqty $\\\rule {0pt}{2.6ex}11&$\protect \protect \unhbox \voidb@x \hbox {Als }t\geqslant   0.3\protect \protect \unhbox \voidb@x \hbox { Dan}\protect \protect \unhbox \voidb@x \hbox { Stop }\protect \protect \unhbox \voidb@x \hbox {EindAls}$&
+TEXTMODEL table: \begin {tblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$I\,=\,U_b/ (R_3+ R_{1,2}/ 2)$&$t=\ptcTqty $\\\rule {0pt}{2.6ex}2&$U_{1,2}\,=\,I\cdot   R_{1,2}/ 2$&$dt=\ptcDtqty $\\\rule {0pt}{2.6ex}3&$U_3\,=\,I\cdot   R_3$&$U_b=\ptcUbqty $\\\rule {0pt}{2.6ex}4&$P_{1,2}\,=\,I^2 \cdot   R_{1,2}/ 4$&$T_0=\ptcTnulqty $\\\rule {0pt}{2.6ex}5&$P_3\,=\,I^2 \cdot   R_3$&$R_0=\ptcRnulqty $\\\rule {0pt}{2.6ex}6&$T_{1,2}\,=\,T_{1,2}+ P_{1,2}\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_{1,2}^4 \cdot   dt/ mc$&$\mitalpha =\ptcWtcqty $\\\rule {0pt}{2.6ex}7&$T_3\,=\,T_3+ P_3\cdot   dt/ mc- \mitvarepsilon \mitsigma A\cdot   T_3^4 \cdot   dt/ mc$&$\mitvarepsilon \mitsigma A=\ptcSBqty $\\\rule {0pt}{2.6ex}8&$R_{1,2}\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_{1,2}- T_0))$&$mc=\ptcMcqty $\\\rule {0pt}{2.6ex}9&$R_3\,=\,R_0\cdot   (1 + \mitalpha \cdot   (T_3- T_0))$&$I=\ptcIqty $\\\rule {0pt}{2.6ex}10&$t\,=\,t+ dt$&$R_3=\ptcRserqty $\\\rule {0pt}{2.6ex}11&$\protect \protect \unhbox \voidb@x \hbox {Als }t\geqslant   0.3\protect \protect \unhbox \voidb@x \hbox { Dan}\protect \protect \unhbox \voidb@x \hbox { Stop }\protect \protect \unhbox \voidb@x \hbox {EindAls}$&$R_{1,2}=\ptcRparqty $\\&&$U_{1,2}=\ptcUparqty $\\&&$U_3=\ptcUserqty $\\&&$P_3=\ptcPserqty $\\&&$P_{1,2}=\ptcPparqty $\\&&$T_3=\ptcTserqty $\\&&$T_{1,2}=\ptcTparqty $\\\end {tblr}
 TEXTMODEL done
 BUILD: step 0 reset auto-positions
 BUILD: step 1 lua layout writeback
 BUILD: step 2 tikzpicture
 NODE: ptcT
 NODE: ptcDt
-NODE: ptcRnul
 NODE: ptcUb
 NODE: ptcTnul
+NODE: ptcRnul
 NODE: ptcWtc
 NODE: ptcSB
 NODE: ptcMc
-NODE: ptcUpar
 NODE: ptcI
-NODE: ptcRpar
 NODE: ptcRser
+NODE: ptcRpar
+NODE: ptcUpar
 NODE: ptcUser
 NODE: ptcPser
 NODE: ptcPpar
@@ -2749,49 +2126,33 @@ BUILD: step 6b+7 causal arrows (Lua)
 BUILD: step 8 done
 COMPUTE start
 COMPUTE done
-[7] [8] [9] [10]
+[7] [8] [9] [10] [11]
 This exam contains 8 questions with 0 parts, 0 subparts, and 0 subsubparts.
 This exam has a total of 42 points.
 This exam has a total of 0 bonus points.
-
-Class exam Warning: Point totals have changed. Rerun to get point totals right.
-
-
 ("./Artikel gloeilamp.aux")
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `"Artikel gloeilamp".out' has not changed.
 (rerunfilecheck)             Checksum: <no file>.
 )
 
 Here is how much of LuaTeX's memory you used:
- 70966 strings out of 476076
- 745113,5906145 words of node,token memory allocated
+ 70989 strings out of 476076
+ 745114,5906145 words of node,token memory allocated
  1150 words of node memory still in use:
-   7 hlist, 2 vlist, 2 rule, 3 glue, 4 kern, 1 glyph, 112 attribute, 118 glue_sp
-ec, 57 attribute_list, 3 write nodes
-   avail lists: 1:4,2:153458,3:97199,4:124,5:497,6:133,7:7270,8:60,9:2628,10:13,
-11:458
- 92202 multiletter control sequences out of 65536+600000
- 143 fonts using 56830591 bytes
- 91i,19n,121p,748b,3237s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmmono9-regular.otf><c:/tex
-live/2025/texmf-dist/fonts/opentype/public/lm/lmmono10-regular.otf><c:/texlive/2
-025/texmf-dist/fonts/opentype/public/lete-sans-math/LeteSansMath.otf><c:/texlive
-/2025/texmf-dist/fonts/opentype/public/lete-sans-math/LeteSansMath.otf><c:/Windo
-ws/Fonts/ARIALNI.TTF><c:/texlive/2025/texmf-dist/fonts/opentype/public/lete-sans
--math/LeteSansMath.otf><c:/Windows/Fonts/arial.ttf><c:/Windows/Fonts/arialbd.ttf
->
-Output written on Artikel gloeilamp.pdf (10 pages, 595761 bytes).
+   7 hlist, 2 vlist, 2 rule, 3 glue, 4 kern, 1 glyph, 112 attribute, 118 glue_spec, 57 attribute_list, 3 write nodes
+   avail lists: 1:5,2:153501,3:97199,4:124,5:498,6:133,7:7230,8:60,9:2626,10:21,11:490
+ 92222 multiletter control sequences out of 65536+600000
+ 143 fonts using 56830959 bytes
+ 91i,19n,121p,771b,3237s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmmono9-regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmmono10-regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lete-sans-math/LeteSansMath.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lete-sans-math/LeteSansMath.otf><c:/Windows/Fonts/ARIALNI.TTF><c:/texlive/2025/texmf-dist/fonts/opentype/public/lete-sans-math/LeteSansMath.otf><c:/Windows/Fonts/arial.ttf><c:/Windows/Fonts/arialbd.ttf>
+Output written on Artikel gloeilamp.pdf (11 pages, 599454 bytes).
 
-PDF statistics: 169 PDF objects out of 1000 (max. 8388607)
- 131 compressed objects within 2 object streams
- 43 named destinations out of 1000 (max. 1048576)
+PDF statistics: 178 PDF objects out of 1000 (max. 8388607)
+ 139 compressed objects within 2 object streams
+ 45 named destinations out of 1000 (max. 1048576)
  16 words of extra memory for PDF output out of 10000 (max. 100000000)
 
