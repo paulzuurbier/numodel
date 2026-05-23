@@ -17,6 +17,8 @@ flows.between_target:
 flows.stock_valve:
 flows.stock_phantom_valve:
   ballY -> ballV
+flows.valve_extra_targets:
+flows.outvalve_extra_sources:
 deps:
   ballT -> ballDt
   ballV -> ballDt,ballG

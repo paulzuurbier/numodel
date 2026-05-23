@@ -21,6 +21,8 @@ flows.stock_valve:
 flows.stock_phantom_valve:
   projX -> projVx
   projY -> projVy
+flows.valve_extra_targets:
+flows.outvalve_extra_sources:
 deps:
   projT -> projDt
   projVy -> projDt,projG

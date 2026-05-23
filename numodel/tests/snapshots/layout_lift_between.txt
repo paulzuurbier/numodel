@@ -20,6 +20,8 @@ flows.between_target:
   liftdMGV -> liftEsys
 flows.stock_valve:
 flows.stock_phantom_valve:
+flows.valve_extra_targets:
+flows.outvalve_extra_sources:
 deps:
   liftEZ -> liftDt,liftdMGV
   liftEsys -> liftDt,liftPout,liftdMGV

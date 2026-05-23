@@ -1,0 +1,38 @@
+% test-multi-series.tex — verify multi-series \diagrammodel:
+% comma-separated y-variables, unit-aware filtering, shared y-axis range
+% scaled to the joint min/max, colour-blind safe palette + dash cycle,
+% and legend built from each variable's display text.
+
+\documentclass{article}
+\usepackage{numodel}
+
+\begin{document}
+
+\newmodelprefix{osc}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.01}{\s}{2}{systeem}
+\mvar{V}{v}{0}{\m\per\s}{3}{hulp}
+\mvar{X}{x}{0.10}{\m}{3}{voorraad}
+\mvar{Y}{y}{0.05}{\m}{3}{voorraad}
+\mvar{M}{m}{0.250}{\kg}{3}{constante}
+\mvar{K}{k}{40}{\N\per\m}{2}{constante}
+
+\mrule{V}{\oscV - (\oscK / \oscM) * \oscX * \oscDt}
+\mrule{X}{\oscX + \oscV * \oscDt}
+\mrule{Y}{\oscY + 0.5 * \oscV * \oscDt}
+\mrule{T}{\oscT + \oscDt}
+\mstop{\oscT >= 1.5}
+
+\computemodel
+
+\section*{1. Single series (legacy behaviour, mark-only plot)}
+\diagrammodel{T}{X}{osc-single}
+
+\section*{2. Two y-variables, same unit (\unit{\m}) — combined plot}
+\diagrammodel{T}{X,Y}{osc-multi}
+
+\section*{3. Mixed units: \texttt{X}, \texttt{V}, \texttt{Y} —
+\texttt{V} (\unit{\m\per\s}) must be dropped with a warning}
+\diagrammodel{T}{X,V,Y}{osc-mismatch}
+
+\end{document}

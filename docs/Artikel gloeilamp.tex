@@ -1,0 +1,556 @@
+% ===== Stand-alone preamble (vervangt ../code preamble.tex) =====
+\documentclass[addpoints,11pt,a4paper]{exam}
+\extrawidth{1in}
+\extraheadheight{-0.5in}
+
+% --- Pakketten (subset van toetsen/Preamble/packages.tex) ---
+\usepackage{fontspec}
+\usepackage{hyperref}
+\usepackage{xparse}
+\usepackage{caption}
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{unicode-math}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage[siunitx]{circuitikz}
+\usepackage{booktabs}
+\usepackage[dutch]{babel}
+\usepackage{etoolbox}
+\usepackage{luacode}
+\usepackage{float}
+\usepackage[fleqn]{nccmath}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage[syntax=NL, tblrenv=tblr]{numodel}
+
+% --- Fonts (toetsen/Preamble/opmaak.tex) ---
+\setmainfont{Arial}
+\setmathfont{Lete Sans Math}
+% icomma-vervanging: komma normaal teken in math (geen extra spatie erna)
+\AtBeginDocument{\Umathcode`\,="0"0"2C\relax}
+
+% --- siunitx-configuratie (toetsen/Preamble/siunitx-config.tex) ---
+\newcommand{\stdsign}{3}
+\sisetup{
+  evaluate-expression,
+  exponent-product = \cdot,
+  output-decimal-marker = {,},
+  round-mode = figures,
+  round-precision = \stdsign,
+  per-mode = single-symbol,
+  exponent-mode = threshold,
+  exponent-thresholds = -3:\stdsign,
+  unit-mode = text,
+  propagate-math-font = true,
+  text-series-to-math = true,
+  reset-text-family = true,
+  reset-text-series = true,
+  reset-text-shape = true
+}
+\NewDocumentCommand{\anum}{o m g}{%
+  \IfValueTF{#3}{%
+    \IfValueTF{#1}{\num[round-precision = #3, exponent-thresholds = -3:#3, #1]{#2}}%
+                  {\num[round-precision = #3, exponent-thresholds = -3:#3]{#2}}%
+  }{\IfValueTF{#1}{\num[#1]{#2}}{\num{#2}}}%
+}
+\NewDocumentCommand{\aqty}{o m m g}{%
+  \IfValueTF{#4}{%
+    \IfValueTF{#1}{\qty[round-precision = #4, exponent-thresholds = -3:#4, #1]{#2}{#3}}%
+                  {\qty[round-precision = #4, exponent-thresholds = -3:#4]{#2}{#3}}%
+  }{\IfValueTF{#1}{\qty[#1]{#2}{#3}}{\qty{#2}{#3}}}%
+}
+
+% --- \defqty (vereenvoudigde versie van toetsen/Preamble/defqty.tex) ---
+\makeatletter
+\newcommand{\defqty}[4]{%
+  \expandafter\edef\csname #1\endcsname{\fpeval{#2}}%
+  \expandafter\def\csname #1n\endcsname{\anum{\fpeval{#2}}{#4}\relax}%
+  \expandafter\def\csname #1q\endcsname{\aqty{\fpeval{#2}}{#3}{#4}\relax}%
+}
+\makeatother
+
+% --- \includeimage (vereenvoudigd: enkel renderen, geen uitwerkbijlage) ---
+\NewDocumentCommand{\includeimage}{m m +m}{\ifnum#1=1#3\fi}
+
+% --- Solution-omkadering en exam-stijl (toetsen/Preamble/exam-config.tex) ---
+\renewcommand{\labelitemi}{$\bullet$}
+\newmdenv[
+  linecolor=red,
+  linewidth=3pt,
+  topline=false,
+  bottomline=false,
+  rightline=false,
+  leftline=true,
+  innerleftmargin=10pt,
+  innerrightmargin=0pt,
+  innertopmargin=0pt,
+  innerbottommargin=0pt
+]{solutionframe}
+\renewenvironment{TheSolution}{\begin{solutionframe}}{\end{solutionframe}}
+
+\pagestyle{foot}
+\footrule
+\setlength{\footskip}{20pt}
+\addtolength{\textheight}{1.5cm}
+\cfoot{Ga verder op de volgende pagina}
+\rfoot{\thepage}
+\everymath{\displaystyle}
+\renewcommand{\solutiontitle}{}
+\pointname{p}
+\pointformat{\textbf{(\thepoints)}}
+\renewcommand{\thepartno}{\alph{partno}}
+\renewcommand{\partlabel}{\thepartno)}
+\AtEndEnvironment{questions}{\cfoot{Einde}\newpage}
+
+\begin{document}
+\printanswers
+\begin{questions}
+
+\subsection*{Examenopgave 10 vwo natuurkunde 2026-1 -- een verdiepingsroute}
+\item[]
+
+Examenopgave 10 vraagt of lamp~$\text{L}_3$ in een gemengde schakeling op een te hoog of te laag vermogen brandt. Het correctievoorschrift verwacht een kwalitatieve redenering van drie regels: lamp~3 voert meer stroom dan de andere, wordt heter dan de andere, krijgt door zijn positieve temperatuurco\"effici\"ent (PTC) een hogere weerstand --- en dus een hogere spanning (dan 12 V), dus een te groot vermogen. Drie punten, klaar.
+
+Maar de onderliggende vraag --- hoe heet wordt lamp~3 nou werkelijk, en hoeveel vermogen krijgt het~? --- laat het examen liggen. Daar zit nog veel mooie natuurkunde verstopt die met vwo-wiskunde bereikbaar is. Deze uitwerking volgt de opbouw van het examen --- eerst een ohmse opwarmer (parallel aan examenopgave~9), dan de PTC-uitbreiding van opgave~10 --- en gaat daarna verder met een gesloten analytische oplossing in de \emph{hete limiet} en een numerieke verificatie met een Euler-model.
+
+We werken consequent met de examenwaarden $U_{nom} = \qty{12}{\V}$, $P_{nom} = \qty{2.4}{\W}$, zodat $R_{nom} = U_{nom}^{\,2}/P_{nom} = \qty{60}{\ohm}$~--- precies de waarde van de ohmse weerstand uit examenopgave~8.
+
+\newpage
+\subsection*{Combinatieschakeling met schuifweerstanden}
+\item[]
+
+\includeimage{1}{0}{%
+\begin{figure}[H]
+\centering
+\begin{circuitikz}[european]
+  \draw (0,0) to[battery2, a=$U_b$] (6,0)
+              (6,0) to (6,2)
+              (3,2) to[vR, n=Rthree] (6,2)
+              (3,2) -- (3,2.5)
+              (3,2.5) to (3,1.5)
+              (0,2.5) to[vR, n=Rone] (3,2.5)
+              (0,1.5) to[vR, n=Rtwo] (3,1.5)
+              (0,2.5) -- (0,0);
+  \node[above left, inner sep=1pt] at (Rthree.north) {$R_3$};
+  \node[above left, inner sep=1pt] at (Rone.north) {$R_1$};
+  \node[below left, inner sep=1pt] at (Rtwo.south) {$R_2$};
+\end{circuitikz}
+\caption{Combinatieschakeling met schuifweerstanden.}
+\label{fig:schuifweerstanden}
+\end{figure}
+}
+
+In figuur~\ref{fig:schuifweerstanden} is een combinatieschakeling afgebeeld met drie schuifweerstanden. De batterij heeft een vaste spanning van $U_b$. De schuifweerstanden worden elk ingesteld op dezelfde weerstand $R$.
+
+\question[5]
+\textbf{Toon aan} met een berekening dat $P_3$ viermaal groter is dan $P_1$.
+
+\begin{solution}
+\begin{itemize}
+  \item De totale weerstand is $R_{tot} = R + \dfrac{R}{2} = \dfrac{3R}{2}$.
+  \item $I_3$ is de hoofdstroom: $I_3 = \dfrac{U_b}{R_{tot}} = \dfrac{2U_b}{3R}$.
+  \item $U_3 = I_3 \cdot R = \dfrac{2U_b}{3}$.
+  \item Spanning over $R_1$ (en $R_2$): $U_1 = U_b - U_3 = \dfrac{U_b}{3}$, dus $U_3 = 2\,U_1$.
+  \item De weerstanden zijn gelijk, dus met $P = \dfrac{U^2}{R}$ volgt: $\dfrac{P_3}{P_1} = \left(\dfrac{U_3}{U_1}\right)^{\!2} = 2^2 = 4$.
+\end{itemize}
+\end{solution}
+
+Alle schuifweerstanden worden nu anders ingesteld, weerstand $R_1$ en $R_2$ nemen af met een factor $x$ en weerstand $R_3$ neemt toe met een factor $x$. De nieuwe weerstanden zijn dus $R_1' = R_2' = \dfrac{R}{x}$ en $R_3' = xR$.
+
+\question[7]
+\textbf{Leid af} voor welke waarden van $x$ het vermogen $P_3(x)$ een positieve afgeleide heeft en voor welke waarden een negatieve.
+
+\begin{solution}
+\begin{itemize}
+  \item Parallelschakeling: $R_{1\parallel 2}' = \dfrac{R}{2x}$, dus $R_{tot}' = xR + \dfrac{R}{2x} = \dfrac{R(2x^2+1)}{2x}$.
+  \item Spanningsdeler: $U_3' = U_b \cdot \dfrac{R_3'}{R_{tot}'} = \dfrac{2x^2}{2x^2+1}\,U_b$.
+  \item Vermogen: $P_3'(x) = \dfrac{U_3'^{\,2}}{R_3'} = \dfrac{4x^3\,U_b^2}{R\,(2x^2+1)^2}$.
+  \item Differentiëren naar $x$ geeft $\dfrac{dP_3'}{dx} = \dfrac{4U_b^2}{R}\cdot \dfrac{x^2\,(3-2x^2)}{(2x^2+1)^3}$.
+  \item Nulpunt: $3 - 2x^2 = 0 \;\Rightarrow\; x = \sqrt{\dfrac{3}{2}} = \dfrac{1}{2}\sqrt{6} \approx 1{,}22$.
+  \item Voor $1 \leq x < \tfrac{1}{2}\sqrt{6}$ is de afgeleide positief: $P_3$ \textbf{stijgt}.
+  \item Voor $x > \tfrac{1}{2}\sqrt{6}$ is de afgeleide negatief: $P_3$ \textbf{daalt}. In de limiet $x \to \infty$ gaat $R_3$ alle spanning dragen maar wordt zo groot dat $P_3 = U_3^2/R_3 \to 0$.
+\end{itemize}
+\end{solution}
+
+\newpage
+\subsection*{Combinatieschakeling met gloeilampen}
+\item[]
+
+De schuifweerstanden worden vervangen door drie identieke gloeilampen (figuur~\ref{fig:gloeilampen}). Bij standaardtemperatuur $T_0$ heeft elke gloeidraad weerstand $R$.
+
+\includeimage{1}{0}{%
+\begin{figure}[H]
+\centering
+\begin{circuitikz}[european]
+  \draw (0,0) to[battery2, a=$U_b$] (6,0)
+              (6,0) to (6,2)
+              (3,2) to[lamp, n=Lthree] (6,2)
+              (3,2) -- (3,2.5)
+              (3,2.5) to (3,1.5)
+              (0,2.5) to[lamp, n=Lone] (3,2.5)
+              (0,1.5) to[lamp, n=Ltwo] (3,1.5)
+              (0,2.5) -- (0,0);
+  \node[above, inner sep=2pt] at (Lthree.north) {lamp 3};
+  \node[above, inner sep=2pt] at (Lone.north) {lamp 1};
+  \node[below, inner sep=2pt] at (Ltwo.south) {lamp 2};
+\end{circuitikz}
+\caption{Drie identieke gloeilampen: lamp~1 en~2 parallel, in serie met lamp~3.}
+\label{fig:gloeilampen}
+\end{figure}
+}
+
+Zodra de stroomkring gesloten wordt, stijgt de temperatuur van de gloeidraden. Omdat het materiaal een positieve temperatuurco\"effici\"ent (PTC) heeft, stijgt daarmee ook de weerstand volgens
+\begin{equation}
+R(T) = R\bigl(1 + \alpha\,(T - T_0)\bigr),
+\label{eq:weerstand}
+\end{equation}
+waarin $\alpha$ de temperatuurco\"effici\"ent is.
+
+Tegelijk straalt de hete gloeidraad warmte uit volgens de wet van Stefan--Boltzmann,
+\begin{equation}
+P_{straling} = \varepsilon\sigma A\,T^4 \;\equiv\; k\,T^4,
+\label{eq:stralen}
+\end{equation}
+met $\varepsilon$ de emissiviteit, $\sigma$ de constante van Stefan--Boltzmann en $A$ het stralende oppervlak. Omdat de gloeidraden zo heet worden is de door de draden \emph{ge\"absorbeerde} omgevingsstraling verwaarloosbaar.
+
+In de stationaire eindtoestand is voor elke draad het elektrisch gedissipeerde vermogen gelijk aan het uitgestraalde vermogen:
+\[
+\text{draad 3:}\; I^2 R_3 = k\,T_3^{\,4}, \qquad
+\text{draad 1 (of 2):}\; \bigl(\tfrac{1}{2}I\bigr)^{\!2} R_p = k\,T_p^{\,4},
+\]
+waarbij $I$ de hoofdstroom door draad~3 is en de parallelle draden elk de helft voeren. Draad~1 en~2 zijn identiek en hebben dezelfde temperatuur $T_p$ en weerstand $R_p$.
+
+\question[4]
+\textbf{Toon aan} dat het totale vermogen dat de drie lampen samen omzetten gelijk is aan $P_{tot} = U_b\,I$. \textbf{Leg uit} waarom $P_{tot}$ \emph{niet} bepaald kan worden uit enkel $U_b$, $R$, $\alpha$ en $T_0$.
+
+\begin{solution}
+\begin{itemize}
+  \item De volledige bronstroom $I$ loopt door de bron met spanning $U_b$, dus het door de bron geleverde vermogen is $P_{tot} = U_b\,I$. In de stationaire toestand wordt dit volledig uitgestraald door de drie draden.
+  \item Het overblijvende probleem is het bepalen van $I$. Dat vereist de spanningswet $U_b = I\bigl(R_3 + \tfrac{1}{2}R_p\bigr)$, samen met de twee stralingsbalansen en het weerstandsmodel~\eqref{eq:weerstand}.
+  \item Dit geeft vijf vergelijkingen in zes onbekenden: $I$, $T_3$, $T_p$, $R_3$, $R_p$ en de stralingsconstante $k = \varepsilon\sigma A$. Met enkel $U_b$, $R$, $\alpha$ en $T_0$ is $k$ nergens uit af te leiden.
+  \item Het probleem is dus \emph{onderbepaald}: er ontbreekt \'e\'en gegeven dat het verband tussen straling en temperatuur ijkt.
+\end{itemize}
+\end{solution}
+
+\newpage
+Het ontbrekende gegeven is bijvoorbeeld een \emph{nominaal werkpunt} van \'e\'en losse draad: bij spanning $U_{nom}$ levert \'e\'en draad een gemeten vermogen $P_{nom}$. We nemen aan dat deze meting is verricht aan precies zo'n draad als die in de schakeling, zodat de stralingsconstante $k$, de koude weerstand $R$ en de temperatuurco\"effici\"ent $\alpha$ identiek zijn. Hieruit volgt direct $I_{nom} = P_{nom}/U_{nom}$ en $R_{nom} = U_{nom}^{\,2}/P_{nom}$, en met~\eqref{eq:weerstand} ook de nominale temperatuur en de stralingsconstante:
+\begin{equation}
+T_{nom} = T_0 + \frac{1}{\alpha}\!\left(\frac{R_{nom}}{R} - 1\right),
+\qquad k = \frac{P_{nom}}{T_{nom}^{\,4}}.
+\label{eq:Tnom}
+\end{equation}
+
+\question[6]
+\textbf{Stel} het volledige stelsel vergelijkingen op waarmee $I$, $T_3$ en $T_p$ in principe berekend kunnen worden, met als gegevens $U_b$, $R$, $\alpha$, $T_0$ en het nominale werkpunt $(U_{nom}, P_{nom})$.
+
+\begin{solution}
+Met $k = P_{nom}/T_{nom}^{\,4}$ via~\eqref{eq:Tnom} vormen $I$, $T_3$ en $T_p$ de oplossing van:
+\begin{align*}
+I^{2} R_3 &= k\,T_3^{\,4}, & R_3 &= R\bigl(1+\alpha(T_3-T_0)\bigr),\\
+\tfrac{1}{4}I^{2} R_p &= k\,T_p^{\,4}, & R_p &= R\bigl(1+\alpha(T_p-T_0)\bigr),\\
+U_b &= I\bigl(R_3 + \tfrac{1}{2}R_p\bigr). &&
+\end{align*}
+Dit is een gesloten stelsel van drie vergelijkingen in drie onbekenden. Omdat $T^4$ tegen $T$ wordt uitgespeeld is het een vierdegraadsprobleem: in principe analytisch oplosbaar, maar zonder elegante elementaire vorm. Numeriek is het triviaal (zie verificatie achteraan); analytisch wordt het pas elegant in de \emph{hete limiet}, waarin $\alpha(T - T_0) \gg 1$.
+\end{solution}
+
+\newpage
+\subsection*{Hete limiet -- analytische oplossing}
+
+Bij het examenwerkpunt ($T_{nom} \approx \qty{2400}{\K}$, want $P_{nom} = \qty{2.4}{\W}$ bij $R_{nom} = \qty{60}{\ohm}$) is $\alpha\,(T_{nom} - T_0) \approx 11 \gg 1$. In deze \emph{hete limiet} mogen we in~\eqref{eq:weerstand} de "1" verwaarlozen ten opzichte van $\alpha T$ en $\alpha T_0$ ten opzichte van $\alpha T$, zodat
+\[
+R(T) \approx R\,\alpha\,T.
+\]
+Het stelsel uit opgave~4 wordt nu analytisch oplosbaar. De prijs van deze benadering kwantificeren we achteraan met een numerieke verificatie.
+
+\question[5]
+\textbf{Toon aan} dat in de hete limiet $\dfrac{T_3}{T_p} = \sqrt[3]{4}$, en dus ook $\dfrac{R_3}{R_p} = \sqrt[3]{4}$.
+
+\begin{solution}
+\begin{itemize}
+  \item Hete-limietbenadering toepassen: $R_3 \approx R\alpha\,T_3$ en $R_p \approx R\alpha\,T_p$.
+  \item Stralingsbalans draad~3: $k\,T_3^{\,4} = I^2\,R\alpha\,T_3 \;\Rightarrow\; T_3^{\,3} = \dfrac{I^2 R\alpha}{k}.$
+  \item Stralingsbalans parallelle draad: $k\,T_p^{\,4} = \tfrac{1}{4}I^2 R\alpha\,T_p \;\Rightarrow\; T_p^{\,3} = \dfrac{I^2 R\alpha}{4k}.$
+  \item Delen geeft $\left(\dfrac{T_3}{T_p}\right)^{\!3} = 4$, dus $\dfrac{T_3}{T_p} = \sqrt[3]{4} \approx 1{,}587$.
+  \item In de hete limiet is $R \propto T$, dus geldt eveneens $\dfrac{R_3}{R_p} = \sqrt[3]{4}$.
+\end{itemize}
+\end{solution}
+
+\question[6]
+\textbf{Leid af} een gesloten uitdrukking voor de stroom $I$ in termen van het nominale werkpunt $(U_{nom}, I_{nom})$ en de bronspanning $U_b$.
+
+\begin{solution}
+\begin{itemize}
+  \item Pas dezelfde hete-limietbalans toe op een losse nominale draad ($I_{nom}$ door $R_{nom} \approx R\alpha\,T_{nom}$):
+    \[T_{nom}^{\,3} = \dfrac{I_{nom}^{\,2}\, R\alpha}{k}.\]
+  \item Vergelijken met $T_3^{\,3} = I^{2} R\alpha/k$ geeft de schaalrelatie voor de temperatuur:
+    $T_3 = T_{nom}\,(I/I_{nom})^{2/3}.$
+  \item En daarmee voor de weerstand: $R_3 = R\alpha\,T_3 = R_{nom}\,(I/I_{nom})^{2/3}.$
+  \item Met $R_p = R_3/\sqrt[3]{4}$ wordt de spanningswet
+    \[U_b = I\,R_3\bigl(1 + \tfrac{1}{2}\cdot 4^{-1/3}\bigr) = I\,R_3\cdot C,
+      \qquad C \equiv 1 + \tfrac{1}{2}\cdot 4^{-1/3} \approx 1{,}315.\]
+  \item Invullen van $R_3 = R_{nom}(I/I_{nom})^{2/3}$ levert $U_b = I\,R_{nom}\,(I/I_{nom})^{2/3}\,C$.
+  \item Substitueer $U_{nom} = I_{nom}R_{nom}$. Dan $U_b = U_{nom}\,(I/I_{nom})^{5/3}\,C$, dus
+    \[\boxed{\;I = I_{nom}\!\left(\frac{1}{C}\cdot\frac{U_b}{U_{nom}}\right)^{\!3/5}.\;}\]
+\end{itemize}
+\end{solution}
+
+\newpage
+\question[5]
+\textbf{Toon aan} dat het totale vermogen in de hete limiet gegeven wordt door
+\[
+P_{tot} = P_{nom}\!\left(\frac{U_b}{U_{nom}}\right)^{\!8/5}\!\cdot C^{-3/5},
+\]
+en \textbf{bepaal} hoe $P_{tot}$ verdeeld is over draad~3 en de twee parallelle draden.
+
+\begin{solution}
+\begin{itemize}
+  \item Combineer $P_{tot} = U_b\,I$ met de uitdrukking voor $I$ uit de vorige opgave:
+    \[P_{tot} = U_b\,I_{nom}\,\bigl(U_b/(C\,U_{nom})\bigr)^{3/5}.\]
+  \item Herschrijf met $P_{nom} = U_{nom}I_{nom}$:
+    \[P_{tot} = P_{nom}\!\left(\frac{U_b}{U_{nom}}\right)^{\!8/5}\!\cdot C^{-3/5}\approx 0{,}83\,P_{nom}\!\left(\frac{U_b}{U_{nom}}\right)^{\!1{,}6}.\]
+  \item Verdeling: per draad geldt $P = kT^4$, dus $\dfrac{P_3}{P_p} = (T_3/T_p)^4 = 4^{4/3}$.
+  \item Met $P_{tot} = P_3 + 2P_p$ volgt:
+    \[P_3 = P_{tot}\cdot\dfrac{4^{4/3}}{4^{4/3}+2} \approx 0{,}761\,P_{tot},
+      \qquad P_p = P_{tot}\cdot\dfrac{1}{4^{4/3}+2} \approx 0{,}119\,P_{tot}.\]
+    Draad~3 zet ruwweg driekwart van het totale vermogen om; de twee parallelle draden delen samen de overige kwart.
+  \item Numerieke controle met de examenwaarden $U_{nom} = \qty{12}{\V}$, $P_{nom} = \qty{2.4}{\W}$ en $U_b = \qty{18}{\V}$: $P_{tot} \approx \qty{3.89}{\W}$, $P_3 \approx \qty{2.96}{\W}$, $P_p \approx \qty{0.46}{\W}$ per parallelle draad. Lamp~3 brandt dus op $P_3 \approx \qty{2.96}{\W} > P_{nom}$ --- op te hoog vermogen, precies wat examenopgave~10 als antwoord verwachtte. Voor de numerieke verificatie van deze cijfers, zie tabel~\ref{tab:verificatie} hieronder.
+\end{itemize}
+\end{solution}
+
+\question[4]
+\textbf{Beschouw} de twee grensgevallen $U_b \to 0$ en $U_b \to \infty$. Past het gedrag bij het PTC-karakter van het materiaal?
+
+\begin{solution}
+\begin{itemize}
+  \item $U_b \to 0$: $P_{tot} \propto U_b^{8/5} \to 0$ -- en sneller dan lineair.
+  \item Strikt genomen geldt de hete-limietformule hier niet meer ($\alpha(T-T_0) \not\gg 1$); in het volledige model nadert het gedrag dat van \emph{gewone} weerstanden $R$ (zoals in opgave~1).
+  \item $U_b \to \infty$: $P_{tot} \propto U_b^{8/5}$ blijft groeien, maar de \emph{stroom} groeit slechts als $U_b^{3/5}$, dus \emph{langzamer} dan lineair. Een gewone ohmse weerstand zou $I \propto U_b$ geven.
+  \item Het PTC-gedrag plus de stralingskoeling onderdrukt de stroomtoename: hoe heter de draad, hoe groter de weerstand, hoe meer de stroomtoename wordt afgevlakt. Dit is precies het zelfregulerende karakter waarvoor PTC-materialen bekendstaan.
+\end{itemize}
+\end{solution}
+
+\newpage
+\section*{Verificatie -- iteratief model}
+
+De hete-limietoplossing is een asymptotische benadering. Om de uitkomst te toetsen lossen we het volledige stelsel uit opgave~4 numeriek op met een Euler-model. Voor de uitvoering gebruiken we \texttt{numodel}~--- een door mij ontwikkeld \LaTeX-pakket dat het tekstmodel, het Forrester-diagram, de simulatie en de bijbehorende grafieken automatisch in het document rendert.
+
+De gloeidraden zijn wolfraam ($\alpha = \qty{5.2e-3}{\per\K}$), gemodelleerd op het examenwerkpunt $U_{nom} = \qty{12}{\V}$, $P_{nom} = \qty{2.4}{\W}$. De bronspanning is $U_b = \qty{18}{\V}$. De voorraadgrootheden zijn de temperaturen $T_p$ en $T_3$. Hun toename per tijdstap volgt uit de warmtebalans --- het opgenomen elektrische vermogen min het uitgestraalde stralingsvermogen, gedeeld door de warmtecapaciteit $mc$ van de draad. De hulpgrootheden $R$, $U$, $I$ en $P$ volgen elke stap uit de actuele temperaturen.
+
+Het model is overgenomen van Arno Rijnders, uit zijn opmerking op Facebook. Echter de startwaarden zijn aangepast zodat de hete limiet bereikt wordt. De temperatuurcoëfficiënt is afhankelijk van de temperatuur, in het model is de constante waarde daarom iets naar boven verschoven, zodat de modelregels hetzelfde konden blijven.
+
+\numodelsetup{diagram-style=tight}
+
+\newmodelprefix{ptc}
+
+% --- systeemvariabelen ---
+\mvar{T}{t}{0}{\s}{4}{system}
+\mvar{Dt}{dt}{1e-4}{\s}{1}{system}
+
+% --- constanten (wolfraam, 12 V / 2.4 W werkpunt = examenwaarden) ---
+\mvar{Rnul}{R_0}{5.0}{\ohm}{2}{constant}
+\mvar{Ub}{U_b}{18}{\V}{2}{constant}
+\mvar{Tnul}{T_0}{293}{\K}{3}{constant}
+\mvar{Wtc}{\alpha}{5.2e-3}{\per\K}{2}{constant}
+\mvar{SB}{\varepsilon\sigma A}{7.14e-14}{}{3}{constant}
+\mvar{Mc}{mc}{3e-5}{\joule\per\K}{1}{constant}
+
+% --- hulpvariabelen ---
+\mvar{Upar}{U_{1,2}}{0}{\V}{3}{hulp}
+\mvar{I}{I}{0}{\A}{4}{hulp}
+\mvar{Rpar}{R_{1,2}}{5.0}{\ohm}{2}{hulp}
+\mvar{Rser}{R_3}{5.0}{\ohm}{2}{hulp}
+\mvar{User}{U_3}{0}{\V}{3}{hulp}
+\mvar{Pser}{P_3}{0}{\W}{3}{hulp}
+\mvar{Ppar}{P_{1,2}}{0}{\W}{3}{hulp}
+
+% --- voorraden (temperaturen) ---
+\mvar{Tser}{T_3}{293}{\K}{3}{stock}
+\mvar{Tpar}{T_{1,2}}{293}{\K}{3}{stock}
+
+% --- modelregels ---
+\mrule{I}{\ptcUb / (\ptcRser + \ptcRpar / 2)}
+\mrule{Upar}{\ptcI * \ptcRpar / 2}
+\mrule{User}{\ptcI * \ptcRser}
+\mrule{Ppar}{\ptcI^2 * \ptcRpar / 4}
+\mrule{Pser}{\ptcI^2 * \ptcRser}
+\mrule{Tpar}{\ptcTpar + \ptcPpar * \ptcDt / \ptcMc - \ptcSB * \ptcTpar^4 * \ptcDt / \ptcMc}
+\mrule{Tser}{\ptcTser + \ptcPser * \ptcDt / \ptcMc - \ptcSB * \ptcTser^4 * \ptcDt / \ptcMc}
+\mrule{Rpar}{\ptcRnul * (1 + \ptcWtc * (\ptcTpar - \ptcTnul))}
+\mrule{Rser}{\ptcRnul * (1 + \ptcWtc * (\ptcTser - \ptcTnul))}
+\mrule{T}{\ptcT + \ptcDt}
+\mstop{\ptcT >= 0.3}
+
+\subsection*{Tekstmodel}
+\textmodel
+
+\subsection*{Grafisch model}
+\graphicmodel
+
+\subsection*{Simulatie}
+\computemodel
+
+\subsection*{Spanning over draad 3 en paralleltak}
+\diagrammodel{T}{User, Upar}{ptc-user-t}
+
+Na ongeveer $\qty{0.2}{\s}$ bereikt de schakeling zijn stationaire eindtoestand. Tabel~\ref{tab:verificatie} zet de eindwaarden uit het iteratieve model naast de analytische hete-limietvoorspellingen uit opgave~7.
+
+\defqty{anaI}{0.2164}{\A}{4}
+\defqty{anaUser}{13.69}{\V}{4}
+\defqty{anaUpar}{4.31}{\V}{3}
+\defqty{anaPtot}{3.896}{\W}{4}
+\defqty{anaPser}{2.965}{\W}{4}
+\defqty{anaPpar}{0.463}{\W}{3}
+
+\edef\modI{\mstep{I}{-1}}
+\edef\modUser{\mstep{User}{-1}}
+\edef\modUpar{\mstep{Upar}{-1}}
+\edef\modPser{\mstep{Pser}{-1}}
+\edef\modPpar{\mstep{Ppar}{-1}}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lccc}
+\toprule
+Grootheid & Hete limiet (analytisch) & Euler-model (numeriek) & Relatief verschil \\
+\midrule
+$I$       & $\anaIq$    & $\qty{\modI}{\A}$    & $\num[round-mode=places,round-precision=1]{\fpeval{(\modI-\anaI)/\anaI*100}}\,\%$ \\
+$U_3$     & $\anaUserq$ & $\qty{\modUser}{\V}$ & $\num[round-mode=places,round-precision=1]{\fpeval{(\modUser-\anaUser)/\anaUser*100}}\,\%$ \\
+$U_{1,2}$ & $\anaUparq$ & $\qty{\modUpar}{\V}$ & $\num[round-mode=places,round-precision=1]{\fpeval{(\modUpar-\anaUpar)/\anaUpar*100}}\,\%$ \\
+$P_3$     & $\anaPserq$ & $\qty{\modPser}{\W}$ & $\num[round-mode=places,round-precision=1]{\fpeval{(\modPser-\anaPser)/\anaPser*100}}\,\%$ \\
+$P_{1,2}$ & $\anaPparq$ & $\qty{\modPpar}{\W}$ & $\num[round-mode=places,round-precision=1]{\fpeval{(\modPpar-\anaPpar)/\anaPpar*100}}\,\%$ \\
+\bottomrule
+\end{tabular}
+\caption{Vergelijking van de analytische hete-limietuitkomst met het iteratieve Euler-model voor $U_b = \qty{18}{\V}$ en examenlampen ($U_{nom} = \qty{12}{\V}$, $P_{nom} = \qty{2.4}{\W}$). Het relatieve verschil weerspiegelt de prijs van het verwaarlozen van de "1" in $R = R_0\bigl(1 + \alpha(T - T_0)\bigr)$.}
+\label{tab:verificatie}
+\end{table}
+
+De afwijking is enkele procenten en typisch het grootst voor de paralleltak --- die heeft een lagere eindtemperatuur, dus de hete-limietbenadering geldt daar minder strikt. De cirkel sluit: lamp~3 brandt op $P_3 > P_{nom}$, het examenantwoord nu kwantitatief onderbouwd.
+
+\newpage
+\section*{Verificatie -- empirische benadering}
+
+De hete-limietoplossing en het Euler-model vertrekken allebei van een
+fysisch model: het weerstandsverband~\eqref{eq:weerstand} en de
+stralingswet~\eqref{eq:stralen}. Een derde, volledig onafhankelijke route
+slaat die modellering over en meet het gedrag van de gloeidraad
+rechtstreeks. Deze aanpak is uitgewerkt door collega Koen Van de Moortel;
+ze vormt een mooie kruiscontrole, juist omdat ze nergens van straling of
+temperatuur uitgaat.
+
+\subsection*{Het empirische verband}
+
+Het uitgangspunt is een gemeten \emph{stroom-spanningskarakteristiek} van
+een losse gloeidraad, samengevat in een machtswet
+\begin{equation}
+I = a\,U^{\,b}.
+\label{eq:machtswet}
+\end{equation}
+De twee parameters $a$ en $b$ worden experimenteel bepaald. Hun betekenis
+is af te lezen aan de grenzen: voor een \emph{ohmse} weerstand geldt
+$I = U/R$, dus $b = 1$ en $a = 1/R$. De exponent $b$ meet dus hoe sterk de
+gloeidraad van ohms gedrag afwijkt. Voor een PTC-draad is $b < 1$: de
+stroom groeit langzamer dan evenredig met de spanning, omdat de draad bij
+hogere spanning heter wordt en zijn weerstand stijgt. Dezelfde
+zelfregulering dus die in de hete limiet de stroomgroei afvlakte --- maar
+hier vastgelegd in \'e\'en gemeten getal in plaats van afgeleid uit
+$R(T)$ en Stefan--Boltzmann.
+
+\subsection*{Afleiding van \texorpdfstring{$U_3$}{U3}}
+
+De schakeltopologie is dezelfde als hiervoor: draad~3 voert de
+hoofdstroom $I$, de twee parallelle draden voeren elk $\tfrac{1}{2}I$.
+Alle drie de identieke draden gehoorzamen~\eqref{eq:machtswet}.
+
+\begin{itemize}
+  \item Draad~3, met spanning $U_3$: $\quad I = a\,U_3^{\,b}$.
+  \item Een parallelle draad, met spanning $U_b - U_3$ en stroom
+    $\tfrac{1}{2}I$: $\quad \tfrac{1}{2}I = a\,(U_b - U_3)^{\,b}$.
+  \item Deel de eerste vergelijking door de tweede; $a$ valt weg:
+    \[\frac{I}{\tfrac{1}{2}I}
+       = \frac{U_3^{\,b}}{(U_b-U_3)^{\,b}}
+       \;\Longrightarrow\;
+       2 = \left(\frac{U_3}{U_b-U_3}\right)^{\!b}.\]
+  \item Neem aan beide kanten de macht $1/b$:
+    \[2^{1/b} = \frac{U_3}{U_b - U_3}
+       \;\Longrightarrow\;
+       2^{1/b}\,(U_b - U_3) = U_3.\]
+  \item Losmaken van $U_3$ geeft de gesloten uitdrukking
+    \[\boxed{\;U_3 = \dfrac{1}{1 + 2^{-1/b}}\;U_b.\;}\]
+\end{itemize}
+
+\subsection*{Vergelijking met de hete limiet}
+
+Deze empirische uitkomst en de hete-limietuitkomst uit opgave~6 zijn in
+feite dezelfde formule. In de hete limiet gold $R \propto T$ en
+$T^{\,3} \propto I^{2}$, wat samen $U_b \propto I^{\,5/3}$ oplevert, oftewel
+$I \propto U^{\,3/5}$. Dat is precies~\eqref{eq:machtswet} met de
+\emph{theoretische} exponent $b = \tfrac{3}{5} = 0{,}60$. Invullen daarvan
+geeft $2^{-1/b} = 2^{-5/3} = 0{,}315$ en dus $U_3 = U_b/1{,}315 = 0{,}760\,U_b$
+--- identiek aan de factor $C$ uit opgave~6.
+
+De empirische route en de fysische route zijn dus twee zijden van
+dezelfde medaille: de hete limiet \emph{voorspelt} de exponent
+($b = 3/5$) uit de stralingsfysica, terwijl de meting hem direct
+\emph{vaststelt}. Een gemeten waarde dicht bij $0{,}6$ is daarmee een
+experimentele bevestiging dat de hete-limietaanname fysisch hout snijdt.
+
+\subsection*{Een gemeten lampje}
+
+Voor een klein gloeilampje leverde de fit van~\eqref{eq:machtswet} aan
+gemeten data een exponent $b = 0{,}573$.\footnote{Meting en fit:
+Koen Van de Moortel, \texttt{lerenisplezant.be}. De gemeten karakteristiek
+toont de duidelijk holle, afvlakkende vorm die~\eqref{eq:machtswet} met
+$b<1$ voorspelt; een ohmse weerstand zou een rechte lijn door de oorsprong
+geven.} Die ligt opvallend dicht bij de theoretische $3/5$ --- het kleine
+verschil weerspiegelt de 1 in~\eqref{eq:weerstand} en de niet-lineariteit
+van echt wolfraam, precies de termen die de hete limiet verwaarloost.
+
+Met $b = 0{,}573$ in de empirische formule wordt
+$2^{-1/b} = 0{,}298$, zodat
+\[U_3 = \frac{1}{1 + 0{,}298}\,U_b
+       = 0{,}771 \times \qty{18}{\V}
+       \approx \qty{13.86}{\V}.\]
+De overige grootheden volgen door~\eqref{eq:machtswet} te ijken op het
+nominale werkpunt ($a = I_{nom}/U_{nom}^{\,b}$) en in te vullen. Tabel~%
+\ref{tab:drieroutes} zet alle drie de routes naast elkaar.
+
+\defqty{empI}{0.2173}{\A}{4}
+\defqty{empUser}{13.86}{\V}{4}
+\defqty{empUpar}{4.136}{\V}{4}
+\defqty{empPser}{3.012}{\W}{4}
+\defqty{empPpar}{0.449}{\W}{3}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lccc}
+\toprule
+Grootheid & Hete limiet & Euler-model & Empirisch \\
+          & ($b=3/5$, analytisch) & (numeriek) & ($b=0{,}573$, gemeten) \\
+\midrule
+$I$       & $\anaIq$    & $\qty{\modI}{\A}$    & $\empIq$    \\
+$U_3$     & $\anaUserq$ & $\qty{\modUser}{\V}$ & $\empUserq$ \\
+$U_{1,2}$ & $\anaUparq$ & $\qty{\modUpar}{\V}$ & $\empUparq$ \\
+$P_3$     & $\anaPserq$ & $\qty{\modPser}{\W}$ & $\empPserq$ \\
+$P_{1,2}$ & $\anaPparq$ & $\qty{\modPpar}{\W}$ & $\empPparq$ \\
+\bottomrule
+\end{tabular}
+\caption{Drie onafhankelijke routes naar dezelfde eindtoestand voor
+$U_b = \qty{18}{\V}$ en examenlampen ($U_{nom} = \qty{12}{\V}$,
+$P_{nom} = \qty{2.4}{\W}$). De hete limiet leidt de machtsexponent
+$b = 3/5$ af uit de stralingsfysica; het Euler-model lost het volledige
+stelsel numeriek op; de empirische route meet de exponent rechtstreeks aan
+een gloeilampje ($b = 0{,}573$).}
+\label{tab:drieroutes}
+\end{table}
+
+Drie routes --- een analytische benadering, een numerieke simulatie en een
+directe meting --- die langs volledig verschillende wegen op vrijwel
+dezelfde eindtoestand uitkomen. Dat $U_3$ in alle drie de gevallen rond
+$\qty{13.8}{\V}$ uitkomt, ruim boven de $\qty{12}{\V}$ van het nominale
+werkpunt, maakt het examenantwoord onomstotelijk: lamp~3 brandt op een te
+hoog vermogen.
+
+\end{questions}
+\end{document}

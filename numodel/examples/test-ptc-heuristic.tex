@@ -1,0 +1,52 @@
+% test-ptc-heuristic.tex — minimal PTC model to verify the improved
+% flow-var heuristic.  With the original heuristic, Ppar/Pser would be
+% shadowed by the earlier-declared constant SB; the diagram would
+% mislabel each filament's inflow valve as `esA`.  With the aux-wins
+% rule plus paren distribution, Ppar/Pser surface as the inflow
+% valves and SB is correctly identified as the radiative outflow.
+
+\documentclass{article}
+\usepackage{numodel}
+
+\begin{document}
+
+\numodelsetup{diagram-style=tight}
+\newmodelprefix{ptc}
+
+\mvar{T}{t}{0}{\s}{4}{system}
+\mvar{Dt}{dt}{1e-4}{\s}{1}{system}
+\mvar{Ub}{U_b}{18}{\V}{2}{constant}
+\mvar{Rnul}{R_0}{5.0}{\ohm}{2}{constant}
+\mvar{Tnul}{T_0}{293}{\K}{3}{constant}
+\mvar{Wtc}{\alpha}{5.2e-3}{\per\K}{2}{constant}
+\mvar{SB}{\varepsilon\sigma A}{7.14e-14}{}{3}{constant}
+\mvar{Mc}{mc}{3e-5}{\joule\per\K}{1}{constant}
+\mvar{I}{I}{0}{\A}{4}{hulp}
+\mvar{Rpar}{R_{1,2}}{5.0}{\ohm}{2}{hulp}
+\mvar{Rser}{R_3}{5.0}{\ohm}{2}{hulp}
+\mvar{Upar}{U_{1,2}}{0}{\V}{3}{hulp}
+\mvar{User}{U_3}{0}{\V}{3}{hulp}
+\mvar{Ppar}{P_{1,2}}{0}{\W}{3}{hulp}
+\mvar{Pser}{P_3}{0}{\W}{3}{hulp}
+\mvar{Tpar}{T_{1,2}}{293}{\K}{1}{stock}
+\mvar{Tser}{T_3}{293}{\K}{1}{stock}
+
+\mrule{I}{\ptcUb / (\ptcRser + \ptcRpar / 2)}
+\mrule{Upar}{\ptcI * \ptcRpar / 2}
+\mrule{User}{\ptcI * \ptcRser}
+\mrule{Ppar}{\ptcI^2 * \ptcRpar / 4}
+\mrule{Pser}{\ptcI^2 * \ptcRser}
+\mrule{Tpar}{\ptcTpar + (\ptcPpar - \ptcSB * \ptcTpar^4) * \ptcDt / \ptcMc}
+\mrule{Tser}{\ptcTser + (\ptcPser - \ptcSB * \ptcTser^4) * \ptcDt / \ptcMc}
+\mrule{Rpar}{\ptcRnul * (1 + \ptcWtc * (\ptcTpar - \ptcTnul))}
+\mrule{Rser}{\ptcRnul * (1 + \ptcWtc * (\ptcTser - \ptcTnul))}
+\mrule{T}{\ptcT + \ptcDt}
+\mstop{\ptcT >= 0.3}
+
+\section*{Tekstmodel}
+\textmodel
+
+\section*{Grafisch model}
+\graphicmodel
+
+\end{document}

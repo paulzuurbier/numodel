@@ -5,6 +5,84 @@ All notable changes to `numodel` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.5.0-pre] — 2026-05-23 (pre-release)
+
+### Added
+- Multi-series `\diagrammodel`: the second argument now accepts a
+  comma-separated list of y-variables.  Every entry whose `unitraw`
+  matches the first one's is plotted in the same diagram as
+  discrete model points (mark-only); the y-axis is scaled to the
+  joint min/max of the kept series.  Entries with a non-matching
+  unit are dropped and a `numodel/unit-mismatch` warning is issued.
+  Series cycle through a colour-blind safe palette (Okabe & Ito,
+  yellow omitted) ordered so consecutive colours differ in
+  luminance as well — so they stay distinguishable on a greyscale
+  printout.  The legend lists each kept variable's display text;
+  the legacy single-entry form keeps the historical "model point"
+  mark-only rendering unchanged.
+- Shared-inflow Forrester diagrams: when one auxiliary variable is
+  the inflow of more than one stock, `\graphicmodel` draws a single
+  valve next to the first such stock, places the additional stocks
+  side by side, and threads a curved branch (`to[bend left=30]`,
+  matching the curved causal arrows) from the valve over the
+  primary stock into each extra target.  Layout stays compact —
+  the involved stocks share one row, no vertical stacking.
+- Shared-outflow Forrester diagrams: mirror of the above for the
+  outflow side.  When one variable drains more than one stock,
+  the valve is placed to the right of the last-declared source
+  stock and every earlier source attaches with a curved branch
+  arcing back over the intervening stocks into the shared valve.
+- `\flowarrowbent` / `\flowoutarrowbent` TikZ macros driving the
+  curved inflow / outflow branches; both use the same
+  `bend left=30` style as the existing curved causal arrows.
+- New colour-blind safe palette `numodelseriesa`…`numodelseriesg`
+  (Okabe & Ito with yellow omitted), ordered by luminance for
+  greyscale legibility.  Reused as the multi-series cycle in
+  `\diagrammodel`; available to user code as `\definecolor`-style
+  names.
+- `examples/test-multi-series.tex`,
+  `examples/test-shared-inflow.tex`, and
+  `examples/test-ptc-heuristic.tex` — exercise the new features
+  (multi-series filtering with a unit-mismatch warning, shared
+  inflow, and the PTC two-filament stocks with shared radiative
+  outflow).
+- Manual subsection §"Shared valves" describing the side-by-side
+  layout and the curved-branch rendering for shared inflow and
+  shared outflow.
+
+### Changed
+- Flow-variable detection prefers `aux` and `stock` variables over
+  `constant`s when both appear in the same inflow term.  The
+  previous heuristic ("first declared wins") would mislabel an
+  inflow valve as a scaling constant when that constant happened
+  to be declared before the rate-bearing helper; the new rule
+  picks the helper, so the valve label matches what the physics
+  treats as flowing.
+- Inflow term parsing now distributes top-level parenthesised
+  sub-expressions of the form `(+A - B) * C` into `+A*C, -B*C`
+  before flow classification.  This lets a rule such as
+  `\T + (\P - \k * \T^4) * \Dt / \mc` surface `P` as the inflow
+  valve and `k` as the outflow valve, instead of treating the
+  whole bracket as one inflow term that masks the radiative
+  `k * T^4` outflow.
+
+### Internal
+- New Lua maps `flows.valve_extra_targets` and
+  `flows.outvalve_extra_sources` track the extra stocks attached
+  to a shared valve.  Exported to TeX through
+  `\l__numodel_valve_extras_prop` and
+  `\l__numodel_outvalve_extras_prop`.
+- `auto_layout` now defers shared-valve placement to the
+  designated primary source — first-declared for inflows
+  (so the valve lands at the left of the stock row), last-declared
+  for outflows (so it lands at the right) — and skips it for the
+  other sharing stocks.  Their flow attaches with a curved branch
+  emitted by `\__numodel_emit_valve_extras:n` /
+  `\__numodel_emit_outvalve_extras:n`.
+- `last_outflow` gap-detection in `auto_layout` now keys off
+  whether the chain actually placed an outflow valve, so shared
+  outflows no longer leave an empty grid cell between rows.
+
 ## [0.4.0] — 2026-05-19
 
 ### Added

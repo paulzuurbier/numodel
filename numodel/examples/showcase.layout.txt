@@ -39,6 +39,8 @@ flows.stock_valve:
 flows.stock_phantom_valve:
   liftH -> liftV
   liftV -> liftA
+flows.valve_extra_targets:
+flows.outvalve_extra_sources:
 deps:
   liftA -> liftT,liftDt,liftTend,liftJ
   liftEZ -> liftDt,liftdMGV

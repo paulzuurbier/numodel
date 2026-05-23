@@ -1,6 +1,6 @@
 -- ====================================================================
 -- numodel.lua --- Lua data store for the numodel package (per-prefix)
--- numodel.lua  v0.4.0  2026/05/19
+-- numodel.lua  v0.5.0-pre  2026/05/23
 -- ====================================================================
 --
 -- Copyright (C) 2026 Paul Zuurbier <mail@paulzuurbier.nl>
@@ -226,17 +226,26 @@ end
 
 -- Find first variable (declaration order) whose \name appears in term,
 -- excluding the target itself, system-typed vars, and display "dt".
+-- An aux or stock variable wins over a constant: when both can be the
+-- flow var of a term, the rate-bearing one is the meaningful valve
+-- label, not the parameter that scales it.  Falls back to the first
+-- constant if no aux/stock candidate is present.
 local function first_flow_var(m, target, term)
+    local fallback = nil
     for name, meta in var_iter(m) do
         if name ~= target
            and meta.type ~= "system"
            and meta.text ~= "dt"
            and cs_in_expr(name, term)
         then
-            return name
+            if meta.type == "aux" or meta.type == "stock" then
+                return name
+            elseif not fallback then
+                fallback = name
+            end
         end
     end
-    return nil
+    return fallback
 end
 
 -- Tokenize an additive expression into top-level (sign, term) pairs.
@@ -287,6 +296,72 @@ end
 -- between-flow detection requires `\X * \Dt` and `\X*\Dt` to match.
 local function normalize_term(s)
     return (s:gsub("%s+", ""))
+end
+
+-- Locate the first top-level parenthesised group in `s`.  Returns
+-- start, end (character indices of the matching `(` and `)`) or nil
+-- if no balanced top-level pair exists.  Square brackets and braces
+-- count as their own nesting level but are not unwrapped here -- only
+-- `(...)` is considered for term distribution.
+local function find_top_paren(s)
+    local n = #s
+    local i = 1
+    while i <= n do
+        local c = s:sub(i, i)
+        if c == "(" then
+            local startp = i
+            local d = 1
+            local j = i + 1
+            while j <= n and d > 0 do
+                local cj = s:sub(j, j)
+                if cj == "(" then d = d + 1
+                elseif cj == ")" then d = d - 1 end
+                j = j + 1
+            end
+            if d == 0 then return startp, j - 1 end
+            return nil
+        end
+        i = i + 1
+    end
+    return nil
+end
+
+-- If `term` has the shape `<before>(A op B op ...)<after>` with at
+-- least one top-level `+`/`-` inside the parens, redistribute it into
+-- one term per inner additive component, combining the outer `sign`
+-- with each inner sign.  Otherwise the original (sign, term) is
+-- returned unchanged.  Only the leftmost top-level paren-group is
+-- expanded; nested or sibling groups are left alone to avoid
+-- combinatorial explosion.  Mirrors hand-distributing
+-- `+(A - B) * C` into `+A*C , -B*C` for flow-classification purposes
+-- -- the numeric value of the term does not need to be preserved,
+-- only the variables it references and their sign.
+function M._distribute_paren_term(sign, term)
+    local sp, ep = find_top_paren(term)
+    if not sp then
+        return { { sign = sign, term = term } }
+    end
+    local inner = term:sub(sp + 1, ep - 1)
+    local inner_terms = M._tokenize_terms(inner)
+    if #inner_terms < 2 then
+        return { { sign = sign, term = term } }
+    end
+    local before = term:sub(1, sp - 1)
+    local after  = term:sub(ep + 1)
+    -- Bail out if there's another paren-group on either side; the
+    -- two-paren product `(A-B)*(C-D)` would need 4-way distribution.
+    if before:find("(", 1, true) or after:find("(", 1, true) then
+        return { { sign = sign, term = term } }
+    end
+    local out = {}
+    for _, it in ipairs(inner_terms) do
+        local combined_sign = (sign == it.sign) and "+" or "-"
+        out[#out + 1] = {
+            sign = combined_sign,
+            term = before .. it.term .. after,
+        }
+    end
+    return out
 end
 
 -- Split a top-level ternary `cond ? a : b`.  Returns
@@ -390,7 +465,21 @@ function M.classify_flows(p)
         inflow              = {},
         outflow             = {},
         valve_for           = {},
+        -- Secondary stocks that share an inflow with the primary
+        -- valve_for[fv] target.  Map: fv -> ordered list of stocks.
+        -- Used by the renderer to draw a curved branch from the
+        -- shared valve, sweeping over the primary stock into each
+        -- additional target.  Empty when no inflow is shared.
+        valve_extra_targets = {},
         outvalve_for        = {},
+        -- Extra source stocks that share an outflow with the primary
+        -- outvalve_for[fv] source.  Map: fv -> ordered list of stocks.
+        -- Mirrors valve_extra_targets but for the outflow side: the
+        -- primary is the LAST stock to claim the valve (so the valve
+        -- ends up to the right of all sharing stocks); previously-
+        -- registered sources are demoted to this list and rendered
+        -- with a curved branch over the intermediate stocks.
+        outvalve_extra_sources = {},
         between_valve       = {},
         between_target      = {},
         stock_valve         = {},
@@ -416,23 +505,26 @@ function M.classify_flows(p)
             local in_set, in_order   = {}, {}
             local out_set, out_order = {}, {}
             for _, br in ipairs(branches) do
-                for _, t in ipairs(M._tokenize_terms(br)) do
-                    local norm = normalize_term(t.term)
-                    if not (t.sign == "+" and norm == self_cs) then
-                        local fv = first_flow_var(m, r.target, t.term)
-                        if fv then
-                            local key = norm .. "|" .. fv
-                            if t.sign == "+" then
-                                if not in_set[key] then
-                                    in_set[key] = { term = norm, fv = fv,
-                                                    used = false }
-                                    in_order[#in_order+1] = key
-                                end
-                            else
-                                if not out_set[key] then
-                                    out_set[key] = { term = norm, fv = fv,
-                                                     used = false }
-                                    out_order[#out_order+1] = key
+                for _, raw in ipairs(M._tokenize_terms(br)) do
+                    for _, t in ipairs(
+                            M._distribute_paren_term(raw.sign, raw.term)) do
+                        local norm = normalize_term(t.term)
+                        if not (t.sign == "+" and norm == self_cs) then
+                            local fv = first_flow_var(m, r.target, t.term)
+                            if fv then
+                                local key = norm .. "|" .. fv
+                                if t.sign == "+" then
+                                    if not in_set[key] then
+                                        in_set[key] = { term = norm, fv = fv,
+                                                        used = false }
+                                        in_order[#in_order+1] = key
+                                    end
+                                else
+                                    if not out_set[key] then
+                                        out_set[key] = { term = norm, fv = fv,
+                                                         used = false }
+                                        out_order[#out_order+1] = key
+                                    end
                                 end
                             end
                         end
@@ -489,8 +581,28 @@ function M.classify_flows(p)
                     m.flows.inflow[tgt] = fv
                     in_t.used = true
                 else
-                    m.flows.valve_for[fv] = tgt
-                    m.flows.inflow[tgt]   = fv
+                    local current = m.flows.valve_for[fv]
+                    if current and current ~= tgt then
+                        -- Shared inflow: tgt becomes a secondary
+                        -- target on the existing valve for fv.  The
+                        -- renderer draws a curved branch from the
+                        -- valve, sweeping over the primary stock to
+                        -- this one.
+                        local extras = m.flows.valve_extra_targets[fv]
+                        if not extras then
+                            extras = {}
+                            m.flows.valve_extra_targets[fv] = extras
+                        end
+                        local seen = false
+                        for _, x in ipairs(extras) do
+                            if x == tgt then seen = true; break end
+                        end
+                        if not seen then extras[#extras+1] = tgt end
+                        m.flows.inflow[tgt] = fv
+                    else
+                        m.flows.valve_for[fv] = tgt
+                        m.flows.inflow[tgt]   = fv
+                    end
                     in_t.used = true
                 end
             end
@@ -525,6 +637,29 @@ function M.classify_flows(p)
                             m.flows.between_target[fv] = already
                             m.flows.valve_for[fv]      = nil
                         else
+                            local prev = m.flows.outvalve_for[fv]
+                            if prev and prev ~= src then
+                                -- Shared outflow: the new src becomes
+                                -- primary (so the valve is placed to
+                                -- the right of the last-declared
+                                -- source), and the previously-claimed
+                                -- source is demoted to extras --
+                                -- rendered with a curved arrow over
+                                -- the intervening stocks.
+                                local xs =
+                                    m.flows.outvalve_extra_sources[fv]
+                                if not xs then
+                                    xs = {}
+                                    m.flows.outvalve_extra_sources[fv] = xs
+                                end
+                                local seen = false
+                                for _, x in ipairs(xs) do
+                                    if x == prev then
+                                        seen = true; break
+                                    end
+                                end
+                                if not seen then xs[#xs+1] = prev end
+                            end
                             m.flows.outvalve_for[fv] = src
                         end
                     end
@@ -687,7 +822,11 @@ function M.auto_layout(p, diagram_style, max_gridx)
                     stock_count = stock_count + 1
                 end
                 local ofv = F.outflow[name]
-                if ofv and not F.between_valve[ofv] then
+                if ofv and not F.between_valve[ofv]
+                   -- Shared outflow: only the primary source owns the
+                   -- valve cell; extras share it and add no cells.
+                   and (F.outvalve_for[ofv] == name
+                        or F.outvalve_for[ofv] == nil) then
                     stock_count = stock_count + 1
                 end
             end
@@ -781,7 +920,12 @@ function M.auto_layout(p, diagram_style, max_gridx)
         end
         local ofv = F.outflow[sn]
         if ofv and not F.between_valve[ofv]
-           and valve_unplaced(m, keep_natural, ofv) then
+           and valve_unplaced(m, keep_natural, ofv)
+           -- Shared outflow: only the primary's chain owns the valve
+           -- cell; extras render with a curved branch and add nothing
+           -- to the chain width.
+           and (F.outvalve_for[ofv] == sn
+                or F.outvalve_for[ofv] == nil) then
             w = w + 1
         end
         return w
@@ -884,9 +1028,19 @@ function M.auto_layout(p, diagram_style, max_gridx)
         cursor = cursor + 1
         local ofv = F.outflow[s]
         if ofv and valve_unplaced(m, keep_natural, ofv) then
-            cursor = next_free(cursor, 0)
-            set_valve_pos(m, keep_natural, ofv, cursor)
-            cursor = cursor + 1
+            -- For a shared outflow, only the designated primary
+            -- source places the valve (so it lands to the right of
+            -- the last-declared source).  Extras leave it for the
+            -- primary's place_stock call to handle.
+            local is_primary = (F.outvalve_for[ofv] == s)
+                            or  F.between_valve[ofv] == s
+                            or (F.outvalve_for[ofv] == nil
+                                and F.between_valve[ofv] == nil)
+            if is_primary then
+                cursor = next_free(cursor, 0)
+                set_valve_pos(m, keep_natural, ofv, cursor)
+                cursor = cursor + 1
+            end
         end
     end
     local placed_stocks = {}
@@ -924,7 +1078,15 @@ function M.auto_layout(p, diagram_style, max_gridx)
             end
             local sn  = chain[#chain]
             local ofv = F.outflow[sn]
-            last_outflow = ofv ~= nil and F.between_valve[ofv] == nil
+            -- Only the chain that actually placed the outflow valve
+            -- (= the chain whose tail owns it in outvalve_for) needs
+            -- a gap before a following chain.  Shared outflows where
+            -- this chain was an extra source leave the valve cell to
+            -- the primary's chain and add no trailing valve here.
+            last_outflow = ofv ~= nil
+                       and F.between_valve[ofv] == nil
+                       and (F.outvalve_for[ofv] == sn
+                            or F.outvalve_for[ofv] == nil)
         end
     end
 
@@ -1148,6 +1310,16 @@ function M.dump_layout(p)
     dump_map("flows.between_target",      F.between_target)
     dump_map("flows.stock_valve",         F.stock_valve)
     dump_map("flows.stock_phantom_valve", F.stock_phantom_valve)
+    out[#out+1] = "flows.valve_extra_targets:"
+    for _, k in ipairs(sorted_keys(F.valve_extra_targets or {})) do
+        out[#out+1] = "  " .. k .. " -> " ..
+            table.concat(F.valve_extra_targets[k], ",")
+    end
+    out[#out+1] = "flows.outvalve_extra_sources:"
+    for _, k in ipairs(sorted_keys(F.outvalve_extra_sources or {})) do
+        out[#out+1] = "  " .. k .. " -> " ..
+            table.concat(F.outvalve_extra_sources[k], ",")
+    end
     out[#out+1] = "deps:"
     for _, k in ipairs(sorted_keys(m.deps or {})) do
         out[#out+1] = "  " .. k .. " -> " .. table.concat(m.deps[k], ",")
@@ -1259,6 +1431,27 @@ function M.tex_writeback(p)
     dump_prop("l__numodel_between_target_prop",      F.between_target)
     dump_prop("l__numodel_stock_valve_prop",         F.stock_valve)
     dump_prop("l__numodel_stock_phantom_valve_prop", F.stock_phantom_valve)
+
+    -- valve_extra_targets: one entry per shared inflow valve.  The
+    -- prop value is a comma-list of secondary stock names; the
+    -- renderer iterates it to draw a curved branch per extra target.
+    for fv, list in pairs(F.valve_extra_targets or {}) do
+        if #list > 0 then
+            emit(string.format(
+                "\\prop_put:Nnn \\l__numodel_valve_extras_prop {%s} {%s}",
+                fv, table.concat(list, ",")))
+        end
+    end
+    -- outvalve_extra_sources: mirror of valve_extra_targets for shared
+    -- outflow valves.  Value = comma-list of extra source stocks
+    -- (primary lives in outvalve_for[fv]).
+    for fv, list in pairs(F.outvalve_extra_sources or {}) do
+        if #list > 0 then
+            emit(string.format(
+                "\\prop_put:Nnn \\l__numodel_outvalve_extras_prop {%s} {%s}",
+                fv, table.concat(list, ",")))
+        end
+    end
 
     -- stock_valve / stock_phantom_valve also store the virtual valve-slot
     -- coordinates as "<stock>__svgx" / "<stock>__svgy" -> N.  The y-slot

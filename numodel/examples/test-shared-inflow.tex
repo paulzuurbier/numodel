@@ -1,0 +1,35 @@
+% test-shared-inflow.tex — Forrester diagram with one shared inflow
+% valve feeding two stocks side by side.  The aux R is the rate that
+% fills both reservoirs Va and Vb; the renderer places R, Va, Vb on
+% one row and draws a straight flow into Va with a curved branch
+% over Va into Vb.
+%
+% Variable identifiers are letter-only (TeX control-word constraint)
+% but the display texts use the conventional V_1 / V_2 subscripts.
+
+\documentclass{article}
+\usepackage{numodel}
+
+\begin{document}
+
+\newmodelprefix{share}
+
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{0.1}{\s}{1}{system}
+\mvar{R}{r}{5}{\m\cubed\per\s}{2}{aux}
+\mvar{Va}{V_1}{0}{\m\cubed}{3}{stock}
+\mvar{Vb}{V_2}{0}{\m\cubed}{3}{stock}
+
+\mrule{R}{5}
+\mrule{Va}{\shareVa + \shareR * \shareDt}
+\mrule{Vb}{\shareVb + \shareR * \shareDt}
+\mrule{T}{\shareT + \shareDt}
+\mstop{\shareT >= 5}
+
+\section*{Tekstmodel}
+\textmodel
+
+\section*{Grafisch model (gedeelde instroom $R$ voor $V_1$ en $V_2$)}
+\graphicmodel
+
+\end{document}

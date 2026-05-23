@@ -17,6 +17,8 @@ flows.between_target:
 flows.stock_valve:
 flows.stock_phantom_valve:
   avV -> avA
+flows.valve_extra_targets:
+flows.outvalve_extra_sources:
 deps:
   avA -> avDt,avJ
   avT -> avDt

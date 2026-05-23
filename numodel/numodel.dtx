@@ -16,7 +16,7 @@
 % companion Lua module numodel.lua.
 %
 %<*driver>
-\ProvidesFile{numodel.dtx}[2026/05/19 v0.4.0 numodel documentation]
+\ProvidesFile{numodel.dtx}[2026/05/23 v0.5.0-pre numodel documentation]
 \documentclass{ltxdoc}
 \usepackage{numodel}
 \usepackage[left=3.5cm, right=2cm, top=2cm, bottom=2cm, marginparwidth=3.5cm, marginparsep=0.3cm]{geometry}
@@ -50,6 +50,12 @@
 %   localised continuation markers; new \texttt{tblrenv} key for
 %   \cs{textmodel}, \cs{numodelsetup} and package option.  See
 %   CHANGELOG.md for details.}
+% \changes{v0.5.0-pre}{2026/05/23}{Multi-series \cs{diagrammodel}
+%   (comma-separated y-variables, unit-aware filtering, colour-blind
+%   safe palette); shared inflow/outflow Forrester valves with curved
+%   branches; improved flow-variable heuristic (aux/stock wins over
+%   constant in inflow terms; top-level parens distributed before
+%   classification).  See CHANGELOG.md for details.}
 %
 % \GetFileInfo{numodel.dtx}
 %
@@ -746,7 +752,7 @@
 % Convenience wrapper that produces a complete |figure| with caption
 % and label.  Signature:
 % \begin{quote}
-% |\diagrammodel[<keys>]{<xvar>}{<yvar>}[<extra>]{<label>}|
+% |\diagrammodel[<keys>]{<xvar>}{<yvar>|\meta{,\dots}|}[<extra>]{<label>}|
 % \end{quote}
 % Reads min/max and display text from |\<prefix><xvar>| etc.,
 % delegates to |\drawplot| from \textsf{numodel-plot}, and emits
@@ -754,6 +760,17 @@
 % \meta{extra} argument is appended to the |axis| body, useful for
 % additional |\addplot| lines (annotations, theoretical curves).
 % Must be called after |\computemodel|.
+%
+% The \meta{yvar} argument accepts a comma-separated list of
+% variables: every entry whose |unitraw| matches the first one's is
+% drawn into the same diagram as discrete model points (no connecting
+% lines), with the y-axis range scaled to the joint min/max of the
+% kept series.  Entries with a non-matching unit are dropped and a
+% warning is issued.  The seven colours cycle through Okabe \& Ito's
+% colour-blind safe palette (yellow omitted), ordered so consecutive
+% series differ in luminance -- which keeps them distinguishable on a
+% greyscale printout as well.  The legend lists each kept variable's
+% display text.
 %
 % \subsection{Series accessors}
 %
@@ -829,6 +846,53 @@
 % inside the body, |#1| is the full prefixed name (e.g.\ |ballY|).
 % Used by external tools (e.g.\ a worksheet system) that need to
 % expand every model accessor.
+%
+% \subsection{Shared valves}\label{sec:shared-valve}
+%
+% When the same auxiliary variable appears as the inflow of more
+% than one stock, |\graphicmodel| draws a single valve next to the
+% first such stock and threads a curved branch (|to[bend left=30]|
+% -- the same bend as the curved causal arrows) from that valve over
+% the primary stock into each additional one.  The auto-layout
+% leaves the involved stocks side by side on the same row so the
+% branch stays compact.  A minimal example:
+% \begin{quote}
+% \begin{verbatim}
+% \mvar{R}{r}{5}{\m\cubed\per\s}{2}{aux}
+% \mvar{Va}{V_1}{0}{\m\cubed}{3}{stock}
+% \mvar{Vb}{V_2}{0}{\m\cubed}{3}{stock}
+% \mrule{Va}{\Va + \R * \Dt}
+% \mrule{Vb}{\Vb + \R * \Dt}
+% \end{verbatim}
+% \end{quote}
+% renders one |R| valve, a straight pipe |R| $\to$ |V_a|, and a
+% curved branch |R| $\to$ |V_b| arcing over |V_a|.  (Note: TeX
+% control words do not accept digits, so the macro names |Va|/|Vb|
+% are used internally while the display texts |V_1|/|V_2| appear
+% in the rendered diagram and table.)
+%
+% Shared \emph{outflows} are handled symmetrically.  When one
+% variable drains more than one stock, the valve is placed to the
+% right of the last-declared source stock, and every earlier
+% source attaches with a curved branch arcing over the intervening
+% stocks into the shared valve.  This matters in particular for
+% physical models where a single Stefan--Boltzmann constant or
+% friction coefficient drains several reservoirs into the same
+% sink.
+%
+% Two flow-classification refinements support these layouts:
+% \begin{itemize}
+% \item The flow-variable heuristic prefers \texttt{aux} and
+%   \texttt{stock} variables over \texttt{constant}s when both
+%   appear in the same additive term, so an inflow valve carries
+%   the meaningful rate variable instead of an earlier-declared
+%   scaling constant.
+% \item Top-level parenthesised inflow terms of the form
+%   |(A - B)*C| are distributed into |+A*C, -B*C| before
+%   classification, so |A| surfaces as the inflow valve and
+%   |B| (typically a radiative or dissipative loss involving a
+%   constant) surfaces as the outflow valve.
+% \end{itemize}
 %
 % \section{Variable types}\label{sec:types}
 %
@@ -934,7 +998,7 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{numodel}[2026/05/19 v0.4.0
+\ProvidesPackage{numodel}[2026/05/23 v0.5.0-pre
   Numerical physics models with Euler integration and Forrester diagrams]
 
 \RequirePackage{expl3}
@@ -1899,6 +1963,10 @@ end
   { Unknown~variable~type~'#1'.~
     Use~one~of~stock,~constant,~aux,~system~
     (or~the~Dutch~aliases~voorraad,~constante,~hulp,~systeem). }
+\msg_new:nnn { numodel } { unit-mismatch }
+  { Variable~'#1'~has~a~different~unit~from~the~first~variable~
+    (expected~'#2').~Skipping~it~in~\token_to_str:N \diagrammodel\space
+    so~the~remaining~series~share~a~common~y-axis. }
 
 % ====================================================================
 % Display helpers
@@ -2588,7 +2656,15 @@ end
 % Lua-populated cache (filled by numodel.tex_writeback at the start of
 % each \graphicmodel call, consumed by the emit helpers below).
 \prop_new:N \l__numodel_valve_for_prop      % aux/const -> stock (inflow)
+% Secondary stocks for a shared inflow valve.  Value = comma-list of
+% stock names; the renderer iterates it to draw a curved branch from
+% the valve, sweeping over the primary stock into each extra target.
+\prop_new:N \l__numodel_valve_extras_prop
 \prop_new:N \l__numodel_outvalve_for_prop   % aux/const -> stock (outflow)
+% Mirror of valve_extras_prop for shared outflow valves: a curved
+% branch from each extra source stock arcs over the intermediate
+% stocks into the shared valve's open end.
+\prop_new:N \l__numodel_outvalve_extras_prop
 \prop_new:N \l__numodel_between_valve_prop  % aux/const -> source_stock (between-flow)
 \prop_new:N \l__numodel_between_target_prop % aux/const -> target_stock (between-flow)
 \prop_new:N \l__numodel_stock_valve_prop    % stock -> source stock (stock-as-flow)
@@ -2939,6 +3015,7 @@ end
                       { \tl_use:N \l__numodel_tmp_tl }
                   }
               }
+            \__numodel_emit_valve_extras:n {#1}
           }
           {
             \prop_if_in:NnTF \l__numodel_outvalve_for_prop {#1}
@@ -2961,6 +3038,7 @@ end
                           { \tl_use:N \l__numodel_tmp_tl } {#1 __vc}
                       }
                   }
+                \__numodel_emit_outvalve_extras:n {#1}
               }
               {
                 % between (no cloud: both ends are stocks)
@@ -3038,7 +3116,43 @@ end
               { \tl_use:N \l__numodel_scratch_tl }
           }
       }
+    \__numodel_emit_valve_extras:n {#1}
   }
+
+% Emit one curved inflow branch per shared-inflow extra target
+% (\l__numodel_valve_extras_prop[fv]).  Each branch starts at the
+% valve coordinate and sweeps over the primary stock to the extra
+% target's north edge.  No-op when the valve is not shared.
+\cs_new_protected:Npn \__numodel_emit_valve_extras:n #1
+  {
+    \prop_get:NnNT \l__numodel_valve_extras_prop {#1} \l__numodel_scratch_tl
+      {
+        \clist_set:NV \l__numodel_scratch_clist \l__numodel_scratch_tl
+        \clist_map_inline:Nn \l__numodel_scratch_clist
+          {
+            \tl_put_right:Nn \l__numodel_flows_tl
+              { \flowarrowbent {#1 __vc} {##1} }
+          }
+      }
+  }
+
+% Mirror of \__numodel_emit_valve_extras:n for shared outflow valves.
+% Each extra source stock gets a curved branch arcing over the
+% intermediate stocks into the shared valve's open end.
+\cs_new_protected:Npn \__numodel_emit_outvalve_extras:n #1
+  {
+    \prop_get:NnNT \l__numodel_outvalve_extras_prop
+      {#1} \l__numodel_scratch_tl
+      {
+        \clist_set:NV \l__numodel_scratch_clist \l__numodel_scratch_tl
+        \clist_map_inline:Nn \l__numodel_scratch_clist
+          {
+            \tl_put_right:Nn \l__numodel_flows_tl
+              { \flowoutarrowbent {##1} {#1 __vc} }
+          }
+      }
+  }
+\clist_new:N \l__numodel_scratch_clist
 
 \cs_new_protected:Npn \__numodel_emit_outvalve:n #1
   {
@@ -3061,6 +3175,7 @@ end
               { \tl_use:N \l__numodel_scratch_tl } {#1 __vc}
           }
       }
+    \__numodel_emit_outvalve_extras:n {#1}
   }
 
 \cs_new_protected:Npn \__numodel_emit_between_valve:n #1
@@ -3236,7 +3351,9 @@ end
     % 1. Clear the props that Lua refills, so repeated \graphicmodel
     %    calls don't produce duplicate entries.
     \prop_clear:N  \l__numodel_valve_for_prop
+    \prop_clear:N  \l__numodel_valve_extras_prop
     \prop_clear:N  \l__numodel_outvalve_for_prop
+    \prop_clear:N  \l__numodel_outvalve_extras_prop
     \prop_clear:N  \l__numodel_between_valve_prop
     \prop_clear:N  \l__numodel_between_target_prop
     \prop_clear:N  \l__numodel_stock_valve_prop
@@ -3326,43 +3443,171 @@ end
 % \diagrammodel -- convenience command for model graphs
 % ====================================================================
 % Usage: \diagrammodel{xvar}{yvar}[extra drawplot code]{label}
+%        \diagrammodel{xvar}{yvar1,yvar2,...,yvarn}[extra]{label}
 %
 % Builds a complete figure with model points.  Sets axis dimensions
 % from min/max, axis labels from text/unit, and emits caption and
 % label automatically.
+%
+% When the second argument is a comma-separated list, every y-variable
+% whose unit matches the first one is drawn into the same diagram with
+% the y-axis scaled to the joint min/max range.  Variables with a
+% mismatching unit are dropped with a warning.  Every series is drawn
+% as discrete model points (no connecting lines); the seven colours
+% come from Okabe & Ito's colour-blind safe palette (yellow omitted)
+% and are ordered so consecutive series differ in luminance, which
+% keeps them distinguishable on a greyscale printout.  The legend
+% lists each kept variable's display text.
 
 \tl_new:N \l__numodel_xname_tl
 \tl_new:N \l__numodel_yname_tl
+\tl_new:N \l__numodel_yfull_tl
+\tl_new:N \l__numodel_yunit_first_tl
+\tl_new:N \l__numodel_yqty_tl
+\tl_new:N \l__numodel_plotbody_tl
+\clist_new:N \l__numodel_yshort_clist
+\int_new:N \l__numodel_yidx_int
+
+% Colour-blind safe palette (Okabe & Ito; yellow #F0E442 omitted for
+% poor white-background contrast).  Ordered so consecutive series
+% differ in luminance as well as hue, keeping them distinguishable
+% on a greyscale printout.
+\definecolor{numodelseriesa}{HTML}{000000} % black            (L ~ 0.00)
+\definecolor{numodelseriesb}{HTML}{E69F00} % orange           (L ~ 0.69)
+\definecolor{numodelseriesc}{HTML}{0072B2} % dark blue        (L ~ 0.36)
+\definecolor{numodelseriesd}{HTML}{56B4E9} % sky blue         (L ~ 0.74)
+\definecolor{numodelseriese}{HTML}{D55E00} % vermillion       (L ~ 0.50)
+\definecolor{numodelseriesf}{HTML}{CC79A7} % reddish purple   (L ~ 0.62)
+\definecolor{numodelseriesg}{HTML}{009E73} % bluish green     (L ~ 0.52)
+
+\clist_new:N \g__numodel_series_colors_clist
+\clist_gset:Nn \g__numodel_series_colors_clist
+  {
+    numodelseriesa , numodelseriesb , numodelseriesc , numodelseriesd ,
+    numodelseriese , numodelseriesf , numodelseriesg
+  }
+
+% Return the cycling colour name for series #1 (1-based), modulo 7.
+\cs_new:Npn \__numodel_series_color:n #1
+  {
+    \clist_item:Nn \g__numodel_series_colors_clist
+      { 1 + \int_mod:nn { #1 - 1 } { 7 } }
+  }
 
 \NewDocumentCommand{\diagrammodel}{ O{} m m O{} m }
   {
     \tl_clear:N \l__numodel_cmd_prefix_tl
     \keys_set:nn { numodel / cmd } {#1}
     \__numodel_resolve_eff_prefix:
-    % Full names (prefix + short) for \use:c lookup on globals
     \tl_set:Ne \l__numodel_xname_tl { \l__numodel_eff_prefix_tl #2 }
-    \tl_set:Ne \l__numodel_yname_tl { \l__numodel_eff_prefix_tl #3 }
-    \edef\dm@coords{\mcoordsp{\l__numodel_eff_prefix_tl}{#2}{#3}}
+    % --- Parse comma-separated y-variable list ----------------------
+    % Keep only variables whose unitraw matches the first one's; warn
+    % about the rest.
+    \clist_clear:N \l__numodel_yshort_clist
+    \tl_clear:N    \l__numodel_yunit_first_tl
+    \int_zero:N    \l__numodel_yidx_int
+    \clist_map_inline:nn {#3}
+      {
+        \int_incr:N \l__numodel_yidx_int
+        \tl_set:Ne \l__numodel_yfull_tl { \l__numodel_eff_prefix_tl ##1 }
+        \int_compare:nNnTF { \l__numodel_yidx_int } = { 1 }
+          {
+            \tl_set:Ne \l__numodel_yunit_first_tl
+              { \use:c { \l__numodel_yfull_tl unitraw } }
+            \clist_put_right:Nn \l__numodel_yshort_clist {##1}
+          }
+          {
+            \tl_set:Ne \l_tmpa_tl
+              { \use:c { \l__numodel_yfull_tl unitraw } }
+            \str_if_eq:VVTF \l_tmpa_tl \l__numodel_yunit_first_tl
+              { \clist_put_right:Nn \l__numodel_yshort_clist {##1} }
+              {
+                \msg_warning:nnee { numodel } { unit-mismatch }
+                  { \tl_use:N \l__numodel_yfull_tl }
+                  { \tl_use:N \l__numodel_yunit_first_tl }
+              }
+          }
+      }
+    % Canonical y-name = first kept variable (legacy single-series
+    % accessor used by the caption when only one series is plotted).
+    \clist_get:NN \l__numodel_yshort_clist \l_tmpa_tl
+    \tl_set:Ne \l__numodel_yname_tl
+      { \l__numodel_eff_prefix_tl \l_tmpa_tl }
+    % --- Axis ranges -----------------------------------------------
     \def\xmin{\use:c{\l__numodel_xname_tl min}}
     \def\xmax{\use:c{\l__numodel_xname_tl max}}
     \def\xlabelqty{\use:c{\l__numodel_xname_tl text}}
     \def\xlabelunit{\use:c{\l__numodel_xname_tl unitraw}}
-    \def\ymin{\use:c{\l__numodel_yname_tl min}}
-    \def\ymax{\use:c{\l__numodel_yname_tl max}}
-    \def\ylabelqty{\use:c{\l__numodel_yname_tl text}}
-    \def\ylabelunit{\use:c{\l__numodel_yname_tl unitraw}}
+    % Reduce over the kept y-variables.  Use \edef + \fpeval so the
+    % per-variable min/max accessors are expanded to numeric literals
+    % before the fp parser sees them.
+    \def\ymin{inf}
+    \def\ymax{-inf}
+    \clist_map_inline:Nn \l__numodel_yshort_clist
+      {
+        \tl_set:Ne \l__numodel_yfull_tl { \l__numodel_eff_prefix_tl ##1 }
+        \edef\ymin{\fpeval{min(\ymin,\use:c{\l__numodel_yfull_tl min})}}
+        \edef\ymax{\fpeval{max(\ymax,\use:c{\l__numodel_yfull_tl max})}}
+      }
+    % --- y-axis label: comma-joined display texts, common unit -----
+    \tl_clear:N \l__numodel_yqty_tl
+    \int_zero:N \l__numodel_yidx_int
+    \clist_map_inline:Nn \l__numodel_yshort_clist
+      {
+        \int_incr:N \l__numodel_yidx_int
+        \int_compare:nNnF { \l__numodel_yidx_int } = { 1 }
+          { \tl_put_right:Nn \l__numodel_yqty_tl { ,~ } }
+        \tl_put_right:Ne \l__numodel_yqty_tl
+          { \use:c { \l__numodel_eff_prefix_tl ##1 text } }
+      }
+    \edef\ylabelqty{\tl_use:N \l__numodel_yqty_tl}
+    \edef\ylabelunit{\tl_use:N \l__numodel_yunit_first_tl}
     \begin{figure}[H]
     \centering
     \group_begin:
     \__numodel_apply_dsep:
-    \__numodel_draw_plot:n
+    % --- Build the plot body ---------------------------------------
+    \int_compare:nNnTF
+        { \clist_count:N \l__numodel_yshort_clist } = { 1 }
       {
-        \addplot[only~marks,~mark=*,~mark~size=0.5pt]~coordinates~{\dm@coords};
-        \addlegendentry{model~point}
-        #4
+        % Single-series: preserve the legacy mark-only rendering.
+        \edef\dm@coords
+          { \mcoordsp{\l__numodel_eff_prefix_tl}{#2}{\tl_use:N \l_tmpa_tl} }
+        \__numodel_draw_plot:n
+          {
+            \addplot[only~marks,~mark=*,~mark~size=0.5pt]~coordinates~{\dm@coords};
+            \addlegendentry{model~point}
+            #4
+          }
+      }
+      {
+        % Multi-series: one mark-only \addplot per kept variable, with
+        % cycling colour-blind safe colour, and a text legend.  The
+        % legend's mark is enlarged so the colour stays visible there.
+        \tl_clear:N \l__numodel_plotbody_tl
+        \int_zero:N \l__numodel_yidx_int
+        \clist_map_inline:Nn \l__numodel_yshort_clist
+          {
+            \int_incr:N \l__numodel_yidx_int
+            \tl_put_right:Ne \l__numodel_plotbody_tl
+              {
+                \exp_not:N \addplot
+                  [ only~marks ,~mark=* ,~mark~size=0.5pt ,
+                    color = \__numodel_series_color:n
+                              { \int_use:N \l__numodel_yidx_int } ,
+                    legend~image~post~style = { mark~size=2pt } ]
+                coordinates {
+                  \mcoordsp { \l__numodel_eff_prefix_tl } { #2 } { ##1 }
+                } ;
+                \exp_not:N \addlegendentry
+                  { $ \use:c { \l__numodel_eff_prefix_tl ##1 text } $ }
+              }
+          }
+        \tl_put_right:Nn \l__numodel_plotbody_tl {#4}
+        \exp_args:NV \__numodel_draw_plot:n \l__numodel_plotbody_tl
       }
     \group_end:
-    \caption{$\use:c{\l__numodel_yname_tl text}$($\use:c{\l__numodel_xname_tl text}$)\text{-diagram}}
+    \caption{$\tl_use:N \l__numodel_yqty_tl$($\use:c{\l__numodel_xname_tl text}$)\text{-diagram}}
     % If the project-specific worksheet system is loaded, pick the
     % '-ws' label inside a worksheet; otherwise always the bare label.
     \cs_if_exist:NTF \ifinworksheet
@@ -3567,6 +3812,30 @@ end
 \newcommand{\flowbetweenarrow}[3]{%
 	\draw[\nmflowtip] (#1.east) -- ([xshift=0.5mm]#3.west);%
 }
+
+% === Macro: curved inflow branch for a shared valve ===
+% Used when one inflow valve feeds more than one stock.  The primary
+% target is drawn with the standard straight \flowarrow; every
+% secondary target is drawn with this macro, which arcs over the
+% intervening stock(s) using the same `bend left=30' style as the
+% curved causal arrows.
+% Usage: \flowarrowbent{<valve-coord>}{<target-stock>}
+\newcommand{\flowarrowbent}[2]{%
+	\draw[\nmflowtip] (#1) to[bend left=30] ([xshift=0.5mm]#2.west);%
+}
+
+% === Macro: curved outflow branch for a shared valve ===
+% Mirror of \flowarrowbent.  Used when one outflow valve drains more
+% than one stock.  The primary source is drawn with the standard
+% straight \flowoutarrow into the valve placed at its right; every
+% additional source is drawn with this macro, which arcs over the
+% intervening stocks and ends at the shared valve itself (the valve
+% node draws on top, merging the curve into the valve like the
+% straight outflow line does).
+% Usage: \flowoutarrowbent{<source-stock>}{<valve-coord>}
+\newcommand{\flowoutarrowbent}[2]{%
+	\draw[\nmflowtip] (#1.east) to[bend left=30] (#2);%
+}
 %</package>
 %    \end{macrocode}
 %
@@ -3586,7 +3855,7 @@ end
 %
 %    \begin{macrocode}
 %<*EN>
-\ProvidesExplFile{numodel-EN.def}{2026/05/19}{0.4.0}
+\ProvidesExplFile{numodel-EN.def}{2026/05/23}{0.5.0-pre}
   {numodel~keyword~table~--~English~(XMILE)}
 \cs_new:Npn \__numodel_kw_EN_if:           { IF~ }
 \cs_new:Npn \__numodel_kw_EN_then:         { ~THEN~ }
@@ -3623,7 +3892,7 @@ end
 %
 %    \begin{macrocode}
 %<*NL>
-\ProvidesExplFile{numodel-NL.def}{2026/05/19}{0.4.0}
+\ProvidesExplFile{numodel-NL.def}{2026/05/23}{0.5.0-pre}
   {numodel~keyword~table~--~Dutch~(CoachTaal)}
 \cs_new:Npn \__numodel_kw_NL_if:           { Als~ }
 \cs_new:Npn \__numodel_kw_NL_then:         { ~Dan~ }
