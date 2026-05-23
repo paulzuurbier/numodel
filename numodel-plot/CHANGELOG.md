@@ -5,11 +5,11 @@ All notable changes to `numodel-plot` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [0.5.0-pre] — 2026-05-23 (pre-release)
+## [0.5.0] — 2026-05-23
 
 Version-sync release.  No functional changes to `numodel-plot`;
 bumped to keep bundle component versions aligned with `numodel`
-0.5.0-pre.
+0.5.0.
 
 ## [0.4.0] — 2026-05-19
 

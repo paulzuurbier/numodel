@@ -16,7 +16,7 @@
 % companion Lua module numodel.lua.
 %
 %<*driver>
-\ProvidesFile{numodel.dtx}[2026/05/23 v0.5.0-pre numodel documentation]
+\ProvidesFile{numodel.dtx}[2026/05/23 v0.5.0 numodel documentation]
 \documentclass{ltxdoc}
 \usepackage{numodel}
 \usepackage[left=3.5cm, right=2cm, top=2cm, bottom=2cm, marginparwidth=3.5cm, marginparsep=0.3cm]{geometry}
@@ -50,7 +50,7 @@
 %   localised continuation markers; new \texttt{tblrenv} key for
 %   \cs{textmodel}, \cs{numodelsetup} and package option.  See
 %   CHANGELOG.md for details.}
-% \changes{v0.5.0-pre}{2026/05/23}{Multi-series \cs{diagrammodel}
+% \changes{v0.5.0}{2026/05/23}{Multi-series \cs{diagrammodel}
 %   (comma-separated y-variables, unit-aware filtering, colour-blind
 %   safe palette); shared inflow/outflow Forrester valves with curved
 %   branches; improved flow-variable heuristic (aux/stock wins over
@@ -998,7 +998,7 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{numodel}[2026/05/23 v0.5.0-pre
+\ProvidesPackage{numodel}[2026/05/23 v0.5.0
   Numerical physics models with Euler integration and Forrester diagrams]
 
 \RequirePackage{expl3}
@@ -3857,7 +3857,7 @@ end
 %
 %    \begin{macrocode}
 %<*EN>
-\ProvidesExplFile{numodel-EN.def}{2026/05/23}{0.5.0-pre}
+\ProvidesExplFile{numodel-EN.def}{2026/05/23}{0.5.0}
   {numodel~keyword~table~--~English~(XMILE)}
 \cs_new:Npn \__numodel_kw_EN_if:           { IF~ }
 \cs_new:Npn \__numodel_kw_EN_then:         { ~THEN~ }
@@ -3894,7 +3894,7 @@ end
 %
 %    \begin{macrocode}
 %<*NL>
-\ProvidesExplFile{numodel-NL.def}{2026/05/23}{0.5.0-pre}
+\ProvidesExplFile{numodel-NL.def}{2026/05/23}{0.5.0}
   {numodel~keyword~table~--~Dutch~(CoachTaal)}
 \cs_new:Npn \__numodel_kw_NL_if:           { Als~ }
 \cs_new:Npn \__numodel_kw_NL_then:         { ~Dan~ }

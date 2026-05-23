@@ -35,7 +35,7 @@
 tagfiles = {"*.dtx", "*.ins", "*.lua", "build.lua", "README.md"}
 
 release_date = "2026/05/23"
-release_tag  = "0.5.0-pre"
+release_tag  = "0.5.0"
 
 -- Version strings may include a pre-release suffix (`0.5.0-pre`,
 -- `1.0.0-rc.2`, ...).  Pattern matches the alphanumeric + dot/dash

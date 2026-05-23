@@ -8,16 +8,16 @@ For module-specific entries see `numodel/CHANGELOG.md` and
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 each module independently adheres to [Semantic Versioning](https://semver.org/).
 
-## [0.5.0-pre] — 2026-05-23 (pre-release)
+## [0.5.0] — 2026-05-23
 
-- `numodel` 0.5.0-pre — multi-series `\diagrammodel` (comma-separated
+- `numodel` 0.5.0 — multi-series `\diagrammodel` (comma-separated
   y-variables, unit-aware filtering, colour-blind safe + greyscale-
   legible palette); shared-inflow and shared-outflow Forrester
   diagrams with curved branches; improved flow-variable heuristic
   (aux/stock wins over constant in inflow terms; parenthesised
   sub-expressions are distributed before classification).  See
   `numodel/CHANGELOG.md` for details.
-- `numodel-plot` 0.5.0-pre — version-sync bump only; no functional
+- `numodel-plot` 0.5.0 — version-sync bump only; no functional
   changes.
 
 ## [0.4.0] — 2026-05-19
