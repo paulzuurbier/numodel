@@ -7,7 +7,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [0.6.0] — Unreleased
 
+### Added
+- Per-prefix accessor `\<prefix>steps` set by `\computemodel`,
+  expanding to the iteration count $N$ (= number of recorded
+  samples).  Previously the count had to be derived by hand from
+  e.g. `Tmax/dt`, which could be off by one depending on how
+  `\mstop`'s inequality rounded.  Undefined before the first
+  `\computemodel` call for that prefix.  Picking `steps` as an
+  `\mvar` name now collides with this accessor (noted in the
+  naming caveat of the manual).
+
+### Fixed
+- `\textmodel` no longer raises "Undefined control sequence \DN@" /
+  "\extrap@" / "\@cdots" warnings (and earlier silently scrambled
+  cell contents) when an `\mvar`'s `alias`, `aliasleft`, or
+  `aliasright` key holds `\cdots`, `\ldots`, or any other amsmath
+  dots macro (`\dotsb`, `\dotsm`, `\dotsc`, `\dotsi`, `\dotso`,
+  `\dots`).  Two interacting causes:
+  - The startcell builder used `\tl_if_blank:eTF { \use:c { ... } }`
+    to test whether each alias key was set.  The `:e` variant
+    fully expanded `\cdots`, triggering its `\futurelet` lookahead
+    outside a math context.  Replaced by
+    `\str_if_eq:eeTF { \tl_to_str:c { ... } } { }`, which
+    detokenizes the accessor's body after exactly one expansion
+    and compares the resulting string to the empty string.  Two
+    near-misses on the way to this: `\cs_if_eq:cNTF ... \c_empty_tl`
+    and `\tl_if_empty:cTF`; both turn out to be `\if_meaning:w`
+    comparisons against `\c_empty_tl`, and `\cs_gset:cpe` produces
+    `\long\xdef` macros whose meaning never matches the
+    non-`\long` `\c_empty_tl` — so empty-body accessors compared
+    as not-empty.  The string-comparison route is prefix-agnostic.
+  - When the alias value was then typeset inside the tabularray
+    cell, `\cdots`'s lookahead still ran past the `$`-closer into
+    document tokens (a regression introduced in v0.4.0 when
+    `\textmodel` moved from plain `tabular` to `tabularray`'s
+    `longtblr` — plain `tabular` did not pre-process cell contents,
+    so the lookahead stayed contained).  Each alias substitution is
+    now wrapped in an explicit `{...}` group so the lookahead is
+    bounded to the cell.
+
 ### Changed
+- `\mstep{<Name>}{<i>}` now raises a `numodel` error when `<i>`
+  falls outside the recorded range (`0..\<prefix>steps - 1` or, for
+  Python-style negative indices, `-\<prefix>steps..-1`).  The
+  previous behaviour was to silently expand to nothing, which let
+  typo'd indices and off-by-one mistakes propagate into surrounding
+  PGFPlots expressions as empty arguments.
 - `\graphicmodel` auto-layout no longer leaves an empty row between
   the stocks row and the constants row when the model has no
   auxiliary variables to fill the middle row.  Constants drop down

@@ -9,14 +9,10 @@
 \contentsline {subsection}{\numberline {4.1}Variables and rules}{5}{subsection.4.1}%
 \contentsline {subsection}{\numberline {4.2}Expression reference}{6}{subsection.4.2}%
 \contentsline {subsection}{\numberline {4.3}Render commands}{8}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Series accessors}{9}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Namespace management}{10}{subsection.4.5}%
-\contentsline {subsection}{\numberline {4.6}Shared valves}{10}{subsection.4.6}%
-\contentsline {section}{\numberline {5}Variable types}{11}{section.5}%
-\contentsline {section}{\numberline {6}Generated accessors}{11}{section.6}%
-\contentsline {section}{\numberline {7}Multiple models in one document}{12}{section.7}%
-\contentsline {section}{\numberline {8}Requirements}{12}{section.8}%
-\contentsline {section}{\numberline {9}Implementation}{12}{section.9}%
-\contentsline {subsection}{\numberline {9.1}Translation files}{55}{subsection.9.1}%
-\contentsline {subsubsection}{\numberline {9.1.1}\texttt {numodel-EN.def} -- English (XMILE)}{55}{subsubsection.9.1.1}%
-\contentsline {subsubsection}{\numberline {9.1.2}\texttt {numodel-NL.def} -- Dutch (CoachTaal)}{56}{subsubsection.9.1.2}%
+\contentsline {subsection}{\numberline {4.4}Series accessors}{10}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Namespace management}{11}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Shared valves}{11}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Variable types}{12}{section.5}%
+\contentsline {section}{\numberline {6}Generated accessors}{12}{section.6}%
+\contentsline {section}{\numberline {7}Multiple models in one document}{13}{section.7}%
+\contentsline {section}{\numberline {8}Requirements}{13}{section.8}%

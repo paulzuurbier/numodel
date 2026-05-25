@@ -132,8 +132,19 @@ function M.get_step(p, name, step)
     if not data then return end
     -- Non-negative step: 0-based forward index (step 0 = initial values).
     -- Negative step: index from the end (-1 = last recorded step).
-    local idx = step >= 0 and step + 1 or #data + step + 1
-    if idx < 1 or idx > #data then return end
+    local n = #data
+    local idx = step >= 0 and step + 1 or n + step + 1
+    if idx < 1 or idx > n then
+        tex.error(string.format(
+            "numodel: \\mstep index %d out of range for variable '%s' " ..
+            "(prefix '%s' has %d recorded sample%s; valid indices: " ..
+            "0..%d or %d..-1)",
+            step, name, p, n, n == 1 and "" or "s",
+            n - 1, -n),
+            { "Call \\computemodel before \\mstep, and keep the index ",
+              "within the recorded range -- see \\<prefix>steps." })
+        return
+    end
     tex.sprint(tostring(data[idx]))
 end
 

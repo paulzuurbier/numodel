@@ -26,6 +26,7 @@
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
+\OnlyDescription
 \begin{document}
 \DocInput{numodel.dtx}
 \end{document}
@@ -449,7 +450,9 @@
 % ends up meaning whichever was declared last.  The same hazard
 % applies to prefix choices -- avoid prefixes where one is a
 % concatenation of another with a variable name (e.g.\ |ball| with
-% a variable |Y| versus a prefix |ballY|).
+% a variable |Y| versus a prefix |ballY|).  An |\mvar| name of
+% |steps| would similarly collide with the per-prefix iteration
+% accessor |\<prefix>steps| set by |\computemodel|.
 %
 % Optional \meta{keys}:
 % \begin{description}
@@ -803,8 +806,9 @@
 % and max so no second pass over the series is needed.  After
 % |\computemodel| returns, |\<prefix><Name>min| /
 % |\<prefix><Name>max| hold the extrema, |\<prefix><Name>| holds
-% the final-step value, and the full time-series can be retrieved
-% with |\mcoords| / |\mstep|.
+% the final-step value, |\<prefix>steps| expands to the number of
+% recorded samples (i.e.\ the iteration count $N$), and the full
+% time-series can be retrieved with |\mcoords| / |\mstep|.
 %
 % \DescribeMacro{\diagrammodel}
 % Convenience wrapper that produces a complete |figure| with caption
@@ -814,7 +818,7 @@
 % \end{quote}
 % Reads min/max and display text from |\<prefix><xvar>| etc.,
 % delegates to |\drawplot| from \textsf{numodel-plot}, and emits
-% |\caption{$y(x)$-diagram}\label{fig:<label>}|.  The optional
+% |\caption{$<prefix><yvar><text>(<prefix><xvar><text>)$-diagram}\label{fig:<label>}|.  The optional
 % \meta{extra} argument is appended to the |axis| body, useful for
 % additional |\addplot| lines (annotations, theoretical curves).
 % Must be called after |\computemodel|.
@@ -829,6 +833,60 @@
 % series differ in luminance -- which keeps them distinguishable on a
 % greyscale printout as well.  The legend lists each kept variable's
 % display text.
+%
+% \begin{quote}
+% Example -- two quantities in one diagram.  The free-fall ball from
+% the introduction is extended with gravitational potential energy
+% $E_p = m\,g\,h$ (written as $-m\,G\,Y$ because $G = -9{,}81$ already
+% encodes the downward direction) and kinetic energy
+% $E_k = \tfrac{1}{2}\,m\,v^2$.  Both share the unit |\joule|, so the
+% multi-series filter keeps both and scales the y-axis to their
+% combined range:
+% \begin{verbatim}
+% \newmodelprefix{nrg}
+% \mvar{T}{t}{0}{\s}{2}{system}
+% \mvar{Dt}{dt}{0.1}{\s}{2}{system}
+% \mvar{V}{v}{0}{\m\per\s}{2}{stock}
+% \mvar{Y}{y}{100}{\m}{3}{stock}
+% \mvar{m}{m}{0.5}{\kg}{3}{constant}
+% \mvar{G}{g}{-9.81}{\m\per\s\squared}{3}{constant}
+% \mvar{Ep}{E_p}{-\nrgm * \nrgG * \nrgY}{\joule}{3}{aux}
+% \mvar{Ek}{E_k}{0.5 * \nrgm * \nrgV * \nrgV}{\joule}{3}{aux}
+% \mrule{V}{\nrgV + \nrgG * \nrgDt}
+% \mrule{Y}{\nrgY + \nrgV * \nrgDt}
+% \mrule{Ep}{-\nrgm * \nrgG * \nrgY}
+% \mrule{Ek}{0.5 * \nrgm * \nrgV * \nrgV}
+% \mrule{T}{\nrgT + \nrgDt}
+% \mstop{\nrgY <= 0}
+% \computemodel
+% \diagrammodel{T}{Ep,Ek}{ball-energy}
+% \end{verbatim}
+% At $t=0$ all energy sits in $E_p$; as the ball falls, $E_p$
+% drops and $E_k$ grows.  The two |aux| variables receive a
+% start-value expression so that step~0 is recorded with the
+% physically meaningful initial energies rather than empty values.
+% \end{quote}
+%
+% \newmodelprefix{nrg}
+% \mvar{T}{t}{0}{\s}{2}{system}
+% \mvar{Dt}{dt}{0.1}{\s}{2}{system}
+% \mvar{V}{v}{0}{\m\per\s}{2}{stock}
+% \mvar{Y}{y}{100}{\m}{3}{stock}
+% \mvar{m}{m}{0.5}{\kg}{3}{constant}
+% \mvar{G}{g}{-9.81}{\m\per\s\squared}{3}{constant}
+% \mvar{Ep}{E_p}{-\nrgm * \nrgG * \nrgY}{\joule}{3}{aux}
+% \mvar{Ek}{E_k}{0.5 * \nrgm * \nrgV * \nrgV}{\joule}{3}{aux}
+% \mrule{V}{\nrgV + \nrgG * \nrgDt}
+% \mrule{Y}{\nrgY + \nrgV * \nrgDt}
+% \mrule{Ep}{-\nrgm * \nrgG * \nrgY}
+% \mrule{Ek}{0.5 * \nrgm * \nrgV * \nrgV}
+% \mrule{T}{\nrgT + \nrgDt}
+% \mstop{\nrgY <= 0}
+% \computemodel
+%
+% \begin{center}
+% \diagrammodel{T}{Ep,Ek}{ball-energy}
+% \end{center}
 %
 % \subsection{Series accessors}
 %
@@ -847,8 +905,13 @@
 % the initial-values row, step~$N{-}1$ is the final recorded step
 % after |\computemodel|.  Negative indices count from the end
 % (Python-style), so |\mstep{Y}{-1}| is the last recorded $y$ and
-% |\mstep{Y}{-2}| is the penultimate one.  Returns nothing (silently)
-% if the index is out of range.
+% |\mstep{Y}{-2}| is the penultimate one.  Raises a |numodel| error
+% when \meta{i} falls outside the recorded range
+% (|0..\<prefix>steps - 1| for non-negative indices, or
+% |-\<prefix>steps..-1| for the Python-style negative form), which
+% surfaces typo'd indices and "ran $N$ steps but indexed step $N$"
+% off-by-one mistakes rather than expanding to nothing and propagating
+% empty arguments into the surrounding plot.
 %
 % \begin{quote}
 % Example -- a red secant line through the last two simulated
@@ -961,21 +1024,21 @@
 % are interchangeable.
 %
 % \begin{description}
-% \item[\texttt{stock} \rm(alias \texttt{voorraad})] A stock that
+% \item[\texttt{stock}] A stock that
 %   accumulates over time.  Drawn as a rectangle in the Forrester
 %   diagram; its rule must be of the form
 %   $\text{stock} \leftarrow \text{stock} + \dots$ so that the
 %   integrator can detect inflows and outflows.  Receives an
 %   \emph{initial values} row.
-% \item[\texttt{constant} \rm(alias \texttt{constante})] A constant
+% \item[\texttt{constant}] A constant
 %   parameter (mass, gravitational acceleration, spring stiffness,
 %   $\ldots$).  Drawn as a circle.  Receives an \emph{initial values}
 %   row.
-% \item[\texttt{aux} \rm(alias \texttt{hulp})] An auxiliary variable
+% \item[\texttt{aux}] An auxiliary variable
 %   computed from other variables on each step.  Drawn as a plain
 %   identifier node, no rectangle.  No \emph{initial values} row
 %   (start value is normally left empty).
-% \item[\texttt{system} \rm(alias \texttt{systeem})] System-level
+% \item[\texttt{system}] System-level
 %   bookkeeping (time |T|, step size |Dt|, terminal time,
 %   $\ldots$).  Drawn separately, no flow arrows.  Receives an
 %   \emph{initial values} row.
@@ -1011,8 +1074,69 @@
 % \item[\texttt{gridx}, \texttt{gridy}] Manual placement coordinates
 %   in the Forrester grid; $-1$ if left to auto-layout.
 % \item[\texttt{alias}, \texttt{aliasleft}, \texttt{aliasright}]
-%   Override tokens for the \emph{startwaarden} cell layout.
+%   Override tokens for the \emph{initial values} cell layout.
+%   |aliasright| replaces just the value part of the cell (keeping
+%   the symbol and equals sign); |aliasleft| replaces just the
+%   symbol; |alias| replaces the entire cell.
 % \end{description}
+%
+% In addition, |\computemodel| writes one per-\emph{prefix} accessor
+% (no variable name in the middle):
+% \begin{description}
+% \item[\texttt{\textbackslash <prefix>steps}] The number of recorded
+%   samples after the most recent |\computemodel| call for this
+%   prefix, i.e.\ the iteration count $N$.  Empty (undefined) before
+%   the first |\computemodel|.  Picking |steps| as an |\mvar| name
+%   would collide with this accessor -- see the naming caveat in
+%   Section~\ref{sec:api}.
+% \end{description}
+%
+% \begin{quote}
+% Example -- the alias keys exist primarily as a worksheet hook:
+% the same model can be rendered as a fully-specified reference
+% \emph{and} as a fill-in-the-blanks exercise.  |aliasright=\cdots|
+% blanks the value while keeping the symbol visible (asking
+% \emph{what value} belongs there), |alias={?}| blanks the entire
+% cell (asking the student to supply both the symbol and the value
+% from physical knowledge).  Crucially, |\computemodel| keeps using
+% the original numeric start value, so the diagram or computed
+% answer for the rest of the model remains correct -- only the
+% rendered table changes:
+% \begin{verbatim}
+% \newmodelprefix{quiz}
+% \mvar{T}{t}{0}{\s}{2}{system}
+% \mvar{Dt}{dt}{0.5}{\s}{2}{system}
+% \mvar{V}{v}{0}{\m\per\s}{2}{stock}
+% \mvar[aliasright=\cdots]{Y}{y}{50}{\m}{3}{stock}
+% \mvar[alias={?}]{G}{g}{-9.81}{\m\per\s\squared}{3}{constant}
+% \mrule{V}{\quizV + \quizG * \quizDt}
+% \mrule{Y}{\quizY + \quizV * \quizDt}
+% \mrule{T}{\quizT + \quizDt}
+% \mstop{\quizY <= 0}
+% \textmodel
+% \end{verbatim}
+% The row for $y$ now reads \(y = \cdots\) (asking the student to
+% identify the initial height from a graph or photograph) and the
+% row for $g$ shows just \(?\) (asking the student to supply the
+% gravitational acceleration from memory).  The rule column is
+% unaffected -- |\mrule| has its own |alias|/|aliasright| keys for
+% blanking rule bodies if needed.
+% \end{quote}
+%
+% \newmodelprefix{quiz}
+% \mvar{T}{t}{0}{\s}{2}{system}
+% \mvar{Dt}{dt}{0.5}{\s}{2}{system}
+% \mvar{V}{v}{0}{\m\per\s}{2}{stock}
+% \mvar[aliasright=\cdots]{Y}{y}{50}{\m}{3}{stock}
+% \mvar[alias={?}]{G}{g}{-9.81}{\m\per\s\squared}{3}{constant}
+% \mrule{V}{\quizV + \quizG * \quizDt}
+% \mrule{Y}{\quizY + \quizV * \quizDt}
+% \mrule{T}{\quizT + \quizDt}
+% \mstop{\quizY <= 0}
+%
+% \begin{center}
+% \textmodel
+% \end{center}
 %
 % \section{Multiple models in one document}
 %
@@ -2395,20 +2519,30 @@ end
 %                                     \<name>num (units=false)
 \cs_new_protected:Npn \__numodel_emit_startcell:n #1
   {
-    \tl_if_blank:eTF { \use:c { #1 alias } }
+    % Alias-key contents are wrapped in a TeX group { ... } before
+    % being placed in the table.  Two reasons:
+    %  - the bare-macro form (\exp_not:c) keeps expansion-fragile
+    %    contents like \cdots or \ldots from expanding at table-build
+    %    time, so amsmath internals (\extrap@, \@cdots, ...) only run
+    %    later inside the proper math context;
+    %  - the surrounding group bounds the \futurelet lookahead that
+    %    \cdots and friends perform when they expand: without it the
+    %    lookahead crosses tabularray's cell boundary into document
+    %    tokens, producing "Undefined control sequence \DN@" cascades.
+    \str_if_eq:eeTF { \tl_to_str:c { #1 alias } } { }
       {
         \tl_gput_right:Nn \g__numodel_table_tl { $ }
-        \tl_if_blank:eTF { \use:c { #1 aliasleft } }
+        \str_if_eq:eeTF { \tl_to_str:c { #1 aliasleft } } { }
           {
-            \tl_gput_right:Ne \g__numodel_table_tl
-              { \exp_not:e { \use:c { #1 text } } }
+            \tl_gput_right:Nx \g__numodel_table_tl
+              { { \exp_not:c { #1 text } } }
           }
           {
-            \tl_gput_right:Ne \g__numodel_table_tl
-              { \exp_not:e { \use:c { #1 aliasleft } } }
+            \tl_gput_right:Nx \g__numodel_table_tl
+              { { \exp_not:c { #1 aliasleft } } }
           }
         \tl_gput_right:Nn \g__numodel_table_tl { = }
-        \tl_if_blank:eTF { \use:c { #1 aliasright } }
+        \str_if_eq:eeTF { \tl_to_str:c { #1 aliasright } } { }
           {
             % Emit \<name>qty or \<name>num as a token name without
             % expanding it; siunitx macros must only expand at
@@ -2424,15 +2558,15 @@ end
               }
           }
           {
-            \tl_gput_right:Ne \g__numodel_table_tl
-              { \exp_not:e { \use:c { #1 aliasright } } }
+            \tl_gput_right:Nx \g__numodel_table_tl
+              { { \exp_not:c { #1 aliasright } } }
           }
         \tl_gput_right:Nn \g__numodel_table_tl { $ }
       }
       {
         \tl_gput_right:Nn \g__numodel_table_tl { $ }
-        \tl_gput_right:Ne \g__numodel_table_tl
-          { \exp_not:e { \use:c { #1 alias } } }
+        \tl_gput_right:Nx \g__numodel_table_tl
+          { { \exp_not:c { #1 alias } } }
         \tl_gput_right:Nn \g__numodel_table_tl { $ }
       }
   }
@@ -2638,6 +2772,10 @@ end
           }
       }
     \__numodel_set_minmax_from_lua:
+    % Public per-prefix step-count accessor: \<prefix>steps holds the
+    % number of recorded samples (= iterations of the loop above).
+    \cs_gset:cpe { \g_numodel_current_prefix_tl steps }
+      { \int_use:N \g_numodel_steps_int }
   }
 
 % On-demand coordinates from Lua (after \computemodel).  Arguments
