@@ -5,6 +5,25 @@ All notable changes to `numodel` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.6.0] — Unreleased
+
+### Changed
+- `\graphicmodel` auto-layout no longer leaves an empty row between
+  the stocks row and the constants row when the model has no
+  auxiliary variables to fill the middle row.  Constants drop down
+  from `gridy=2` to `gridy=1` in that case, so simple
+  stock-plus-constant models render without a vertical gap (visible
+  in the `forrester` and `edu` examples of the manual's "Diagram
+  styles in practice" section).
+- Manual: assorted clarifications and corrections.
+
+### Removed
+- `stockwidth` setup key and the `\halfstockwidth` macro it wrote
+  to.  The value was never consumed — stock rectangles have used
+  fixed `em`-based dimensions for a while — so the key only ever
+  accepted input without effect.  No replacement; node sizes scale
+  with the surrounding font size.
+
 ## [0.5.0] — 2026-05-23
 
 ### Added

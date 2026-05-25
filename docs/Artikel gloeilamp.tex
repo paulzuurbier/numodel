@@ -117,7 +117,7 @@ Maar de onderliggende vraag --- hoe heet wordt lamp~3 nou werkelijk, en hoeveel 
 
 We werken consequent met de examenwaarden $U_{nom} = \qty{12}{\V}$, $P_{nom} = \qty{2.4}{\W}$, zodat $R_{nom} = U_{nom}^{\,2}/P_{nom} = \qty{60}{\ohm}$~--- precies de waarde van de ohmse weerstand uit examenopgave~8.
 
-\newpage
+%\newpage
 \subsection*{Combinatieschakeling met schuifweerstanden}
 \item[]
 
@@ -157,6 +157,7 @@ In figuur~\ref{fig:schuifweerstanden} is een combinatieschakeling afgebeeld met 
 \end{itemize}
 \end{solution}
 
+\newpage
 Alle schuifweerstanden worden nu anders ingesteld, weerstand $R_1$ en $R_2$ nemen af met een factor $x$ en weerstand $R_3$ neemt toe met een factor $x$. De nieuwe weerstanden zijn dus $R_1' = R_2' = \dfrac{R}{x}$ en $R_3' = xR$.
 
 \question[7]
@@ -171,6 +172,20 @@ Alle schuifweerstanden worden nu anders ingesteld, weerstand $R_1$ en $R_2$ neme
   \item Nulpunt: $3 - 2x^2 = 0 \;\Rightarrow\; x = \sqrt{\dfrac{3}{2}} = \dfrac{1}{2}\sqrt{6} \approx 1{,}22$.
   \item Voor $1 \leq x < \tfrac{1}{2}\sqrt{6}$ is de afgeleide positief: $P_3$ \textbf{stijgt}.
   \item Voor $x > \tfrac{1}{2}\sqrt{6}$ is de afgeleide negatief: $P_3$ \textbf{daalt}. In de limiet $x \to \infty$ gaat $R_3$ alle spanning dragen maar wordt zo groot dat $P_3 = U_3^2/R_3 \to 0$.
+\end{itemize}
+\end{solution}
+
+\question[4]
+\textbf{Bereken} het maximum van $P_3'(x)$, uitgedrukt als factor van het oorspronkelijke vermogen $P = P_3'(1) = \dfrac{4U_b^2}{9R}$ uit opgave~1.
+
+\begin{solution}
+\begin{itemize}
+  \item Bij het maximum is $x^2 = \tfrac{3}{2}$, dus $x^3 = \left(\tfrac{3}{2}\right)^{3/2} = \tfrac{3}{4}\sqrt{6}$ en $(2x^2+1)^2 = 4^2 = 16$.
+  \item Invullen in $P_3'(x) = \dfrac{4x^3\,U_b^2}{R\,(2x^2+1)^2}$ levert het maximum:
+    \[P_3'(x_{max}) = \dfrac{4 \cdot \tfrac{3}{4}\sqrt{6} \cdot U_b^2}{16\,R} = \dfrac{3\sqrt{6}}{16}\cdot \dfrac{U_b^2}{R}.\]
+  \item Uitdrukken als factor van $P = \dfrac{4U_b^2}{9R}$:
+    \[\dfrac{P_3'(x_{max})}{P} = \dfrac{3\sqrt{6}/16}{4/9} = \dfrac{27\sqrt{6}}{64} \approx 1{,}034.\]
+  \item Het maximum ligt dus slechts ongeveer $3{,}4\,\%$ boven het oorspronkelijke vermogen --- bij $x=1$ zit de schakeling al dicht bij het maximum, ook al varieert $P_3'(x)$ over een groot bereik van $x$ aanzienlijk.
 \end{itemize}
 \end{solution}
 

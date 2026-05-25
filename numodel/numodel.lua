@@ -947,7 +947,10 @@ function M.auto_layout(p, diagram_style, max_gridx)
         end
     end
 
-    -- 1. Constants on gridy=2.
+    -- 1. Constants on gridy=2 -- or on gridy=1 when no aux is going
+    -- to occupy that row, so the diagram never contains an empty row
+    -- between stocks and constants.
+    local const_y = (aux_count > 0) and 2 or 1
     local cursor = 0
     for name, meta in var_iter(m) do
         if meta.type == "constant" and meta.gridx_init == -1 then
@@ -960,12 +963,12 @@ function M.auto_layout(p, diagram_style, max_gridx)
             end
             if place_high then
                 if wrap and cursor >= max_gridx then
-                    shift_up_at_or_above(m, 2)
+                    shift_up_at_or_above(m, const_y)
                     cursor = 0
                 end
-                cursor = next_free(cursor, 2)
-                set_layout(m, name, cursor, 2, "constant")
-                occupy(m, cursor, 2, name)
+                cursor = next_free(cursor, const_y)
+                set_layout(m, name, cursor, const_y, "constant")
+                occupy(m, cursor, const_y, name)
                 cursor = cursor + 1
             end
         end

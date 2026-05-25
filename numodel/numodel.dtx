@@ -163,21 +163,46 @@
 % Forrester diagram}
 %
 % |\graphicmodel| draws the same model as a stock-and-flow diagram.
-% Stocks (type |stock|) are rectangles, constants (|constant|)
-% are circles, helpers (|aux|) are unboxed identifiers; flows are
-% inferred from rule structure (|\<stock> + ...| or |... + \<stock>|
-% on the right-hand side):
+% Stocks (type |stock|) are rectangles; auxiliaries (|aux|) and
+% constants (|constant|) are circles, with two short horizontal
+% dashes flanking the constant ring.  In the default |tight|
+% diagram-style, an aux or constant that is the direct inflow or
+% outflow of a stock is absorbed into the valve label and not drawn
+% as a separate node; |diagram-style=forrester| or |edu| keep both
+% (Section~\ref{sec:cfg}).
+%
+% Flows are inferred per additive term on the right-hand side of
+% each stock rule.  After dropping the self-carry term, every |+T|
+% is a candidate inflow and every |-T| a candidate outflow of the
+% target stock; the first non-|system|, non-|Dt| variable appearing
+% inside~|T| becomes the flow variable (|aux| and |stock| beat
+% |constant| when several candidates coexist).  When the same flow
+% variable surfaces as an outflow term of stock~|A| and a matching
+% inflow term of stock~|B|, the pair is promoted to a
+% \emph{between-flow}: one valve drains |A| into |B| instead of two
+% separate valves.  If the flow variable of an inflow term is itself
+% a stock, the source stock takes the valve's place -- with a
+% matching outflow term on its own rule (a conserved-quantity
+% between-flow) or, when no such match exists, with a cloud-fed
+% phantom valve plus a causal link to the source stock:
 %
 % \begin{center}
 % \graphicmodel
 % \end{center}
 %
-% Layout is automatic from the rule graph.  Manual placement is
-% available through |gridx|/|gridy| keys on the |\mvar| call (see
-% Section~\ref{sec:api}).  Wide diagrams can be capped to a maximum
-% number of grid columns with |\numodelsetup{gridmaxx=N}|: when a row
-% reaches |N|, the auto layout shifts the affected items up one row
-% and continues filling.
+% Layout is automatic from the rule graph: stocks (with their
+% inflow/outflow valves) sit on the bottom row, auxiliaries on the
+% middle row, and constants on the top row, each filled
+% left-to-right in declaration order.  The order of |\mvar| calls
+% therefore drives the horizontal reading order of the diagram --
+% reordering, inserting or holding back a |\mvar| nudges the
+% visible arrangement without touching any grid coordinates, which
+% is the primary lever a document author has over the look of the
+% diagram.  Manual placement remains available through |gridx|/|gridy|
+% keys on the |\mvar| call (see Section~\ref{sec:api}).  Wide
+% diagrams can be capped to a maximum number of grid columns with
+% |\numodelsetup{gridmaxx=N}|: when a row reaches |N|, the auto
+% layout shifts the affected items up one row and continues filling.
 %
 % \subsection{\texttt{\textbackslash computemodel} +
 % \texttt{\textbackslash diagrammodel} \textemdash{} numerical plot}
@@ -224,8 +249,7 @@
 %   \item[\texttt{NL}] Dutch CoachTaal keywords:
 %     |Als|/|Dan|/|Anders|, |EN|, |OF|, |Abs|, |Teken|, \ldots
 %   \end{description}
-%   The legacy names |english|, |coachtaal| and |dutch| are accepted
-%   as aliases for |EN| and |NL|.  Each language tag |X| corresponds
+%   Each language tag |X| corresponds
 %   to a file |numodel-X.def| located via |kpse| when the package
 %   processes the key.  The package ships with |numodel-EN.def| and
 %   |numodel-NL.def|; drop your own |numodel-FR.def| (or any other
@@ -242,8 +266,17 @@
 % \item[\texttt{graphscaley}] Vertical grid spacing in centimetres
 %   for |\graphicmodel|'s Forrester layout (default 2).  Larger
 %   values spread the diagram out vertically.
-% \item[\texttt{stockwidth}] Half-width of stock rectangles in
-%   |\graphicmodel| (default 0.375).
+%
+%   |graphscalex|/|graphscaley| control only the empty space
+%   between diagram elements: the nodes themselves (stocks,
+%   valves, auxiliaries, constants) have fixed dimensions
+%   expressed in |em| and are not individually configurable.
+%   Because |em| is relative to the current font size, the way
+%   to grow or shrink the nodes uniformly is to change the font
+%   size around the |\graphicmodel| call -- e.g.\ wrap it in
+%   |{\small \graphicmodel}| or |{\large \graphicmodel}|.  Pick
+%   spacing with |graphscalex|/|graphscaley|, pick node size
+%   with the surrounding font.
 % \item[\texttt{gridmaxx}] Maximum number of grid columns the auto
 %   layout may fill on any one row before wrapping (integer, default
 %   |0| = no limit).  When the limit is reached, items already placed
@@ -388,19 +421,35 @@
 % |\mvar[<keys>]{<Name>}{<text>}{<start>}{<unit>}{<sig>}{<type>}|
 % \end{quote}
 % where \meta{Name} is a short alphabetic identifier (the
-% prefix-qualified accessor becomes |\<prefix><Name>|), \meta{text}
-% is the math-mode display symbol used in the rule table and
-% diagram (e.g.\ |F_{res}|), \meta{start} is the initial value
-% (a number, or empty for helpers computed by a rule, or any
-% \textsf{expl3} \texttt{fp}-evaluable expression involving previously
-% defined model variables), \meta{unit} is a bare \textsf{siunitx}
-% unit macro sequence (e.g.\ |\m\per\s\squared|), \meta{sig} is the
+% prefix-qualified accessor becomes |\<prefix><Name>|, along with a
+% family of suffixed accessor macros |\<prefix><Name><suffix>|
+% documented in Section~\ref{sec:accessors}), \meta{text} is the
+% math-mode display symbol used in the rule table and diagram
+% (e.g.\ |F_{res}|), \meta{start} is the initial value (a number,
+% or empty for helpers computed by a rule, or any \textsf{expl3}
+% \texttt{fp}-evaluable expression involving previously defined
+% model variables), \meta{unit} is a bare \textsf{siunitx} unit
+% macro sequence (e.g.\ |\m\per\s\squared|), \meta{sig} is the
 % number of significant figures used by |\<prefix><Name>num|/|qty|,
 % and \meta{type} is one of |stock|, |aux|, |constant|, or
 % |system|.  Each English type also accepts a Dutch alias
 % (|voorraad|, |hulp|, |constante|, |systeem|) for backwards
 % compatibility with existing teaching material.  See
 % Section~\ref{sec:types}.
+%
+% \textbf{Naming caveat.}  All accessor macros of a given prefix
+% share one flat TeX namespace: |\mvar{X}| generates |\<prefix>X|
+% and every |\<prefix>X<suffix>| listed in
+% Section~\ref{sec:accessors}.  Pick \meta{Name}s so that no name
+% equals another name followed by such a suffix, otherwise the two
+% definitions silently overwrite each other.  The canonical trap is
+% declaring both |T| and |Tmax|: the |max|-suffix accessor of |T|
+% (the extremum |\<prefix>Tmax|) collides with the no-suffix
+% accessor of |Tmax|, so |\<prefix>Tmax| inside a rule expression
+% ends up meaning whichever was declared last.  The same hazard
+% applies to prefix choices -- avoid prefixes where one is a
+% concatenation of another with a variable name (e.g.\ |ball| with
+% a variable |Y| versus a prefix |ballY|).
 %
 % Optional \meta{keys}:
 % \begin{description}
@@ -742,11 +791,20 @@
 % |\numodelsetup|.
 %
 % \DescribeMacro{\computemodel}
-% Runs the Euler simulation in Lua.  Records every variable's value
-% at every step, plus running min and max.  After it returns, the
-% accessors |\<prefix><Name>min| / |\<prefix><Name>max| hold the
-% extrema, and |\<prefix><Name>| holds the final-step value.  The
-% time-series can be retrieved with |\mcoords| / |\mstep|.
+% Runs the Euler simulation.  Each iteration step is executed in
+% LaTeX itself: \textsf{expl3}'s |\fp_eval| (the engine behind the
+% LaTeX2e |\fpeval|) evaluates the stop condition and then every
+% |\mrule| body in declaration order, writing each new value into
+% the accessor macro |\<prefix><Name>|.  The per-step values are
+% appended to Lua tables on the side -- storing the time series as
+% growing TeX token lists would cost $O(N)$ per append and $O(N^2)$
+% overall, whereas the Lua-table append is $O(1)$, so a 20\,000-step
+% run stays linear in total work.  Lua also keeps the running min
+% and max so no second pass over the series is needed.  After
+% |\computemodel| returns, |\<prefix><Name>min| /
+% |\<prefix><Name>max| hold the extrema, |\<prefix><Name>| holds
+% the final-step value, and the full time-series can be retrieved
+% with |\mcoords| / |\mstep|.
 %
 % \DescribeMacro{\diagrammodel}
 % Convenience wrapper that produces a complete |figure| with caption
@@ -923,7 +981,7 @@
 %   \emph{initial values} row.
 % \end{description}
 %
-% \section{Generated accessors}
+% \section{Generated accessors}\label{sec:accessors}
 %
 % Each |\mvar| call generates a family of accessor macros named
 % |\<prefix><Name><suffix>|.  The full set:
@@ -1419,7 +1477,6 @@ end
 %                  diagrams (default 2)
 %   graphscaley -- vertical grid spacing \dgridy for Forrester
 %                  diagrams (default 2)
-%   stockwidth  -- half-width of the stock rectangle (default 0.375)
 
 % Helper for choice-with-empty-reset: validates #4 against #3 (a
 % comma-separated whitelist) and writes it into #1 (a tl).  An empty
@@ -1460,7 +1517,6 @@ end
     maxiter             .int_gset:N = \g_numodel_maxiter_int,
     graphscalex         .code:n = { \tl_gset:Nn \dgridx {#1} },
     graphscaley         .code:n = { \tl_gset:Nn \dgridy {#1} },
-    stockwidth          .code:n = { \tl_gset:Nn \halfstockwidth {#1} },
     gridmaxx            .int_gset:N = \g_numodel_gridmaxx_int,
     diagram-style              .choice:,
     diagram-style / tight      .code:n =
@@ -1507,7 +1563,7 @@ end
   { \keys_set:nn { numodel / setup } {#1} }
 
 % Defaults (this call also initialises \g__numodel_syntax_tl,
-% \g_numodel_maxiter_int, \dgridx, \dgridy, \halfstockwidth and
+% \g_numodel_maxiter_int, \dgridx, \dgridy and
 % \g__numodel_diagram_style_tl).
 \numodelsetup
   {
@@ -1515,7 +1571,6 @@ end
     maxiter       = 20000,
     graphscalex   = 2,
     graphscaley   = 2,
-    stockwidth    = 0.375,
     diagram-style = tight,
     units         = true,
     tblrenv       = longtblr,
@@ -1529,7 +1584,6 @@ end
     maxiter             .meta:nn = { numodel / setup }{ maxiter             = #1 },
     graphscalex         .meta:nn = { numodel / setup }{ graphscalex         = #1 },
     graphscaley         .meta:nn = { numodel / setup }{ graphscaley         = #1 },
-    stockwidth          .meta:nn = { numodel / setup }{ stockwidth          = #1 },
     gridmaxx            .meta:nn = { numodel / setup }{ gridmaxx            = #1 },
     diagram-style       .meta:nn = { numodel / setup }{ diagram-style       = #1 },
     flowarrow-style     .meta:nn = { numodel / setup }{ flowarrow-style     = #1 },
@@ -3633,7 +3687,7 @@ end
 % Use \dgridx and \dgridy as the grid spacings for consistent positioning.
 % ============================================================
 
-% === Grid spacing -- defaults set via \numodelsetup {graphscalex, graphscaley, stockwidth} ===
+% === Grid spacing -- defaults set via \numodelsetup {graphscalex, graphscaley} ===
 
 % === Styles ===
 \tikzset{
