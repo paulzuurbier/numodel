@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  26 MAY 2026 12:19
+This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  26 MAY 2026 22:06
  restricted system commands enabled.
 **numodel-plot-manual.tex
 (./numodel-plot-manual.tex
@@ -1571,32 +1571,32 @@ Package hyperref Info: Option `bookmarksnumbered' set `true' on input line 75.
 \HD@helplength=\skip62
 )
 Package translations Info: No language package found. I am going to use `englis
-h' as default language. on input line 51.
+h' as default language. on input line 60.
 
 (./numodel-plot-manual.aux)
 \openout1 = numodel-plot-manual.aux
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 51.
-LaTeX Font Info:    ... okay on input line 51.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 51.
-LaTeX Font Info:    ... okay on input line 51.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 51.
-LaTeX Font Info:    ... okay on input line 51.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 51.
-LaTeX Font Info:    ... okay on input line 51.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 51.
-LaTeX Font Info:    ... okay on input line 51.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 51.
-LaTeX Font Info:    ... okay on input line 51.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 51.
-LaTeX Font Info:    ... okay on input line 51.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 51.
-LaTeX Font Info:    ... okay on input line 51.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 51.
-LaTeX Font Info:    ... okay on input line 51.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 51.
-LaTeX Font Info:    ... okay on input line 51.
-Package doc Info: Made | a short reference for \verb on input line 51.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+Package doc Info: Made | a short reference for \verb on input line 60.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: luatex
@@ -1639,7 +1639,7 @@ File: translations-basic-dictionary-english.trsl (english translation file `tra
 nslations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' f
-or `english'. on input line 51.
+or `english'. on input line 60.
  (c:/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count428
@@ -1671,17 +1671,17 @@ Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
 (Font)                  TU/LeteSansMath(1)/m/n --> TU/Arial(0)/m/n on input lin
-e 51.
+e 60.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> TU/Arial(0)/m/it on input line 51.
+(Font)                  OT1/cmr/m/it --> TU/Arial(0)/m/it on input line 60.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> TU/Arial(0)/b/n on input line 51.
+(Font)                  OT1/cmr/bx/n --> TU/Arial(0)/b/n on input line 60.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 51.
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 60.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 51.
+(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 60.
 \c@lstlisting=\count434
-Package hyperref Info: Link coloring ON on input line 51.
+Package hyperref Info: Link coloring ON on input line 60.
 (./numodel-plot-manual.out) (./numodel-plot-manual.out)
 \@outlinefile=\write6
 
@@ -1691,8 +1691,8 @@ Package hyperref Info: Link coloring ON on input line 51.
 \HD@savedest@out=\write7
 
 \openout7 = numodel-plot-manual.hd
-Package doc Info: | already a short reference for \verb(*) on input line 51.
-Package doc Info: Deleted | as a short reference for \verb(*) on input line 51.
+Package doc Info: | already a short reference for \verb(*) on input line 60.
+Package doc Info: Deleted | as a short reference for \verb(*) on input line 60.
 
  (./numodel-plot-manual.toc)
 \tf@toc=\write8
@@ -1736,28 +1736,28 @@ LaTeX Warning: Marginpar on page 6 moved.
 
 LaTeX Warning: Marginpar on page 6 moved.
 
-[6] (./numodel-plot-manual.aux)
+[6] [7] (./numodel-plot-manual.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `numodel-plot-manual.out' has not changed.
-(rerunfilecheck)             Checksum: 6F8CA3B37F528E8DF819D3AD1CB141FF;881.
+(rerunfilecheck)             Checksum: 949338B24ED709918BF1A3C6708BB29C;1077.
 Package rerunfilecheck Info: File `numodel-plot-manual.hd' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 )
 
 Here is how much of LuaTeX's memory you used:
- 51511 strings out of 476076
- 476962,1977958 words of node,token memory allocated
+ 51526 strings out of 476076
+ 476913,1977958 words of node,token memory allocated
  556 words of node memory still in use:
    6 hlist, 2 vlist, 2 rule, 3 glue, 4 kern, 1 glyph, 9 attribute, 62 glue_spec,
  9 attribute_list, 2 write nodes
-   avail lists: 2:11411,3:2789,4:194,5:11332,6:133,7:13759,8:14,9:23925,10:24,11
-:1181,12:1
- 72739 multiletter control sequences out of 65536+600000
- 109 fonts using 43540823 bytes
- 114i,12n,126p,770b,2879s stack positions out of 10000i,1000n,20000p,200000b,200000s
+   avail lists: 1:2,2:12419,3:3545,4:196,5:11336,6:134,7:13760,8:13,9:23926,10:2
+4,11:1207,12:1
+ 72752 multiletter control sequences out of 65536+600000
+ 109 fonts using 43540711 bytes
+ 114i,12n,126p,770b,2883s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Windows/Fonts/ARIALNI.TTF><c:/texlive/2025/texmf-dist/fonts/opentype/public/
 fira/FiraMono-Bold.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lete-sa
 ns-math/LeteSansMath.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lm
@@ -1768,10 +1768,10 @@ ar.otf><c:/Windows/Fonts/arialbd.ttf><c:/texlive/2025/texmf-dist/fonts/opentype/
 public/fira/FiraMono-Regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/publ
 ic/lete-sans-math/LeteSansMath.otf><c:/texlive/2025/texmf-dist/fonts/opentype/pu
 blic/lm/lmsans17-regular.otf><c:/Windows/Fonts/arial.ttf>
-Output written on numodel-plot-manual.pdf (6 pages, 120927 bytes).
+Output written on numodel-plot-manual.pdf (7 pages, 124256 bytes).
 
-PDF statistics: 267 PDF objects out of 1000 (max. 8388607)
- 220 compressed objects within 3 object streams
- 115 named destinations out of 1000 (max. 1048576)
- 80 words of extra memory for PDF output out of 10000 (max. 100000000)
+PDF statistics: 276 PDF objects out of 1000 (max. 8388607)
+ 228 compressed objects within 3 object streams
+ 117 named destinations out of 1000 (max. 1048576)
+ 88 words of extra memory for PDF output out of 10000 (max. 100000000)
 

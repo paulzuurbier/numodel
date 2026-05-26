@@ -66,6 +66,14 @@
   after skip=10pt,
 }
 
+% Match tick-label backgrounds to the modelexample colback so plots
+% emitted by \diagrammodel blend into the listing's gray frame
+% instead of the numodel-plot default (fill=white).
+\pgfplotsset{numodel/axis/.append style={%
+  xticklabel style={fill=black!3},%
+  yticklabel style={fill=black!3}%
+}}
+
 \begin{document}
 
 \CheckSum{0}

@@ -5,6 +5,29 @@ All notable changes to `numodel-plot` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.7.0] — 2026-05-26
+
+### Changed
+- Tick labels on both axes now render with a semi-transparent white
+  background (`fill=white, fill opacity=0.8, text opacity=1, inner
+  sep=1pt`) so the numbers remain optically separated from the grid
+  and from plotted curves passing behind them.
+- Tick labels at axis crossings are no longer hidden. The
+  `numodel/axis` style sets `hide obscured x ticks=false` and
+  `hide obscured y ticks=false`, so every scale number stays visible
+  even where an axis line would otherwise obscure it; the new white
+  background provides the visual separation from the crossing axis.
+
+### Fixed
+- Tick-scale label (the `·10^n` factor that appears when a magnitude
+  is extracted into the axis label) is now actually suppressed.
+  The previous implementation hid it via `opacity=0` on
+  `every {x,y} tick scale label`, which leaked through the new
+  `text opacity=1` on the tick-label style and made the factor
+  reappear near the origin.  Suppression now uses pgfplots' own
+  `{x,y}tick scale label code/.code={}`, which prevents the node
+  from being drawn at all (and keeps it out of the PDF text layer).
+
 ## [0.6.0] — 2026-05-26
 
 ### Changed (build / packaging)

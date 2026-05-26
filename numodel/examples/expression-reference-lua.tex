@@ -1,0 +1,537 @@
+% expression-reference-lua.tex
+% Companion to the manual's "Expression reference" subsection, with the
+% CoachTaal column replaced by a Lua column.  Useful for evaluating what
+% a user would have to type if model rules were evaluated by Lua (LuaTeX
+% embeds Lua 5.3) instead of TeX's \fp_eval.
+\documentclass{article}
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{tabularray}
+\definecolor{numorange}{rgb}{0.90,0.45,0.00}
+
+\begin{document}
+
+\section*{Expression reference (XMILE / l3fp / Lua)}
+
+\textbf{XMILE} shows XMILE\,v1.0 syntax, \textbf{l3fp} shows the
+\texttt{\textbackslash fp\_eval}-compatible form used inside
+\texttt{\textbackslash mrule}, and \textbf{Lua} shows the equivalent
+Lua expression (Lua 5.3, the version embedded in LuaTeX).
+\textcolor{numorange}{Orange} entries are not yet fully supported by
+\textsf{numodel}'s rule renderer (the expression computes correctly,
+but the keyword in the rule table is not yet translated).
+\textit{Italic} cells contain a derived equivalent rather than a
+native keyword.
+
+\begin{longtblr}[
+  caption = {Expression reference: XMILE, \texttt{\textbackslash fpeval},
+             and Lua},
+  label   = {tab:expr-lua},
+]{
+  colspec = {@{} l l l @{}},
+  rowhead = 1,
+  rowsep  = 1pt,
+}
+  \textbf{XMILE} & \textbf{l3fp (\texttt{\textbackslash fpeval})}
+                 & \textbf{Lua (5.3)} \\
+  \hline
+
+  \SetCell[c=3]{l} \itshape Arithmetic operators \\
+  \hline
+  \texttt{+} & \texttt{+} & \texttt{+} \\
+  \texttt{-} & \texttt{-} & \texttt{-} \\
+  \texttt{*} & \texttt{*} & \texttt{*} \\
+  \texttt{/} & \texttt{/} & \texttt{/} \\
+  \texttt{\textasciicircum} &
+    \texttt{\textasciicircum} &
+    \texttt{\textasciicircum} \\
+  \textcolor{numorange}{\texttt{MOD(x,y)}}
+    & \textcolor{numorange}{\textit{x - trunc(x/y)*y}}
+    & \texttt{x \% y} \\
+
+  \SetCell[c=3]{l} \itshape Comparison operators \\
+  \hline
+  \texttt{<}  & \texttt{<}  & \texttt{<}  \\
+  \texttt{<=} & \texttt{<=} & \texttt{<=} \\
+  \texttt{>}  & \texttt{>}  & \texttt{>}  \\
+  \texttt{>=} & \texttt{>=} & \texttt{>=} \\
+  \texttt{=}  & \texttt{=}  & \texttt{==} \\
+  \texttt{<>} & \texttt{!=} & \texttt{\textasciitilde=} \\
+
+  \SetCell[c=3]{l} \itshape Boolean operators \\
+  \hline
+  \texttt{AND} & \texttt{\&\&}              & \texttt{and} \\
+  \texttt{OR}  & \texttt{\textbar\textbar}  & \texttt{or}  \\
+  \texttt{NOT} & \texttt{!}                 & \texttt{not} \\
+
+  \SetCell[c=3]{l} \itshape Control flow \\
+  \hline
+  \texttt{IF c THEN a ELSE b}
+    & \texttt{c ? a : b}
+    & \textit{c and a or b} \\
+
+  \SetCell[c=3]{l} \itshape General math functions \\
+  \hline
+  \texttt{ABS(x)}  & \texttt{abs(x)}  & \texttt{math.abs(x)}  \\
+  \texttt{SIGN(x)} & \texttt{sign(x)} &
+    \textit{x>0 and 1 or (x<0 and -1 or 0)} \\
+  \texttt{SQRT(x)} & \texttt{sqrt(x)} & \texttt{math.sqrt(x)} \\
+  \textcolor{numorange}{\texttt{INT(x)}}
+    & \textcolor{numorange}{\texttt{trunc(x)}}
+    & \textit{(math.modf(x))} \\
+  \textcolor{numorange}{\textit{INT(x+0.5)}}
+    & \textcolor{numorange}{\texttt{round(x)}}
+    & \textit{math.floor(x+0.5)} \\
+  \textcolor{numorange}{\textit{INT(x)}}
+    & \textcolor{numorange}{\texttt{floor(x)}}
+    & \texttt{math.floor(x)} \\
+  \textcolor{numorange}{\textit{-INT(-x)}}
+    & \textcolor{numorange}{\texttt{ceil(x)}}
+    & \texttt{math.ceil(x)} \\
+  \textcolor{numorange}{\texttt{MIN(x,y)}}
+    & \textcolor{numorange}{\texttt{min(x,y)}}
+    & \texttt{math.min(x,y)} \\
+  \textcolor{numorange}{\texttt{MAX(x,y)}}
+    & \textcolor{numorange}{\texttt{max(x,y)}}
+    & \texttt{math.max(x,y)} \\
+  \textcolor{numorange}{\textit{---}}
+    & \textcolor{numorange}{\texttt{fact(x)}}
+    & \textit{---} \\
+  \textcolor{numorange}{\textit{INT(LOG10(ABS(x)))}}
+    & \textcolor{numorange}{\texttt{logb(x)}}
+    & \textit{math.floor(math.log(math.abs(x),10))} \\
+
+  \SetCell[c=3]{l} \itshape Exponential and logarithmic \\
+  \hline
+  \texttt{EXP(x)} & \texttt{exp(x)} & \texttt{math.exp(x)} \\
+  \texttt{LN(x)}  & \texttt{ln(x)}  & \texttt{math.log(x)}  \\
+  \textcolor{numorange}{\texttt{LOG10(x)}}
+    & \textcolor{numorange}{\textit{ln(x)/ln(10)}}
+    & \texttt{math.log(x,10)} \\
+
+  \SetCell[c=3]{l} \itshape Trigonometry (radians) \\
+  \hline
+  \texttt{SIN(x)}    & \texttt{sin(x)}  & \texttt{math.sin(x)}  \\
+  \texttt{COS(x)}    & \texttt{cos(x)}  & \texttt{math.cos(x)}  \\
+  \texttt{TAN(x)}    & \texttt{tan(x)}  & \texttt{math.tan(x)}  \\
+  \texttt{ARCSIN(x)} & \texttt{asin(x)} & \texttt{math.asin(x)} \\
+  \texttt{ARCCOS(x)} & \texttt{acos(x)} & \texttt{math.acos(x)} \\
+  \textcolor{numorange}{\texttt{ARCTAN(x)}}
+    & \textcolor{numorange}{\texttt{atan(x)}}
+    & \texttt{math.atan(x)} \\
+  \textcolor{numorange}{\texttt{ARCTAN2(y,x)}}
+    & \textcolor{numorange}{\texttt{atan(y,x)}}
+    & \texttt{math.atan(y,x)} \\
+  \textcolor{numorange}{\textit{1/TAN(x)}}
+    & \textcolor{numorange}{\texttt{cot(x)}}
+    & \textit{1/math.tan(x)} \\
+  \textcolor{numorange}{\textit{1/SIN(x)}}
+    & \textcolor{numorange}{\texttt{csc(x)}}
+    & \textit{1/math.sin(x)} \\
+  \textcolor{numorange}{\textit{1/COS(x)}}
+    & \textcolor{numorange}{\texttt{sec(x)}}
+    & \textit{1/math.cos(x)} \\
+  \textcolor{numorange}{\textit{ARCSIN(1/x)}}
+    & \textcolor{numorange}{\texttt{acsc(x)}}
+    & \textit{math.asin(1/x)} \\
+  \textcolor{numorange}{\textit{ARCCOS(1/x)}}
+    & \textcolor{numorange}{\texttt{asec(x)}}
+    & \textit{math.acos(1/x)} \\
+  \textcolor{numorange}{\textit{ARCTAN(1/x)}}
+    & \textcolor{numorange}{\texttt{acot(x)}}
+    & \textit{math.atan(1/x)} \\
+  \textcolor{numorange}{\textit{ARCTAN2(x,y)}}
+    & \textcolor{numorange}{\texttt{acot(y,x)}}
+    & \textit{math.atan(x,y)} \\
+
+  \SetCell[c=3]{l} \itshape Trigonometry (degrees) \\
+  \hline
+  \textcolor{numorange}{\textit{SIN(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{sind(x)}}
+    & \textit{math.sin(math.rad(x))} \\
+  \textcolor{numorange}{\textit{COS(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{cosd(x)}}
+    & \textit{math.cos(math.rad(x))} \\
+  \textcolor{numorange}{\textit{TAN(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{tand(x)}}
+    & \textit{math.tan(math.rad(x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCSIN(x)}}
+    & \textcolor{numorange}{\texttt{asind(x)}}
+    & \textit{math.deg(math.asin(x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCCOS(x)}}
+    & \textcolor{numorange}{\texttt{acosd(x)}}
+    & \textit{math.deg(math.acos(x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCTAN(x)}}
+    & \textcolor{numorange}{\texttt{atand(x)}}
+    & \textit{math.deg(math.atan(x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCTAN2(y,x)}}
+    & \textcolor{numorange}{\texttt{atand(y,x)}}
+    & \textit{math.deg(math.atan(y,x))} \\
+  \textcolor{numorange}{\textit{1/TAN(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{cotd(x)}}
+    & \textit{1/math.tan(math.rad(x))} \\
+  \textcolor{numorange}{\textit{1/SIN(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{cscd(x)}}
+    & \textit{1/math.sin(math.rad(x))} \\
+  \textcolor{numorange}{\textit{1/COS(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{secd(x)}}
+    & \textit{1/math.cos(math.rad(x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCSIN(1/x)}}
+    & \textcolor{numorange}{\texttt{acscd(x)}}
+    & \textit{math.deg(math.asin(1/x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCCOS(1/x)}}
+    & \textcolor{numorange}{\texttt{asecd(x)}}
+    & \textit{math.deg(math.acos(1/x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCTAN(1/x)}}
+    & \textcolor{numorange}{\texttt{acotd(x)}}
+    & \textit{math.deg(math.atan(1/x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCTAN2(x,y)}}
+    & \textcolor{numorange}{\texttt{acotd(y,x)}}
+    & \textit{math.deg(math.atan(x,y))} \\
+
+  \SetCell[c=3]{l} \itshape Constants \\
+  \hline
+  \texttt{PI} & \texttt{pi}     & \texttt{math.pi}     \\
+  \texttt{e}  & \textit{exp(1)} & \textit{math.exp(1)} \\
+  \textcolor{numorange}{\texttt{INF}}
+    & \textcolor{numorange}{\texttt{inf}}
+    & \texttt{math.huge} \\
+  \textcolor{numorange}{\texttt{NAN}}
+    & \textcolor{numorange}{\texttt{nan}}
+    & \textit{0/0} \\
+  \textcolor{numorange}{\textit{PI/180}}
+    & \textcolor{numorange}{\texttt{deg}}
+    & \textit{math.pi/180} \\
+  \textcolor{numorange}{\textit{1}}
+    & \textcolor{numorange}{\texttt{true}}
+    & \texttt{true} \\
+  \textcolor{numorange}{\textit{0}}
+    & \textcolor{numorange}{\texttt{false}}
+    & \texttt{false} \\
+
+  \SetCell[c=3]{l} \itshape Simulation-specific functions (XMILE only) \\
+  \hline
+  \textcolor{numorange}{\texttt{TIME}}
+    & \textcolor{numorange}{\textit{user variable (\texttt{\textbackslash mvar})}}
+    & \textit{user variable} \\
+  \textcolor{numorange}{\texttt{DT}}
+    & \textcolor{numorange}{\textit{user variable (\texttt{\textbackslash mvar})}}
+    & \textit{user variable} \\
+  \textcolor{numorange}{\texttt{STEP(h,t\textsubscript{0})}}
+    & \textcolor{numorange}{\textit{T >= t0 ? h : 0}}
+    & \textit{(T >= t0) and h or 0} \\
+  \textcolor{numorange}{\texttt{RAMP(s,t\textsubscript{0})}}
+    & \textcolor{numorange}{\textit{T > t0 ? s*(T-t0) : 0}}
+    & \textit{(T > t0) and s*(T-t0) or 0} \\
+  \textcolor{numorange}{\texttt{DELAY(x,dt)}}
+    & \textcolor{numorange}{\textit{not supported}}
+    & \textit{not supported} \\
+  \textcolor{numorange}{\texttt{SMOOTH(x,t)}}
+    & \textcolor{numorange}{\textit{not supported}}
+    & \textit{not supported} \\
+  \textcolor{numorange}{\texttt{INIT(x)}}
+    & \textcolor{numorange}{\textit{not supported}}
+    & \textit{not supported} \\
+  \textcolor{numorange}{\texttt{PREVIOUS(x)}}
+    & \textcolor{numorange}{\textit{not supported}}
+    & \textit{not supported} \\
+  \textcolor{numorange}{\textit{RANDOM(0,1)}}
+    & \textcolor{numorange}{\texttt{rand()}}
+    & \texttt{math.random()} \\
+  \textcolor{numorange}{\texttt{RANDOM(lo,hi)}}
+    & \textcolor{numorange}{\textit{lo + (hi-lo)*rand()}}
+    & \textit{lo + (hi-lo)*math.random()} \\
+  \textcolor{numorange}{\textit{not supported}}
+    & \textcolor{numorange}{\texttt{randint(n)}}
+    & \texttt{math.random(n)} \\
+  \textcolor{numorange}{\textit{not supported}}
+    & \textcolor{numorange}{\texttt{randint(m,n)}}
+    & \texttt{math.random(m,n)} \\
+  \hline
+\end{longtblr}
+
+\section*{Flattening \texttt{math} into the rule environment}
+
+The verbose \texttt{math.} prefix in front of every call is the main
+cost of using raw Lua expressions in user-authored rules.  Lua lets
+you eliminate it by handing the loaded expression its own
+environment.  The pattern (Lua 5.3, the version embedded in LuaTeX):
+
+\begin{verbatim}
+local function make_env(vars)
+  local env = {}
+  for k, v in pairs(math) do env[k] = v end  -- sin, cos, pi, huge, ...
+  setmetatable(env, { __index = vars })      -- model variables fall through
+  return env
+end
+
+local function compile_rule(expr, env)
+  local f, err = load("return " .. expr, "rule", "t", env)
+  if not f then error(err) end
+  return f
+end
+\end{verbatim}
+
+The Euler integrator then evaluates each rule with no boilerplate on
+the user's side:
+
+\begin{verbatim}
+local env = make_env(vars)
+local f   = compile_rule("v + g * dt", env)  -- user-typed expression
+vars.v    = f()                              -- vars.g, vars.dt via __index
+\end{verbatim}
+
+Three things to note.  First, copying \texttt{math} into \texttt{env}
+once gives a direct table lookup for \texttt{sin}, \texttt{cos},
+\dots; only model-variable reads pay the metatable hop, and only on
+first access per step.  Second, the \texttt{"t"} mode flag on
+\texttt{load} restricts the chunk to text (no precompiled bytecode),
+a useful sandbox guarantee for user input.  Third, name collisions
+matter: if a model variable is called \texttt{sin}, \texttt{log},
+\texttt{pi}, etc., the math binding in \texttt{env} shadows it.  In
+practice this is a non-issue (physics models do not name a stock
+\texttt{sin}), but it is worth a sanity check at \texttt{register}
+time.
+
+The next table repeats the expression reference under this
+assumption: the \texttt{math.} prefix is gone everywhere.  Entries
+that were derived stay derived; \textsf{numodel} could also inject
+named helpers for \texttt{sign}, \texttt{cot}, \texttt{csc},
+\texttt{round}, etc.\ into \texttt{env} to make those native too,
+but that is outside the standard library and not assumed here.
+
+One subtlety worth flagging: in radian-mode trig, \texttt{deg} is the
+\emph{function} \texttt{math.deg} (radians$\to$degrees), so the
+constant ``\texttt{deg}'' for $\pi/180$ has to be spelled out as
+\texttt{pi/180}.
+
+\section*{Expression reference (XMILE / l3fp / Lua, flattened)}
+
+\begin{longtblr}[
+  caption = {Expression reference with \texttt{math} flattened into
+             the rule environment},
+  label   = {tab:expr-lua-flat},
+]{
+  colspec = {@{} l l l @{}},
+  rowhead = 1,
+  rowsep  = 1pt,
+}
+  \textbf{XMILE} & \textbf{l3fp (\texttt{\textbackslash fpeval})}
+                 & \textbf{Lua (math flattened)} \\
+  \hline
+
+  \SetCell[c=3]{l} \itshape Arithmetic operators \\
+  \hline
+  \texttt{+} & \texttt{+} & \texttt{+} \\
+  \texttt{-} & \texttt{-} & \texttt{-} \\
+  \texttt{*} & \texttt{*} & \texttt{*} \\
+  \texttt{/} & \texttt{/} & \texttt{/} \\
+  \texttt{\textasciicircum} &
+    \texttt{\textasciicircum} &
+    \texttt{\textasciicircum} \\
+  \textcolor{numorange}{\texttt{MOD(x,y)}}
+    & \textcolor{numorange}{\textit{x - trunc(x/y)*y}}
+    & \texttt{x \% y} \\
+
+  \SetCell[c=3]{l} \itshape Comparison operators \\
+  \hline
+  \texttt{<}  & \texttt{<}  & \texttt{<}  \\
+  \texttt{<=} & \texttt{<=} & \texttt{<=} \\
+  \texttt{>}  & \texttt{>}  & \texttt{>}  \\
+  \texttt{>=} & \texttt{>=} & \texttt{>=} \\
+  \texttt{=}  & \texttt{=}  & \texttt{==} \\
+  \texttt{<>} & \texttt{!=} & \texttt{\textasciitilde=} \\
+
+  \SetCell[c=3]{l} \itshape Boolean operators \\
+  \hline
+  \texttt{AND} & \texttt{\&\&}              & \texttt{and} \\
+  \texttt{OR}  & \texttt{\textbar\textbar}  & \texttt{or}  \\
+  \texttt{NOT} & \texttt{!}                 & \texttt{not} \\
+
+  \SetCell[c=3]{l} \itshape Control flow \\
+  \hline
+  \texttt{IF c THEN a ELSE b}
+    & \texttt{c ? a : b}
+    & \textit{c and a or b} \\
+
+  \SetCell[c=3]{l} \itshape General math functions \\
+  \hline
+  \texttt{ABS(x)}  & \texttt{abs(x)}  & \texttt{abs(x)}  \\
+  \texttt{SIGN(x)} & \texttt{sign(x)} &
+    \textit{x>0 and 1 or (x<0 and -1 or 0)} \\
+  \texttt{SQRT(x)} & \texttt{sqrt(x)} & \texttt{sqrt(x)} \\
+  \textcolor{numorange}{\texttt{INT(x)}}
+    & \textcolor{numorange}{\texttt{trunc(x)}}
+    & \textit{(modf(x))} \\
+  \textcolor{numorange}{\textit{INT(x+0.5)}}
+    & \textcolor{numorange}{\texttt{round(x)}}
+    & \textit{floor(x+0.5)} \\
+  \textcolor{numorange}{\textit{INT(x)}}
+    & \textcolor{numorange}{\texttt{floor(x)}}
+    & \texttt{floor(x)} \\
+  \textcolor{numorange}{\textit{-INT(-x)}}
+    & \textcolor{numorange}{\texttt{ceil(x)}}
+    & \texttt{ceil(x)} \\
+  \textcolor{numorange}{\texttt{MIN(x,y)}}
+    & \textcolor{numorange}{\texttt{min(x,y)}}
+    & \texttt{min(x,y)} \\
+  \textcolor{numorange}{\texttt{MAX(x,y)}}
+    & \textcolor{numorange}{\texttt{max(x,y)}}
+    & \texttt{max(x,y)} \\
+  \textcolor{numorange}{\textit{---}}
+    & \textcolor{numorange}{\texttt{fact(x)}}
+    & \textit{---} \\
+  \textcolor{numorange}{\textit{INT(LOG10(ABS(x)))}}
+    & \textcolor{numorange}{\texttt{logb(x)}}
+    & \textit{floor(log(abs(x),10))} \\
+
+  \SetCell[c=3]{l} \itshape Exponential and logarithmic \\
+  \hline
+  \texttt{EXP(x)} & \texttt{exp(x)} & \texttt{exp(x)} \\
+  \texttt{LN(x)}  & \texttt{ln(x)}  & \texttt{log(x)}  \\
+  \textcolor{numorange}{\texttt{LOG10(x)}}
+    & \textcolor{numorange}{\textit{ln(x)/ln(10)}}
+    & \texttt{log(x,10)} \\
+
+  \SetCell[c=3]{l} \itshape Trigonometry (radians) \\
+  \hline
+  \texttt{SIN(x)}    & \texttt{sin(x)}  & \texttt{sin(x)}  \\
+  \texttt{COS(x)}    & \texttt{cos(x)}  & \texttt{cos(x)}  \\
+  \texttt{TAN(x)}    & \texttt{tan(x)}  & \texttt{tan(x)}  \\
+  \texttt{ARCSIN(x)} & \texttt{asin(x)} & \texttt{asin(x)} \\
+  \texttt{ARCCOS(x)} & \texttt{acos(x)} & \texttt{acos(x)} \\
+  \textcolor{numorange}{\texttt{ARCTAN(x)}}
+    & \textcolor{numorange}{\texttt{atan(x)}}
+    & \texttt{atan(x)} \\
+  \textcolor{numorange}{\texttt{ARCTAN2(y,x)}}
+    & \textcolor{numorange}{\texttt{atan(y,x)}}
+    & \texttt{atan(y,x)} \\
+  \textcolor{numorange}{\textit{1/TAN(x)}}
+    & \textcolor{numorange}{\texttt{cot(x)}}
+    & \textit{1/tan(x)} \\
+  \textcolor{numorange}{\textit{1/SIN(x)}}
+    & \textcolor{numorange}{\texttt{csc(x)}}
+    & \textit{1/sin(x)} \\
+  \textcolor{numorange}{\textit{1/COS(x)}}
+    & \textcolor{numorange}{\texttt{sec(x)}}
+    & \textit{1/cos(x)} \\
+  \textcolor{numorange}{\textit{ARCSIN(1/x)}}
+    & \textcolor{numorange}{\texttt{acsc(x)}}
+    & \textit{asin(1/x)} \\
+  \textcolor{numorange}{\textit{ARCCOS(1/x)}}
+    & \textcolor{numorange}{\texttt{asec(x)}}
+    & \textit{acos(1/x)} \\
+  \textcolor{numorange}{\textit{ARCTAN(1/x)}}
+    & \textcolor{numorange}{\texttt{acot(x)}}
+    & \textit{atan(1/x)} \\
+  \textcolor{numorange}{\textit{ARCTAN2(x,y)}}
+    & \textcolor{numorange}{\texttt{acot(y,x)}}
+    & \textit{atan(x,y)} \\
+
+  \SetCell[c=3]{l} \itshape Trigonometry (degrees) \\
+  \hline
+  \textcolor{numorange}{\textit{SIN(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{sind(x)}}
+    & \textit{sin(rad(x))} \\
+  \textcolor{numorange}{\textit{COS(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{cosd(x)}}
+    & \textit{cos(rad(x))} \\
+  \textcolor{numorange}{\textit{TAN(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{tand(x)}}
+    & \textit{tan(rad(x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCSIN(x)}}
+    & \textcolor{numorange}{\texttt{asind(x)}}
+    & \textit{deg(asin(x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCCOS(x)}}
+    & \textcolor{numorange}{\texttt{acosd(x)}}
+    & \textit{deg(acos(x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCTAN(x)}}
+    & \textcolor{numorange}{\texttt{atand(x)}}
+    & \textit{deg(atan(x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCTAN2(y,x)}}
+    & \textcolor{numorange}{\texttt{atand(y,x)}}
+    & \textit{deg(atan(y,x))} \\
+  \textcolor{numorange}{\textit{1/TAN(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{cotd(x)}}
+    & \textit{1/tan(rad(x))} \\
+  \textcolor{numorange}{\textit{1/SIN(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{cscd(x)}}
+    & \textit{1/sin(rad(x))} \\
+  \textcolor{numorange}{\textit{1/COS(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{secd(x)}}
+    & \textit{1/cos(rad(x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCSIN(1/x)}}
+    & \textcolor{numorange}{\texttt{acscd(x)}}
+    & \textit{deg(asin(1/x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCCOS(1/x)}}
+    & \textcolor{numorange}{\texttt{asecd(x)}}
+    & \textit{deg(acos(1/x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCTAN(1/x)}}
+    & \textcolor{numorange}{\texttt{acotd(x)}}
+    & \textit{deg(atan(1/x))} \\
+  \textcolor{numorange}{\textit{180/PI*ARCTAN2(x,y)}}
+    & \textcolor{numorange}{\texttt{acotd(y,x)}}
+    & \textit{deg(atan(x,y))} \\
+
+  \SetCell[c=3]{l} \itshape Constants \\
+  \hline
+  \texttt{PI} & \texttt{pi}     & \texttt{pi}     \\
+  \texttt{e}  & \textit{exp(1)} & \textit{exp(1)} \\
+  \textcolor{numorange}{\texttt{INF}}
+    & \textcolor{numorange}{\texttt{inf}}
+    & \texttt{huge} \\
+  \textcolor{numorange}{\texttt{NAN}}
+    & \textcolor{numorange}{\texttt{nan}}
+    & \textit{0/0} \\
+  \textcolor{numorange}{\textit{PI/180}}
+    & \textcolor{numorange}{\texttt{deg}}
+    & \textit{pi/180} \\
+  \textcolor{numorange}{\textit{1}}
+    & \textcolor{numorange}{\texttt{true}}
+    & \texttt{true} \\
+  \textcolor{numorange}{\textit{0}}
+    & \textcolor{numorange}{\texttt{false}}
+    & \texttt{false} \\
+
+  \SetCell[c=3]{l} \itshape Simulation-specific functions (XMILE only) \\
+  \hline
+  \textcolor{numorange}{\texttt{TIME}}
+    & \textcolor{numorange}{\textit{user variable (\texttt{\textbackslash mvar})}}
+    & \textit{user variable} \\
+  \textcolor{numorange}{\texttt{DT}}
+    & \textcolor{numorange}{\textit{user variable (\texttt{\textbackslash mvar})}}
+    & \textit{user variable} \\
+  \textcolor{numorange}{\texttt{STEP(h,t\textsubscript{0})}}
+    & \textcolor{numorange}{\textit{T >= t0 ? h : 0}}
+    & \textit{(T >= t0) and h or 0} \\
+  \textcolor{numorange}{\texttt{RAMP(s,t\textsubscript{0})}}
+    & \textcolor{numorange}{\textit{T > t0 ? s*(T-t0) : 0}}
+    & \textit{(T > t0) and s*(T-t0) or 0} \\
+  \textcolor{numorange}{\texttt{DELAY(x,dt)}}
+    & \textcolor{numorange}{\textit{not supported}}
+    & \textit{not supported} \\
+  \textcolor{numorange}{\texttt{SMOOTH(x,t)}}
+    & \textcolor{numorange}{\textit{not supported}}
+    & \textit{not supported} \\
+  \textcolor{numorange}{\texttt{INIT(x)}}
+    & \textcolor{numorange}{\textit{not supported}}
+    & \textit{not supported} \\
+  \textcolor{numorange}{\texttt{PREVIOUS(x)}}
+    & \textcolor{numorange}{\textit{not supported}}
+    & \textit{not supported} \\
+  \textcolor{numorange}{\textit{RANDOM(0,1)}}
+    & \textcolor{numorange}{\texttt{rand()}}
+    & \texttt{random()} \\
+  \textcolor{numorange}{\texttt{RANDOM(lo,hi)}}
+    & \textcolor{numorange}{\textit{lo + (hi-lo)*rand()}}
+    & \textit{lo + (hi-lo)*random()} \\
+  \textcolor{numorange}{\textit{not supported}}
+    & \textcolor{numorange}{\texttt{randint(n)}}
+    & \texttt{random(n)} \\
+  \textcolor{numorange}{\textit{not supported}}
+    & \textcolor{numorange}{\texttt{randint(m,n)}}
+    & \texttt{random(m,n)} \\
+  \hline
+\end{longtblr}
+
+\end{document}

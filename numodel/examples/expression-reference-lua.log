@@ -1,0 +1,337 @@
+This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  26 MAY 2026 16:24
+ restricted system commands enabled.
+ file:line:error style messages enabled.
+**c:/numodel-bundle/numodel/examples/expression-reference-lua.tex
+(c:/numodel-bundle/numodel/examples/expression-reference-lua.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+Lua module: luaotfload 2024-12-03 v3.29 Lua based OpenType font support
+Lua module: lualibs 2023-07-13 v2.76 ConTeXt Lua standard libraries.
+Lua module: lualibs-extended 2023-07-13 v2.76 ConTeXt Lua libraries -- extended collection.
+luaotfload | conf : Root cache directory is "C:/Users/paulz/.texlive2026/texmf-var/luatex-cache/generic/names".
+luaotfload | init : Loading fontloader "fontloader-2023-12-28.lua" from kpse-resolved path "c:/texlive/2025/texmf-dist/tex/luatex/luaotfload/fontloader-2023-12-28.lua".
+Lua-only attribute luaotfload@noligature = 1
+luaotfload | init : Context OpenType loader version 3.134
+Inserting `luaotfload.node_processor' in `pre_linebreak_filter'.
+Inserting `luaotfload.node_processor' in `hpack_filter'.
+Inserting `luaotfload.glyph_stream' in `glyph_stream_provider'.
+Inserting `luaotfload.define_font' in `define_font'.
+Lua-only attribute luaotfload_color_attribute = 2
+luaotfload | conf : Root cache directory is "C:/Users/paulz/.texlive2026/texmf-var/luatex-cache/generic/names".
+Inserting `luaotfload.harf.strip_prefix' in `find_opentype_file'.
+Inserting `luaotfload.harf.strip_prefix' in `find_truetype_file'.
+Removing  `luaotfload.glyph_stream' from `glyph_stream_provider'.
+Inserting `luaotfload.harf.glyphstream' in `glyph_stream_provider'.
+Inserting `luaotfload.harf.finalize_vlist' in `post_linebreak_filter'.
+Inserting `luaotfload.harf.finalize_hlist' in `hpack_filter'.
+Inserting `luaotfload.cleanup_files' in `wrapup_run'.
+Inserting `luaotfload.harf.finalize_unicode' in `finish_pdffile'.
+Inserting `luaotfload.glyphinfo' in `glyph_info'.
+Lua-only attribute luaotfload.letterspace_done = 3
+Inserting `luaotfload.aux.set_sscale_dimens' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.set_font_index' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.patch_cambria_domh' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.fixup_fontdata' in `luaotfload.patch_font_unsafe'.
+Inserting `luaotfload.aux.set_capheight' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.set_xheight' in `luaotfload.patch_font'.
+Inserting `luaotfload.rewrite_fontname' in `luaotfload.patch_font'.
+Inserting `tracingstacklevels' in `input_level_string'. (c:/texlive/2025/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(c:/texlive/2025/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
+luaotfload | db : Font names database loaded from C:/Users/paulz/.texlive2026/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz)
+\c@part=\count273
+\c@section=\count274
+\c@subsection=\count275
+\c@subsubsection=\count276
+\c@paragraph=\count277
+\c@subparagraph=\count278
+\c@figure=\count279
+\c@table=\count280
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen147
+) (c:/texlive/2025/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2026/03/07 v6.0 Page Geometry
+ (c:/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks17
+) (c:/texlive/2025/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+ (c:/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2024/12/12 v1.0g TeX engine tests
+))
+\Gm@cnth=\count281
+\Gm@cntv=\count282
+\c@Gm@tempcnt=\count283
+\Gm@bindingoffset=\dimen148
+\Gm@wd@mp=\dimen149
+\Gm@odd@mp=\dimen150
+\Gm@even@mp=\dimen151
+\Gm@layoutwidth=\dimen152
+\Gm@layoutheight=\dimen153
+\Gm@layouthoffset=\dimen154
+\Gm@layoutvoffset=\dimen155
+\Gm@dimlist=\toks18
+) (c:/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
+ (c:/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: luatex.def on input line 274.
+ (c:/texlive/2025/texmf-dist/tex/latex/graphics-def/luatex.def
+File: luatex.def 2025/09/29 v1.2f Graphics/color driver for luatex
+) (c:/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
+Package xcolor Info: Model `RGB' extended on input line 1365.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+) (c:/texlive/2025/texmf-dist/tex/latex/tabularray/tabularray.sty
+Package: tabularray 2025-11-27 v2025C Typeset tabulars and arrays with LaTeX3
+ (c:/texlive/2025/texmf-dist/tex/latex/ninecolors/ninecolors.sty
+Package: ninecolors 2022-02-13 v2022D Select colors with proper color contrast
+ (c:/texlive/2025/texmf-dist/tex/latex/l3packages/xparse/xparse.sty (c:/texlive/2025/texmf-dist/tex/latex/l3kernel/expl3.sty
+Package: expl3 2026-01-19 L3 programming layer (loader) 
+ (c:/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-luatex.def
+File: l3backend-luatex.def 2025-10-09 L3 backend support: PDF output (LuaTeX)
+\l__color_backend_stack_int=\count284
+Inserting `l3color' in `luaotfload.parse_color'.))
+Package: xparse 2025-10-09 L3 Experimental document command parser
+))
+\g__tblr_nohyper_int=\count285
+\l__tblr_a_int=\count286
+\l__tblr_c_int=\count287
+\l__tblr_r_int=\count288
+\l__tblr_d_dim=\dimen156
+\l__tblr_h_dim=\dimen157
+\l__tblr_o_dim=\dimen158
+\l__tblr_p_dim=\dimen159
+\l__tblr_q_dim=\dimen160
+\l__tblr_r_dim=\dimen161
+\l__tblr_s_dim=\dimen162
+\l__tblr_t_dim=\dimen163
+\l__tblr_v_dim=\dimen164
+\l__tblr_w_dim=\dimen165
+\l__tblr_a_box=\box53
+\l__tblr_b_box=\box54
+\l__tblr_c_box=\box55
+\l__tblr_d_box=\box56
+\c@tblrcount=\count289
+\c@rownum=\count290
+\c@colnum=\count291
+\c@rowcount=\count292
+\c@colcount=\count293
+\abovesep=\dimen166
+\belowsep=\dimen167
+\leftsep=\dimen168
+\rightsep=\dimen169
+\gTblrLevelInt=\count294
+\g__tblr_data_row_key_count_int=\count295
+\g__tblr_data_column_key_count_int=\count296
+\g__tblr_data_cell_key_count_int=\count297
+\g__tblr_array_int=\count298
+\l__tblr_key_count_int=\count299
+\l__tblr_key_quotient_int=\count300
+\l__tblr_key_quotient_two_int=\count301
+\l__tblr_key_remainder_int=\count302
+\g__tblr_data_str_value_count_int=\count303
+\lTblrChildTotalInt=\count304
+\lTblrChildHtotalInt=\count305
+\lTblrChildVtotalInt=\count306
+\l__child_diff_h_int=\count307
+\l__child_diff_v_int=\count308
+\l__child_sign_h_int=\count309
+\l__child_sign_v_int=\count310
+\l__child_step_int=\count311
+\lTblrDefaultHruleWidthDim=\dimen170
+\lTblrDefaultVruleWidthDim=\dimen171
+\l__tblr_split_balance_int=\count312
+\l__tblr_strut_dp_dim=\dimen172
+\l__tblr_strut_ht_dim=\dimen173
+\g__tblr_cell_wd_dim=\dimen174
+\g__tblr_cell_ht_dim=\dimen175
+\g__tblr_cell_head_dim=\dimen176
+\g__tblr_cell_foot_dim=\dimen177
+\l__tblr_measured_cell_box=\box57
+\g__tblr_last_box=\box58
+\l__tblr_temp_box=\box59
+\l__tblr_column_target_dim=\dimen178
+\l__tblr_hfuzz_dim=\dimen179
+\l__tblr_caption_box=\box60
+\l__tblr_caption_left_box=\box61
+\lTblrRowHeadInt=\count313
+\lTblrRowFootInt=\count314
+\l__tblr_row_head_box=\box62
+\l__tblr_row_foot_box=\box63
+\l__tblr_row_head_foot_dim=\dimen180
+\lTblrTableWidthDim=\dimen181
+\l__tblr_table_firsthead_box=\box64
+\l__tblr_table_middlehead_box=\box65
+\l__tblr_table_lasthead_box=\box66
+\l__tblr_table_firstfoot_box=\box67
+\l__tblr_table_middlefoot_box=\box68
+\l__tblr_table_lastfoot_box=\box69
+\l__tblr_remain_height_dim=\dimen182
+\l__tblr_next_rows_dim=\dimen183
+\l__tblr_page_overfill_dim=\dimen184
+\l__tblr_long_from_int=\count315
+\l__tblr_long_to_int=\count316
+\l__tblr_curr_i_int=\count317
+\l__tblr_prev_i_int=\count318
+\lTblrTablePageInt=\count319
+\l__tblr_table_head_box=\box70
+\l__tblr_table_foot_box=\box71
+\l__tblr_table_head_foot_dim=\dimen185
+\l__tblr_table_head_body_foot_dim=\dimen186
+\l__tblr_table_box=\box72
+\lTblrRowFirstInt=\count320
+\lTblrRowLastInt=\count321
+\l__tblr_cover_box_a_dim=\dimen187
+\l__tblr_cover_box_b_dim=\dimen188
+\l__tblr_table_hlines_box=\box73
+\l__tblr_hline_box=\box74
+\l__tblr_row_box=\box75
+\l__tblr_col_o_wd_dim=\dimen189
+\l__tblr_col_b_wd_dim=\dimen190
+\l__tblr_hline_leftskip_dim=\dimen191
+\l__tblr_hline_rightskip_dim=\dimen192
+\l__tblr_row_ht_dim=\dimen193
+\l__tblr_row_dp_dim=\dimen194
+\l__tblr_row_abovesep_dim=\dimen195
+\l__tblr_row_belowsep_dim=\dimen196
+\l__tblr_row_vlines_box=\box76
+\l__tblr_vline_box=\box77
+\l__tblr_cell_box=\box78
+\l__tblr_row_upper_dim=\dimen197
+\l__tblr_row_lower_dim=\dimen198
+\l__tblr_row_vpace_dim=\dimen199
+\l__tblr_vline_aboveskip_dim=\dimen256
+\l__tblr_vline_belowskip_dim=\dimen257
+\lTblrCellRowSpanInt=\count322
+\lTblrCellColSpanInt=\count323
+\l__tblr_cell_wd_dim=\dimen258
+\l__tblr_cell_ht_dim=\dimen259
+\lTblrCellAboveBorderWidthDim=\dimen260
+\lTblrCellBelowBorderWidthDim=\dimen261
+\lTblrCellLeftBorderWidthDim=\dimen262
+\lTblrCellRightBorderWidthDim=\dimen263
+\l__tblr_diag_box=\box79
+\l__tblr_cell_inner_wd_dim=\dimen264
+\l__tblr_cell_inner_dp_dim=\dimen265
+\l__tblr_cell_hanchor_dim=\dimen266
+\l__tblr_last_cell_table_ht_dim=\dimen267
+\l__tblr_last_cell_table_dp_dim=\dimen268
+\l__tblr_last_vline_wd_dim=\dimen269
+\l__tblr_tikz_node_box=\box80
+) (./expression-reference-lua.aux)
+\openout1 = expression-reference-lua.aux
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: luatex
+*geometry* verbose mode - [ preamble ] result:
+* driver: luatex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(56.9055pt, 483.69687pt, 56.9055pt)
+* v-part:(T,H,B)=(56.9055pt, 731.23584pt, 56.9055pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=483.69687pt
+* \textheight=731.23584pt
+* \oddsidemargin=-15.36449pt
+* \evensidemargin=-15.36449pt
+* \topmargin=-52.36449pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+(c:/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count324
+\scratchdimen=\dimen270
+\scratchbox=\box81
+\nofMPsegments=\count325
+\nofMParguments=\count326
+\everyMPshowfont=\toks19
+\MPscratchCnt=\count327
+\MPscratchDim=\dimen271
+\MPnumerator=\count328
+\makeMPintoPDFobject=\count329
+\everyMPtoPDFconversion=\toks20
+)
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 251.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 251.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 251.
+ [1
+
+{c:/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <14.4> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 253.
+ [2] [3] [4] [5] (./expression-reference-lua.aux)
+ ***********
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+ ***********
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+)
+
+Here is how much of LuaTeX's memory you used:
+ 7410 strings out of 476076
+ 195342,662416 words of node,token memory allocated
+ 416 words of node memory still in use:
+   3 hlist, 1 vlist, 1 rule, 2 glue, 3 kern, 1 glyph, 4 attribute, 50 glue_spec, 4 attribute_list, 1 write nodes
+   avail lists: 2:9624,3:530,4:368,5:625,6:421,7:10327,8:5,9:6274,10:9,11:268
+ 29875 multiletter control sequences out of 65536+600000
+ 35 fonts using 2634639 bytes
+ 88i,10n,107p,402b,6214s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmmono8-regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmmono10-italic.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmmonolt10-bold.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmroman10-italic.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmsans10-regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmmono10-regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmroman10-bold.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmroman12-bold.otf><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on expression-reference-lua.pdf (5 pages, 73158 bytes).
+
+PDF statistics: 95 PDF objects out of 1000 (max. 8388607)
+ 57 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 1048576)
+ 1 words of extra memory for PDF output out of 10000 (max. 100000000)
+

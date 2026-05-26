@@ -48,6 +48,15 @@
   after skip=10pt,
 }
 
+% Match tick-label backgrounds to the plotexample colback so the
+% manual's example plots blend into the listing's gray frame instead
+% of the package default (fill=white).  See §"Tick label backgrounds"
+% in the body for how end users adapt this to their own document.
+\pgfplotsset{numodel/axis/.append style={%
+  xticklabel style={fill=black!3},%
+  yticklabel style={fill=black!3}%
+}}
+
 \begin{document}
 
 \CheckSum{0}
@@ -119,8 +128,8 @@ Minimum working example (assuming |\usepackage{numodel-plot}| in
 the preamble):
 
 \begin{plotexample}
-\def\xmin{0}   \def\xmax{10}
-\def\ymin{0}   \def\ymax{5}
+\def\xmin{-5}   \def\xmax{10}
+\def\ymin{-3}   \def\ymax{5}
 \def\xlabelqty{t}  \def\xlabelunit{\s}
 \def\ylabelqty{v}  \def\ylabelunit{\m\per\s}
 \drawplot{\addplot[domain=\xmin:\xmax]{0.5*x};}
@@ -299,6 +308,33 @@ plot:
 \caption*{\texttt{numodel/axis}}
 \end{subfigure}
 \end{plotexample}
+
+\subsection{Tick label backgrounds}
+
+To keep scale numbers optically separated from the grid and from
+plot lines passing behind them, the |numodel/axis| style draws each
+tick label on a semi-transparent white rectangle (|fill=white|,
+|fill opacity=0.8|, |inner sep=1pt|).  The same style also keeps
+tick labels visible where a crossing axis would otherwise hide them
+(|hide obscured x ticks=false| and the $y$-counterpart); the white
+rectangle then provides the visual separation from the axis line.
+
+If the surrounding document has a coloured background --- a sidebar
+box, a slide template, the |plotexample| environment used in this
+manual --- the white rectangles will stand out against it.  Match
+them to the surrounding colour with
+\begin{quote}
+\begin{verbatim}
+\pgfplotsset{numodel/axis/.append style={
+  xticklabel style={fill=<your-color>},
+  yticklabel style={fill=<your-color>}
+}}
+\end{verbatim}
+\end{quote}
+or remove the rectangles entirely with |fill=none|.  In pgfplots,
+|xticklabel style={...}| appends to the existing tick-label style
+rather than replacing it, so the other settings (number format,
+comma-as-decimal-separator, opacity) are preserved.
 
 \section{Public API}
 

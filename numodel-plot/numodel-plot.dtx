@@ -59,8 +59,10 @@
     tick style={black}
   },
   numodel/axis/.style={
-    xticklabel style={/pgf/number format/.cd, fixed, precision=6, fixed zerofill=false, use comma, 1000 sep={\,}, /tikz/.cd, text depth=0.3ex},
-    yticklabel style={/pgf/number format/.cd, fixed, precision=6, fixed zerofill=false, use comma, 1000 sep={\,}, /tikz/.cd, text depth=0.3ex},
+    xticklabel style={/pgf/number format/.cd, fixed, precision=6, fixed zerofill=false, use comma, 1000 sep={\,}, /tikz/.cd, text depth=0.3ex, fill=white, fill opacity=0.8, text opacity=1, inner sep=1pt},
+    yticklabel style={/pgf/number format/.cd, fixed, precision=6, fixed zerofill=false, use comma, 1000 sep={\,}, /tikz/.cd, text depth=0.3ex, fill=white, fill opacity=0.8, text opacity=1, inner sep=1pt},
+    hide obscured x ticks=false,
+    hide obscured y ticks=false,
     axis lines=left,
     xlabel near ticks,
     ylabel near ticks,
@@ -319,10 +321,10 @@
   \pgfplotsset{numodel/axis/.append style={scaled y ticks=base 10:#1}}%
 }
 \newcommand{\pznmpSuppressXScaleLabel}{%
-  \pgfplotsset{numodel/axis/.append style={every x tick scale label/.style={opacity=0, inner sep=0pt, at={(0,0)}}}}%
+  \pgfplotsset{numodel/axis/.append style={xtick scale label code/.code={}}}%
 }
 \newcommand{\pznmpSuppressYScaleLabel}{%
-  \pgfplotsset{numodel/axis/.append style={every y tick scale label/.style={opacity=0, inner sep=0pt, at={(0,0)}}}}%
+  \pgfplotsset{numodel/axis/.append style={ytick scale label code/.code={}}}%
 }
 
 \ExplSyntaxOn

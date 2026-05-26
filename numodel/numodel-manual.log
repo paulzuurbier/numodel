@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  26 MAY 2026 12:19
+This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  26 MAY 2026 22:10
  restricted system commands enabled.
 **numodel-manual.tex
 (./numodel-manual.tex
@@ -791,7 +791,7 @@ Package: ninecolors 2022-02-13 v2022D Select colors with proper color contrast
 \l__tblr_tikz_node_box=\box151
 )
 (c:/Users/paulz/texmf/tex/latex/numodel-bundle/numodel-plot/numodel-plot.sty
-Package: numodel-plot 2026/05/23 v0.5.0 Auto-sizing PGFPlots engine
+Package: numodel-plot 2026/05/26 v0.6.0 Auto-sizing PGFPlots engine
 
 (c:/texlive/2025/texmf-dist/tex/latex/pgfplots/pgfplots.sty
 (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.revision.tex)
@@ -1778,32 +1778,32 @@ Package hyperref Info: Option `bookmarksnumbered' set `true' on input line 75.
 \HD@helplength=\skip62
 )
 Package translations Info: No language package found. I am going to use `englis
-h' as default language. on input line 69.
+h' as default language. on input line 77.
 
 (./numodel-manual.aux)
 \openout1 = numodel-manual.aux
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 69.
-LaTeX Font Info:    ... okay on input line 69.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 69.
-LaTeX Font Info:    ... okay on input line 69.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 69.
-LaTeX Font Info:    ... okay on input line 69.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 69.
-LaTeX Font Info:    ... okay on input line 69.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 69.
-LaTeX Font Info:    ... okay on input line 69.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 69.
-LaTeX Font Info:    ... okay on input line 69.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 69.
-LaTeX Font Info:    ... okay on input line 69.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 69.
-LaTeX Font Info:    ... okay on input line 69.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 69.
-LaTeX Font Info:    ... okay on input line 69.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 69.
-LaTeX Font Info:    ... okay on input line 69.
-Package doc Info: Made | a short reference for \verb on input line 69.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+Package doc Info: Made | a short reference for \verb on input line 77.
 
 (c:/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -1833,7 +1833,7 @@ File: translations-basic-dictionary-english.trsl (english translation file `tra
 nslations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' f
-or `english'. on input line 69.
+or `english'. on input line 77.
 
 Package pgfplots notification 'compat/show suggested version=true': document ha
 s been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
@@ -1874,17 +1874,17 @@ s been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
 
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
 (Font)                  TU/LeteSansMath(1)/m/n --> TU/Arial(0)/m/n on input lin
-e 69.
+e 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> TU/Arial(0)/m/it on input line 69.
+(Font)                  OT1/cmr/m/it --> TU/Arial(0)/m/it on input line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> TU/Arial(0)/b/n on input line 69.
+(Font)                  OT1/cmr/bx/n --> TU/Arial(0)/b/n on input line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 69.
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 69.
+(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 77.
 \c@lstlisting=\count485
-Package hyperref Info: Link coloring ON on input line 69.
+Package hyperref Info: Link coloring ON on input line 77.
 (./numodel-manual.out) (./numodel-manual.out)
 \@outlinefile=\write6
 
@@ -1893,8 +1893,8 @@ Package hyperref Info: Link coloring ON on input line 69.
 \HD@savedest@out=\write7
 
 \openout7 = numodel-manual.hd
-Package doc Info: | already a short reference for \verb(*) on input line 69.
-Package doc Info: Deleted | as a short reference for \verb(*) on input line 69.
+Package doc Info: | already a short reference for \verb(*) on input line 77.
+Package doc Info: Deleted | as a short reference for \verb(*) on input line 77.
 
 
 (./numodel-manual.toc)
@@ -2082,7 +2082,7 @@ BUILD: step 8 done
 COMPUTE start
 COMPUTE done
 ) [3]
-Overfull \hbox (7.71947pt too wide) in paragraph at lines 328--331
+Overfull \hbox (7.71947pt too wide) in paragraph at lines 336--339
 []\TU/Arial(0)/m/n/10 For-rester/Ster-man con-ven-tion: the valve is drawn with-
 out a la-bel and the helper/con-
  []
@@ -2563,13 +2563,13 @@ rotect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox
 r}
 TEXTMODEL done
 [13]
-Overfull \hbox (15.98227pt too wide) in paragraph at lines 1117--1117
+Overfull \hbox (15.98227pt too wide) in paragraph at lines 1125--1125
  []\TU/FiraMono(0)/m/n/10 \switchmodelprefix{ball}\textmodel\computemodel\diagra
 mmodel{T}{Y}{fall}[] 
  []
 
 
-Overfull \hbox (39.98227pt too wide) in paragraph at lines 1120--1120
+Overfull \hbox (39.98227pt too wide) in paragraph at lines 1128--1128
  []\TU/FiraMono(0)/m/n/10 \switchmodelprefix{spring}\textmodel\computemodel\diag
 rammodel{T}{X}{spring}[] 
  []
@@ -2586,14 +2586,14 @@ Package rerunfilecheck Info: File `numodel-manual.hd' has not changed.
 )
 
 Here is how much of LuaTeX's memory you used:
- 57800 strings out of 476076
- 305237,2373549 words of node,token memory allocated
+ 57805 strings out of 476076
+ 305231,2373549 words of node,token memory allocated
  556 words of node memory still in use:
    6 hlist, 2 vlist, 2 rule, 3 glue, 4 kern, 1 glyph, 9 attribute, 62 glue_spec,
  9 attribute_list, 2 write nodes
-   avail lists: 1:1,2:9467,3:2781,4:524,5:4642,6:369,7:17133,8:26,9:10815,10:42,
+   avail lists: 1:2,2:9476,3:3335,4:524,5:4642,6:368,7:17153,8:26,9:10822,10:42,
 11:2204
- 78970 multiletter control sequences out of 65536+600000
+ 78975 multiletter control sequences out of 65536+600000
  137 fonts using 47858447 bytes
  117i,21n,162p,798b,4328s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Windows/Fonts/ARIALNBI.TTF><c:/texlive/2025/texmf-dist/fonts/opentype/public
@@ -2608,7 +2608,7 @@ ype/public/lm/lmsans9-regular.otf><c:/Windows/Fonts/arialbd.ttf><c:/texlive/2025
 mf-dist/fonts/opentype/public/lete-sans-math/LeteSansMath.otf><c:/texlive/2025/t
 exmf-dist/fonts/opentype/public/lm/lmsans17-regular.otf><c:/Windows/Fonts/arial.
 ttf>
-Output written on numodel-manual.pdf (14 pages, 204598 bytes).
+Output written on numodel-manual.pdf (14 pages, 205615 bytes).
 
 PDF statistics: 349 PDF objects out of 1000 (max. 8388607)
  288 compressed objects within 3 object streams
