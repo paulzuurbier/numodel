@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [0.7.0] — 2026-05-26
 
+### Added
+- New example `examples/numodel-plot-example-quadrants.tex` that
+  renders all nine quadrant configurations (four single-quadrant,
+  four half-plane, and the full four-quadrant case) side by side, so
+  the axis-line and axis-label placement rules can be inspected in
+  one figure.
+
 ### Changed
 - Tick labels on both axes now render with a semi-transparent white
   background (`fill=white, fill opacity=0.8, text opacity=1, inner
@@ -17,6 +24,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `hide obscured y ticks=false`, so every scale number stays visible
   even where an axis line would otherwise obscure it; the new white
   background provides the visual separation from the crossing axis.
+- Axis labels (quantity + unit) are now placed in the extension of
+  the axis arrow rather than at the tick-label margin, in all five
+  configurations where the axis line is moved off the plot edge
+  (4Q, I+II, II+III, III+IV, IV+I).  The label sits exactly on the
+  axis line, offset by `1em` past the arrow tip.  Previous placement
+  used `xticklabel cs:1.05` / `yticklabel cs:1.05`, which positioned
+  the label at the tick-label height rather than on the axis itself,
+  giving an awkward diagonal offset relative to the arrow.
 
 ### Fixed
 - Tick-scale label (the `·10^n` factor that appears when a magnitude

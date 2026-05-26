@@ -1,0 +1,80 @@
+% numodel-plot-example-quadrants.tex — axis placement across all
+% nine quadrant combinations.
+%
+% Demonstrates how numodel-plot positions the axis lines and labels
+% based on which quadrants the data range covers:
+%   - 4 single-quadrant cases (I, II, III, IV)
+%   - 4 half-plane cases (I+II, II+III, III+IV, IV+I)
+%   - 1 four-quadrant case
+% In every "axisMoved" case (the latter five) the axis label is
+% placed in the extension of the axis arrow, 2em past the tip,
+% rather than at the tick-label margin.
+
+\documentclass{article}
+\usepackage[a4paper, margin=1.5cm]{geometry}
+\usepackage{siunitx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{numodel-plot}
+
+% Compact plots so 9 fit on a page.
+\numodelplotsetup{xcmmax=4, ycmmax=4}
+
+% Shorthand: one plot of the given function over the supplied range.
+\newcommand{\qplot}[5]{%
+  \def\xmin{#1}\def\xmax{#2}%
+  \def\ymin{#3}\def\ymax{#4}%
+  \def\xlabelqty{t}\def\xlabelunit{\s}%
+  \def\ylabelqty{v}\def\ylabelunit{\m\per\s}%
+  \drawplot{\addplot[domain=\xmin:\xmax,thick,samples=40]{#5};}%
+}
+
+\begin{document}
+
+\begin{figure}[h]\centering
+% Row 1: single-quadrant cases
+\begin{subfigure}{0.32\textwidth}\centering
+  \qplot{0}{10}{0}{5}{0.5*x}
+  \caption*{Quadrant I}
+\end{subfigure}\hfill
+\begin{subfigure}{0.32\textwidth}\centering
+  \qplot{-10}{0}{0}{5}{-0.5*x}
+  \caption*{Quadrant II}
+\end{subfigure}\hfill
+\begin{subfigure}{0.32\textwidth}\centering
+  \qplot{-10}{0}{-5}{0}{0.5*x}
+  \caption*{Quadrant III}
+\end{subfigure}
+
+\vspace{1em}
+% Row 2: Q IV + the two horizontal half-planes
+\begin{subfigure}{0.32\textwidth}\centering
+  \qplot{0}{10}{-5}{0}{-0.5*x}
+  \caption*{Quadrant IV}
+\end{subfigure}\hfill
+\begin{subfigure}{0.32\textwidth}\centering
+  \qplot{-5}{10}{0}{5}{0.05*x*x}
+  \caption*{I + II}
+\end{subfigure}\hfill
+\begin{subfigure}{0.32\textwidth}\centering
+  \qplot{-10}{0}{-3}{3}{0.6*(x+5)}
+  \caption*{II + III}
+\end{subfigure}
+
+\vspace{1em}
+% Row 3: the two remaining half-planes + 4Q
+\begin{subfigure}{0.32\textwidth}\centering
+  \qplot{-5}{10}{-5}{0}{-0.05*x*x}
+  \caption*{III + IV}
+\end{subfigure}\hfill
+\begin{subfigure}{0.32\textwidth}\centering
+  \qplot{0}{10}{-3}{3}{0.6*x-3}
+  \caption*{IV + I}
+\end{subfigure}\hfill
+\begin{subfigure}{0.32\textwidth}\centering
+  \qplot{-5}{10}{-3}{5}{0.5*x}
+  \caption*{All four}
+\end{subfigure}
+\end{figure}
+
+\end{document}

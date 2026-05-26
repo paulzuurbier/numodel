@@ -453,32 +453,32 @@
 \edef\nmp@fourQuad{\fpeval{(\nmp@xStraddles && \nmp@yStraddles) ? 1 : 0}}%
 \ifnum\nmp@fourQuad=1
 \pgfplotsset{numodel/axis/.append style={%
-  xlabel style={at={(xticklabel cs:1.05)}, anchor=west},%
-  ylabel style={at={(yticklabel cs:1.05)}, anchor=south, rotate=0}%
+  xlabel style={at={(axis cs:\xmax,0)}, anchor=west, xshift=1em},%
+  ylabel style={at={(axis cs:0,\ymax)}, anchor=south, yshift=1em, rotate=0}%
 }}%
 \fi
 \edef\nmp@qIandII{\fpeval{(\nmp@xStraddles && \ymin>=0) ? 1 : 0}}%
 \ifnum\nmp@qIandII=1
 \pgfplotsset{numodel/axis/.append style={%
-  ylabel style={at={(yticklabel cs:1.05)}, anchor=south, rotate=0}%
+  ylabel style={at={(axis cs:0,\ymax)}, anchor=south, yshift=1em, rotate=0}%
 }}%
 \fi
 \edef\nmp@qIIandIII{\fpeval{(\nmp@yStraddles && \nmp@xAllNonPos) ? 1 : 0}}%
 \ifnum\nmp@qIIandIII=1
 \pgfplotsset{numodel/axis/.append style={%
-  xlabel style={at={(xticklabel cs:-0.05)}, anchor=east}%
+  xlabel style={at={(axis cs:\xmin,0)}, anchor=east, xshift=-1em}%
 }}%
 \fi
 \edef\nmp@qIIIandIV{\fpeval{(\nmp@xStraddles && \nmp@yAllNonPos) ? 1 : 0}}%
 \ifnum\nmp@qIIIandIV=1
 \pgfplotsset{numodel/axis/.append style={%
-  ylabel style={at={(yticklabel cs:-0.05)}, anchor=north, rotate=0}%
+  ylabel style={at={(axis cs:0,\ymin)}, anchor=north, yshift=-1em, rotate=0}%
 }}%
 \fi
 \edef\nmp@qIVandI{\fpeval{(\nmp@yStraddles && \xmin>=0) ? 1 : 0}}%
 \ifnum\nmp@qIVandI=1
 \pgfplotsset{numodel/axis/.append style={%
-  xlabel style={at={(xticklabel cs:1.05)}, anchor=west}%
+  xlabel style={at={(axis cs:\xmax,0)}, anchor=west, xshift=1em}%
 }}%
 \fi
 \ifdefined\xlabelqty\ifdefined\xlabelunit\xlabelbuild\fi\fi
