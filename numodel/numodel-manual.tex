@@ -1,0 +1,1137 @@
+% File: numodel-manual.tex
+% Standalone manual for the numodel package.
+% Source for the documentation that used to live in numodel.dtx.
+
+\documentclass{ltxdoc}
+\usepackage{numodel}
+\usepackage[left=3.5cm, right=2cm, top=2cm, bottom=2cm,
+            marginparwidth=3.5cm, marginparsep=0.3cm]{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\definecolor{numorange}{rgb}{0.90,0.45,0.00}
+\EnableCrossrefs
+\CodelineIndex
+
+% Fonts.  fontspec + unicode-math require LuaLaTeX (already the
+% engine for this bundle).  unicode-math is loaded AFTER numodel
+% (and thus after amsmath) so it integrates with the existing math
+% setup rather than fighting it.
+\usepackage{fontspec}
+\setmainfont{Arial}
+\usepackage{unicode-math}
+\setmathfont{Lete Sans Math}
+\setmonofont{Fira Mono}
+
+% Make ltxdoc's |...| inline verbatim breakable: long option strings
+% and key paths (e.g. |/pgf/number format/use comma|) overflow the
+% margin otherwise.  fvextra's \DefineShortVerb with
+% breaklines+breakanywhere replaces the doc.sty default.
+%
+% NB: ltxdoc.cls binds | via \AtBeginDocument{\MakeShortVerb{\|}}.
+% That hook runs at \begin{document}, after the preamble.  So the
+% rebinding must happen INSIDE a later \AtBeginDocument hook --
+% otherwise ltxdoc's binding overwrites fvextra's.
+\usepackage{fvextra}
+\AtBeginDocument{%
+  \MakeShortVerb{\|}% match ltxdoc's first, so DeleteShortVerb succeeds
+  \DeleteShortVerb{\|}%
+  \DefineShortVerb[breaklines,breakanywhere]{\|}%
+}
+
+% tcolorbox with the listings library: lets us write a single
+% model-example body that is both displayed verbatim AND executed
+% (instead of duplicating the code into a verbatim block + a
+% redeclaration).  See \begin{modelexample}...\end{modelexample}
+% below.
+\usepackage{tcolorbox}
+\tcbuselibrary{listings,skins,breakable}
+
+\lstdefinestyle{numodelcode}{
+  basicstyle=\small\ttfamily,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+}
+
+\NewTCBListing{modelexample}{}{%
+  enhanced,
+  breakable,
+  listing style=numodelcode,
+  colback=black!3,
+  colframe=black!50,
+  boxrule=0.4pt,
+  arc=2pt,
+  before skip=10pt,
+  after skip=10pt,
+}
+
+\begin{document}
+
+\CheckSum{0}
+
+\changes{v0.1}{2026/04/24}{Initial version, extracted from internal
+  project sources.}
+\changes{v0.2.0}{2026/05/16}{l3build workflow; bundle structure
+  with numodel-plot; diagram-style key; units key; localised
+  column titles; decimal-separator key; factor-aware flow
+  detection.  See CHANGELOG.md for details.}
+\changes{v0.3.0}{2026/05/17}{Version-sync release with
+  \textsf{numodel-plot}~v0.3.0; no functional changes to
+  \textsf{numodel} itself.}
+\changes{v0.4.0}{2026/05/19}{Expression reference table; display
+  translation for sqrt/exp/ln/sin/cos/tan/asin/acos; \cs{textmodel}
+  migrated to \textsf{tabularray}'s \texttt{longtblr} with
+  localised continuation markers; new \texttt{tblrenv} key for
+  \cs{textmodel}, \cs{numodelsetup} and package option.  See
+  CHANGELOG.md for details.}
+\changes{v0.5.0}{2026/05/23}{Multi-series \cs{diagrammodel}
+  (comma-separated y-variables, unit-aware filtering, colour-blind
+  safe palette); shared inflow/outflow Forrester valves with curved
+  branches; improved flow-variable heuristic (aux/stock wins over
+  constant in inflow terms; top-level parens distributed before
+  classification).  See CHANGELOG.md for details.}
+
+\GetFileInfo{numodel.sty}
+
+\DoNotIndex{\newcommand,\newenvironment,\def,\edef,\let,\global,
+  \RequirePackage,\ProvidesPackage,\NeedsTeXFormat,\endinput,
+  \ExplSyntaxOn,\ExplSyntaxOff,\begin,\end,\relax,\undefined,\cs_new,
+  \cs_set,\cs_gset,\tl_new,\tl_set,\int_new,\seq_new,\prop_new}
+
+\title{The \textsf{numodel} package\thanks{This document corresponds
+  to \textsf{numodel}~\fileversion, dated \today.}}
+\author{Paul Zuurbier \\ \texttt{mail@paulzuurbier.nl}}
+\date{\today}
+\maketitle
+
+\begin{abstract}
+A LuaLaTeX package for writing and rendering numerical models
+(Euler-integrated dynamical systems) directly inside LaTeX
+documents, aimed at physics teaching material.  It provides a
+text-model pipeline (\texttt{\textbackslash mvar},
+\texttt{\textbackslash mrule}, \texttt{\textbackslash computemodel}),
+Forrester stock-and-flow diagrams, and optional plots of the
+computed time series via the sibling package \textsf{numodel-plot}.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+\textsf{numodel} lets an author write a dynamical system (stocks,
+flows, helper variables, rules, and a stop condition) as a sequence
+of LaTeX macros and renders three complementary views of that model
+directly in the document:
+\begin{itemize}
+\item a \emph{text model} \textemdash{} a typeset rule table with
+  initial values (|\textmodel|);
+\item a \emph{graphic model} \textemdash{} a Forrester
+  stock-and-flow diagram with auto-layout (|\graphicmodel|);
+\item a \emph{diagram} \textemdash{} a numerical Euler simulation
+  plus PGFPlot of any pair of variables (|\computemodel| followed
+  by |\diagrammodel|; the plot is rendered through the sibling
+  package \textsf{numodel-plot}).
+\end{itemize}
+
+All three views are produced from a single set of declarations so
+the textbook description, the conceptual stock-and-flow diagram,
+and the numerical result of the same model are guaranteed to stay
+in sync.  Variables and rules live in namespaces (\emph{prefixes})
+so a document can contain multiple independent models;
+|\newmodelprefix{P}| starts a fresh one.  The simulation engine
+runs in Lua (through \textsf{luacode}) for $\mathcal{O}(1)$ appends
+and cheap min/max tracking; the rendering layer is pure
+\textsf{expl3}.
+
+\section{First example: a free-falling ball}
+
+A ball dropped from $h_0 = 100\,\mathrm{m}$ under constant
+gravitational acceleration.  The complete model:
+
+\begin{quote}
+\begin{verbatim}
+\usepackage[syntax=EN]{numodel}
+
+\newmodelprefix{ball}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{0.1}{\s}{2}{system}
+\mvar{V}{v}{0}{\m\per\s}{2}{stock}
+\mvar{Y}{y}{100}{\m}{3}{stock}
+\mvar{G}{g}{-9.81}{\m\per\s\squared}{3}{aux}
+
+\mrule{V}{\ballV + \ballG * \ballDt}
+\mrule{Y}{\ballY + \ballV * \ballDt}
+\mrule{T}{\ballT + \ballDt}
+\mstop{\ballY <= 0}
+\end{verbatim}
+\end{quote}
+
+After the declarations above, three render commands produce the
+three views shown below, each from the \emph{same} model.
+
+\subsection{\texttt{\textbackslash textmodel} \textemdash{} rule table}
+
+The verbatim source rendered by |\textmodel|:
+\newmodelprefix{ball}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{0.1}{\s}{2}{system}
+\mvar{V}{v}{0}{\m\per\s}{2}{stock}
+\mvar{Y}{y}{100}{\m}{3}{stock}
+\mvar{G}{g}{-9.81}{\m\per\s\squared}{3}{aux}
+\mrule{V}{\ballV + \ballG * \ballDt}
+\mrule{Y}{\ballY + \ballV * \ballDt}
+\mrule{T}{\ballT + \ballDt}
+\mstop{\ballY <= 0}
+
+\begin{center}
+\textmodel
+\end{center}
+
+Each |\mvar| with a non-empty start value contributes a row in the
+\emph{initial values} column; each |\mrule| contributes a row in the
+\emph{model} column.  Symbols come from the second |\mvar|
+argument (the display text), values are formatted through
+\textsf{siunitx}.  |<=| is rendered as $\leqslant$.
+
+\subsection{\texttt{\textbackslash graphicmodel} \textemdash{}
+Forrester diagram}
+
+|\graphicmodel| draws the same model as a stock-and-flow diagram.
+Stocks (type |stock|) are rectangles; auxiliaries (|aux|) and
+constants (|constant|) are circles, with two short horizontal
+dashes flanking the constant ring.  In the default |tight|
+diagram-style, an aux or constant that is the direct inflow or
+outflow of a stock is absorbed into the valve label and not drawn
+as a separate node; |diagram-style=forrester| or |edu| keep both
+(Section~\ref{sec:cfg}).
+
+Flows are inferred per additive term on the right-hand side of
+each stock rule.  After dropping the self-carry term, every |+T|
+is a candidate inflow and every |-T| a candidate outflow of the
+target stock; the first non-|system|, non-|Dt| variable appearing
+inside~|T| becomes the flow variable (|aux| and |stock| beat
+|constant| when several candidates coexist).  When the same flow
+variable surfaces as an outflow term of stock~|A| and a matching
+inflow term of stock~|B|, the pair is promoted to a
+\emph{between-flow}: one valve drains |A| into |B| instead of two
+separate valves.  If the flow variable of an inflow term is itself
+a stock, the source stock takes the valve's place -- with a
+matching outflow term on its own rule (a conserved-quantity
+between-flow) or, when no such match exists, with a cloud-fed
+phantom valve plus a causal link to the source stock:
+
+\begin{center}
+\graphicmodel
+\end{center}
+
+Layout is automatic from the rule graph: stocks (with their
+inflow/outflow valves) sit on the bottom row, auxiliaries on the
+middle row, and constants on the top row, each filled
+left-to-right in declaration order.  The order of |\mvar| calls
+therefore drives the horizontal reading order of the diagram --
+reordering, inserting or holding back a |\mvar| nudges the
+visible arrangement without touching any grid coordinates, which
+is the primary lever a document author has over the look of the
+diagram.  Manual placement remains available through |gridx|/|gridy|
+keys on the |\mvar| call (see Section~\ref{sec:api}).  Wide
+diagrams can be capped to a maximum number of grid columns with
+|\numodelsetup{gridmaxx=N}|: when a row reaches |N|, the auto
+layout shifts the affected items up one row and continues filling.
+
+\subsection{\texttt{\textbackslash computemodel} +
+\texttt{\textbackslash diagrammodel} \textemdash{} numerical plot}
+
+|\computemodel| iterates the rules forward in time using
+Euler integration with step size~|\ballDt|, stopping when |\mstop|'s
+condition becomes true (or when the |maxiter| safety limit is
+reached, see Section~\ref{sec:cfg}).  |\diagrammodel{xvar}{yvar}{label}|
+then plots one variable against another:
+
+\begin{modelexample}
+\computemodel
+\diagrammodel{T}{Y}{ball-fall}
+\end{modelexample}
+
+Axis ranges, tick lattice, and labels are computed automatically
+from the simulated min/max of each variable; the plot inherits the
+\textsf{numodel-plot} style (see that package's documentation for
+configuration).
+
+\section{Configuration}\label{sec:cfg}
+
+\DescribeMacro{\numodelsetup}
+Runtime configuration:
+\begin{quote}
+\begin{verbatim}
+\numodelsetup{syntax=NL, maxiter=50000}
+\end{verbatim}
+\end{quote}
+The same keys can also be passed as package options:
+|\usepackage[syntax=NL]{numodel}|.  Recognised keys:
+
+\begin{description}
+\item[\texttt{syntax}] Language tag for the rule-table rendering.
+  Built-in values:
+  \begin{description}
+  \item[\texttt{EN}] (default) XMILE-style ALL-CAPS keywords:
+    |IF|/|THEN|/|ELSE|, |AND|, |OR|, |ABS|, |SIGN|, \ldots
+  \item[\texttt{NL}] Dutch CoachTaal keywords:
+    |Als|/|Dan|/|Anders|, |EN|, |OF|, |Abs|, |Teken|, \ldots
+  \end{description}
+  Each language tag |X| corresponds
+  to a file |numodel-X.def| located via |kpse| when the package
+  processes the key.  The package ships with |numodel-EN.def| and
+  |numodel-NL.def|; drop your own |numodel-FR.def| (or any other
+  tag) in |TEXMFHOME/tex/latex/numodel/| and select it with
+  |\usepackage[syntax=FR]{numodel}| -- no package rebuild needed.
+  The setting affects display only; the expression syntax in
+  |\mrule| bodies is always |\fp_eval|-compatible.
+\item[\texttt{maxiter}] Safety limit on the number of |\computemodel|
+  iterations (default 20\,000).  When reached, the simulation
+  aborts with a warning naming the unmet stop condition.
+\item[\texttt{graphscalex}] Horizontal grid spacing in centimetres
+  for |\graphicmodel|'s Forrester layout (default 2).  Larger
+  values spread the diagram out horizontally.
+\item[\texttt{graphscaley}] Vertical grid spacing in centimetres
+  for |\graphicmodel|'s Forrester layout (default 2).  Larger
+  values spread the diagram out vertically.
+
+  |graphscalex|/|graphscaley| control only the empty space
+  between diagram elements: the nodes themselves (stocks,
+  valves, auxiliaries, constants) have fixed dimensions
+  expressed in |em| and are not individually configurable.
+  Because |em| is relative to the current font size, the way
+  to grow or shrink the nodes uniformly is to change the font
+  size around the |\graphicmodel| call -- e.g.\ wrap it in
+  |{\small \graphicmodel}| or |{\large \graphicmodel}|.  Pick
+  spacing with |graphscalex|/|graphscaley|, pick node size
+  with the surrounding font.
+\item[\texttt{gridmaxx}] Maximum number of grid columns the auto
+  layout may fill on any one row before wrapping (integer, default
+  |0| = no limit).  When the limit is reached, items already placed
+  on the affected row (and everything above it for the stocks row,
+  everything but stocks for the aux row, only the constants for the
+  constants row) shift up by one row to free space, and placement
+  continues from column~0.  Manually positioned variables
+  (|\mvar[gridx=...,gridy=...]|) are kept where they are.  When
+  wrapping is active the default centring of the aux row and the
+  right-aligning of the stocks row are disabled, so the diagram fills
+  left-to-right, bottom-to-top.
+\item[\texttt{diagram-style}] Rendering style for the case where a
+  helper or constant is the direct inflow/outflow of a stock.
+  Three values:
+  \begin{description}
+  \item[\texttt{tight}] (default) the valve takes the helper's/constant's
+    label; the helper/constant itself is not drawn as a separate node.
+    Compact and most LaTeX-native.
+  \item[\texttt{forrester}] Forrester/Sterman convention: the valve is
+    drawn without a label and the helper/constant remains as a separate
+    node connected to the valve by a causal arrow.
+  \item[\texttt{edu}] Didactic dual form: the valve carries the label
+    \emph{and} the helper/constant is drawn as a separate node with a
+    causal arrow to the valve.  Visually busy but pedagogically explicit.
+  \end{description}
+\item[\texttt{flowarrow-style}] Visual style of the flow pipe.
+  |hollow| renders the classic Forrester double-line pipe with an
+  open arrow head; |filled| renders a thick solid arrow.  The
+  default tracks |diagram-style|: |forrester| picks |hollow|, the
+  other styles pick |filled|.  An explicit value overrides this
+  coupling.
+\item[\texttt{valve-style}] Visual style of the valve node.
+  |valve| draws the bow-tie/butterfly icon (Forrester); |circle|
+  draws an empty circle on the flow pipe; |edu| draws a labelled
+  circle (the flow variable's display text inside).  The default
+  tracks |diagram-style|: |forrester| picks |valve|, the other
+  styles pick |edu|.
+\item[\texttt{flowarrow-cloud-tip}] Whether the open end of an
+  inflow or outflow pipe is anchored to a cloud node, signalling
+  the model boundary.  Default tracks |diagram-style|: |forrester|
+  picks |true|, the other styles pick |false|.  May be set
+  globally via |\numodelsetup|, per-render via |\graphicmodel|, or
+  per-stock via |\mvar[flowarrow-cloud-tip=...]|.  The most
+  specific source wins.
+\item[\texttt{units}] Whether the \emph{initial values} cells in
+  |\textmodel| display the SI unit alongside the value (|\qty|) or
+  only the numeric value (|\num|).  Boolean, default |true|.  May
+  also be supplied to |\textmodel[units=false]| as a per-table
+  override; the global setting is restored after rendering.
+\item[\texttt{tblrenv}] Which \textsf{tabularray} environment wraps
+  the |\textmodel| table.  Three values: |longtblr| (default,
+  page-breakable); |tblr| (inline, no page breaks); |talltblr|
+  (inline, no page breaks, supports |\caption|/notes).  Pick |tblr|
+  or |talltblr| when |\textmodel| sits inside an enclosing
+  environment that suppresses page breaks (|subfigure|, |minipage|,
+  \dots); the default |longtblr| would otherwise emit spurious
+  ``(Continued)'' / \emph{Continued on next page} markers in that
+  setting.  May also be supplied per render as
+  |\textmodel[tblrenv=...]|; the global setting is restored
+  afterwards.
+\item[\texttt{decimal-separator}] Decimal mark used by every number
+  that |numodel| renders: the \emph{initial values} column of
+  |\textmodel|, and the tick labels of |\diagrammodel|.  Two values:
+  \begin{description}
+  \item[\texttt{comma}] use a comma (\textsf{siunitx}
+    |output-decimal-marker={,}|, \textsf{pgfplots}
+    |/pgf/number format/use comma|).
+  \item[\texttt{point}] use a full stop (\textsf{siunitx}
+    |output-decimal-marker={.}|, \textsf{pgfplots}
+    |/pgf/number format/use period|).
+  \end{description}
+  The default tracks |syntax|: |NL| picks |comma|, |EN| picks
+  |point|.  Other language files can publish a default by
+  defining |\__numodel_kw_<LANG>_dsep_default:| (expanding to
+  |point| or |comma|); when the macro is absent the default is
+  |point|.  An explicit |decimal-separator| key locks that
+  choice and overrides any future |syntax| change.  The override is
+  scoped: |numodel| applies it only inside its own renderers
+  (\textsf{siunitx}'s state is restored on group exit), so a
+  document-wide |\sisetup| is not perturbed.
+\end{description}
+
+\subsection{Diagram styles in practice}
+
+The same model rendered under each of the three |diagram-style|
+values.  The model is the simplest case that distinguishes the
+styles: one stock $N$ with a constant inflow~$R$:
+
+\begin{modelexample}
+\newmodelprefix{flux}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{1}{\s}{2}{system}
+\mvar{N}{n}{0}{}{0}{stock}
+\mvar{R}{r}{5}{\per\s}{2}{constant}
+\mrule{N}{\fluxN + \fluxR * \fluxDt}
+\mrule{T}{\fluxT + \fluxDt}
+\mstop{\fluxT >= 5}
+\begin{tabular}{@{}ccc@{}}
+\graphicmodel[diagram-style=tight] &
+\graphicmodel[diagram-style=forrester] &
+\graphicmodel[diagram-style=edu] \\[2pt]
+\texttt{tight} & \texttt{forrester} & \texttt{edu}
+\end{tabular}
+\end{modelexample}
+
+\begin{itemize}
+\item \texttt{tight} collapses the constant $R$ into the valve
+  label, producing the most compact diagram.
+\item \texttt{forrester} keeps the canonical System-Dynamics
+  convention: unlabelled bow-tie valve, the constant remains a
+  separate node, the link from $R$ to the valve is a thin causal
+  arrow.
+\item \texttt{edu} is a didactic dual: the valve carries the label
+  \emph{and} the constant remains as a separate node with a causal
+  arrow.  Less compact but pedagogically explicit -- useful when
+  first introducing the stock/flow vocabulary.
+\end{itemize}
+
+\section{Public API}\label{sec:api}
+
+\subsection{Variables and rules}
+
+\DescribeMacro{\mvar}
+Declares a model variable.  Signature:
+\begin{quote}
+|\mvar[<keys>]{<Name>}{<text>}{<start>}{<unit>}{<sig>}{<type>}|
+\end{quote}
+where \meta{Name} is a short alphabetic identifier (the
+prefix-qualified accessor becomes |\<prefix><Name>|, along with a
+family of suffixed accessor macros |\<prefix><Name><suffix>|
+documented in Section~\ref{sec:accessors}), \meta{text} is the
+math-mode display symbol used in the rule table and diagram
+(e.g.\ |F_{res}|), \meta{start} is the initial value (a number,
+or empty for helpers computed by a rule, or any \textsf{expl3}
+\texttt{fp}-evaluable expression involving previously defined
+model variables), \meta{unit} is a bare \textsf{siunitx} unit
+macro sequence (e.g.\ |\m\per\s\squared|), \meta{sig} is the
+number of significant figures used by |\<prefix><Name>num|/|qty|,
+and \meta{type} is one of |stock|, |aux|, |constant|, or
+|system|.  Each English type also accepts a Dutch alias
+(|voorraad|, |hulp|, |constante|, |systeem|) for backwards
+compatibility with existing teaching material.  See
+Section~\ref{sec:types}.
+
+\textbf{Naming caveat.}  All accessor macros of a given prefix
+share one flat TeX namespace: |\mvar{X}| generates |\<prefix>X|
+and every |\<prefix>X<suffix>| listed in
+Section~\ref{sec:accessors}.  Pick \meta{Name}s so that no name
+equals another name followed by such a suffix, otherwise the two
+definitions silently overwrite each other.  The canonical trap is
+declaring both |T| and |Tmax|: the |max|-suffix accessor of |T|
+(the extremum |\<prefix>Tmax|) collides with the no-suffix
+accessor of |Tmax|, so |\<prefix>Tmax| inside a rule expression
+ends up meaning whichever was declared last.  The same hazard
+applies to prefix choices -- avoid prefixes where one is a
+concatenation of another with a variable name (e.g.\ |ball| with
+a variable |Y| versus a prefix |ballY|).  An |\mvar| name of
+|steps| would similarly collide with the per-prefix iteration
+accessor |\<prefix>steps| set by |\computemodel|.
+
+Optional \meta{keys}:
+\begin{description}
+\item[\texttt{prefix}] Override the current prefix for this single
+  call.
+\item[\texttt{gridx}, \texttt{gridy}] Manual placement in the
+  |\graphicmodel| grid; integers, $-1$ leaves the slot to
+  auto-layout (default).
+\item[\texttt{alias}] Math-mode token list that replaces the
+  entire \emph{initial values} cell.
+\item[\texttt{aliasleft}, \texttt{aliasright}] Replace just the
+  left symbol or right value half of the cell.
+\end{description}
+
+\DescribeMacro{\mrule}
+Adds a rule of the form $\meta{LHS} \leftarrow \meta{expr}$.
+Signature:
+\begin{quote}
+|\mrule*[<keys>]{<LHS>}{<expr>}|
+\end{quote}
+Both forms add the rule to \emph{both} the rule table
+(|\textmodel|) and the simulation (|\computemodel|); execution is
+identical.  The star only changes the typeset layout when
+\meta{expr} is a ternary |cond ? a : b|.  Without the star the
+ternary is rendered on a single table row,
+\begin{quote}
+\begin{verbatim}
+IF cond THEN lhs = a ELSE lhs = b ENDIF
+\end{verbatim}
+\end{quote}
+which is compact but wide.  With the star (|\mrule*|) the same
+ternary is broken across rows,
+\begin{quote}
+\begin{verbatim}
+IF cond THEN
+    lhs = a
+ELSE
+    lhs = b 
+ENDIF
+\end{verbatim}
+\end{quote}
+keeping the table column narrow so a |\graphicmodel| can sit
+alongside it, and making the source itself easier to read.  For
+non-ternary expressions the star has no effect.
+\meta{expr} may use the full |\fp_eval| expression grammar.
+See Table~\ref{tab:expr} (Section~\ref{sec:expr}) for a complete
+overview of supported operators and functions with their XMILE and
+CoachTaal equivalents.
+
+\DescribeMacro{\mruletext}
+Inserts a free-text row in the rule table without registering a
+rule with the simulator.  Signature: |\mruletext[<keys>]{<text>}|.
+Useful for inserting comments or section dividers in long
+rule tables.
+
+\DescribeMacro{\mstop}
+Sets the simulation stop condition.  Signature:
+|\mstop[<keys>]{<expr>}|.  The simulation halts at the first step
+where \meta{expr} evaluates true.  Exactly one |\mstop| per model
+prefix is required before |\computemodel|.  Without one,
+|\computemodel| issues a warning.
+
+\subsection{Expression reference}\label{sec:expr}
+
+Table~\ref{tab:expr} lists all expression constructs for |\mrule|
+bodies.  The \textbf{XMILE} column shows XMILE\,v1.0 syntax,
+\textbf{l3fp} shows the |\fp_eval|-compatible form used inside
+|\mrule|, and \textbf{CoachTaal} shows the Coach\,7 equivalent
+(function names from the standard CoachTaal math reference;
+note that argument separators in CoachTaal are semicolons).
+\textcolor{numorange}{Orange} entries are not yet fully supported
+by \textsf{numodel} (the expression computes correctly, but the
+rendered keyword in the rule table is not yet translated).
+\textit{Italic} cells contain a derived equivalent rather than a
+native keyword.
+
+\begin{longtblr}[
+  caption = {Expression reference: XMILE, \texttt{\textbackslash fp\_eval},
+             and CoachTaal},
+  label   = {tab:expr},
+]{
+  colspec = {@{} l l l @{}},
+  rowhead = 1,
+  rowsep  = 1pt,
+}
+  \textbf{XMILE} & \textbf{l3fp (\texttt{\textbackslash fpeval})}
+                 & \textbf{CoachTaal} \\
+  \hline
+
+  \SetCell[c=3]{l} \itshape Arithmetic operators \\
+  \hline
+  \texttt{+} & \texttt{+} & \texttt{+} \\
+  \texttt{-} & \texttt{-} & \texttt{-} \\
+  \texttt{*} & \texttt{*} & \texttt{*} \\
+  \texttt{/} & \texttt{/} & \texttt{/} \\
+  \texttt{\textasciicircum} &
+    \texttt{\textasciicircum} &
+    \texttt{\textasciicircum} \\
+  \textcolor{numorange}{\texttt{MOD(x,y)}}
+    & \textcolor{numorange}{\textit{x - trunc(x/y)*y}}
+    & \textcolor{numorange}{\textit{x - Entier(x/y)*y}} \\
+
+  \SetCell[c=3]{l} \itshape Comparison operators \\
+  \hline
+  \texttt{<}  & \texttt{<}  & \texttt{<}  \\
+  \texttt{<=} & \texttt{<=} & \texttt{<=} \\
+  \texttt{>}  & \texttt{>}  & \texttt{>}  \\
+  \texttt{>=} & \texttt{>=} & \texttt{>=} \\
+  \texttt{=}  & \texttt{=}  & \texttt{=}  \\
+  \texttt{<>} & \texttt{!=} & \texttt{<>} \\
+
+  \SetCell[c=3]{l} \itshape Boolean operators \\
+  \hline
+  \texttt{AND} & \texttt{\&\&} & \texttt{EN}   \\
+  \texttt{OR}  & \texttt{\textbar\textbar} & \texttt{OF}   \\
+  \texttt{NOT} & \texttt{!}    & \texttt{NIET} \\
+
+  \SetCell[c=3]{l} \itshape Control flow \\
+  \hline
+  \texttt{IF c THEN a ELSE b}
+    & \texttt{c ? a : b}
+    & \texttt{Als c Dan a Anders b EindAls} \\
+
+  \SetCell[c=3]{l} \itshape General math functions \\
+  \hline
+  \texttt{ABS(x)}  & \texttt{abs(x)}  & \texttt{Abs(x)}  \\
+  \texttt{SIGN(x)} & \texttt{sign(x)} & \texttt{Teken(x)} \\
+  \texttt{SQRT(x)} & \texttt{sqrt(x)} & \texttt{Sqrt(x)} \\
+  \textcolor{numorange}{\texttt{INT(x)}}
+    & \textcolor{numorange}{\texttt{trunc(x)}}
+    & \textcolor{numorange}{\textit{Entier(Abs(x))*Teken(x)}} \\
+  \textcolor{numorange}{\textit{INT(x+0.5)}}
+    & \textcolor{numorange}{\texttt{round(x)}}
+    & \textcolor{numorange}{\texttt{Round(x)}} \\
+  \textcolor{numorange}{\textit{INT(x)}}
+    & \textcolor{numorange}{\texttt{floor(x)}}
+    & \textcolor{numorange}{\texttt{Entier(x)}} \\
+  \textcolor{numorange}{\textit{-INT(-x)}}
+    & \textcolor{numorange}{\texttt{ceil(x)}}
+    & \textcolor{numorange}{\textit{-Entier(-x)}} \\
+  \textcolor{numorange}{\texttt{MIN(x,y)}}
+    & \textcolor{numorange}{\texttt{min(x,y)}}
+    & \textcolor{numorange}{\texttt{Min(x;y)}} \\
+  \textcolor{numorange}{\texttt{MAX(x,y)}}
+    & \textcolor{numorange}{\texttt{max(x,y)}}
+    & \textcolor{numorange}{\texttt{Max(x;y)}} \\
+  \textcolor{numorange}{\textit{---}}
+    & \textcolor{numorange}{\texttt{fact(x)}}
+    & \textcolor{numorange}{\texttt{Fac(x)}} \\
+  \textcolor{numorange}{\textit{INT(LOG10(ABS(x)))}}
+    & \textcolor{numorange}{\texttt{logb(x)}}
+    & \textcolor{numorange}{\textit{Entier(Log(Abs(x)))}} \\
+
+  \SetCell[c=3]{l} \itshape Exponential and logarithmic \\
+  \hline
+  \texttt{EXP(x)} & \texttt{exp(x)} & \texttt{Exp(x)} \\
+  \texttt{LN(x)}  & \texttt{ln(x)}  & \texttt{Ln(x)}  \\
+  \textcolor{numorange}{\texttt{LOG10(x)}}
+    & \textcolor{numorange}{\textit{ln(x)/ln(10)}}
+    & \textcolor{numorange}{\texttt{Log(x)}} \\
+
+  \SetCell[c=3]{l} \itshape Trigonometry (radians) \\
+  \hline
+  \texttt{SIN(x)}    & \texttt{sin(x)}  & \texttt{Sin(x)}    \\
+  \texttt{COS(x)}    & \texttt{cos(x)}  & \texttt{Cos(x)}    \\
+  \texttt{TAN(x)}    & \texttt{tan(x)}  & \texttt{Tan(x)}    \\
+  \texttt{ARCSIN(x)} & \texttt{asin(x)} & \texttt{Arcsin(x)} \\
+  \texttt{ARCCOS(x)} & \texttt{acos(x)} & \texttt{Arccos(x)} \\
+  \textcolor{numorange}{\texttt{ARCTAN(x)}}
+    & \textcolor{numorange}{\texttt{atan(x)}}
+    & \textcolor{numorange}{\texttt{Arctan(x)}} \\
+  \textcolor{numorange}{\texttt{ARCTAN2(y,x)}}
+    & \textcolor{numorange}{\texttt{atan(y,x)}}
+    & \textcolor{numorange}{\textit{Arctan(y/x)}} \\
+  \textcolor{numorange}{\textit{1/TAN(x)}}
+    & \textcolor{numorange}{\texttt{cot(x)}}
+    & \textcolor{numorange}{\textit{1/Tan(x)}} \\
+  \textcolor{numorange}{\textit{1/SIN(x)}}
+    & \textcolor{numorange}{\texttt{csc(x)}}
+    & \textcolor{numorange}{\textit{1/Sin(x)}} \\
+  \textcolor{numorange}{\textit{1/COS(x)}}
+    & \textcolor{numorange}{\texttt{sec(x)}}
+    & \textcolor{numorange}{\textit{1/Cos(x)}} \\
+  \textcolor{numorange}{\textit{ARCSIN(1/x)}}
+    & \textcolor{numorange}{\texttt{acsc(x)}}
+    & \textcolor{numorange}{\textit{Arcsin(1/x)}} \\
+  \textcolor{numorange}{\textit{ARCCOS(1/x)}}
+    & \textcolor{numorange}{\texttt{asec(x)}}
+    & \textcolor{numorange}{\textit{Arccos(1/x)}} \\
+  \textcolor{numorange}{\textit{ARCTAN(1/x)}}
+    & \textcolor{numorange}{\texttt{acot(x)}}
+    & \textcolor{numorange}{\textit{Arctan(1/x)}} \\
+  \textcolor{numorange}{\textit{ARCTAN2(x,y)}}
+    & \textcolor{numorange}{\texttt{acot(y,x)}}
+    & \textcolor{numorange}{\textit{Arctan(x/y)}} \\
+
+  \SetCell[c=3]{l} \itshape Trigonometry (degrees) \\
+  \hline
+  \textcolor{numorange}{\textit{SIN(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{sind(x)}}
+    & \textcolor{numorange}{\textit{Sin(Pi/180*x)}} \\
+  \textcolor{numorange}{\textit{COS(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{cosd(x)}}
+    & \textcolor{numorange}{\textit{Cos(Pi/180*x)}} \\
+  \textcolor{numorange}{\textit{TAN(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{tand(x)}}
+    & \textcolor{numorange}{\textit{Tan(Pi/180*x)}} \\
+  \textcolor{numorange}{\textit{180/PI*ARCSIN(x)}}
+    & \textcolor{numorange}{\texttt{asind(x)}}
+    & \textcolor{numorange}{\textit{180/Pi*Arcsin(x)}} \\
+  \textcolor{numorange}{\textit{180/PI*ARCCOS(x)}}
+    & \textcolor{numorange}{\texttt{acosd(x)}}
+    & \textcolor{numorange}{\textit{180/Pi*Arccos(x)}} \\
+  \textcolor{numorange}{\textit{180/PI*ARCTAN(x)}}
+    & \textcolor{numorange}{\texttt{atand(x)}}
+    & \textcolor{numorange}{\textit{180/Pi*Arctan(x)}} \\
+  \textcolor{numorange}{\textit{180/PI*ARCTAN2(y,x)}}
+    & \textcolor{numorange}{\texttt{atand(y,x)}}
+    & \textcolor{numorange}{\textit{180/Pi*Arctan(y/x)}} \\
+  \textcolor{numorange}{\textit{1/TAN(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{cotd(x)}}
+    & \textcolor{numorange}{\textit{1/Tan(Pi/180*x)}} \\
+  \textcolor{numorange}{\textit{1/SIN(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{cscd(x)}}
+    & \textcolor{numorange}{\textit{1/Sin(Pi/180*x)}} \\
+  \textcolor{numorange}{\textit{1/COS(PI/180*x)}}
+    & \textcolor{numorange}{\texttt{secd(x)}}
+    & \textcolor{numorange}{\textit{1/Cos(Pi/180*x)}} \\
+  \textcolor{numorange}{\textit{180/PI*ARCSIN(1/x)}}
+    & \textcolor{numorange}{\texttt{acscd(x)}}
+    & \textcolor{numorange}{\textit{180/Pi*Arcsin(1/x)}} \\
+  \textcolor{numorange}{\textit{180/PI*ARCCOS(1/x)}}
+    & \textcolor{numorange}{\texttt{asecd(x)}}
+    & \textcolor{numorange}{\textit{180/Pi*Arccos(1/x)}} \\
+  \textcolor{numorange}{\textit{180/PI*ARCTAN(1/x)}}
+    & \textcolor{numorange}{\texttt{acotd(x)}}
+    & \textcolor{numorange}{\textit{180/Pi*Arctan(1/x)}} \\
+  \textcolor{numorange}{\textit{180/PI*ARCTAN2(x,y)}}
+    & \textcolor{numorange}{\texttt{acotd(y,x)}}
+    & \textcolor{numorange}{\textit{180/Pi*Arctan(x/y)}} \\
+
+  \SetCell[c=3]{l} \itshape Constants \\
+  \hline
+  \texttt{PI} & \texttt{pi} & \texttt{Pi} \\
+  \texttt{e}  & \textit{exp(1)}  & \textit{Exp(1)}  \\
+  \textcolor{numorange}{\texttt{INF}}
+    & \textcolor{numorange}{\texttt{inf}}
+    & \textcolor{numorange}{\textit{---}} \\
+  \textcolor{numorange}{\texttt{NAN}}
+    & \textcolor{numorange}{\texttt{nan}}
+    & \textcolor{numorange}{\textit{---}} \\
+  \textcolor{numorange}{\textit{PI/180}}
+    & \textcolor{numorange}{\texttt{deg}}
+    & \textcolor{numorange}{\textit{Pi/180}} \\
+  \textcolor{numorange}{\textit{1}}
+    & \textcolor{numorange}{\texttt{true}}
+    & \textcolor{numorange}{\texttt{Aan}} \\
+  \textcolor{numorange}{\textit{0}}
+    & \textcolor{numorange}{\texttt{false}}
+    & \textcolor{numorange}{\texttt{Uit}} \\
+
+  \SetCell[c=3]{l} \itshape Simulation-specific functions (XMILE only) \\
+  \hline
+  \textcolor{numorange}{\texttt{TIME}}
+    & \textcolor{numorange}{\textit{user variable (\texttt{\textbackslash mvar})}}
+    & \textcolor{numorange}{\textit{user variable}} \\
+  \textcolor{numorange}{\texttt{DT}}
+    & \textcolor{numorange}{\textit{user variable (\texttt{\textbackslash mvar})}}
+    & \textcolor{numorange}{\textit{user variable}} \\
+  \textcolor{numorange}{\texttt{STEP(h,t\textsubscript{0})}}
+    & \textcolor{numorange}{\textit{T >= t0 ? h : 0}}
+    & \textcolor{numorange}{\textit{Als T >= t0 Dan h Anders 0 EindAls}} \\
+  \textcolor{numorange}{\texttt{RAMP(s,t\textsubscript{0})}}
+    & \textcolor{numorange}{\textit{T > t0 ? s*(T-t0) : 0}}
+    & \textcolor{numorange}{\textit{Als T > t0 Dan s*(T-t0) Anders 0 EindAls}} \\
+  \textcolor{numorange}{\texttt{DELAY(x,dt)}}
+    & \textcolor{numorange}{\textit{not supported}}
+    & \textcolor{numorange}{\textit{not supported}} \\
+  \textcolor{numorange}{\texttt{SMOOTH(x,t)}}
+    & \textcolor{numorange}{\textit{not supported}}
+    & \textcolor{numorange}{\textit{not supported}} \\
+  \textcolor{numorange}{\texttt{INIT(x)}}
+    & \textcolor{numorange}{\textit{not supported}}
+    & \textcolor{numorange}{\textit{not supported}} \\
+  \textcolor{numorange}{\texttt{PREVIOUS(x)}}
+    & \textcolor{numorange}{\textit{not supported}}
+    & \textcolor{numorange}{\textit{not supported}} \\
+  \textcolor{numorange}{\textit{RANDOM(0,1)}}
+    & \textcolor{numorange}{\texttt{rand()}}
+    & \textcolor{numorange}{\texttt{Rand}} \\
+  \textcolor{numorange}{\texttt{RANDOM(lo,hi)}}
+    & \textcolor{numorange}{\textit{lo + (hi-lo)*rand()}}
+    & \textcolor{numorange}{\textit{lo + (hi-lo)*Rand}} \\
+  \textcolor{numorange}{\textit{not supported}}
+    & \textcolor{numorange}{\texttt{randint(n)}}
+    & \textcolor{numorange}{\textit{not supported}} \\
+  \textcolor{numorange}{\textit{not supported}}
+    & \textcolor{numorange}{\texttt{randint(m,n)}}
+    & \textcolor{numorange}{\textit{not supported}} \\
+  \hline
+\end{longtblr}
+
+\subsection{Render commands}
+
+\DescribeMacro{\textmodel}
+Renders the rule-and-startvalue table.  Optional |[<keys>]| accepts
+|prefix=<name>| (render a non-current model), |units=true| or
+|units=false|, and |tblrenv=tblr|longtblr|talltblr|.  Each per-call
+key overrides the global |\numodelsetup| setting for this single
+render only; the global state is restored afterwards.
+
+|tblrenv| selects which |tabularray| environment wraps the table:
+|longtblr| (default) breaks across pages, |tblr| renders inline
+without page breaks, |talltblr| renders inline but with caption and
+note support.  Use |tblr| or |talltblr| when |\textmodel| sits inside
+an enclosing environment that suppresses page breaks (|subfigure|,
+|minipage|, \dots); the default |longtblr| would otherwise emit
+spurious continuation markers there.
+
+\textbf{Row spacing.}  |numodel| loads |tabularray| and sets
+|\SetTblrInner{rowsep=0pt}| globally so the rule listing renders
+compactly.  This applies to \emph{every} |tabularray| table in the
+document; if you want the default spacing back in your own tables,
+issue |\SetTblrInner{rowsep=2pt}| (or whatever value you prefer)
+somewhere in your document.
+
+\DescribeMacro{\graphicmodel}
+Renders the Forrester stock-and-flow diagram.  Variables of type
+|stock| become rectangles, |constant| become circles, |aux|
+become identifier nodes; flow arrows connect stocks to constant or
+helper sources/sinks based on which variables appear in
+the right-hand side of stock-updating rules.
+
+Optional |[<keys>]| accepts |prefix=<name>| (render a non-current
+model) and |diagram-style=tight|forrester|edu|, which overrides the
+global |\numodelsetup| setting for this single render only.  The
+global state is restored afterwards, so multiple |\graphicmodel|
+calls can each pick their own style without re-issuing
+|\numodelsetup|.
+
+\DescribeMacro{\computemodel}
+Runs the Euler simulation.  Each iteration step is executed in
+LaTeX itself: \textsf{expl3}'s |\fp_eval| (the engine behind the
+LaTeX2e |\fpeval|) evaluates the stop condition and then every
+|\mrule| body in declaration order, writing each new value into
+the accessor macro |\<prefix><Name>|.  The per-step values are
+appended to Lua tables on the side -- storing the time series as
+growing TeX token lists would cost $O(N)$ per append and $O(N^2)$
+overall, whereas the Lua-table append is $O(1)$, so a 20\,000-step
+run stays linear in total work.  Lua also keeps the running min
+and max so no second pass over the series is needed.  After
+|\computemodel| returns, |\<prefix><Name>min| /
+|\<prefix><Name>max| hold the extrema, |\<prefix><Name>| holds
+the final-step value, |\<prefix>steps| expands to the number of
+recorded samples (i.e.\ the iteration count $N$), and the full
+time-series can be retrieved with |\mcoords| / |\mstep|.
+
+\DescribeMacro{\diagrammodel}
+Convenience wrapper that produces a complete |figure| with caption
+and label.  Signature:
+\begin{quote}
+|\diagrammodel[<keys>]{<xvar>}{<yvar>|\meta{,\dots}|}[<extra>]{<label>}|
+\end{quote}
+Reads min/max and display text from |\<prefix><xvar>| etc.,
+delegates to |\drawplot| from \textsf{numodel-plot}, and emits
+|\caption{$<prefix><yvar><text>(<prefix><xvar><text>)$-diagram}\label{fig:<label>}|.  The optional
+\meta{extra} argument is appended to the |axis| body, useful for
+additional |\addplot| lines (annotations, theoretical curves).
+Must be called after |\computemodel|.
+
+The \meta{yvar} argument accepts a comma-separated list of
+variables: every entry whose |unitraw| matches the first one's is
+drawn into the same diagram as discrete model points (no connecting
+lines), with the y-axis range scaled to the joint min/max of the
+kept series.  Entries with a non-matching unit are dropped and a
+warning is issued.  The seven colours cycle through Okabe \& Ito's
+colour-blind safe palette (yellow omitted), ordered so consecutive
+series differ in luminance -- which keeps them distinguishable on a
+greyscale printout as well.  The legend lists each kept variable's
+display text.
+
+Example -- two quantities in one diagram.  The free-fall ball from
+the introduction is extended with gravitational potential energy
+$E_p = m\,g\,h$ (written as $-m\,G\,Y$ because $G = -9{,}81$ already
+encodes the downward direction) and kinetic energy
+$E_k = \tfrac{1}{2}\,m\,v^2$.  Both share the unit |\joule|, so the
+multi-series filter keeps both and scales the y-axis to their
+combined range.  At $t=0$ all energy sits in $E_p$; as the ball
+falls, $E_p$ drops and $E_k$ grows.  The two |aux| variables
+receive a start-value expression so that step~0 is recorded with
+the physically meaningful initial energies rather than empty
+values.
+\begin{modelexample}
+\newmodelprefix{nrg}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{0.1}{\s}{2}{system}
+\mvar{V}{v}{0}{\m\per\s}{2}{stock}
+\mvar{Y}{y}{100}{\m}{3}{stock}
+\mvar{m}{m}{0.5}{\kg}{3}{constant}
+\mvar{G}{g}{-9.81}{\m\per\s\squared}{3}{constant}
+\mvar{Ep}{E_p}{-\nrgm * \nrgG * \nrgY}{\joule}{3}{aux}
+\mvar{Ek}{E_k}{0.5 * \nrgm * \nrgV * \nrgV}{\joule}{3}{aux}
+\mrule{V}{\nrgV + \nrgG * \nrgDt}
+\mrule{Y}{\nrgY + \nrgV * \nrgDt}
+\mrule{Ep}{-\nrgm * \nrgG * \nrgY}
+\mrule{Ek}{0.5 * \nrgm * \nrgV * \nrgV}
+\mrule{T}{\nrgT + \nrgDt}
+\mstop{\nrgY <= 0}
+\computemodel
+\diagrammodel{T}{Ep,Ek}{ball-energy}
+\end{modelexample}
+
+\subsection{Series accessors}
+
+\DescribeMacro{\mcoords}
+Returns a comma-separated PGFPlots coordinate list of the
+simulated series for two variables.  Fully expandable.  Signature:
+|\mcoords{<xvar>}{<yvar>}| (current prefix);
+|\mcoordsp{<prefix>}{<xvar>}{<yvar>}| (explicit prefix).  Both
+forms are usable inside |\addplot coordinates{ ... }|.
+
+\DescribeMacro{\mstep}
+Returns the value of one variable at a chosen iteration.  Fully
+expandable.  Signature: |\mstep{<Name>}{<i>}|;
+|\mstepp{<prefix>}{<Name>}{<i>}|.  The current prefix is prepended
+automatically by |\mstep|.  Step indexing is 0-based: step~0 is
+the initial-values row, step~$N{-}1$ is the final recorded step
+after |\computemodel|.  Negative indices count from the end
+(Python-style), so |\mstep{Y}{-1}| is the last recorded $y$ and
+|\mstep{Y}{-2}| is the penultimate one.  Raises a |numodel| error
+when \meta{i} falls outside the recorded range
+(|0..\<prefix>steps - 1| for non-negative indices, or
+|-\<prefix>steps..-1| for the Python-style negative form), which
+surfaces typo'd indices and "ran $N$ steps but indexed step $N$"
+off-by-one mistakes rather than expanding to nothing and propagating
+empty arguments into the surrounding plot.
+
+Example -- a red secant line through the last two simulated
+$(t,y)$ points of the free-fall ball (the model from the first
+example), extrapolated across the whole $t$-domain and labelled in
+the legend.  The slope is the rise-over-run of the last two steps,
+the intercept is the final $y$-value.  Inside the optional
+|[<extra>]| argument |\mstep| expands as a literal number into
+PGFPlots' math parser, so each |\mstep| is evaluated only once
+(when the expression is constructed) rather than per sample.
+Applied to the |ball| model:
+
+\switchmodelprefix{ball}
+\begin{modelexample}
+\diagrammodel{T}{Y}[%
+  \addplot[red, very thick, domain=\ballTmin:\ballTmax]
+    {\mstep{Y}{-1}
+      + (\mstep{Y}{-1} - \mstep{Y}{-2})
+      / (\mstep{T}{-1} - \mstep{T}{-2})
+      * (x - \mstep{T}{-1})};
+  \addlegendentry{secant endpoints}
+]{ball-fall-secant}
+\end{modelexample}
+
+\subsection{Namespace management}
+
+\DescribeMacro{\newmodelprefix}
+Creates a new model namespace and switches to it.  Signature:
+|\newmodelprefix{<name>}|.  Subsequent |\mvar| / |\mrule| / |\mstop|
+calls bind to this prefix.  All generated accessors are prefixed
+(so |\mvar{Y}{y}{...}{...}{...}{...}| under prefix |ball| produces
+|\ballY|, |\ballYtext|, etc.).
+
+\DescribeMacro{\switchmodelprefix}
+Switches to a previously created prefix.  Useful when a document
+defines several models early and renders them later out of order.
+Signature: |\switchmodelprefix{<name>}|.
+
+\DescribeMacro{\NumodelForEachVar}
+Iterates a token list over every registered variable across every
+known prefix.  Signature: |\NumodelForEachVar{<code with #1>}|;
+inside the body, |#1| is the full prefixed name (e.g.\ |ballY|).
+Used by external tools (e.g.\ a worksheet system) that need to
+expand every model accessor.
+
+\subsection{Shared valves}\label{sec:shared-valve}
+
+When the same auxiliary variable appears as the inflow of more
+than one stock, |\graphicmodel| draws a single valve next to the
+first such stock and threads a curved branch (|to[bend left=30]|
+-- the same bend as the curved causal arrows) from that valve over
+the primary stock into each additional one.  The auto-layout
+leaves the involved stocks side by side on the same row so the
+branch stays compact.  A minimal example:
+\begin{quote}
+\begin{verbatim}
+\mvar{R}{r}{5}{\m\cubed\per\s}{2}{aux}
+\mvar{Va}{V_1}{0}{\m\cubed}{3}{stock}
+\mvar{Vb}{V_2}{0}{\m\cubed}{3}{stock}
+\mrule{Va}{\Va + \R * \Dt}
+\mrule{Vb}{\Vb + \R * \Dt}
+\end{verbatim}
+\end{quote}
+renders one |R| valve, a straight pipe |R| $\to$ |V_a|, and a
+curved branch |R| $\to$ |V_b| arcing over |V_a|.  (Note: TeX
+control words do not accept digits, so the macro names |Va|/|Vb|
+are used internally while the display texts |V_1|/|V_2| appear
+in the rendered diagram and table.)
+
+Shared \emph{outflows} are handled symmetrically.  When one
+variable drains more than one stock, the valve is placed to the
+right of the last-declared source stock, and every earlier
+source attaches with a curved branch arcing over the intervening
+stocks into the shared valve.  This matters in particular for
+physical models where a single Stefan--Boltzmann constant or
+friction coefficient drains several reservoirs into the same
+sink.
+
+Two flow-classification refinements support these layouts:
+\begin{itemize}
+\item The flow-variable heuristic prefers \texttt{aux} and
+  \texttt{stock} variables over \texttt{constant}s when both
+  appear in the same additive term, so an inflow valve carries
+  the meaningful rate variable instead of an earlier-declared
+  scaling constant.
+\item Top-level parenthesised inflow terms of the form
+  |(A - B)*C| are distributed into |+A*C, -B*C| before
+  classification, so |A| surfaces as the inflow valve and
+  |B| (typically a radiative or dissipative loss involving a
+  constant) surfaces as the outflow valve.
+\end{itemize}
+
+\section{Variable types}\label{sec:types}
+
+The sixth |\mvar| argument (\meta{type}) tags a variable with a
+role.  The type drives both |\textmodel| layout (whether the row
+appears in \emph{initial values}) and |\graphicmodel| node shape.
+Each type has a canonical English name and a Dutch alias; the two
+are interchangeable.
+
+\begin{description}
+\item[\texttt{stock}] A stock that
+  accumulates over time.  Drawn as a rectangle in the Forrester
+  diagram; its rule must be of the form
+  $\text{stock} \leftarrow \text{stock} + \dots$ so that the
+  integrator can detect inflows and outflows.  Receives an
+  \emph{initial values} row.
+\item[\texttt{constant}] A constant
+  parameter (mass, gravitational acceleration, spring stiffness,
+  $\ldots$).  Drawn as a circle.  Receives an \emph{initial values}
+  row.
+\item[\texttt{aux}] An auxiliary variable
+  computed from other variables on each step.  Drawn as a plain
+  identifier node, no rectangle.  No \emph{initial values} row
+  (start value is normally left empty).
+\item[\texttt{system}] System-level
+  bookkeeping (time |T|, step size |Dt|, terminal time,
+  $\ldots$).  Drawn separately, no flow arrows.  Receives an
+  \emph{initial values} row.
+\end{description}
+
+\section{Generated accessors}\label{sec:accessors}
+
+Each |\mvar| call generates a family of accessor macros named
+|\<prefix><Name><suffix>|.  The full set:
+
+\begin{description}
+\item[\textit{(no suffix)}] Current numeric value (post-rule-update
+  if inside a step, post-final-step after |\computemodel|).
+\item[\texttt{text}] The display symbol passed as the second
+  argument of |\mvar|.
+\item[\texttt{unit}] |\unit{...}| applied to the unit argument
+  (\textsf{siunitx}-formatted).
+\item[\texttt{unitraw}] The unit argument verbatim, without the
+  |\unit{}| wrapper, suitable for use as a building block (e.g.\
+  |\xlabelunit| in \textsf{numodel-plot}).
+\item[\texttt{num}] The current value formatted via \textsf{siunitx}'s
+  |\num{}| with the variable's significant figures.  Used by
+  |\textmodel| in the \emph{initial values} column when |units=false|.
+\item[\texttt{qty}] As |num|, but including the unit
+  (|\qty{value}{unit}|).  Used by |\textmodel| in the
+  \emph{initial values} column when |units=true| (the default).
+\item[\texttt{pre}] As |qty|, but with engineering prefix mode
+  (e.g.\ |1500 W| renders as |1{,}5\,kW|).
+\item[\texttt{sign}] Significant-figure count (raw integer).
+\item[\texttt{type}] Variable type (raw string).
+\item[\texttt{min}, \texttt{max}] Extrema over the simulated series.
+  Empty before |\computemodel|.
+\item[\texttt{gridx}, \texttt{gridy}] Manual placement coordinates
+  in the Forrester grid; $-1$ if left to auto-layout.
+\item[\texttt{alias}, \texttt{aliasleft}, \texttt{aliasright}]
+  Override tokens for the \emph{initial values} cell layout.
+  |aliasright| replaces just the value part of the cell (keeping
+  the symbol and equals sign); |aliasleft| replaces just the
+  symbol; |alias| replaces the entire cell.
+\end{description}
+
+In addition, |\computemodel| writes one per-\emph{prefix} accessor
+(no variable name in the middle):
+\begin{description}
+\item[\texttt{\textbackslash <prefix>steps}] The number of recorded
+  samples after the most recent |\computemodel| call for this
+  prefix, i.e.\ the iteration count $N$.  Empty (undefined) before
+  the first |\computemodel|.  Picking |steps| as an |\mvar| name
+  would collide with this accessor -- see the naming caveat in
+  Section~\ref{sec:api}.
+\end{description}
+
+Example -- the alias keys exist primarily as a worksheet hook:
+the same model can be rendered as a fully-specified reference
+\emph{and} as a fill-in-the-blanks exercise.  |aliasright=\cdots|
+blanks the value while keeping the symbol visible (asking
+\emph{what value} belongs there), |alias={?}| blanks the entire
+cell (asking the student to supply both the symbol and the value
+from physical knowledge).  Crucially, |\computemodel| keeps using
+the original numeric start value, so the diagram or computed
+answer for the rest of the model remains correct -- only the
+rendered table changes.  The row for $y$ now reads \(y = \cdots\)
+(asking the student to identify the initial height from a graph
+or photograph) and the row for $g$ shows just \(?\) (asking the
+student to supply the gravitational acceleration from memory).
+The rule column is unaffected -- |\mrule| has its own
+|alias|/|aliasright| keys for blanking rule bodies if needed.
+
+\begin{modelexample}
+\newmodelprefix{quiz}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{0.5}{\s}{2}{system}
+\mvar{V}{v}{0}{\m\per\s}{2}{stock}
+\mvar[aliasright=\cdots]{Y}{y}{50}{\m}{3}{stock}
+\mvar[alias={?}]{G}{g}{-9.81}{\m\per\s\squared}{3}{constant}
+\mrule{V}{\quizV + \quizG * \quizDt}
+\mrule{Y}{\quizY + \quizV * \quizDt}
+\mrule{T}{\quizT + \quizDt}
+\mstop{\quizY <= 0}
+\textmodel
+\end{modelexample}
+
+\section{Multiple models in one document}
+
+Each |\newmodelprefix| starts a fresh namespace.  This lets a
+document contain several unrelated models without name clashes:
+\begin{quote}
+\begin{verbatim}
+\newmodelprefix{ball}
+\mvar{Y}{y}{100}{\m}{3}{stock}
+% ... ball model ...
+
+\newmodelprefix{spring}
+\mvar{X}{x}{0.1}{\m}{3}{stock}
+% ... spring model ...
+
+% Render the ball model:
+\switchmodelprefix{ball}\textmodel\computemodel\diagrammodel{T}{Y}{fall}
+
+% Render the spring model:
+\switchmodelprefix{spring}\textmodel\computemodel\diagrammodel{T}{X}{spring}
+\end{verbatim}
+\end{quote}
+Each prefix carries an independent rule list, stop condition, and
+recorded series.
+
+\section{Requirements}
+
+\textsf{numodel} requires LuaLaTeX (the engine, for the Lua
+runtime) and TeX~Live~2022 or later.  Mandatory dependencies:
+\textsf{expl3}, \textsf{xparse}, \textsf{l3keys2e}, \textsf{amsmath},
+\textsf{amssymb}, \textsf{tikz}, \textsf{luacode}, \textsf{siunitx},
+\textsf{float}, and the sibling package \textsf{numodel-plot}
+(which itself pulls in \textsf{pgfplots}).  The companion Lua
+module |numodel.lua| must be installed alongside the |.sty| in a
+directory searched by |kpse|.
+
+\end{document}

@@ -1,0 +1,11 @@
+\newmodelprefix{quiz}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{0.5}{\s}{2}{system}
+\mvar{V}{v}{0}{\m\per\s}{2}{stock}
+\mvar[aliasright=\cdots]{Y}{y}{50}{\m}{3}{stock}
+\mvar[alias={?}]{G}{g}{-9.81}{\m\per\s\squared}{3}{constant}
+\mrule{V}{\quizV + \quizG * \quizDt}
+\mrule{Y}{\quizY + \quizV * \quizDt}
+\mrule{T}{\quizT + \quizDt}
+\mstop{\quizY <= 0}
+\textmodel

@@ -5,7 +5,21 @@ All notable changes to `numodel` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [0.6.0] — Unreleased
+## [0.6.0] — 2026-05-26
+
+### Changed (build / packaging)
+- The user manual has moved out of `numodel.dtx` into a stand-alone
+  `numodel-manual.tex`.  The `.dtx` is now pure docstrip source for
+  `numodel.sty` / `numodel-EN.def` / `numodel-NL.def` and is no
+  longer typesettable on its own.  `l3build doc` continues to build
+  the manual but now compiles `numodel-manual.tex` instead of the
+  `.dtx`.  No change to the package's installed files or user-facing
+  API; only the build-time layout of the bundle changed.
+- The `examples/` directory is no longer shipped to CTAN.  Local
+  development examples stay in the repo but the CTAN upload now
+  contains only the package source (.dtx/.ins/.lua/-manual.tex),
+  the extracted .sty/.def, the typeset PDF, README and CHANGELOG.
+  Same exclusion already in effect for `testfiles/`.
 
 ### Added
 - Per-prefix accessor `\<prefix>steps` set by `\computemodel`,

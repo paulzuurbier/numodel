@@ -5,6 +5,24 @@ All notable changes to `numodel-plot` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.6.0] — 2026-05-26
+
+### Changed (build / packaging)
+- The user manual has moved out of `numodel-plot.dtx` into a
+  stand-alone `numodel-plot-manual.tex`.  The `.dtx` is now pure
+  docstrip source for `numodel-plot.sty` and is no longer
+  typesettable on its own.  `l3build doc` continues to build the
+  manual but now compiles `numodel-plot-manual.tex` instead of the
+  `.dtx`.  Manual now uses Arial/Lete Sans Math/Fira Mono fonts
+  (matching sibling `numodel`) and a tcolorbox+listings
+  `plotexample` environment so each example body is shown verbatim
+  and executed from a single source.  No change to the installed
+  `.sty` or to the user-facing API.
+- The `examples/` directory is no longer shipped to CTAN.  Local
+  development examples stay in the repo but the CTAN upload now
+  contains only the package source (.dtx/.ins/-manual.tex), the
+  extracted .sty, the typeset PDF, README and CHANGELOG.
+
 ## [0.5.0] — 2026-05-23
 
 Version-sync release.  No functional changes to `numodel-plot`;

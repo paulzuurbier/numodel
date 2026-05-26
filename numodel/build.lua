@@ -32,10 +32,14 @@ typesetruns  = 3
 -- Source files that l3build copies into the unpack/test sandbox.
 -- numodel.lua is a hand-written companion to the .sty (not generated
 -- by docstrip) and must therefore be listed alongside the .dtx/.ins.
+-- numodel-manual.tex is a stand-alone LaTeX file (no longer carried
+-- inside the .dtx) and gets typeset by the `doc` target via
+-- typesetfiles below.
 sourcefiles = {
   "numodel.dtx",
   "numodel.ins",
   "numodel.lua",
+  "numodel-manual.tex",
 }
 
 -- Files produced by unpacking that should be installed into the TDS
@@ -50,19 +54,25 @@ installfiles = {
 
 -- Documentation ----------------------------------------------------------
 
-typesetfiles = {"numodel.dtx"}
+-- Manual lives in numodel-manual.tex (standalone LaTeX, no longer
+-- inside the .dtx).  The .dtx itself is pure docstrip source and is
+-- no longer typesettable; `l3build doc` therefore points at the
+-- manual file directly.
+typesetfiles = {"numodel-manual.tex"}
 
--- The dtx loads `\usepackage{numodel}` to typeset its own
--- documentation, so numodel-plot must be visible during the typeset
--- run (numodel-plot ships in the sibling module).  l3build copies
+-- The manual loads `\usepackage{numodel}` to render live examples,
+-- so numodel-plot must be visible during the typeset run
+-- (numodel-plot ships in the sibling module).  l3build copies
 -- typesetdeps into the local typesetting sandbox before compiling.
 typesetdeps = {maindir .. "/numodel-plot"}
 unpackdeps  = {}
 
--- Extra files shipped in the CTAN zip but not installed into TDS:
--- the changelog and the runnable examples directory.
+-- Extra files shipped in the CTAN zip but not installed into TDS.
+-- The runnable examples in examples/ stay in the repo for local
+-- development but are NOT shipped to CTAN (kept lean: only the
+-- broodnodige files end up in the upload).  See the bundle-level
+-- excludefiles for the corresponding sweep.
 textfiles    = {"README.md", "CHANGELOG.md"}
-demofiles    = {"examples/*.tex", "examples/*.layout.txt"}
 
 -- Regression tests ------------------------------------------------------
 

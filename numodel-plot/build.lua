@@ -28,15 +28,27 @@ typesetruns  = 3
 
 -- File lists -------------------------------------------------------------
 
-sourcefiles  = {"numodel-plot.dtx", "numodel-plot.ins"}
+-- numodel-plot-manual.tex is a stand-alone LaTeX file (no longer
+-- carried inside the .dtx) and gets typeset by the `doc` target
+-- via typesetfiles below.
+sourcefiles  = {
+  "numodel-plot.dtx",
+  "numodel-plot.ins",
+  "numodel-plot-manual.tex",
+}
 installfiles = {"numodel-plot.sty"}
 
 -- Documentation ----------------------------------------------------------
 
-typesetfiles = {"numodel-plot.dtx"}
+-- Manual lives in numodel-plot-manual.tex (standalone LaTeX, no
+-- longer inside the .dtx).  The .dtx itself is pure docstrip source
+-- and is no longer typesettable.
+typesetfiles = {"numodel-plot-manual.tex"}
 
+-- Examples in examples/ stay in the repo for local development but
+-- are NOT shipped to CTAN (kept lean: only the broodnodige files
+-- end up in the upload).
 textfiles    = {"README.md", "CHANGELOG.md"}
-demofiles    = {"examples/*.tex"}
 
 -- Regression tests ------------------------------------------------------
 

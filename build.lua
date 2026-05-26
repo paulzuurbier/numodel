@@ -23,6 +23,7 @@ excludefiles = {
   "*/build",
   "*/tests",            -- developer-only Lua unit tests
   "*/testfiles",        -- developer-only l3build regression tests
+  "*/examples",         -- runnable demos kept locally, not shipped
   "docs",               -- local reference PDFs, not shipped to CTAN
 }
 

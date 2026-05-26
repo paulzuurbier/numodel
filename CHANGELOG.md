@@ -8,6 +8,25 @@ For module-specific entries see `numodel/CHANGELOG.md` and
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 each module independently adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.6.0] — 2026-05-26
+
+- `numodel` 0.6.0 — new per-prefix accessor `\<prefix>steps`
+  (iteration count $N$); `\mstep{<Name>}{<i>}` now errors on
+  out-of-range indices; fix `\textmodel` regression so amsmath dots
+  macros (`\cdots`, `\ldots`, …) work as `alias`/`aliasleft`/
+  `aliasright` values; `\graphicmodel` auto-layout no longer leaves
+  an empty middle row when the model has no auxiliary variables;
+  `stockwidth` setup key (dead code) removed.  See
+  `numodel/CHANGELOG.md` for the full list.
+- `numodel-plot` 0.6.0 — version-sync bump only; no functional
+  changes.  See `numodel-plot/CHANGELOG.md`.
+- Build / packaging — both modules' user manuals moved out of the
+  `.dtx` into stand-alone `numodel-manual.tex` /
+  `numodel-plot-manual.tex` (Arial + Lete Sans Math + Fira Mono
+  fonts, tcolorbox+listings example boxes).  Examples directory no
+  longer shipped to CTAN — only `.dtx`/`.ins`/`.lua`/`-manual.tex`,
+  extracted `.sty`/`.def`, typeset PDFs, README and CHANGELOG.
+
 ## [0.5.0] — 2026-05-23
 
 - `numodel` 0.5.0 — multi-series `\diagrammodel` (comma-separated
