@@ -1,0 +1,22 @@
+% Test: display rendering of newly supported expression functions
+% (atan, cot, csc, sec, min, max).  Compile with lualatex.
+\documentclass{article}
+\usepackage{numodel}
+
+\newmodelprefix{tst}
+\mvar{T}{t}{0}{}{2}{system}
+\mvar{Dt}{dt}{1}{}{2}{system}
+\mvar{X}{x}{1}{}{3}{aux}
+\mvar{A}{a}{0}{}{3}{stock}
+
+\mrule{A}{\tstA + atan(\tstX) + cot(\tstX) + csc(\tstX) + sec(\tstX)
+          + min(\tstX,\tstDt) + max(\tstX,\tstDt)}
+\mrule{T}{\tstT + \tstDt}
+\mstop{\tstT >= 2}
+
+\begin{document}
+\textmodel
+
+\numodelsetup{syntax=NL}
+\textmodel
+\end{document}
