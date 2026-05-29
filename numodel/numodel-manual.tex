@@ -99,6 +99,15 @@
   branches; improved flow-variable heuristic (aux/stock wins over
   constant in inflow terms; top-level parens distributed before
   classification).  See CHANGELOG.md for details.}
+\changes{v0.7.0}{2026/05/28}{Multi-prefix \cs{diagrammodel}:
+  \texttt{prefix=} accepts a comma-separated list of prefixes; the
+  same y-variables are plotted across every prefix, with the prefix
+  appended in parentheses after each legend entry.  Fixed display of
+  multi-character numeric superscripts in \cs{textmodel}
+  (\texttt{T\textasciicircum 1.2}, \texttt{T\textasciicircum 12},
+  \texttt{T\textasciicircum -3}) — now wrapped in braces so the
+  whole exponent typesets as a superscript.  See CHANGELOG.md for
+  details.}
 
 \GetFileInfo{numodel.sty}
 
@@ -854,6 +863,24 @@ colour-blind safe palette (yellow omitted), ordered so consecutive
 series differ in luminance -- which keeps them distinguishable on a
 greyscale printout as well.  The legend lists each kept variable's
 display text.
+
+The |prefix=| key likewise accepts a comma-separated list, so the
+same y-variables are plotted across several models in one diagram --
+useful for direct visual comparison between alternative model
+variants of the same physical setup.  Series order is prefix-major
+(all y-variables of the first prefix come before any of the second),
+the colour cycle continues across the cross product, and axis
+ranges reduce over the union of all (prefix, yvar) pairs.  The unit
+filter is applied against the first prefix's first y-variable, so
+the same short names are assumed to share unit and display text
+across prefixes.  When more than one prefix is supplied the prefix
+is appended in parentheses after each y-variable's display text in
+the legend, e.g.\ |$U_3$ (ptc)| and |$U_3$ (pw)|.  Single-prefix
+calls render exactly as before.
+
+\begin{quote}
+|\diagrammodel[prefix={ptc,pw}]{T}{U_3,U_par}{compare-models}|
+\end{quote}
 
 Example -- two quantities in one diagram.  The free-fall ball from
 the introduction is extended with gravitational potential energy

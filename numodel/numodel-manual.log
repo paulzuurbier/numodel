@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  26 MAY 2026 22:44
+This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  28 MAY 2026 09:43
  restricted system commands enabled.
  file:line:error style messages enabled.
 **c:/numodel-bundle/numodel/numodel-manual.tex
@@ -1598,7 +1598,7 @@ BUILD: step 8 done
 COMPUTE start
 COMPUTE done
 ) [3]
-Overfull \hbox (7.71947pt too wide) in paragraph at lines 336--339
+Overfull \hbox (7.71947pt too wide) in paragraph at lines 345--348
 []\TU/Arial(0)/m/n/10 For-rester/Ster-man con-ven-tion: the valve is drawn with-out a la-bel and the helper/con-
  []
 
@@ -2043,12 +2043,12 @@ BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},r
 TEXTMODEL table: \begin {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$v\,=\,v+ g\cdot   dt$&${\quizTtext }=\quizTqty $\\\rule {0pt}{2.6ex}2&$y\,=\,y+ v\cdot   dt$&${\quizDttext }=\quizDtqty $\\\rule {0pt}{2.6ex}3&$t\,=\,t+ dt$&${\quizVtext }=\quizVqty $\\\rule {0pt}{2.6ex}4&$\protect \protect \unhbox \voidb@x \hbox {IF }y\leqslant   0\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF}$&${\quizYtext }={\quizYaliasright }$\\&&${\quizGalias }$\\\end {longtblr}
 TEXTMODEL done
 [13]
-Overfull \hbox (15.98227pt too wide) in paragraph at lines 1125--1125
+Overfull \hbox (15.98227pt too wide) in paragraph at lines 1152--1152
  []\TU/FiraMono(0)/m/n/10 \switchmodelprefix{ball}\textmodel\computemodel\diagrammodel{T}{Y}{fall}[] 
  []
 
 
-Overfull \hbox (39.98227pt too wide) in paragraph at lines 1128--1128
+Overfull \hbox (39.98227pt too wide) in paragraph at lines 1155--1155
  []\TU/FiraMono(0)/m/n/10 \switchmodelprefix{spring}\textmodel\computemodel\diagrammodel{T}{X}{spring}[] 
  []
 
@@ -2064,16 +2064,16 @@ Package rerunfilecheck Info: File `numodel-manual.hd' has not changed.
 )
 
 Here is how much of LuaTeX's memory you used:
- 57806 strings out of 476076
- 305221,2373549 words of node,token memory allocated
+ 57807 strings out of 476076
+ 381529,2373549 words of node,token memory allocated
  556 words of node memory still in use:
    6 hlist, 2 vlist, 2 rule, 3 glue, 4 kern, 1 glyph, 9 attribute, 62 glue_spec, 9 attribute_list, 2 write nodes
-   avail lists: 1:2,2:9472,3:3335,4:524,5:4642,6:368,7:17151,8:26,9:10822,10:42,11:2204
- 78975 multiletter control sequences out of 65536+600000
- 137 fonts using 47858571 bytes
+   avail lists: 1:2,2:9639,3:3386,4:526,5:4944,6:368,7:18566,8:26,9:10841,10:42,11:2386
+ 78976 multiletter control sequences out of 65536+600000
+ 137 fonts using 47858819 bytes
  117i,21n,162p,824b,4328s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Windows/Fonts/ARIALNBI.TTF><c:/texlive/2025/texmf-dist/fonts/opentype/public/fira/FiraMono-Oblique.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/fira/FiraMono-Bold.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lete-sans-math/LeteSansMath.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmsans8-regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lete-sans-math/LeteSansMath.otf><c:/Windows/Fonts/ARIALNI.TTF><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmsans10-regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmsans9-regular.otf><c:/Windows/Fonts/arialbd.ttf><c:/texlive/2025/texmf-dist/fonts/opentype/public/fira/FiraMono-Regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lete-sans-math/LeteSansMath.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmsans17-regular.otf><c:/Windows/Fonts/arial.ttf>
-Output written on numodel-manual.pdf (14 pages, 205610 bytes).
+Output written on numodel-manual.pdf (14 pages, 206423 bytes).
 
 PDF statistics: 349 PDF objects out of 1000 (max. 8388607)
  288 compressed objects within 3 object streams

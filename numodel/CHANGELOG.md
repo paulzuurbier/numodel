@@ -5,6 +5,45 @@ All notable changes to `numodel` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.7.0] — Unreleased
+
+### Added
+- Multi-prefix `\diagrammodel`: the `prefix=` key now accepts a
+  comma-separated list of prefixes, so the same set of y-variables
+  can be plotted across several models in one diagram.  Series order
+  is prefix-major (all y-variables of the first prefix come before
+  any of the second).  When more than one prefix is supplied the
+  prefix is appended in parentheses after each y-variable's display
+  text in the legend, e.g. `$U_3$ (ptc)` vs `$U_3$ (pw)`.  Axis
+  ranges reduce over the union of all (prefix, yvar) pairs; the unit
+  filter is applied against the first prefix's first y-variable, so
+  the same short names are assumed to share unit and display text
+  across prefixes.  Single-prefix and bare-prefix invocations behave
+  exactly as before; existing test files render byte-identical
+  legends and mark layouts.
+- `examples/test-multi-prefix.tex` — exercises the new feature
+  alongside the legacy single-prefix paths (single yvar, multi yvar,
+  multi prefix × single yvar, multi prefix × multi yvar).
+
+### Fixed
+- `\textmodel` rendering of multi-character numeric exponents.  The
+  display pipeline in `\__numodel_vars_to_display:N` previously
+  emitted raw `^1.2` (also `^12`, `^-3`, …) into the math-mode
+  string assembled for the rule cell, so TeX math mode bound only
+  the first token after `^` as the superscript: `T^1.2` typeset as
+  `T¹.2` (the `.2` falling out to the baseline), `T^12` as `T¹2`.
+  `\fp_eval:n`-side execution was unaffected — `\computemodel`
+  always saw the full expression — so the bug was purely cosmetic
+  but masked the actual rule a reader was meant to follow.  Numeric
+  exponent literals (optional sign, digits, optional decimal part)
+  are now wrapped in `{…}` before being typeset, so `T^1.2` reads
+  `T^{1.2}` and `T^-3` reads `T^{-3}`.  Single-token literals like
+  `T^4` were already correct and are now also wrapped (`T^{4}`,
+  rendered identically by TeX), keeping the regex uniform.
+  Explicitly braced (`^{…}`) and parenthesised (`^(…)`) exponents
+  are left untouched because the regex requires a digit or sign
+  immediately after `^`.
+
 ## [0.6.0] — 2026-05-26
 
 ### Changed (build / packaging)

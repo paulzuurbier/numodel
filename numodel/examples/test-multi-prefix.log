@@ -1,0 +1,1260 @@
+This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  28 MAY 2026 09:39
+ restricted system commands enabled.
+**test-multi-prefix.tex
+(./test-multi-prefix.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+Lua module: luaotfload 2024-12-03 v3.29 Lua based OpenType font support
+Lua module: lualibs 2023-07-13 v2.76 ConTeXt Lua standard libraries.
+Lua module: lualibs-extended 2023-07-13 v2.76 ConTeXt Lua libraries -- extended 
+collection.
+luaotfload | conf : Root cache directory is "C:/Users/paulz/.texlive2026/texmf-v
+ar/luatex-cache/generic/names".
+luaotfload | init : Loading fontloader "fontloader-2023-12-28.lua" from kpse-res
+olved path "c:/texlive/2025/texmf-dist/tex/luatex/luaotfload/fontloader-2023-12-
+28.lua".
+Lua-only attribute luaotfload@noligature = 1
+luaotfload | init : Context OpenType loader version 3.134
+Inserting `luaotfload.node_processor' in `pre_linebreak_filter'.
+Inserting `luaotfload.node_processor' in `hpack_filter'.
+Inserting `luaotfload.glyph_stream' in `glyph_stream_provider'.
+Inserting `luaotfload.define_font' in `define_font'.
+Lua-only attribute luaotfload_color_attribute = 2
+luaotfload | conf : Root cache directory is "C:/Users/paulz/.texlive2026/texmf-v
+ar/luatex-cache/generic/names".
+Inserting `luaotfload.harf.strip_prefix' in `find_opentype_file'.
+Inserting `luaotfload.harf.strip_prefix' in `find_truetype_file'.
+Removing  `luaotfload.glyph_stream' from `glyph_stream_provider'.
+Inserting `luaotfload.harf.glyphstream' in `glyph_stream_provider'.
+Inserting `luaotfload.harf.finalize_vlist' in `post_linebreak_filter'.
+Inserting `luaotfload.harf.finalize_hlist' in `hpack_filter'.
+Inserting `luaotfload.cleanup_files' in `wrapup_run'.
+Inserting `luaotfload.harf.finalize_unicode' in `finish_pdffile'.
+Inserting `luaotfload.glyphinfo' in `glyph_info'.
+Lua-only attribute luaotfload.letterspace_done = 3
+Inserting `luaotfload.aux.set_sscale_dimens' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.set_font_index' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.patch_cambria_domh' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.fixup_fontdata' in `luaotfload.patch_font_unsafe'.
+Inserting `luaotfload.aux.set_capheight' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.set_xheight' in `luaotfload.patch_font'.
+Inserting `luaotfload.rewrite_fontname' in `luaotfload.patch_font'.
+Inserting `tracingstacklevels' in `input_level_string'. (c:/texlive/2025/texmf-
+dist/tex/latex/base/article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(c:/texlive/2025/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
+luaotfload | db : Font names database loaded from C:/Users/paulz/.texlive2026/te
+xmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz)
+\c@part=\count273
+\c@section=\count274
+\c@subsection=\count275
+\c@subsubsection=\count276
+\c@paragraph=\count277
+\c@subparagraph=\count278
+\c@figure=\count279
+\c@table=\count280
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen147
+)
+(c:/Users/paulz/texmf/tex/latex/numodel-bundle/numodel/numodel.sty
+Package: numodel 2026/05/26 v0.6.0 Numerical physics models with Euler integrat
+ion and Forrester diagrams
+
+(c:/texlive/2025/texmf-dist/tex/latex/l3kernel/expl3.sty
+Package: expl3 2026-01-19 L3 programming layer (loader) 
+
+(c:/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-luatex.def
+File: l3backend-luatex.def 2025-10-09 L3 backend support: PDF output (LuaTeX)
+\l__color_backend_stack_int=\count281
+Inserting `l3color' in `luaotfload.parse_color'.))
+(c:/texlive/2025/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
+Package: xparse 2025-10-09 L3 Experimental document command parser
+)
+(c:/texlive/2025/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
+Package: l3keys2e 2025-10-09 LaTeX2e option processing using LaTeX3 keys
+)
+(c:/texlive/2025/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2025/07/09 v2.17z AMS math features
+\@mathmargin=\skip51
+
+For additional information on amsmath, use the `?' option.
+(c:/texlive/2025/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2024/11/17 v2.01 AMS text
+
+(c:/texlive/2025/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks17
+\ex@=\dimen148
+))
+(c:/texlive/2025/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen149
+)
+(c:/texlive/2025/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2022/04/08 v2.04 operator names
+)
+\inf@bad=\count282
+LaTeX Info: Redefining \frac on input line 235.
+\uproot@=\count283
+\leftroot@=\count284
+LaTeX Info: Redefining \overline on input line 398.
+LaTeX Info: Redefining \colon on input line 409.
+\classnum@=\count285
+\DOTSCASE@=\count286
+LaTeX Info: Redefining \ldots on input line 495.
+LaTeX Info: Redefining \dots on input line 498.
+LaTeX Info: Redefining \cdots on input line 619.
+\Mathstrutbox@=\box53
+\strutbox@=\box54
+LaTeX Info: Redefining \big on input line 721.
+LaTeX Info: Redefining \Big on input line 722.
+LaTeX Info: Redefining \bigg on input line 723.
+LaTeX Info: Redefining \Bigg on input line 724.
+\big@size=\dimen150
+LaTeX Font Info:    Redeclaring font encoding OML on input line 742.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 743.
+\macc@depth=\count287
+LaTeX Info: Redefining \bmod on input line 904.
+LaTeX Info: Redefining \pmod on input line 909.
+LaTeX Info: Redefining \smash on input line 939.
+LaTeX Info: Redefining \relbar on input line 969.
+LaTeX Info: Redefining \Relbar on input line 970.
+\c@MaxMatrixCols=\count288
+\dotsspace@=\muskip17
+\c@parentequation=\count289
+\dspbrk@lvl=\count290
+\tag@help=\toks18
+\row@=\count291
+\column@=\count292
+\maxfields@=\count293
+\andhelp@=\toks19
+\eqnshift@=\dimen151
+\alignsep@=\dimen152
+\tagshift@=\dimen153
+\tagwidth@=\dimen154
+\totwidth@=\dimen155
+\lineht@=\dimen156
+\@envbody=\toks20
+\multlinegap=\skip52
+\multlinetaggap=\skip53
+\mathdisplay@stack=\toks21
+LaTeX Info: Redefining \[ on input line 2950.
+LaTeX Info: Redefining \] on input line 2951.
+)
+(c:/texlive/2025/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(c:/texlive/2025/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+(c:/texlive/2025/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
+(c:/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty
+(c:/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
+\pgfutil@everybye=\toks22
+\pgfutil@tempdima=\dimen157
+\pgfutil@tempdimb=\dimen158
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
+\pgfutil@abb=\box55
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/pgf.revision.tex)
+Package: pgfrcs 2025-08-29 v3.1.11a (3.1.11a)
+))
+Package: pgf 2025-08-29 v3.1.11a (3.1.11a)
+
+(c:/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty
+(c:/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
+
+(c:/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks23
+)
+(c:/texlive/2025/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
+
+(c:/texlive/2025/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
+)
+(c:/texlive/2025/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: luatex.def on input line 106.
+
+(c:/texlive/2025/texmf-dist/tex/latex/graphics-def/luatex.def
+File: luatex.def 2025/09/29 v1.2f Graphics/color driver for luatex
+))
+\Gin@req@height=\dimen159
+\Gin@req@width=\dimen160
+)
+(c:/texlive/2025/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
+Package: pgfsys 2025-08-29 v3.1.11a (3.1.11a)
+
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks24
+\pgfkeys@temptoks=\toks25
+
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeyslibraryfiltered.co
+de.tex
+\pgfkeys@tmptoks=\toks26
+))
+\pgf@x=\dimen161
+\pgf@y=\dimen162
+\pgf@xa=\dimen163
+\pgf@ya=\dimen164
+\pgf@xb=\dimen165
+\pgf@yb=\dimen166
+\pgf@xc=\dimen167
+\pgf@yc=\dimen168
+\pgf@xd=\dimen169
+\pgf@yd=\dimen170
+\w@pgf@writea=\write3
+\r@pgf@reada=\read2
+\c@pgf@counta=\count294
+\c@pgf@countb=\count295
+\c@pgf@countc=\count296
+\c@pgf@countd=\count297
+\t@pgf@toka=\toks27
+\t@pgf@tokb=\toks28
+\t@pgf@tokc=\toks29
+\pgf@sys@id@count=\count298
+ (c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
+File: pgf.cfg 2025-08-29 v3.1.11a (3.1.11a)
+)
+Driver file for pgf: pgfsys-luatex.def
+
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-luatex.def
+File: pgfsys-luatex.def 2025-08-29 v3.1.11a (3.1.11a)
+
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-pdf.def
+File: pgfsys-common-pdf.def 2025-08-29 v3.1.11a (3.1.11a)
+)))
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
+File: pgfsyssoftpath.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfsyssoftpath@smallbuffer@items=\count299
+\pgfsyssoftpath@bigbuffer@items=\count300
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
+File: pgfsysprotocol.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)) (c:/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
+
+(c:/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: luatex.def on input line 274.
+
+(c:/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
+Package xcolor Info: Model `RGB' extended on input line 1365.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
+Package: pgfcore 2025-08-29 v3.1.11a (3.1.11a)
+
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
+\pgfmath@dimen=\dimen171
+\pgfmath@count=\count301
+\pgfmath@box=\box56
+\pgfmath@toks=\toks30
+\pgfmath@stack@operand=\toks31
+\pgfmath@stack@operation=\toks32
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.te
+x)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric
+.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.t
+ex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.co
+de.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.te
+x)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerarithm
+etics.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count302
+))
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfint.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
+File: pgfcorepoints.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@picminx=\dimen172
+\pgf@picmaxx=\dimen173
+\pgf@picminy=\dimen174
+\pgf@picmaxy=\dimen175
+\pgf@pathminx=\dimen176
+\pgf@pathmaxx=\dimen177
+\pgf@pathminy=\dimen178
+\pgf@pathmaxy=\dimen179
+\pgf@xx=\dimen180
+\pgf@xy=\dimen181
+\pgf@yx=\dimen182
+\pgf@yy=\dimen183
+\pgf@zx=\dimen184
+\pgf@zy=\dimen185
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.cod
+e.tex
+File: pgfcorepathconstruct.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@path@lastx=\dimen186
+\pgf@path@lasty=\dimen187
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code.te
+x
+File: pgfcorepathusage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@shorten@end@additional=\dimen188
+\pgf@shorten@start@additional=\dimen189
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
+File: pgfcorescopes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfpic=\box57
+\pgf@hbox=\box58
+\pgf@layerbox@main=\box59
+\pgf@picture@serial@count=\count303
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code
+.tex
+File: pgfcoregraphicstate.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgflinewidth=\dimen190
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformations.c
+ode.tex
+File: pgfcoretransformations.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@pt@x=\dimen191
+\pgf@pt@y=\dimen192
+\pgf@pt@temp=\dimen193
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
+File: pgfcorequick.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex
+File: pgfcoreobjects.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathprocessing.co
+de.tex
+File: pgfcorepathprocessing.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex
+File: pgfcorearrows.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfarrowsep=\dimen194
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
+File: pgfcoreshade.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@max=\dimen195
+\pgf@sys@shading@range@num=\count304
+\pgf@shadingcount=\count305
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
+File: pgfcoreimage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
+File: pgfcoreexternal.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfexternal@startupbox=\box60
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex
+File: pgfcorelayers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.code
+.tex
+File: pgfcoretransparency.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.code.tex
+File: pgfcorepatterns.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorerdf.code.tex
+File: pgfcorerdf.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+))) (c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.te
+x
+File: pgfmoduleshapes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfnodeparttextbox=\box61
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex
+File: pgfmoduleplot.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(c:/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.st
+y
+Package: pgfcomp-version-0-65 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@nodesepstart=\dimen196
+\pgf@nodesepend=\dimen197
+)
+(c:/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18.st
+y
+Package: pgfcomp-version-1-18 2025-08-29 v3.1.11a (3.1.11a)
+)) (c:/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgffor.sty
+(c:/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex))
+(c:/texlive/2025/texmf-dist/tex/latex/pgf/math/pgfmath.sty
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex))
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
+Package: pgffor 2025-08-29 v3.1.11a (3.1.11a)
+\pgffor@iter=\dimen198
+\pgffor@skip=\dimen199
+\pgffor@stack=\toks33
+\pgffor@toks=\toks34
+))
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
+Package: tikz 2025-08-29 v3.1.11a (3.1.11a)
+
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers.co
+de.tex
+File: pgflibraryplothandlers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@plot@mark@count=\count306
+\pgfplotmarksize=\dimen256
+)
+\tikz@lastx=\dimen257
+\tikz@lasty=\dimen258
+\tikz@lastxsaved=\dimen259
+\tikz@lastysaved=\dimen260
+\tikz@lastmovetox=\dimen261
+\tikz@lastmovetoy=\dimen262
+\tikzleveldistance=\dimen263
+\tikzsiblingdistance=\dimen264
+\tikz@figbox=\box62
+\tikz@figbox@bg=\box63
+\tikz@tempbox=\box64
+\tikz@tempbox@bg=\box65
+\tikztreelevel=\count307
+\tikznumberofchildren=\count308
+\tikznumberofcurrentchild=\count309
+\tikz@fig@count=\count310
+
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
+File: pgfmodulematrix.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfmatrixcurrentrow=\count311
+\pgfmatrixcurrentcolumn=\count312
+\pgf@matrix@numberofcolumns=\count313
+)
+\tikz@expandcount=\count314
+
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
+brarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)))
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
+braryshapes.symbols.code.tex
+File: tikzlibraryshapes.symbols.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.s
+ymbols.code.tex
+File: pgflibraryshapes.symbols.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+))
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.meta.cod
+e.tex
+File: pgflibraryarrows.meta.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfarrowinset=\dimen265
+\pgfarrowlength=\dimen266
+\pgfarrowwidth=\dimen267
+\pgfarrowlinewidth=\dimen268
+) (c:/texlive/2025/texmf-dist/tex/lualatex/luacode/luacode.sty
+Package: luacode 2012/01/23 v1.2a lua-in-tex helpers (mpg)
+
+(c:/texlive/2025/texmf-dist/tex/generic/iftex/ifluatex.sty
+Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
+
+(c:/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2024/12/12 v1.0g TeX engine tests
+))
+(c:/texlive/2025/texmf-dist/tex/luatex/luatexbase/luatexbase.sty
+Package: luatexbase 2015/10/04 v1.3 luatexbase interface to LuaTeX 
+
+(c:/texlive/2025/texmf-dist/tex/luatex/ctablestack/ctablestack.sty
+Package: ctablestack 2015/10/01 v1.0 Catcode table stable support
+\@catcodetablestackcnt=\count315
+)
+\CatcodeTableOther=\catcodetable14
+\CatcodeTableExpl=\catcodetable15
+)
+\luacode@lines=\toks35
+\luacode@table@soft=\catcodetable16
+)
+(c:/texlive/2025/texmf-dist/tex/latex/siunitx/siunitx.sty
+Package: siunitx 2025-07-09 v3.4.14 A comprehensive (SI) units package
+\l__siunitx_number_uncert_offset_int=\count316
+\l__siunitx_number_exponent_fixed_int=\count317
+\l__siunitx_number_min_decimal_int=\count318
+\l__siunitx_number_min_integer_int=\count319
+\l__siunitx_number_round_precision_int=\count320
+\l__siunitx_number_lower_threshold_int=\count321
+\l__siunitx_number_upper_threshold_int=\count322
+\l__siunitx_number_group_first_int=\count323
+\l__siunitx_number_group_size_int=\count324
+\l__siunitx_number_group_minimum_int=\count325
+\l__siunitx_angle_tmp_dim=\dimen269
+\l__siunitx_angle_marker_box=\box66
+\l__siunitx_angle_unit_box=\box67
+\l__siunitx_compound_count_int=\count326
+
+(c:/texlive/2025/texmf-dist/tex/latex/translations/translations.sty
+Package: translations 2022/02/05 v1.12 internationalization of LaTeX2e packages
+ (CN)
+
+(c:/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count327
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(c:/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+(c:/texlive/2025/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+\pdftexcmds@toks=\toks36
+))
+\l__siunitx_table_tmp_box=\box68
+\l__siunitx_table_tmp_dim=\dimen270
+\l__siunitx_table_column_width_dim=\dimen271
+\l__siunitx_table_integer_box=\box69
+\l__siunitx_table_decimal_box=\box70
+\l__siunitx_table_uncert_box=\box71
+\l__siunitx_table_before_box=\box72
+\l__siunitx_table_after_box=\box73
+\l__siunitx_table_before_dim=\dimen272
+\l__siunitx_table_carry_dim=\dimen273
+\l__siunitx_unit_tmp_int=\count328
+\l__siunitx_unit_position_int=\count329
+\l__siunitx_unit_total_int=\count330
+
+(c:/texlive/2025/texmf-dist/tex/latex/tools/array.sty
+Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
+\col@sep=\dimen274
+\ar@mcellbox=\box74
+\extrarowheight=\dimen275
+\NC@list=\toks37
+\extratabsurround=\skip54
+\backup@length=\skip55
+\ar@cellbox=\box75
+))
+(c:/texlive/2025/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count331
+\float@exts=\toks38
+\float@box=\box76
+\@float@everytoks=\toks39
+\@floatcapt=\box77
+)
+(c:/texlive/2025/texmf-dist/tex/latex/tabularray/tabularray.sty
+Package: tabularray 2025-11-27 v2025C Typeset tabulars and arrays with LaTeX3
+
+(c:/texlive/2025/texmf-dist/tex/latex/ninecolors/ninecolors.sty
+Package: ninecolors 2022-02-13 v2022D Select colors with proper color contrast
+)
+\g__tblr_nohyper_int=\count332
+\l__tblr_a_int=\count333
+\l__tblr_c_int=\count334
+\l__tblr_r_int=\count335
+\l__tblr_d_dim=\dimen276
+\l__tblr_h_dim=\dimen277
+\l__tblr_o_dim=\dimen278
+\l__tblr_p_dim=\dimen279
+\l__tblr_q_dim=\dimen280
+\l__tblr_r_dim=\dimen281
+\l__tblr_s_dim=\dimen282
+\l__tblr_t_dim=\dimen283
+\l__tblr_v_dim=\dimen284
+\l__tblr_w_dim=\dimen285
+\l__tblr_a_box=\box78
+\l__tblr_b_box=\box79
+\l__tblr_c_box=\box80
+\l__tblr_d_box=\box81
+\c@tblrcount=\count336
+\c@rownum=\count337
+\c@colnum=\count338
+\c@rowcount=\count339
+\c@colcount=\count340
+\abovesep=\dimen286
+\belowsep=\dimen287
+\leftsep=\dimen288
+\rightsep=\dimen289
+\gTblrLevelInt=\count341
+\g__tblr_data_row_key_count_int=\count342
+\g__tblr_data_column_key_count_int=\count343
+\g__tblr_data_cell_key_count_int=\count344
+\g__tblr_array_int=\count345
+\l__tblr_key_count_int=\count346
+\l__tblr_key_quotient_int=\count347
+\l__tblr_key_quotient_two_int=\count348
+\l__tblr_key_remainder_int=\count349
+\g__tblr_data_str_value_count_int=\count350
+\lTblrChildTotalInt=\count351
+\lTblrChildHtotalInt=\count352
+\lTblrChildVtotalInt=\count353
+\l__child_diff_h_int=\count354
+\l__child_diff_v_int=\count355
+\l__child_sign_h_int=\count356
+\l__child_sign_v_int=\count357
+\l__child_step_int=\count358
+\lTblrDefaultHruleWidthDim=\dimen290
+\lTblrDefaultVruleWidthDim=\dimen291
+\l__tblr_split_balance_int=\count359
+\l__tblr_strut_dp_dim=\dimen292
+\l__tblr_strut_ht_dim=\dimen293
+\g__tblr_cell_wd_dim=\dimen294
+\g__tblr_cell_ht_dim=\dimen295
+\g__tblr_cell_head_dim=\dimen296
+\g__tblr_cell_foot_dim=\dimen297
+\l__tblr_measured_cell_box=\box82
+\g__tblr_last_box=\box83
+\l__tblr_temp_box=\box84
+\l__tblr_column_target_dim=\dimen298
+\l__tblr_hfuzz_dim=\dimen299
+\l__tblr_caption_box=\box85
+\l__tblr_caption_left_box=\box86
+\lTblrRowHeadInt=\count360
+\lTblrRowFootInt=\count361
+\l__tblr_row_head_box=\box87
+\l__tblr_row_foot_box=\box88
+\l__tblr_row_head_foot_dim=\dimen300
+\lTblrTableWidthDim=\dimen301
+\l__tblr_table_firsthead_box=\box89
+\l__tblr_table_middlehead_box=\box90
+\l__tblr_table_lasthead_box=\box91
+\l__tblr_table_firstfoot_box=\box92
+\l__tblr_table_middlefoot_box=\box93
+\l__tblr_table_lastfoot_box=\box94
+\l__tblr_remain_height_dim=\dimen302
+\l__tblr_next_rows_dim=\dimen303
+\l__tblr_page_overfill_dim=\dimen304
+\l__tblr_long_from_int=\count362
+\l__tblr_long_to_int=\count363
+\l__tblr_curr_i_int=\count364
+\l__tblr_prev_i_int=\count365
+\lTblrTablePageInt=\count366
+\l__tblr_table_head_box=\box95
+\l__tblr_table_foot_box=\box96
+\l__tblr_table_head_foot_dim=\dimen305
+\l__tblr_table_head_body_foot_dim=\dimen306
+\l__tblr_table_box=\box97
+\lTblrRowFirstInt=\count367
+\lTblrRowLastInt=\count368
+\l__tblr_cover_box_a_dim=\dimen307
+\l__tblr_cover_box_b_dim=\dimen308
+\l__tblr_table_hlines_box=\box98
+\l__tblr_hline_box=\box99
+\l__tblr_row_box=\box100
+\l__tblr_col_o_wd_dim=\dimen309
+\l__tblr_col_b_wd_dim=\dimen310
+\l__tblr_hline_leftskip_dim=\dimen311
+\l__tblr_hline_rightskip_dim=\dimen312
+\l__tblr_row_ht_dim=\dimen313
+\l__tblr_row_dp_dim=\dimen314
+\l__tblr_row_abovesep_dim=\dimen315
+\l__tblr_row_belowsep_dim=\dimen316
+\l__tblr_row_vlines_box=\box101
+\l__tblr_vline_box=\box102
+\l__tblr_cell_box=\box103
+\l__tblr_row_upper_dim=\dimen317
+\l__tblr_row_lower_dim=\dimen318
+\l__tblr_row_vpace_dim=\dimen319
+\l__tblr_vline_aboveskip_dim=\dimen320
+\l__tblr_vline_belowskip_dim=\dimen321
+\lTblrCellRowSpanInt=\count369
+\lTblrCellColSpanInt=\count370
+\l__tblr_cell_wd_dim=\dimen322
+\l__tblr_cell_ht_dim=\dimen323
+\lTblrCellAboveBorderWidthDim=\dimen324
+\lTblrCellBelowBorderWidthDim=\dimen325
+\lTblrCellLeftBorderWidthDim=\dimen326
+\lTblrCellRightBorderWidthDim=\dimen327
+\l__tblr_diag_box=\box104
+\l__tblr_cell_inner_wd_dim=\dimen328
+\l__tblr_cell_inner_dp_dim=\dimen329
+\l__tblr_cell_hanchor_dim=\dimen330
+\l__tblr_last_cell_table_ht_dim=\dimen331
+\l__tblr_last_cell_table_dp_dim=\dimen332
+\l__tblr_last_vline_wd_dim=\dimen333
+\l__tblr_tikz_node_box=\box105
+)
+(c:/Users/paulz/texmf/tex/latex/numodel-bundle/numodel-plot/numodel-plot.sty
+Package: numodel-plot 2026/05/26 v0.6.0 Auto-sizing PGFPlots engine
+
+(c:/texlive/2025/texmf-dist/tex/latex/pgfplots/pgfplots.sty
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.revision.tex)
+Package: pgfplots 2025/08/14 v1.18.2 Data Visualization (1.18.2)
+
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotscore.code.tex
+Package pgfplots info on input line 124: Initializing with LUA version Lua 5.3
+\pgfplots@luabackend@table=\catcodetable17
+\t@pgfplots@toka=\toks40
+\t@pgfplots@tokb=\toks41
+\t@pgfplots@tokc=\toks42
+\pgfplots@tmpa=\dimen334
+\c@pgfplots@coordindex=\count371
+\c@pgfplots@scanlineindex=\count372
+
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/sys/pgfplotssysgeneric.code.te
+x))
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/pgfplotslibrary.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfs
+upp_loader.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryfpu.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfs
+upp_pgfutil-common-lists.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/luamath/pgflibraryluamath
+.code.tex)
+Package pgfplots info on input line 292: luamath library shipped with pgf 3.1.1
+1a is up-to-date
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.code.tex
+Package pgfplots info on input line 82: Found new luatex: initializing lua comm
+ands instead of write18 (shell-escape)
+
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsliststru
+cture.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsliststru
+ctureext.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsarray.co
+de.tex
+\c@pgfplotsarray@tmp=\count373
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsmatrix.c
+ode.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/numtable/pgfplotstableshared.c
+ode.tex
+\c@pgfplotstable@counta=\count374
+\t@pgfplotstable@a=\toks43
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsdeque.co
+de.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.data.code.
+tex))
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.verb.code.te
+x)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/pgflibrarypgfplots.surfsh
+ading.code.tex
+\c@pgfplotslibrarysurf@no=\count375
+
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/sys/pgflibrarypgfplots.surfsha
+ding.pgfsys-luatex.def)))
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotscolormap.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/util/pgfplotscolor.code.tex))
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsstackedplots.code.tex) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsplothandlers.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplothandler.code.t
+ex
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplotimage.code.tex
+))) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.scaling.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotscoordprocessing.code.t
+ex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.errorbars.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.markers.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplotsticks.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfplots.paths.code.tex)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
+brarydecorations.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduledecorations.code.t
+ex
+\pgfdecoratedcompleteddistance=\dimen335
+\pgfdecoratedremainingdistance=\dimen336
+\pgfdecoratedinputsegmentcompleteddistance=\dimen337
+\pgfdecoratedinputsegmentremainingdistance=\dimen338
+\pgf@decorate@distancetomove=\dimen339
+\pgf@decorate@repeatstate=\count376
+\pgfdecorationsegmentamplitude=\dimen340
+\pgfdecorationsegmentlength=\dimen341
+)
+\tikz@lib@dec@box=\box106
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
+brarydecorations.pathmorphing.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydec
+orations.pathmorphing.code.tex))
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
+brarydecorations.pathreplacing.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydec
+orations.pathreplacing.code.tex))
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.conto
+urlua.code.tex)
+\pgfplots@numplots=\count377
+\pgfplots@xmin@reg=\dimen342
+\pgfplots@xmax@reg=\dimen343
+\pgfplots@ymin@reg=\dimen344
+\pgfplots@ymax@reg=\dimen345
+\pgfplots@zmin@reg=\dimen346
+\pgfplots@zmax@reg=\dimen347
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
+braryplotmarks.code.tex
+File: tikzlibraryplotmarks.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryplotmarks.code.
+tex
+File: pgflibraryplotmarks.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)))
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.fillb
+etween.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfcontrib/tikzlibraryfillbetw
+een.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
+braryintersections.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryintersections.c
+ode.tex
+\pgf@intersect@solutions=\count378
+))
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfcontrib/tikzlibrarydecorati
+ons.softclip.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfcontrib/pgflibraryfillbetwe
+en.code.tex)))
+(c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.decor
+ations.softclip.code.tex)))
+\g_mrule_counter_int=\count379
+\g_numodel_steps_int=\count380
+\g_numodel_maxiter_int=\count381
+\g_numodel_gridmaxx_int=\count382
+
+(c:/Users/paulz/texmf/tex/latex/numodel-bundle/numodel/numodel-EN.def
+File: numodel-EN.def 2026/05/26 v0.6.0 numodel keyword table -- English (XMILE)
+
+)
+\l__numodel_row_int=\count383
+\l__numodel_dispnum_int=\count384
+\l__numodel_startrow_int=\count385
+\l__numodel_numrules_int=\count386
+\l__numodel_numstarts_int=\count387
+\l__numodel_yidx_int=\count388
+)
+Package translations Info: No language package found. I am going to use `englis
+h' as default language. on input line 9.
+
+No file test-multi-prefix.aux.
+
+\openout1 = test-multi-prefix.aux
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+(c:/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count389
+\scratchdimen=\dimen348
+\scratchbox=\box107
+\nofMPsegments=\count390
+\nofMParguments=\count391
+\everyMPshowfont=\toks44
+\MPscratchCnt=\count392
+\MPscratchDim=\dimen349
+\MPnumerator=\count393
+\makeMPintoPDFobject=\count394
+\everyMPtoPDFconversion=\toks45
+) (c:/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(c:/texlive/2025/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+(c:/texlive/2025/texmf-dist/tex/latex/translations/translations-basic-dictionar
+y-english.trsl
+File: translations-basic-dictionary-english.trsl (english translation file `tra
+nslations-basic-dictionary')
+)
+Package translations Info: loading dictionary `translations-basic-dictionary' f
+or `english'. on input line 9.
+
+Package pgfplots notification 'compat/show suggested version=true': document ha
+s been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
+
+NEWPREFIX start: a
+NEWPREFIX save current: 
+NEWPREFIX register
+NEWPREFIX init_backup
+\g__numodel_a_rulecounter_int=\count395
+\g__numodel_a_steps_int=\count396
+NEWPREFIX lua_init
+NEWPREFIX clear_state
+NEWPREFIX set_current
+NEWPREFIX done: a
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: a
+MVAR body fullname: aT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: a
+MVAR body fullname: aDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: a
+MVAR body fullname: aV
+MVAR done: V
+MVAR start: X
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: a
+MVAR body fullname: aX
+MVAR done: X
+MVAR start: Y
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: a
+MVAR body fullname: aY
+MVAR done: Y
+MVAR start: M
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: a
+MVAR body fullname: aM
+MVAR done: M
+MVAR start: K
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: a
+MVAR body fullname: aK
+MVAR done: K
+MRULE start: V
+VTD input: \aV - (\aK / \aM ) * \aX * \aDt 
+VTD seq: aT|aDt|aV|aX|aY|aM|aK
+VTD iter: aT
+VTD replace \c {aT} with t
+VTD iter: aDt
+VTD replace \c {aDt} with dt
+VTD iter: aV
+VTD replace \c {aV} with v
+VTD iter: aX
+VTD replace \c {aX} with x
+VTD iter: aY
+VTD replace \c {aY} with y
+VTD iter: aM
+VTD replace \c {aM} with m
+VTD iter: aK
+VTD replace \c {aK} with k
+MRULE rhs after: v- (k/ m) \cdot   x\cdot   dt
+MRULE display: v\,=\,v- (k/ m) \cdot   x\cdot   dt
+MRULE done: V
+MRULE start: X
+VTD input: \aX + \aV * \aDt 
+VTD seq: aT|aDt|aV|aX|aY|aM|aK
+VTD iter: aT
+VTD replace \c {aT} with t
+VTD iter: aDt
+VTD replace \c {aDt} with dt
+VTD iter: aV
+VTD replace \c {aV} with v
+VTD iter: aX
+VTD replace \c {aX} with x
+VTD iter: aY
+VTD replace \c {aY} with y
+VTD iter: aM
+VTD replace \c {aM} with m
+VTD iter: aK
+VTD replace \c {aK} with k
+MRULE rhs after: x+ v\cdot   dt
+MRULE display: x\,=\,x+ v\cdot   dt
+MRULE done: X
+MRULE start: Y
+VTD input: \aY + 0.5 * \aV * \aDt 
+VTD seq: aT|aDt|aV|aX|aY|aM|aK
+VTD iter: aT
+VTD replace \c {aT} with t
+VTD iter: aDt
+VTD replace \c {aDt} with dt
+VTD iter: aV
+VTD replace \c {aV} with v
+VTD iter: aX
+VTD replace \c {aX} with x
+VTD iter: aY
+VTD replace \c {aY} with y
+VTD iter: aM
+VTD replace \c {aM} with m
+VTD iter: aK
+VTD replace \c {aK} with k
+MRULE rhs after: y+ 0.5 \cdot   v\cdot   dt
+MRULE display: y\,=\,y+ 0.5 \cdot   v\cdot   dt
+MRULE done: Y
+MRULE start: T
+VTD input: \aT + \aDt 
+VTD seq: aT|aDt|aV|aX|aY|aM|aK
+VTD iter: aT
+VTD replace \c {aT} with t
+VTD iter: aDt
+VTD replace \c {aDt} with dt
+VTD iter: aV
+VTD replace \c {aV} with v
+VTD iter: aX
+VTD replace \c {aX} with x
+VTD iter: aY
+VTD replace \c {aY} with y
+VTD iter: aM
+VTD replace \c {aM} with m
+VTD iter: aK
+VTD replace \c {aK} with k
+MRULE rhs after: t+ dt
+MRULE display: t\,=\,t+ dt
+MRULE done: T
+MSTOP start
+VTD input: \aT >= 1.5
+VTD seq: aT|aDt|aV|aX|aY|aM|aK
+VTD iter: aT
+VTD replace \c {aT} with t
+VTD iter: aDt
+VTD replace \c {aDt} with dt
+VTD iter: aV
+VTD replace \c {aV} with v
+VTD iter: aX
+VTD replace \c {aX} with x
+VTD iter: aY
+VTD replace \c {aY} with y
+VTD iter: aM
+VTD replace \c {aM} with m
+VTD iter: aK
+VTD replace \c {aK} with k
+MSTOP done
+COMPUTE start
+COMPUTE done
+NEWPREFIX start: b
+NEWPREFIX save current: a
+NEWPREFIX register
+NEWPREFIX init_backup
+\g__numodel_b_rulecounter_int=\count397
+\g__numodel_b_steps_int=\count398
+NEWPREFIX lua_init
+NEWPREFIX clear_state
+NEWPREFIX set_current
+NEWPREFIX done: b
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bV
+MVAR done: V
+MVAR start: X
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bX
+MVAR done: X
+MVAR start: Y
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bY
+MVAR done: Y
+MVAR start: M
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bM
+MVAR done: M
+MVAR start: K
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bK
+MVAR done: K
+MRULE start: V
+VTD input: \bV - (\bK / \bM ) * \bX * \bDt 
+VTD seq: bT|bDt|bV|bX|bY|bM|bK
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bX
+VTD replace \c {bX} with x
+VTD iter: bY
+VTD replace \c {bY} with y
+VTD iter: bM
+VTD replace \c {bM} with m
+VTD iter: bK
+VTD replace \c {bK} with k
+MRULE rhs after: v- (k/ m) \cdot   x\cdot   dt
+MRULE display: v\,=\,v- (k/ m) \cdot   x\cdot   dt
+MRULE done: V
+MRULE start: X
+VTD input: \bX + \bV * \bDt 
+VTD seq: bT|bDt|bV|bX|bY|bM|bK
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bX
+VTD replace \c {bX} with x
+VTD iter: bY
+VTD replace \c {bY} with y
+VTD iter: bM
+VTD replace \c {bM} with m
+VTD iter: bK
+VTD replace \c {bK} with k
+MRULE rhs after: x+ v\cdot   dt
+MRULE display: x\,=\,x+ v\cdot   dt
+MRULE done: X
+MRULE start: Y
+VTD input: \bY + 0.5 * \bV * \bDt 
+VTD seq: bT|bDt|bV|bX|bY|bM|bK
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bX
+VTD replace \c {bX} with x
+VTD iter: bY
+VTD replace \c {bY} with y
+VTD iter: bM
+VTD replace \c {bM} with m
+VTD iter: bK
+VTD replace \c {bK} with k
+MRULE rhs after: y+ 0.5 \cdot   v\cdot   dt
+MRULE display: y\,=\,y+ 0.5 \cdot   v\cdot   dt
+MRULE done: Y
+MRULE start: T
+VTD input: \bT + \bDt 
+VTD seq: bT|bDt|bV|bX|bY|bM|bK
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bX
+VTD replace \c {bX} with x
+VTD iter: bY
+VTD replace \c {bY} with y
+VTD iter: bM
+VTD replace \c {bM} with m
+VTD iter: bK
+VTD replace \c {bK} with k
+MRULE rhs after: t+ dt
+MRULE display: t\,=\,t+ dt
+MRULE done: T
+MSTOP start
+VTD input: \bT >= 1.5
+VTD seq: bT|bDt|bV|bX|bY|bM|bK
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bX
+VTD replace \c {bX} with x
+VTD iter: bY
+VTD replace \c {bY} with y
+VTD iter: bM
+VTD replace \c {bM} with m
+VTD iter: bK
+VTD replace \c {bK} with k
+MSTOP done
+COMPUTE start
+COMPUTE done
+LaTeX Font Info:    Trying to load font information for U+msa on input line 48.
+
+(c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 48.
+
+
+(c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+Overfull \hbox (6.0675pt too wide) in paragraph at lines 51--51
+ [][] 
+ []
+
+[1
+
+{c:/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
+Overfull \hbox (6.0675pt too wide) in paragraph at lines 57--57
+ [][] 
+ []
+
+[3] [4] (./test-multi-prefix.aux)
+ ***********
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+ ***********
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+)
+
+Here is how much of LuaTeX's memory you used:
+ 33650 strings out of 476076
+ 100000,1977958 words of node,token memory allocated
+ 500 words of node memory still in use:
+   6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 8 attribute, 53 glue_spec,
+ 8 attribute_list, 2 write nodes
+   avail lists: 1:1,2:19150,3:11744,4:58,5:50,6:6,7:2249,8:10,9:705,10:2,11:25
+ 55318 multiletter control sequences out of 65536+600000
+ 35 fonts using 2103295 bytes
+ 117i,19n,114p,746b,2506s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf><c:/t
+exlive/2025/texmf-dist/fonts/opentype/public/lm/lmroman12-bold.otf><c:/texlive/2
+025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2025/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2025/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmsy10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmsy7.pfb>
+Output written on test-multi-prefix.pdf (4 pages, 174980 bytes).
+
+PDF statistics: 54 PDF objects out of 1000 (max. 8388607)
+ 36 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 1048576)
+ 16 words of extra memory for PDF output out of 10000 (max. 100000000)
+

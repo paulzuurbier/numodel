@@ -1035,6 +1035,15 @@ end
             \regex_replace_all:nnN { \c{##1} } { \u{l_tmpa_tl} } #1
           }
       }
+    % Multi-character numeric superscripts.  \fp_eval:n accepts
+    % '^1.2' (and '^12', '^-3', ...), but TeX math mode binds only
+    % the next single token to ^, so 'T^1.2' would typeset as
+    % 'T^{1}.2' and 'T^12' as 'T^{1}2'.  Wrap any numeric exponent
+    % literal in braces so display reads 'T^{1.2}', 'T^{12}', etc.
+    % Explicitly braced (^{...}) or parenthesised (^(...)) exponents
+    % are left untouched.
+    \regex_replace_all:nnN { \^ ( [+\-]? [0-9]+ (?: \. [0-9]+)? ) }
+      { \^ \cB\{ \1 \cE\} } #1
     % Arithmetic operators
     \regex_replace_all:nnN { \* } { \c{cdot} \x{20} } #1
     \regex_replace_all:nnN { >= } { \c{geqslant} \x{20} } #1
@@ -2480,6 +2489,7 @@ end
 % ====================================================================
 % Usage: \diagrammodel{xvar}{yvar}[extra drawplot code]{label}
 %        \diagrammodel{xvar}{yvar1,yvar2,...,yvarn}[extra]{label}
+%        \diagrammodel[prefix={p1,p2,...}]{xvar}{yvar1,...}[extra]{label}
 %
 % Builds a complete figure with model points.  Sets axis dimensions
 % from min/max, axis labels from text/unit, and emits caption and
@@ -2494,6 +2504,16 @@ end
 % and are ordered so consecutive series differ in luminance, which
 % keeps them distinguishable on a greyscale printout.  The legend
 % lists each kept variable's display text.
+%
+% When the prefix key carries a comma-separated list of prefixes, the
+% same set of y-variables is plotted for each prefix; the legend then
+% appends the prefix in parentheses after each display text, e.g.
+% "$U_3$ (ptc)".  Series order is prefix-major: every y-variable of
+% the first prefix is drawn before any of the second.  The unit
+% filter is applied against the first prefix's first y-variable; the
+% same short names are assumed to exist (with matching units) under
+% every other prefix.  x/y axis ranges reduce over the union of all
+% (prefix, yvar) pairs.
 
 \tl_new:N \l__numodel_xname_tl
 \tl_new:N \l__numodel_yname_tl
@@ -2502,6 +2522,8 @@ end
 \tl_new:N \l__numodel_yqty_tl
 \tl_new:N \l__numodel_plotbody_tl
 \clist_new:N \l__numodel_yshort_clist
+\clist_new:N \l__numodel_eff_prefixes_clist
+\bool_new:N  \l__numodel_multipref_bool
 \int_new:N \l__numodel_yidx_int
 
 % Colour-blind safe palette (Okabe & Ito; yellow #F0E442 omitted for
@@ -2535,10 +2557,26 @@ end
     \tl_clear:N \l__numodel_cmd_prefix_tl
     \keys_set:nn { numodel / cmd } {#1}
     \__numodel_resolve_eff_prefix:
+    % --- Parse prefix list -----------------------------------------
+    % \l__numodel_eff_prefix_tl may now carry a comma-separated list
+    % of prefixes (e.g. "ptc,pw") when the user passes prefix={..}.
+    % Treat it as a clist; a single prefix is just a one-item clist.
+    % After this step \l__numodel_eff_prefix_tl is overwritten with
+    % the first prefix, which drives the x-axis attributes and y-axis
+    % label texts (the same short names are assumed to share unit and
+    % display text across prefixes).
+    \clist_set:NV \l__numodel_eff_prefixes_clist
+                  \l__numodel_eff_prefix_tl
+    \clist_get:NN \l__numodel_eff_prefixes_clist
+                  \l__numodel_eff_prefix_tl
+    \bool_set_false:N \l__numodel_multipref_bool
+    \int_compare:nNnT
+        { \clist_count:N \l__numodel_eff_prefixes_clist } > { 1 }
+      { \bool_set_true:N \l__numodel_multipref_bool }
     \tl_set:Ne \l__numodel_xname_tl { \l__numodel_eff_prefix_tl #2 }
     % --- Parse comma-separated y-variable list ----------------------
     % Keep only variables whose unitraw matches the first one's; warn
-    % about the rest.
+    % about the rest.  The unit check uses the first prefix.
     \clist_clear:N \l__numodel_yshort_clist
     \tl_clear:N    \l__numodel_yunit_first_tl
     \int_zero:N    \l__numodel_yidx_int
@@ -2574,18 +2612,23 @@ end
     \def\xmax{\use:c{\l__numodel_xname_tl max}}
     \def\xlabelqty{\use:c{\l__numodel_xname_tl text}}
     \def\xlabelunit{\use:c{\l__numodel_xname_tl unitraw}}
-    % Reduce over the kept y-variables.  Use \edef + \fpeval so the
-    % per-variable min/max accessors are expanded to numeric literals
-    % before the fp parser sees them.
+    % Reduce y-range over every (prefix, yvar) pair.  Use \edef +
+    % \fpeval so the per-variable min/max accessors are expanded to
+    % numeric literals before the fp parser sees them.
     \def\ymin{inf}
     \def\ymax{-inf}
-    \clist_map_inline:Nn \l__numodel_yshort_clist
+    \clist_map_inline:Nn \l__numodel_eff_prefixes_clist
       {
-        \tl_set:Ne \l__numodel_yfull_tl { \l__numodel_eff_prefix_tl ##1 }
-        \edef\ymin{\fpeval{min(\ymin,\use:c{\l__numodel_yfull_tl min})}}
-        \edef\ymax{\fpeval{max(\ymax,\use:c{\l__numodel_yfull_tl max})}}
+        \clist_map_inline:Nn \l__numodel_yshort_clist
+          {
+            \tl_set:Ne \l__numodel_yfull_tl { ##1 ####1 }
+            \edef\ymin{\fpeval{min(\ymin,\use:c{\l__numodel_yfull_tl min})}}
+            \edef\ymax{\fpeval{max(\ymax,\use:c{\l__numodel_yfull_tl max})}}
+          }
       }
     % --- y-axis label: comma-joined display texts, common unit -----
+    % Texts are taken from the first prefix (yvars under other
+    % prefixes are assumed to share their display text).
     \tl_clear:N \l__numodel_yqty_tl
     \int_zero:N \l__numodel_yidx_int
     \clist_map_inline:Nn \l__numodel_yshort_clist
@@ -2603,8 +2646,14 @@ end
     \group_begin:
     \__numodel_apply_dsep:
     % --- Build the plot body ---------------------------------------
+    % Single-series legacy path triggers iff there is exactly one
+    % prefix AND exactly one kept y-variable.  The two-count sum is
+    % 2 iff both lists hold one item.
     \int_compare:nNnTF
-        { \clist_count:N \l__numodel_yshort_clist } = { 1 }
+        {
+          \clist_count:N \l__numodel_yshort_clist +
+          \clist_count:N \l__numodel_eff_prefixes_clist
+        } = { 2 }
       {
         % Single-series: preserve the legacy mark-only rendering.
         \edef\dm@coords
@@ -2617,26 +2666,37 @@ end
           }
       }
       {
-        % Multi-series: one mark-only \addplot per kept variable, with
-        % cycling colour-blind safe colour, and a text legend.  The
-        % legend's mark is enlarged so the colour stays visible there.
+        % Multi-series: one mark-only \addplot per (prefix, yvar)
+        % pair with cycling colour-blind safe colour and a text
+        % legend.  The legend's mark is enlarged so the colour stays
+        % visible there.  Loop order is prefix-major: all y-vars of
+        % the first prefix come before any of the second.  When more
+        % than one prefix is plotted the prefix is appended in
+        % parentheses after each display text.
         \tl_clear:N \l__numodel_plotbody_tl
         \int_zero:N \l__numodel_yidx_int
-        \clist_map_inline:Nn \l__numodel_yshort_clist
+        \clist_map_inline:Nn \l__numodel_eff_prefixes_clist
           {
-            \int_incr:N \l__numodel_yidx_int
-            \tl_put_right:Ne \l__numodel_plotbody_tl
+            \clist_map_inline:Nn \l__numodel_yshort_clist
               {
-                \exp_not:N \addplot
-                  [ only~marks ,~mark=* ,~mark~size=0.5pt ,
-                    color = \__numodel_series_color:n
-                              { \int_use:N \l__numodel_yidx_int } ,
-                    legend~image~post~style = { mark~size=2pt } ]
-                coordinates {
-                  \mcoordsp { \l__numodel_eff_prefix_tl } { #2 } { ##1 }
-                } ;
-                \exp_not:N \addlegendentry
-                  { $ \use:c { \l__numodel_eff_prefix_tl ##1 text } $ }
+                \int_incr:N \l__numodel_yidx_int
+                \tl_put_right:Ne \l__numodel_plotbody_tl
+                  {
+                    \exp_not:N \addplot
+                      [ only~marks ,~mark=* ,~mark~size=0.5pt ,
+                        color = \__numodel_series_color:n
+                                  { \int_use:N \l__numodel_yidx_int } ,
+                        legend~image~post~style = { mark~size=2pt } ]
+                    coordinates {
+                      \mcoordsp { ##1 } { #2 } { ####1 }
+                    } ;
+                    \exp_not:N \addlegendentry
+                      {
+                        $ \use:c { ##1 ####1 text } $
+                        \bool_if:NT \l__numodel_multipref_bool
+                          { ~ ( ##1 ) }
+                      }
+                  }
               }
           }
         \tl_put_right:Nn \l__numodel_plotbody_tl {#4}

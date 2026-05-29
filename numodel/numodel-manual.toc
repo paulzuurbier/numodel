@@ -11,8 +11,8 @@
 \contentsline {subsection}{\numberline {4.3}Render commands}{9}{subsection.4.3}%
 \contentsline {subsection}{\numberline {4.4}Series accessors}{10}{subsection.4.4}%
 \contentsline {subsection}{\numberline {4.5}Namespace management}{11}{subsection.4.5}%
-\contentsline {subsection}{\numberline {4.6}Shared valves}{11}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.6}Shared valves}{12}{subsection.4.6}%
 \contentsline {section}{\numberline {5}Variable types}{12}{section.5}%
 \contentsline {section}{\numberline {6}Generated accessors}{12}{section.6}%
-\contentsline {section}{\numberline {7}Multiple models in one document}{13}{section.7}%
+\contentsline {section}{\numberline {7}Multiple models in one document}{14}{section.7}%
 \contentsline {section}{\numberline {8}Requirements}{14}{section.8}%

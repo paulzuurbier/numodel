@@ -1,0 +1,59 @@
+% test-multi-prefix.tex — verify multi-prefix \diagrammodel:
+% same y-variables plotted across two prefixes, joint min/max range,
+% colour-cycling per (prefix, yvar) pair in prefix-major order, and
+% legend entries that append the prefix after the y-variable text.
+
+\documentclass{article}
+\usepackage{numodel}
+
+\begin{document}
+
+% --- Model A: harmonic oscillator with k = 40 ---------------------
+\newmodelprefix{a}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.01}{\s}{2}{systeem}
+\mvar{V}{v}{0}{\m\per\s}{3}{hulp}
+\mvar{X}{x}{0.10}{\m}{3}{voorraad}
+\mvar{Y}{y}{0.05}{\m}{3}{voorraad}
+\mvar{M}{m}{0.250}{\kg}{3}{constante}
+\mvar{K}{k}{40}{\N\per\m}{2}{constante}
+
+\mrule{V}{\aV - (\aK / \aM) * \aX * \aDt}
+\mrule{X}{\aX + \aV * \aDt}
+\mrule{Y}{\aY + 0.5 * \aV * \aDt}
+\mrule{T}{\aT + \aDt}
+\mstop{\aT >= 1.5}
+
+\computemodel
+
+% --- Model B: same oscillator but stiffer (k = 80) ----------------
+\newmodelprefix{b}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.01}{\s}{2}{systeem}
+\mvar{V}{v}{0}{\m\per\s}{3}{hulp}
+\mvar{X}{x}{0.10}{\m}{3}{voorraad}
+\mvar{Y}{y}{0.05}{\m}{3}{voorraad}
+\mvar{M}{m}{0.250}{\kg}{3}{constante}
+\mvar{K}{k}{80}{\N\per\m}{2}{constante}
+
+\mrule{V}{\bV - (\bK / \bM) * \bX * \bDt}
+\mrule{X}{\bX + \bV * \bDt}
+\mrule{Y}{\bY + 0.5 * \bV * \bDt}
+\mrule{T}{\bT + \bDt}
+\mstop{\bT >= 1.5}
+
+\computemodel
+
+\section*{1. Legacy: single prefix, single yvar}
+\diagrammodel{T}{X}{single-a}
+
+\section*{2. Legacy: single prefix, multiple yvars}
+\diagrammodel{T}{X,Y}{multi-yvar-a}
+
+\section*{3. New: multiple prefixes, single yvar — prefix in legend}
+\diagrammodel[prefix={a,b}]{T}{X}{multi-prefix-single}
+
+\section*{4. New: multiple prefixes, multiple yvars (prefix-major order)}
+\diagrammodel[prefix={a,b}]{T}{X,Y}{multi-prefix-multi}
+
+\end{document}
