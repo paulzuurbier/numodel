@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  29 MAY 2026 23:06
+This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  30 MAY 2026 16:00
  restricted system commands enabled.
 **expr-newfns-test.tex
 (./expr-newfns-test.tex
@@ -58,7 +58,7 @@ xmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz)
 \belowcaptionskip=\skip50
 \bibindent=\dimen147
 ) (../numodel.sty
-Package: numodel 2026/05/26 v0.6.0 Numerical physics models with Euler integrat
+Package: numodel 2026/05/30 v0.6.0 Numerical physics models with Euler integrat
 ion and Forrester diagrams
 
 (c:/texlive/2025/texmf-dist/tex/latex/l3kernel/expl3.sty
@@ -153,30 +153,13 @@ LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
 ))
-(c:/texlive/2025/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
-(c:/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty
-(c:/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
-\pgfutil@everybye=\toks22
-\pgfutil@tempdima=\dimen157
-\pgfutil@tempdimb=\dimen158
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
-\pgfutil@abb=\box55
-)
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex
-(c:/texlive/2025/texmf-dist/tex/generic/pgf/pgf.revision.tex)
-Package: pgfrcs 2025-08-29 v3.1.11a (3.1.11a)
-))
-Package: pgf 2025-08-29 v3.1.11a (3.1.11a)
-
-(c:/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty
+(c:/texlive/2025/texmf-dist/tex/latex/xfrac/xfrac.sty
 (c:/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
 
 (c:/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
-\KV@toks@=\toks23
+\KV@toks@=\toks22
 )
 (c:/texlive/2025/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
@@ -192,9 +175,51 @@ Package graphics Info: Driver file: luatex.def on input line 106.
 (c:/texlive/2025/texmf-dist/tex/latex/graphics-def/luatex.def
 File: luatex.def 2025/09/29 v1.2f Graphics/color driver for luatex
 ))
-\Gin@req@height=\dimen159
-\Gin@req@width=\dimen160
+\Gin@req@height=\dimen157
+\Gin@req@width=\dimen158
 )
+Package: xfrac 2024-06-04 Split-level fractions
+\l__xfrac_slash_box=\box55
+\l__xfrac_tmp_box=\box56
+\l__xfrac_denominator_bot_sep_dim=\dimen159
+\l__xfrac_numerator_bot_sep_dim=\dimen160
+\l__xfrac_numerator_top_sep_dim=\dimen161
+\l__xfrac_slash_left_sep_dim=\dimen162
+\l__xfrac_slash_right_sep_dim=\dimen163
+\l__xfrac_slash_left_muskip=\muskip18
+\l__xfrac_slash_right_muskip=\muskip19
+
+LaTeX template Info: Declaring template type 'xfrac' taking 3 argument(s) on
+(template)           line 100.
+
+
+LaTeX template Info: Declaring instance 'cmr' of type xfrac on line 392.
+
+
+LaTeX template Info: Declaring instance 'cmss' of type xfrac on line 392.
+
+
+LaTeX template Info: Declaring instance 'cmtt' of type xfrac on line 392.
+
+)
+(c:/texlive/2025/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
+(c:/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty
+(c:/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
+\pgfutil@everybye=\toks23
+\pgfutil@tempdima=\dimen164
+\pgfutil@tempdimb=\dimen165
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
+\pgfutil@abb=\box57
+)
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex
+(c:/texlive/2025/texmf-dist/tex/generic/pgf/pgf.revision.tex)
+Package: pgfrcs 2025-08-29 v3.1.11a (3.1.11a)
+))
+Package: pgf 2025-08-29 v3.1.11a (3.1.11a)
+
+(c:/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty
 (c:/texlive/2025/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
 Package: pgfsys 2025-08-29 v3.1.11a (3.1.11a)
@@ -207,16 +232,16 @@ Package: pgfsys 2025-08-29 v3.1.11a (3.1.11a)
 de.tex
 \pgfkeys@tmptoks=\toks26
 ))
-\pgf@x=\dimen161
-\pgf@y=\dimen162
-\pgf@xa=\dimen163
-\pgf@ya=\dimen164
-\pgf@xb=\dimen165
-\pgf@yb=\dimen166
-\pgf@xc=\dimen167
-\pgf@yc=\dimen168
-\pgf@xd=\dimen169
-\pgf@yd=\dimen170
+\pgf@x=\dimen166
+\pgf@y=\dimen167
+\pgf@xa=\dimen168
+\pgf@ya=\dimen169
+\pgf@xb=\dimen170
+\pgf@yb=\dimen171
+\pgf@xc=\dimen172
+\pgf@yc=\dimen173
+\pgf@xd=\dimen174
+\pgf@yd=\dimen175
 \w@pgf@writea=\write3
 \r@pgf@reada=\read2
 \c@pgf@counta=\count294
@@ -270,9 +295,9 @@ Package: pgfcore 2025-08-29 v3.1.11a (3.1.11a)
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex)
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
-\pgfmath@dimen=\dimen171
+\pgfmath@dimen=\dimen176
 \pgfmath@count=\count301
-\pgfmath@box=\box56
+\pgfmath@box=\box58
 \pgfmath@toks=\toks30
 \pgfmath@stack@operand=\toks31
 \pgfmath@stack@operation=\toks32
@@ -301,51 +326,51 @@ etics.code.tex)
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfint.code.tex)
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
 File: pgfcorepoints.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@picminx=\dimen172
-\pgf@picmaxx=\dimen173
-\pgf@picminy=\dimen174
-\pgf@picmaxy=\dimen175
-\pgf@pathminx=\dimen176
-\pgf@pathmaxx=\dimen177
-\pgf@pathminy=\dimen178
-\pgf@pathmaxy=\dimen179
-\pgf@xx=\dimen180
-\pgf@xy=\dimen181
-\pgf@yx=\dimen182
-\pgf@yy=\dimen183
-\pgf@zx=\dimen184
-\pgf@zy=\dimen185
+\pgf@picminx=\dimen177
+\pgf@picmaxx=\dimen178
+\pgf@picminy=\dimen179
+\pgf@picmaxy=\dimen180
+\pgf@pathminx=\dimen181
+\pgf@pathmaxx=\dimen182
+\pgf@pathminy=\dimen183
+\pgf@pathmaxy=\dimen184
+\pgf@xx=\dimen185
+\pgf@xy=\dimen186
+\pgf@yx=\dimen187
+\pgf@yy=\dimen188
+\pgf@zx=\dimen189
+\pgf@zy=\dimen190
 )
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.cod
 e.tex
 File: pgfcorepathconstruct.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@path@lastx=\dimen186
-\pgf@path@lasty=\dimen187
+\pgf@path@lastx=\dimen191
+\pgf@path@lasty=\dimen192
 )
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code.te
 x
 File: pgfcorepathusage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@shorten@end@additional=\dimen188
-\pgf@shorten@start@additional=\dimen189
+\pgf@shorten@end@additional=\dimen193
+\pgf@shorten@start@additional=\dimen194
 )
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
 File: pgfcorescopes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfpic=\box57
-\pgf@hbox=\box58
-\pgf@layerbox@main=\box59
+\pgfpic=\box59
+\pgf@hbox=\box60
+\pgf@layerbox@main=\box61
 \pgf@picture@serial@count=\count303
 )
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code
 .tex
 File: pgfcoregraphicstate.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgflinewidth=\dimen190
+\pgflinewidth=\dimen195
 )
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformations.c
 ode.tex
 File: pgfcoretransformations.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@pt@x=\dimen191
-\pgf@pt@y=\dimen192
-\pgf@pt@temp=\dimen193
+\pgf@pt@x=\dimen196
+\pgf@pt@y=\dimen197
+\pgf@pt@temp=\dimen198
 )
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
 File: pgfcorequick.code.tex 2025-08-29 v3.1.11a (3.1.11a)
@@ -359,11 +384,11 @@ File: pgfcorepathprocessing.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 )
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex
 File: pgfcorearrows.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfarrowsep=\dimen194
+\pgfarrowsep=\dimen199
 )
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
 File: pgfcoreshade.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@max=\dimen195
+\pgf@max=\dimen256
 \pgf@sys@shading@range@num=\count304
 \pgf@shadingcount=\count305
 )
@@ -372,7 +397,7 @@ File: pgfcoreimage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 )
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
 File: pgfcoreexternal.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfexternal@startupbox=\box60
+\pgfexternal@startupbox=\box62
 ) (c:/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex
 File: pgfcorelayers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 )
@@ -387,7 +412,7 @@ File: pgfcorerdf.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ))) (c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.te
 x
 File: pgfmoduleshapes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfnodeparttextbox=\box61
+\pgfnodeparttextbox=\box63
 )
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex
 File: pgfmoduleplot.code.tex 2025-08-29 v3.1.11a (3.1.11a)
@@ -395,8 +420,8 @@ File: pgfmoduleplot.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 (c:/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.st
 y
 Package: pgfcomp-version-0-65 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@nodesepstart=\dimen196
-\pgf@nodesepend=\dimen197
+\pgf@nodesepstart=\dimen257
+\pgf@nodesepend=\dimen258
 )
 (c:/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18.st
 y
@@ -408,8 +433,8 @@ Package: pgfcomp-version-1-18 2025-08-29 v3.1.11a (3.1.11a)
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex))
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
 Package: pgffor 2025-08-29 v3.1.11a (3.1.11a)
-\pgffor@iter=\dimen198
-\pgffor@skip=\dimen199
+\pgffor@iter=\dimen259
+\pgffor@skip=\dimen260
 \pgffor@stack=\toks33
 \pgffor@toks=\toks34
 ))
@@ -420,20 +445,20 @@ Package: tikz 2025-08-29 v3.1.11a (3.1.11a)
 de.tex
 File: pgflibraryplothandlers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgf@plot@mark@count=\count306
-\pgfplotmarksize=\dimen256
+\pgfplotmarksize=\dimen261
 )
-\tikz@lastx=\dimen257
-\tikz@lasty=\dimen258
-\tikz@lastxsaved=\dimen259
-\tikz@lastysaved=\dimen260
-\tikz@lastmovetox=\dimen261
-\tikz@lastmovetoy=\dimen262
-\tikzleveldistance=\dimen263
-\tikzsiblingdistance=\dimen264
-\tikz@figbox=\box62
-\tikz@figbox@bg=\box63
-\tikz@tempbox=\box64
-\tikz@tempbox@bg=\box65
+\tikz@lastx=\dimen262
+\tikz@lasty=\dimen263
+\tikz@lastxsaved=\dimen264
+\tikz@lastysaved=\dimen265
+\tikz@lastmovetox=\dimen266
+\tikz@lastmovetoy=\dimen267
+\tikzleveldistance=\dimen268
+\tikzsiblingdistance=\dimen269
+\tikz@figbox=\box64
+\tikz@figbox@bg=\box65
+\tikz@tempbox=\box66
+\tikz@tempbox@bg=\box67
 \tikztreelevel=\count307
 \tikznumberofchildren=\count308
 \tikznumberofcurrentchild=\count309
@@ -462,10 +487,10 @@ File: pgflibraryshapes.symbols.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.meta.cod
 e.tex
 File: pgflibraryarrows.meta.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfarrowinset=\dimen265
-\pgfarrowlength=\dimen266
-\pgfarrowwidth=\dimen267
-\pgfarrowlinewidth=\dimen268
+\pgfarrowinset=\dimen270
+\pgfarrowlength=\dimen271
+\pgfarrowwidth=\dimen272
+\pgfarrowlinewidth=\dimen273
 ) (c:/texlive/2025/texmf-dist/tex/lualatex/luacode/luacode.sty
 Package: luacode 2012/01/23 v1.2a lua-in-tex helpers (mpg)
 
@@ -500,9 +525,9 @@ Package: siunitx 2025-07-09 v3.4.14 A comprehensive (SI) units package
 \l__siunitx_number_group_first_int=\count323
 \l__siunitx_number_group_size_int=\count324
 \l__siunitx_number_group_minimum_int=\count325
-\l__siunitx_angle_tmp_dim=\dimen269
-\l__siunitx_angle_marker_box=\box66
-\l__siunitx_angle_unit_box=\box67
+\l__siunitx_angle_tmp_dim=\dimen274
+\l__siunitx_angle_marker_box=\box68
+\l__siunitx_angle_unit_box=\box69
 \l__siunitx_compound_count_int=\count326
 
 (c:/texlive/2025/texmf-dist/tex/latex/translations/translations.sty
@@ -528,37 +553,37 @@ Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
 \pdftexcmds@toks=\toks36
 ))
-\l__siunitx_table_tmp_box=\box68
-\l__siunitx_table_tmp_dim=\dimen270
-\l__siunitx_table_column_width_dim=\dimen271
-\l__siunitx_table_integer_box=\box69
-\l__siunitx_table_decimal_box=\box70
-\l__siunitx_table_uncert_box=\box71
-\l__siunitx_table_before_box=\box72
-\l__siunitx_table_after_box=\box73
-\l__siunitx_table_before_dim=\dimen272
-\l__siunitx_table_carry_dim=\dimen273
+\l__siunitx_table_tmp_box=\box70
+\l__siunitx_table_tmp_dim=\dimen275
+\l__siunitx_table_column_width_dim=\dimen276
+\l__siunitx_table_integer_box=\box71
+\l__siunitx_table_decimal_box=\box72
+\l__siunitx_table_uncert_box=\box73
+\l__siunitx_table_before_box=\box74
+\l__siunitx_table_after_box=\box75
+\l__siunitx_table_before_dim=\dimen277
+\l__siunitx_table_carry_dim=\dimen278
 \l__siunitx_unit_tmp_int=\count328
 \l__siunitx_unit_position_int=\count329
 \l__siunitx_unit_total_int=\count330
 
 (c:/texlive/2025/texmf-dist/tex/latex/tools/array.sty
 Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
-\col@sep=\dimen274
-\ar@mcellbox=\box74
-\extrarowheight=\dimen275
+\col@sep=\dimen279
+\ar@mcellbox=\box76
+\extrarowheight=\dimen280
 \NC@list=\toks37
 \extratabsurround=\skip54
 \backup@length=\skip55
-\ar@cellbox=\box75
+\ar@cellbox=\box77
 ))
 (c:/texlive/2025/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count331
 \float@exts=\toks38
-\float@box=\box76
+\float@box=\box78
 \@float@everytoks=\toks39
-\@floatcapt=\box77
+\@floatcapt=\box79
 )
 (c:/texlive/2025/texmf-dist/tex/latex/tabularray/tabularray.sty
 Package: tabularray 2025-11-27 v2025C Typeset tabulars and arrays with LaTeX3
@@ -570,29 +595,29 @@ Package: ninecolors 2022-02-13 v2022D Select colors with proper color contrast
 \l__tblr_a_int=\count333
 \l__tblr_c_int=\count334
 \l__tblr_r_int=\count335
-\l__tblr_d_dim=\dimen276
-\l__tblr_h_dim=\dimen277
-\l__tblr_o_dim=\dimen278
-\l__tblr_p_dim=\dimen279
-\l__tblr_q_dim=\dimen280
-\l__tblr_r_dim=\dimen281
-\l__tblr_s_dim=\dimen282
-\l__tblr_t_dim=\dimen283
-\l__tblr_v_dim=\dimen284
-\l__tblr_w_dim=\dimen285
-\l__tblr_a_box=\box78
-\l__tblr_b_box=\box79
-\l__tblr_c_box=\box80
-\l__tblr_d_box=\box81
+\l__tblr_d_dim=\dimen281
+\l__tblr_h_dim=\dimen282
+\l__tblr_o_dim=\dimen283
+\l__tblr_p_dim=\dimen284
+\l__tblr_q_dim=\dimen285
+\l__tblr_r_dim=\dimen286
+\l__tblr_s_dim=\dimen287
+\l__tblr_t_dim=\dimen288
+\l__tblr_v_dim=\dimen289
+\l__tblr_w_dim=\dimen290
+\l__tblr_a_box=\box80
+\l__tblr_b_box=\box81
+\l__tblr_c_box=\box82
+\l__tblr_d_box=\box83
 \c@tblrcount=\count336
 \c@rownum=\count337
 \c@colnum=\count338
 \c@rowcount=\count339
 \c@colcount=\count340
-\abovesep=\dimen286
-\belowsep=\dimen287
-\leftsep=\dimen288
-\rightsep=\dimen289
+\abovesep=\dimen291
+\belowsep=\dimen292
+\leftsep=\dimen293
+\rightsep=\dimen294
 \gTblrLevelInt=\count341
 \g__tblr_data_row_key_count_int=\count342
 \g__tblr_data_column_key_count_int=\count343
@@ -611,86 +636,86 @@ Package: ninecolors 2022-02-13 v2022D Select colors with proper color contrast
 \l__child_sign_h_int=\count356
 \l__child_sign_v_int=\count357
 \l__child_step_int=\count358
-\lTblrDefaultHruleWidthDim=\dimen290
-\lTblrDefaultVruleWidthDim=\dimen291
+\lTblrDefaultHruleWidthDim=\dimen295
+\lTblrDefaultVruleWidthDim=\dimen296
 \l__tblr_split_balance_int=\count359
-\l__tblr_strut_dp_dim=\dimen292
-\l__tblr_strut_ht_dim=\dimen293
-\g__tblr_cell_wd_dim=\dimen294
-\g__tblr_cell_ht_dim=\dimen295
-\g__tblr_cell_head_dim=\dimen296
-\g__tblr_cell_foot_dim=\dimen297
-\l__tblr_measured_cell_box=\box82
-\g__tblr_last_box=\box83
-\l__tblr_temp_box=\box84
-\l__tblr_column_target_dim=\dimen298
-\l__tblr_hfuzz_dim=\dimen299
-\l__tblr_caption_box=\box85
-\l__tblr_caption_left_box=\box86
+\l__tblr_strut_dp_dim=\dimen297
+\l__tblr_strut_ht_dim=\dimen298
+\g__tblr_cell_wd_dim=\dimen299
+\g__tblr_cell_ht_dim=\dimen300
+\g__tblr_cell_head_dim=\dimen301
+\g__tblr_cell_foot_dim=\dimen302
+\l__tblr_measured_cell_box=\box84
+\g__tblr_last_box=\box85
+\l__tblr_temp_box=\box86
+\l__tblr_column_target_dim=\dimen303
+\l__tblr_hfuzz_dim=\dimen304
+\l__tblr_caption_box=\box87
+\l__tblr_caption_left_box=\box88
 \lTblrRowHeadInt=\count360
 \lTblrRowFootInt=\count361
-\l__tblr_row_head_box=\box87
-\l__tblr_row_foot_box=\box88
-\l__tblr_row_head_foot_dim=\dimen300
-\lTblrTableWidthDim=\dimen301
-\l__tblr_table_firsthead_box=\box89
-\l__tblr_table_middlehead_box=\box90
-\l__tblr_table_lasthead_box=\box91
-\l__tblr_table_firstfoot_box=\box92
-\l__tblr_table_middlefoot_box=\box93
-\l__tblr_table_lastfoot_box=\box94
-\l__tblr_remain_height_dim=\dimen302
-\l__tblr_next_rows_dim=\dimen303
-\l__tblr_page_overfill_dim=\dimen304
+\l__tblr_row_head_box=\box89
+\l__tblr_row_foot_box=\box90
+\l__tblr_row_head_foot_dim=\dimen305
+\lTblrTableWidthDim=\dimen306
+\l__tblr_table_firsthead_box=\box91
+\l__tblr_table_middlehead_box=\box92
+\l__tblr_table_lasthead_box=\box93
+\l__tblr_table_firstfoot_box=\box94
+\l__tblr_table_middlefoot_box=\box95
+\l__tblr_table_lastfoot_box=\box96
+\l__tblr_remain_height_dim=\dimen307
+\l__tblr_next_rows_dim=\dimen308
+\l__tblr_page_overfill_dim=\dimen309
 \l__tblr_long_from_int=\count362
 \l__tblr_long_to_int=\count363
 \l__tblr_curr_i_int=\count364
 \l__tblr_prev_i_int=\count365
 \lTblrTablePageInt=\count366
-\l__tblr_table_head_box=\box95
-\l__tblr_table_foot_box=\box96
-\l__tblr_table_head_foot_dim=\dimen305
-\l__tblr_table_head_body_foot_dim=\dimen306
-\l__tblr_table_box=\box97
+\l__tblr_table_head_box=\box97
+\l__tblr_table_foot_box=\box98
+\l__tblr_table_head_foot_dim=\dimen310
+\l__tblr_table_head_body_foot_dim=\dimen311
+\l__tblr_table_box=\box99
 \lTblrRowFirstInt=\count367
 \lTblrRowLastInt=\count368
-\l__tblr_cover_box_a_dim=\dimen307
-\l__tblr_cover_box_b_dim=\dimen308
-\l__tblr_table_hlines_box=\box98
-\l__tblr_hline_box=\box99
-\l__tblr_row_box=\box100
-\l__tblr_col_o_wd_dim=\dimen309
-\l__tblr_col_b_wd_dim=\dimen310
-\l__tblr_hline_leftskip_dim=\dimen311
-\l__tblr_hline_rightskip_dim=\dimen312
-\l__tblr_row_ht_dim=\dimen313
-\l__tblr_row_dp_dim=\dimen314
-\l__tblr_row_abovesep_dim=\dimen315
-\l__tblr_row_belowsep_dim=\dimen316
-\l__tblr_row_vlines_box=\box101
-\l__tblr_vline_box=\box102
-\l__tblr_cell_box=\box103
-\l__tblr_row_upper_dim=\dimen317
-\l__tblr_row_lower_dim=\dimen318
-\l__tblr_row_vpace_dim=\dimen319
-\l__tblr_vline_aboveskip_dim=\dimen320
-\l__tblr_vline_belowskip_dim=\dimen321
+\l__tblr_cover_box_a_dim=\dimen312
+\l__tblr_cover_box_b_dim=\dimen313
+\l__tblr_table_hlines_box=\box100
+\l__tblr_hline_box=\box101
+\l__tblr_row_box=\box102
+\l__tblr_col_o_wd_dim=\dimen314
+\l__tblr_col_b_wd_dim=\dimen315
+\l__tblr_hline_leftskip_dim=\dimen316
+\l__tblr_hline_rightskip_dim=\dimen317
+\l__tblr_row_ht_dim=\dimen318
+\l__tblr_row_dp_dim=\dimen319
+\l__tblr_row_abovesep_dim=\dimen320
+\l__tblr_row_belowsep_dim=\dimen321
+\l__tblr_row_vlines_box=\box103
+\l__tblr_vline_box=\box104
+\l__tblr_cell_box=\box105
+\l__tblr_row_upper_dim=\dimen322
+\l__tblr_row_lower_dim=\dimen323
+\l__tblr_row_vpace_dim=\dimen324
+\l__tblr_vline_aboveskip_dim=\dimen325
+\l__tblr_vline_belowskip_dim=\dimen326
 \lTblrCellRowSpanInt=\count369
 \lTblrCellColSpanInt=\count370
-\l__tblr_cell_wd_dim=\dimen322
-\l__tblr_cell_ht_dim=\dimen323
-\lTblrCellAboveBorderWidthDim=\dimen324
-\lTblrCellBelowBorderWidthDim=\dimen325
-\lTblrCellLeftBorderWidthDim=\dimen326
-\lTblrCellRightBorderWidthDim=\dimen327
-\l__tblr_diag_box=\box104
-\l__tblr_cell_inner_wd_dim=\dimen328
-\l__tblr_cell_inner_dp_dim=\dimen329
-\l__tblr_cell_hanchor_dim=\dimen330
-\l__tblr_last_cell_table_ht_dim=\dimen331
-\l__tblr_last_cell_table_dp_dim=\dimen332
-\l__tblr_last_vline_wd_dim=\dimen333
-\l__tblr_tikz_node_box=\box105
+\l__tblr_cell_wd_dim=\dimen327
+\l__tblr_cell_ht_dim=\dimen328
+\lTblrCellAboveBorderWidthDim=\dimen329
+\lTblrCellBelowBorderWidthDim=\dimen330
+\lTblrCellLeftBorderWidthDim=\dimen331
+\lTblrCellRightBorderWidthDim=\dimen332
+\l__tblr_diag_box=\box106
+\l__tblr_cell_inner_wd_dim=\dimen333
+\l__tblr_cell_inner_dp_dim=\dimen334
+\l__tblr_cell_hanchor_dim=\dimen335
+\l__tblr_last_cell_table_ht_dim=\dimen336
+\l__tblr_last_cell_table_dp_dim=\dimen337
+\l__tblr_last_vline_wd_dim=\dimen338
+\l__tblr_tikz_node_box=\box107
 )
 (c:/Users/paulz/texmf/tex/latex/numodel-bundle/numodel-plot/numodel-plot.sty
 Package: numodel-plot 2026/05/26 v0.6.0 Auto-sizing PGFPlots engine
@@ -706,7 +731,7 @@ Package pgfplots info on input line 124: Initializing with LUA version Lua 5.3
 \t@pgfplots@toka=\toks40
 \t@pgfplots@tokb=\toks41
 \t@pgfplots@tokc=\toks42
-\pgfplots@tmpa=\dimen334
+\pgfplots@tmpa=\dimen339
 \c@pgfplots@coordindex=\count371
 \c@pgfplots@scanlineindex=\count372
 
@@ -772,16 +797,16 @@ ex)
 brarydecorations.code.tex
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduledecorations.code.t
 ex
-\pgfdecoratedcompleteddistance=\dimen335
-\pgfdecoratedremainingdistance=\dimen336
-\pgfdecoratedinputsegmentcompleteddistance=\dimen337
-\pgfdecoratedinputsegmentremainingdistance=\dimen338
-\pgf@decorate@distancetomove=\dimen339
+\pgfdecoratedcompleteddistance=\dimen340
+\pgfdecoratedremainingdistance=\dimen341
+\pgfdecoratedinputsegmentcompleteddistance=\dimen342
+\pgfdecoratedinputsegmentremainingdistance=\dimen343
+\pgf@decorate@distancetomove=\dimen344
 \pgf@decorate@repeatstate=\count376
-\pgfdecorationsegmentamplitude=\dimen340
-\pgfdecorationsegmentlength=\dimen341
+\pgfdecorationsegmentamplitude=\dimen345
+\pgfdecorationsegmentlength=\dimen346
 )
-\tikz@lib@dec@box=\box106
+\tikz@lib@dec@box=\box108
 )
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
 brarydecorations.pathmorphing.code.tex
@@ -794,12 +819,12 @@ orations.pathreplacing.code.tex))
 (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.conto
 urlua.code.tex)
 \pgfplots@numplots=\count377
-\pgfplots@xmin@reg=\dimen342
-\pgfplots@xmax@reg=\dimen343
-\pgfplots@ymin@reg=\dimen344
-\pgfplots@ymax@reg=\dimen345
-\pgfplots@zmin@reg=\dimen346
-\pgfplots@zmax@reg=\dimen347
+\pgfplots@xmin@reg=\dimen347
+\pgfplots@xmax@reg=\dimen348
+\pgfplots@ymin@reg=\dimen349
+\pgfplots@ymax@reg=\dimen350
+\pgfplots@zmin@reg=\dimen351
+\pgfplots@zmax@reg=\dimen352
 )
 (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzli
 braryplotmarks.code.tex
@@ -830,7 +855,7 @@ ations.softclip.code.tex)))
 \g_numodel_maxiter_int=\count381
 \g_numodel_gridmaxx_int=\count382
  (../numodel-EN.def
-File: numodel-EN.def 2026/05/26 v0.6.0 numodel keyword table -- English (XMILE)
+File: numodel-EN.def 2026/05/30 v0.6.0 numodel keyword table -- English (XMILE)
 
 )
 \l__numodel_row_int=\count383
@@ -876,7 +901,10 @@ MVAR body fullname: tstA
 MVAR done: A
 MRULE start: A
 VTD input: \tstA + atan(\tstX ) + cot(\tstX ) + csc(\tstX ) + sec(\tstX ) + min
-(\tstX ,\tstDt ) + max(\tstX ,\tstDt )
+(\tstX ,\tstDt ) + max(\tstX ,\tstDt ) + floor(\tstX ) + ceil(\tstX ) + asind(\
+tstX ) + acosd(\tstX ) + atand(\tstX ) + sind(\tstX ) + cosd(\tstX ) + tand(\ts
+tX ) + acsc(\tstX ) + asec(\tstX ) + acot(\tstX ) + cscd(\tstX ) + cotd(\tstX )
+ + secd(\tstX ) + acscd(\tstX ) + asecd(\tstX ) + acotd(\tstX )
 VTD seq: tstT|tstDt|tstX|tstA
 VTD iter: tstT
 VTD replace \c {tstT} with t
@@ -886,10 +914,30 @@ VTD iter: tstX
 VTD replace \c {tstX} with x
 VTD iter: tstA
 VTD replace \c {tstA} with a
-MRULE rhs after: a+ \text {ARCTAN}(x) + 1/\text {TAN}(x) + 1/\text {SIN}(x) + 1
-/\text {COS}(x) + \text {MIN}(x,dt) + \text {MAX}(x,dt)
-MRULE display: a\,=\,a+ \text {ARCTAN}(x) + 1/\text {TAN}(x) + 1/\text {SIN}(x)
- + 1/\text {COS}(x) + \text {MIN}(x,dt) + \text {MAX}(x,dt)
+MRULE rhs after: a+ \text {ARCTAN}(x) + \sfrac {1}{\text {TAN}(x)} + \sfrac {1}
+{\text {SIN}(x)} + \sfrac {1}{\text {COS}(x)} + \text {MIN}(x,dt) + \text {MAX}
+(x,dt) + \text {INT}(x) + -\text {INT}(-x) + \sfrac {180}{\pi }\cdot  \text {AR
+CSIN}(x) + \sfrac {180}{\pi }\cdot  \text {ARCCOS}(x) + \sfrac {180}{\pi }\cdot
+  \text {ARCTAN}(x) + \text {SIN}(\sfrac {\pi }{180}\cdot  x) + \text {COS}(\sf
+rac {\pi }{180}\cdot  x) + \text {TAN}(\sfrac {\pi }{180}\cdot  x) + \text {ARC
+SIN}(\sfrac {1}{x}) + \text {ARCCOS}(\sfrac {1}{x}) + \text {ARCTAN}(\sfrac {1}
+{x}) + \sfrac {1}{\text {SIN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {
+TAN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {COS}(\sfrac {\pi }{180}\c
+dot  x)} + \sfrac {180}{\pi }\cdot  \text {ARCSIN}(\sfrac {1}{x}) + \sfrac {180
+}{\pi }\cdot  \text {ARCCOS}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdot  \text {A
+RCTAN}(\sfrac {1}{x})
+MRULE display: a\,=\,a+ \text {ARCTAN}(x) + \sfrac {1}{\text {TAN}(x)} + \sfrac
+ {1}{\text {SIN}(x)} + \sfrac {1}{\text {COS}(x)} + \text {MIN}(x,dt) + \text {
+MAX}(x,dt) + \text {INT}(x) + -\text {INT}(-x) + \sfrac {180}{\pi }\cdot  \text
+ {ARCSIN}(x) + \sfrac {180}{\pi }\cdot  \text {ARCCOS}(x) + \sfrac {180}{\pi }\
+cdot  \text {ARCTAN}(x) + \text {SIN}(\sfrac {\pi }{180}\cdot  x) + \text {COS}
+(\sfrac {\pi }{180}\cdot  x) + \text {TAN}(\sfrac {\pi }{180}\cdot  x) + \text 
+{ARCSIN}(\sfrac {1}{x}) + \text {ARCCOS}(\sfrac {1}{x}) + \text {ARCTAN}(\sfrac
+ {1}{x}) + \sfrac {1}{\text {SIN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\te
+xt {TAN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {COS}(\sfrac {\pi }{18
+0}\cdot  x)} + \sfrac {180}{\pi }\cdot  \text {ARCSIN}(\sfrac {1}{x}) + \sfrac 
+{180}{\pi }\cdot  \text {ARCCOS}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdot  \tex
+t {ARCTAN}(\sfrac {1}{x})
 MRULE done: A
 MRULE start: T
 VTD input: \tstT + \tstDt 
@@ -918,37 +966,37 @@ VTD iter: tstA
 VTD replace \c {tstA} with a
 MSTOP done
 Package translations Info: No language package found. I am going to use `englis
-h' as default language. on input line 17.
+h' as default language. on input line 30.
 (./expr-newfns-test.aux)
 \openout1 = expr-newfns-test.aux
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
 
 (c:/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count391
-\scratchdimen=\dimen348
-\scratchbox=\box107
+\scratchdimen=\dimen353
+\scratchbox=\box109
 \nofMPsegments=\count392
 \nofMParguments=\count393
 \everyMPshowfont=\toks44
 \MPscratchCnt=\count394
-\MPscratchDim=\dimen349
+\MPscratchDim=\dimen354
 \MPnumerator=\count395
 \makeMPintoPDFobject=\count396
 \everyMPtoPDFconversion=\toks45
@@ -967,17 +1015,27 @@ File: translations-basic-dictionary-english.trsl (english translation file `tra
 nslations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' f
-or `english'. on input line 17.
+or `english'. on input line 30.
 
 Package pgfplots notification 'compat/show suggested version=true': document ha
 s been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
 
 TEXTMODEL start
-BUILD_TABLE rules: a\,=\,a+ \text {ARCTAN}(x) + 1/\text {TAN}(x) + 1/\text {SIN
-}(x) + 1/\text {COS}(x) + \text {MIN}(x,dt) + \text {MAX}(x,dt)|t\,=\,t+ dt|\pr
-otect \protect \unhbox \voidb@x \hbox {IF }t\geqslant   2\protect \protect \unh
-box \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\pro
-tect \protect \unhbox \voidb@x \hbox {ENDIF}
+BUILD_TABLE rules: a\,=\,a+ \text {ARCTAN}(x) + \sfrac {1}{\text {TAN}(x)} + \s
+frac {1}{\text {SIN}(x)} + \sfrac {1}{\text {COS}(x)} + \text {MIN}(x,dt) + \te
+xt {MAX}(x,dt) + \text {INT}(x) + -\text {INT}(-x) + \sfrac {180}{\pi }\cdot  \
+text {ARCSIN}(x) + \sfrac {180}{\pi }\cdot  \text {ARCCOS}(x) + \sfrac {180}{\p
+i }\cdot  \text {ARCTAN}(x) + \text {SIN}(\sfrac {\pi }{180}\cdot  x) + \text {
+COS}(\sfrac {\pi }{180}\cdot  x) + \text {TAN}(\sfrac {\pi }{180}\cdot  x) + \t
+ext {ARCSIN}(\sfrac {1}{x}) + \text {ARCCOS}(\sfrac {1}{x}) + \text {ARCTAN}(\s
+frac {1}{x}) + \sfrac {1}{\text {SIN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}
+{\text {TAN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {COS}(\sfrac {\pi 
+}{180}\cdot  x)} + \sfrac {180}{\pi }\cdot  \text {ARCSIN}(\sfrac {1}{x}) + \sf
+rac {180}{\pi }\cdot  \text {ARCCOS}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdot  
+\text {ARCTAN}(\sfrac {1}{x})|t\,=\,t+ dt|\protect \protect \unhbox \voidb@x \h
+box {IF }t\geqslant   2\protect \protect \unhbox \voidb@x \hbox { THEN}\protect
+ \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hb
+ox {ENDIF}
 BUILD_TABLE types: rule|rule|rule
 BUILD_TABLE numrules: 3
 BUILD_TABLE numstarts: 4
@@ -985,21 +1043,49 @@ BUILD_TABLE before-step table: \begin {longtblr}[theme={numodel}]{colspec={r|l|
 l},rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline 
 BUILD_TABLE iter row: 0
 BUILD_TABLE row: 1type: rule
-BUILD_TABLE emit rule num: 1content: a\,=\,a+ \text {ARCTAN}(x) + 1/\text {TAN}
-(x) + 1/\text {SIN}(x) + 1/\text {COS}(x) + \text {MIN}(x,dt) + \text {MAX}(x,d
-t)
+BUILD_TABLE emit rule num: 1content: a\,=\,a+ \text {ARCTAN}(x) + \sfrac {1}{\t
+ext {TAN}(x)} + \sfrac {1}{\text {SIN}(x)} + \sfrac {1}{\text {COS}(x)} + \text
+ {MIN}(x,dt) + \text {MAX}(x,dt) + \text {INT}(x) + -\text {INT}(-x) + \sfrac {
+180}{\pi }\cdot  \text {ARCSIN}(x) + \sfrac {180}{\pi }\cdot  \text {ARCCOS}(x)
+ + \sfrac {180}{\pi }\cdot  \text {ARCTAN}(x) + \text {SIN}(\sfrac {\pi }{180}\
+cdot  x) + \text {COS}(\sfrac {\pi }{180}\cdot  x) + \text {TAN}(\sfrac {\pi }{
+180}\cdot  x) + \text {ARCSIN}(\sfrac {1}{x}) + \text {ARCCOS}(\sfrac {1}{x}) +
+ \text {ARCTAN}(\sfrac {1}{x}) + \sfrac {1}{\text {SIN}(\sfrac {\pi }{180}\cdot
+  x)} + \sfrac {1}{\text {TAN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text 
+{COS}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {180}{\pi }\cdot  \text {ARCSIN}(\s
+frac {1}{x}) + \sfrac {180}{\pi }\cdot  \text {ARCCOS}(\sfrac {1}{x}) + \sfrac 
+{180}{\pi }\cdot  \text {ARCTAN}(\sfrac {1}{x})
 BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},
 rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1
-&$a\,=\,a+ \text {ARCTAN}(x) + 1/\text {TAN}(x) + 1/\text {SIN}(x) + 1/\text {C
-OS}(x) + \text {MIN}(x,dt) + \text {MAX}(x,dt)$&
+&$a\,=\,a+ \text {ARCTAN}(x) + \sfrac {1}{\text {TAN}(x)} + \sfrac {1}{\text {S
+IN}(x)} + \sfrac {1}{\text {COS}(x)} + \text {MIN}(x,dt) + \text {MAX}(x,dt) + 
+\text {INT}(x) + -\text {INT}(-x) + \sfrac {180}{\pi }\cdot  \text {ARCSIN}(x) 
++ \sfrac {180}{\pi }\cdot  \text {ARCCOS}(x) + \sfrac {180}{\pi }\cdot  \text {
+ARCTAN}(x) + \text {SIN}(\sfrac {\pi }{180}\cdot  x) + \text {COS}(\sfrac {\pi 
+}{180}\cdot  x) + \text {TAN}(\sfrac {\pi }{180}\cdot  x) + \text {ARCSIN}(\sfr
+ac {1}{x}) + \text {ARCCOS}(\sfrac {1}{x}) + \text {ARCTAN}(\sfrac {1}{x}) + \s
+frac {1}{\text {SIN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {TAN}(\sfr
+ac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {COS}(\sfrac {\pi }{180}\cdot  x)} 
++ \sfrac {180}{\pi }\cdot  \text {ARCSIN}(\sfrac {1}{x}) + \sfrac {180}{\pi }\c
+dot  \text {ARCCOS}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdot  \text {ARCTAN}(\s
+frac {1}{x})$&
 BUILD_TABLE iter row: 1
 BUILD_TABLE row: 2type: rule
 BUILD_TABLE emit rule num: 2content: t\,=\,t+ dt
 BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},
 rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1
-&$a\,=\,a+ \text {ARCTAN}(x) + 1/\text {TAN}(x) + 1/\text {SIN}(x) + 1/\text {C
-OS}(x) + \text {MIN}(x,dt) + \text {MAX}(x,dt)$&${\tstTtext }=\tstTqty $\\\rule
- {0pt}{2.6ex}2&$t\,=\,t+ dt$&
+&$a\,=\,a+ \text {ARCTAN}(x) + \sfrac {1}{\text {TAN}(x)} + \sfrac {1}{\text {S
+IN}(x)} + \sfrac {1}{\text {COS}(x)} + \text {MIN}(x,dt) + \text {MAX}(x,dt) + 
+\text {INT}(x) + -\text {INT}(-x) + \sfrac {180}{\pi }\cdot  \text {ARCSIN}(x) 
++ \sfrac {180}{\pi }\cdot  \text {ARCCOS}(x) + \sfrac {180}{\pi }\cdot  \text {
+ARCTAN}(x) + \text {SIN}(\sfrac {\pi }{180}\cdot  x) + \text {COS}(\sfrac {\pi 
+}{180}\cdot  x) + \text {TAN}(\sfrac {\pi }{180}\cdot  x) + \text {ARCSIN}(\sfr
+ac {1}{x}) + \text {ARCCOS}(\sfrac {1}{x}) + \text {ARCTAN}(\sfrac {1}{x}) + \s
+frac {1}{\text {SIN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {TAN}(\sfr
+ac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {COS}(\sfrac {\pi }{180}\cdot  x)} 
++ \sfrac {180}{\pi }\cdot  \text {ARCSIN}(\sfrac {1}{x}) + \sfrac {180}{\pi }\c
+dot  \text {ARCCOS}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdot  \text {ARCTAN}(\s
+frac {1}{x})$&${\tstTtext }=\tstTqty $\\\rule {0pt}{2.6ex}2&$t\,=\,t+ dt$&
 BUILD_TABLE iter row: 2
 BUILD_TABLE row: 3type: rule
 BUILD_TABLE emit rule num: 3content: \protect \protect \unhbox \voidb@x \hbox {
@@ -1008,47 +1094,76 @@ tect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {E
 NDIF}
 BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},
 rowhead=1}&\textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1
-&$a\,=\,a+ \text {ARCTAN}(x) + 1/\text {TAN}(x) + 1/\text {SIN}(x) + 1/\text {C
-OS}(x) + \text {MIN}(x,dt) + \text {MAX}(x,dt)$&${\tstTtext }=\tstTqty $\\\rule
- {0pt}{2.6ex}2&$t\,=\,t+ dt$&${\tstDttext }=\tstDtqty $\\\rule {0pt}{2.6ex}3&$\
-protect \protect \unhbox \voidb@x \hbox {IF }t\geqslant   2\protect \protect \u
-nhbox \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\p
-rotect \protect \unhbox \voidb@x \hbox {ENDIF}$&
+&$a\,=\,a+ \text {ARCTAN}(x) + \sfrac {1}{\text {TAN}(x)} + \sfrac {1}{\text {S
+IN}(x)} + \sfrac {1}{\text {COS}(x)} + \text {MIN}(x,dt) + \text {MAX}(x,dt) + 
+\text {INT}(x) + -\text {INT}(-x) + \sfrac {180}{\pi }\cdot  \text {ARCSIN}(x) 
++ \sfrac {180}{\pi }\cdot  \text {ARCCOS}(x) + \sfrac {180}{\pi }\cdot  \text {
+ARCTAN}(x) + \text {SIN}(\sfrac {\pi }{180}\cdot  x) + \text {COS}(\sfrac {\pi 
+}{180}\cdot  x) + \text {TAN}(\sfrac {\pi }{180}\cdot  x) + \text {ARCSIN}(\sfr
+ac {1}{x}) + \text {ARCCOS}(\sfrac {1}{x}) + \text {ARCTAN}(\sfrac {1}{x}) + \s
+frac {1}{\text {SIN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {TAN}(\sfr
+ac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {COS}(\sfrac {\pi }{180}\cdot  x)} 
++ \sfrac {180}{\pi }\cdot  \text {ARCSIN}(\sfrac {1}{x}) + \sfrac {180}{\pi }\c
+dot  \text {ARCCOS}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdot  \text {ARCTAN}(\s
+frac {1}{x})$&${\tstTtext }=\tstTqty $\\\rule {0pt}{2.6ex}2&$t\,=\,t+ dt$&${\ts
+tDttext }=\tstDtqty $\\\rule {0pt}{2.6ex}3&$\protect \protect \unhbox \voidb@x 
+\hbox {IF }t\geqslant   2\protect \protect \unhbox \voidb@x \hbox { THEN}\prote
+ct \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \
+hbox {ENDIF}$&
 TEXTMODEL table: \begin {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&
 \textbf {model}&\textbf {initial values}\\\hline \rule {0pt}{2.6ex}1&$a\,=\,a+ 
-\text {ARCTAN}(x) + 1/\text {TAN}(x) + 1/\text {SIN}(x) + 1/\text {COS}(x) + \t
-ext {MIN}(x,dt) + \text {MAX}(x,dt)$&${\tstTtext }=\tstTqty $\\\rule {0pt}{2.6e
-x}2&$t\,=\,t+ dt$&${\tstDttext }=\tstDtqty $\\\rule {0pt}{2.6ex}3&$\protect \pr
-otect \unhbox \voidb@x \hbox {IF }t\geqslant   2\protect \protect \unhbox \void
-b@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \pro
-tect \unhbox \voidb@x \hbox {ENDIF}$&${\tstXtext }=\tstXqty $\\&&${\tstAtext }=
-\tstAqty $\\\end {longtblr}
-LaTeX Font Info:    Trying to load font information for U+msa on input line 19.
+\text {ARCTAN}(x) + \sfrac {1}{\text {TAN}(x)} + \sfrac {1}{\text {SIN}(x)} + \
+sfrac {1}{\text {COS}(x)} + \text {MIN}(x,dt) + \text {MAX}(x,dt) + \text {INT}
+(x) + -\text {INT}(-x) + \sfrac {180}{\pi }\cdot  \text {ARCSIN}(x) + \sfrac {1
+80}{\pi }\cdot  \text {ARCCOS}(x) + \sfrac {180}{\pi }\cdot  \text {ARCTAN}(x) 
++ \text {SIN}(\sfrac {\pi }{180}\cdot  x) + \text {COS}(\sfrac {\pi }{180}\cdot
+  x) + \text {TAN}(\sfrac {\pi }{180}\cdot  x) + \text {ARCSIN}(\sfrac {1}{x}) 
++ \text {ARCCOS}(\sfrac {1}{x}) + \text {ARCTAN}(\sfrac {1}{x}) + \sfrac {1}{\t
+ext {SIN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {TAN}(\sfrac {\pi }{1
+80}\cdot  x)} + \sfrac {1}{\text {COS}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1
+80}{\pi }\cdot  \text {ARCSIN}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdot  \text 
+{ARCCOS}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdot  \text {ARCTAN}(\sfrac {1}{x}
+)$&${\tstTtext }=\tstTqty $\\\rule {0pt}{2.6ex}2&$t\,=\,t+ dt$&${\tstDttext }=\
+tstDtqty $\\\rule {0pt}{2.6ex}3&$\protect \protect \unhbox \voidb@x \hbox {IF }
+t\geqslant   2\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect
+ \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF
+}$&${\tstXtext }=\tstXqty $\\&&${\tstAtext }=\tstAqty $\\\end {longtblr}
+LaTeX Font Info:    Trying to load font information for U+msa on input line 32.
 
 (c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 19.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 32.
 
 
 (c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Overfull \hbox (144.56038pt too wide) detected at line 19
+Overfull \hbox (1450.03825pt too wide) detected at line 32
  [] 
  []
 
 TEXTMODEL done
 (../numodel-NL.def
-File: numodel-NL.def 2026/05/26 v0.6.0 numodel~keyword~table~--~Dutch~(CoachTaa
+File: numodel-NL.def 2026/05/30 v0.6.0 numodel~keyword~table~--~Dutch~(CoachTaa
 l)
 )
 TEXTMODEL start
-BUILD_TABLE rules: a\,=\,a+ \text {ARCTAN}(x) + 1/\text {TAN}(x) + 1/\text {SIN
-}(x) + 1/\text {COS}(x) + \text {MIN}(x,dt) + \text {MAX}(x,dt)|t\,=\,t+ dt|\pr
-otect \protect \unhbox \voidb@x \hbox {IF }t\geqslant   2\protect \protect \unh
-box \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\pro
-tect \protect \unhbox \voidb@x \hbox {ENDIF}
+BUILD_TABLE rules: a\,=\,a+ \text {ARCTAN}(x) + \sfrac {1}{\text {TAN}(x)} + \s
+frac {1}{\text {SIN}(x)} + \sfrac {1}{\text {COS}(x)} + \text {MIN}(x,dt) + \te
+xt {MAX}(x,dt) + \text {INT}(x) + -\text {INT}(-x) + \sfrac {180}{\pi }\cdot  \
+text {ARCSIN}(x) + \sfrac {180}{\pi }\cdot  \text {ARCCOS}(x) + \sfrac {180}{\p
+i }\cdot  \text {ARCTAN}(x) + \text {SIN}(\sfrac {\pi }{180}\cdot  x) + \text {
+COS}(\sfrac {\pi }{180}\cdot  x) + \text {TAN}(\sfrac {\pi }{180}\cdot  x) + \t
+ext {ARCSIN}(\sfrac {1}{x}) + \text {ARCCOS}(\sfrac {1}{x}) + \text {ARCTAN}(\s
+frac {1}{x}) + \sfrac {1}{\text {SIN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}
+{\text {TAN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {COS}(\sfrac {\pi 
+}{180}\cdot  x)} + \sfrac {180}{\pi }\cdot  \text {ARCSIN}(\sfrac {1}{x}) + \sf
+rac {180}{\pi }\cdot  \text {ARCCOS}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdot  
+\text {ARCTAN}(\sfrac {1}{x})|t\,=\,t+ dt|\protect \protect \unhbox \voidb@x \h
+box {IF }t\geqslant   2\protect \protect \unhbox \voidb@x \hbox { THEN}\protect
+ \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hb
+ox {ENDIF}
 BUILD_TABLE types: rule|rule|rule
 BUILD_TABLE numrules: 3
 BUILD_TABLE numstarts: 4
@@ -1056,21 +1171,49 @@ BUILD_TABLE before-step table: \begin {longtblr}[theme={numodel}]{colspec={r|l|
 l},rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline 
 BUILD_TABLE iter row: 0
 BUILD_TABLE row: 1type: rule
-BUILD_TABLE emit rule num: 1content: a\,=\,a+ \text {ARCTAN}(x) + 1/\text {TAN}
-(x) + 1/\text {SIN}(x) + 1/\text {COS}(x) + \text {MIN}(x,dt) + \text {MAX}(x,d
-t)
+BUILD_TABLE emit rule num: 1content: a\,=\,a+ \text {ARCTAN}(x) + \sfrac {1}{\t
+ext {TAN}(x)} + \sfrac {1}{\text {SIN}(x)} + \sfrac {1}{\text {COS}(x)} + \text
+ {MIN}(x,dt) + \text {MAX}(x,dt) + \text {INT}(x) + -\text {INT}(-x) + \sfrac {
+180}{\pi }\cdot  \text {ARCSIN}(x) + \sfrac {180}{\pi }\cdot  \text {ARCCOS}(x)
+ + \sfrac {180}{\pi }\cdot  \text {ARCTAN}(x) + \text {SIN}(\sfrac {\pi }{180}\
+cdot  x) + \text {COS}(\sfrac {\pi }{180}\cdot  x) + \text {TAN}(\sfrac {\pi }{
+180}\cdot  x) + \text {ARCSIN}(\sfrac {1}{x}) + \text {ARCCOS}(\sfrac {1}{x}) +
+ \text {ARCTAN}(\sfrac {1}{x}) + \sfrac {1}{\text {SIN}(\sfrac {\pi }{180}\cdot
+  x)} + \sfrac {1}{\text {TAN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text 
+{COS}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {180}{\pi }\cdot  \text {ARCSIN}(\s
+frac {1}{x}) + \sfrac {180}{\pi }\cdot  \text {ARCCOS}(\sfrac {1}{x}) + \sfrac 
+{180}{\pi }\cdot  \text {ARCTAN}(\sfrac {1}{x})
 BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},
 rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$
-a\,=\,a+ \text {ARCTAN}(x) + 1/\text {TAN}(x) + 1/\text {SIN}(x) + 1/\text {COS
-}(x) + \text {MIN}(x,dt) + \text {MAX}(x,dt)$&
+a\,=\,a+ \text {ARCTAN}(x) + \sfrac {1}{\text {TAN}(x)} + \sfrac {1}{\text {SIN
+}(x)} + \sfrac {1}{\text {COS}(x)} + \text {MIN}(x,dt) + \text {MAX}(x,dt) + \t
+ext {INT}(x) + -\text {INT}(-x) + \sfrac {180}{\pi }\cdot  \text {ARCSIN}(x) + 
+\sfrac {180}{\pi }\cdot  \text {ARCCOS}(x) + \sfrac {180}{\pi }\cdot  \text {AR
+CTAN}(x) + \text {SIN}(\sfrac {\pi }{180}\cdot  x) + \text {COS}(\sfrac {\pi }{
+180}\cdot  x) + \text {TAN}(\sfrac {\pi }{180}\cdot  x) + \text {ARCSIN}(\sfrac
+ {1}{x}) + \text {ARCCOS}(\sfrac {1}{x}) + \text {ARCTAN}(\sfrac {1}{x}) + \sfr
+ac {1}{\text {SIN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {TAN}(\sfrac
+ {\pi }{180}\cdot  x)} + \sfrac {1}{\text {COS}(\sfrac {\pi }{180}\cdot  x)} + 
+\sfrac {180}{\pi }\cdot  \text {ARCSIN}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdo
+t  \text {ARCCOS}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdot  \text {ARCTAN}(\sfr
+ac {1}{x})$&
 BUILD_TABLE iter row: 1
 BUILD_TABLE row: 2type: rule
 BUILD_TABLE emit rule num: 2content: t\,=\,t+ dt
 BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},
 rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$
-a\,=\,a+ \text {ARCTAN}(x) + 1/\text {TAN}(x) + 1/\text {SIN}(x) + 1/\text {COS
-}(x) + \text {MIN}(x,dt) + \text {MAX}(x,dt)$&${\tstTtext }=\tstTqty $\\\rule {
-0pt}{2.6ex}2&$t\,=\,t+ dt$&
+a\,=\,a+ \text {ARCTAN}(x) + \sfrac {1}{\text {TAN}(x)} + \sfrac {1}{\text {SIN
+}(x)} + \sfrac {1}{\text {COS}(x)} + \text {MIN}(x,dt) + \text {MAX}(x,dt) + \t
+ext {INT}(x) + -\text {INT}(-x) + \sfrac {180}{\pi }\cdot  \text {ARCSIN}(x) + 
+\sfrac {180}{\pi }\cdot  \text {ARCCOS}(x) + \sfrac {180}{\pi }\cdot  \text {AR
+CTAN}(x) + \text {SIN}(\sfrac {\pi }{180}\cdot  x) + \text {COS}(\sfrac {\pi }{
+180}\cdot  x) + \text {TAN}(\sfrac {\pi }{180}\cdot  x) + \text {ARCSIN}(\sfrac
+ {1}{x}) + \text {ARCCOS}(\sfrac {1}{x}) + \text {ARCTAN}(\sfrac {1}{x}) + \sfr
+ac {1}{\text {SIN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {TAN}(\sfrac
+ {\pi }{180}\cdot  x)} + \sfrac {1}{\text {COS}(\sfrac {\pi }{180}\cdot  x)} + 
+\sfrac {180}{\pi }\cdot  \text {ARCSIN}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdo
+t  \text {ARCCOS}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdot  \text {ARCTAN}(\sfr
+ac {1}{x})$&${\tstTtext }=\tstTqty $\\\rule {0pt}{2.6ex}2&$t\,=\,t+ dt$&
 BUILD_TABLE iter row: 2
 BUILD_TABLE row: 3type: rule
 BUILD_TABLE emit rule num: 3content: \protect \protect \unhbox \voidb@x \hbox {
@@ -1079,23 +1222,42 @@ tect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {E
 NDIF}
 BUILD_TABLE after-emit table tail: {longtblr}[theme={numodel}]{colspec={r|l|l},
 rowhead=1}&\textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$
-a\,=\,a+ \text {ARCTAN}(x) + 1/\text {TAN}(x) + 1/\text {SIN}(x) + 1/\text {COS
-}(x) + \text {MIN}(x,dt) + \text {MAX}(x,dt)$&${\tstTtext }=\tstTqty $\\\rule {
-0pt}{2.6ex}2&$t\,=\,t+ dt$&${\tstDttext }=\tstDtqty $\\\rule {0pt}{2.6ex}3&$\pr
-otect \protect \unhbox \voidb@x \hbox {IF }t\geqslant   2\protect \protect \unh
-box \voidb@x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\pro
-tect \protect \unhbox \voidb@x \hbox {ENDIF}$&
+a\,=\,a+ \text {ARCTAN}(x) + \sfrac {1}{\text {TAN}(x)} + \sfrac {1}{\text {SIN
+}(x)} + \sfrac {1}{\text {COS}(x)} + \text {MIN}(x,dt) + \text {MAX}(x,dt) + \t
+ext {INT}(x) + -\text {INT}(-x) + \sfrac {180}{\pi }\cdot  \text {ARCSIN}(x) + 
+\sfrac {180}{\pi }\cdot  \text {ARCCOS}(x) + \sfrac {180}{\pi }\cdot  \text {AR
+CTAN}(x) + \text {SIN}(\sfrac {\pi }{180}\cdot  x) + \text {COS}(\sfrac {\pi }{
+180}\cdot  x) + \text {TAN}(\sfrac {\pi }{180}\cdot  x) + \text {ARCSIN}(\sfrac
+ {1}{x}) + \text {ARCCOS}(\sfrac {1}{x}) + \text {ARCTAN}(\sfrac {1}{x}) + \sfr
+ac {1}{\text {SIN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {TAN}(\sfrac
+ {\pi }{180}\cdot  x)} + \sfrac {1}{\text {COS}(\sfrac {\pi }{180}\cdot  x)} + 
+\sfrac {180}{\pi }\cdot  \text {ARCSIN}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdo
+t  \text {ARCCOS}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdot  \text {ARCTAN}(\sfr
+ac {1}{x})$&${\tstTtext }=\tstTqty $\\\rule {0pt}{2.6ex}2&$t\,=\,t+ dt$&${\tstD
+ttext }=\tstDtqty $\\\rule {0pt}{2.6ex}3&$\protect \protect \unhbox \voidb@x \h
+box {IF }t\geqslant   2\protect \protect \unhbox \voidb@x \hbox { THEN}\protect
+ \protect \unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hb
+ox {ENDIF}$&
 TEXTMODEL table: \begin {longtblr}[theme={numodel}]{colspec={r|l|l},rowhead=1}&
 \textbf {model}&\textbf {startwaarden}\\\hline \rule {0pt}{2.6ex}1&$a\,=\,a+ \t
-ext {ARCTAN}(x) + 1/\text {TAN}(x) + 1/\text {SIN}(x) + 1/\text {COS}(x) + \tex
-t {MIN}(x,dt) + \text {MAX}(x,dt)$&${\tstTtext }=\tstTqty $\\\rule {0pt}{2.6ex}
-2&$t\,=\,t+ dt$&${\tstDttext }=\tstDtqty $\\\rule {0pt}{2.6ex}3&$\protect \prot
-ect \unhbox \voidb@x \hbox {IF }t\geqslant   2\protect \protect \unhbox \voidb@
-x \hbox { THEN}\protect \protect \unhbox \voidb@x \hbox { STOP }\protect \prote
-ct \unhbox \voidb@x \hbox {ENDIF}$&${\tstXtext }=\tstXqty $\\&&${\tstAtext }=\t
-stAqty $\\\end {longtblr}
+ext {ARCTAN}(x) + \sfrac {1}{\text {TAN}(x)} + \sfrac {1}{\text {SIN}(x)} + \sf
+rac {1}{\text {COS}(x)} + \text {MIN}(x,dt) + \text {MAX}(x,dt) + \text {INT}(x
+) + -\text {INT}(-x) + \sfrac {180}{\pi }\cdot  \text {ARCSIN}(x) + \sfrac {180
+}{\pi }\cdot  \text {ARCCOS}(x) + \sfrac {180}{\pi }\cdot  \text {ARCTAN}(x) + 
+\text {SIN}(\sfrac {\pi }{180}\cdot  x) + \text {COS}(\sfrac {\pi }{180}\cdot  
+x) + \text {TAN}(\sfrac {\pi }{180}\cdot  x) + \text {ARCSIN}(\sfrac {1}{x}) + 
+\text {ARCCOS}(\sfrac {1}{x}) + \text {ARCTAN}(\sfrac {1}{x}) + \sfrac {1}{\tex
+t {SIN}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {1}{\text {TAN}(\sfrac {\pi }{180
+}\cdot  x)} + \sfrac {1}{\text {COS}(\sfrac {\pi }{180}\cdot  x)} + \sfrac {180
+}{\pi }\cdot  \text {ARCSIN}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdot  \text {A
+RCCOS}(\sfrac {1}{x}) + \sfrac {180}{\pi }\cdot  \text {ARCTAN}(\sfrac {1}{x})$
+&${\tstTtext }=\tstTqty $\\\rule {0pt}{2.6ex}2&$t\,=\,t+ dt$&${\tstDttext }=\ts
+tDtqty $\\\rule {0pt}{2.6ex}3&$\protect \protect \unhbox \voidb@x \hbox {IF }t\
+geqslant   2\protect \protect \unhbox \voidb@x \hbox { THEN}\protect \protect \
+unhbox \voidb@x \hbox { STOP }\protect \protect \unhbox \voidb@x \hbox {ENDIF}$
+&${\tstXtext }=\tstXqty $\\&&${\tstAtext }=\tstAqty $\\\end {longtblr}
 
-Overfull \hbox (146.56035pt too wide) detected at line 22
+Overfull \hbox (1452.03822pt too wide) detected at line 35
  [] 
  []
 
@@ -1108,27 +1270,39 @@ TEXTMODEL done
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
+
+
+LaTeX Font Warning: Size substitutions with differences
+(Font)              up to 4.125pt have occurred.
+
 )
 
 Here is how much of LuaTeX's memory you used:
- 32945 strings out of 476076
- 100000,1373583 words of node,token memory allocated
- 491 words of node memory still in use:
-   6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 7 attribute, 52 glue_spec,
- 7 attribute_list, 2 write nodes
-   avail lists: 1:1,2:1413,3:135,4:10,5:59,6:68,7:1782,8:69,9:1216,10:7,11:22
- 54603 multiletter control sequences out of 65536+600000
- 36 fonts using 2234983 bytes
- 117i,9n,122p,745b,1525s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmroman10-bold.otf><c:/texl
-ive/2025/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf><c:/texlive/2
-025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2025/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2025/texmf-dist/fonts/
-type1/public/amsfonts/symbols/msam10.pfb>
-Output written on expr-newfns-test.pdf (1 page, 32144 bytes).
+ 33167 strings out of 476076
+ 100000,1977958 words of node,token memory allocated
+ 495 words of node memory still in use:
+   6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 8 attribute, 52 glue_spec,
+ 8 attribute_list, 2 write nodes
+   avail lists: 1:1,2:8168,3:356,4:43,5:514,6:68,7:4604,8:282,9:3292,10:33,11:91
 
-PDF statistics: 37 PDF objects out of 1000 (max. 8388607)
- 24 compressed objects within 1 object stream
+ 54820 multiletter control sequences out of 65536+600000
+ 78 fonts using 5275231 bytes
+ 99i,24n,156p,745b,1525s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmroman10-bold.otf><c:/texl
+ive/2025/texmf-dist/fonts/opentype/public/lm/lmroman7-regular.otf><c:/texlive/20
+25/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf><c:/texlive/2025/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2025/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmmi5.pfb><c:/texlive/2025/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmmi7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmr10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
+5.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/te
+xlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2025
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/texlive/2025/texmf-dist
+/fonts/type1/public/amsfonts/symbols/msam10.pfb>
+Output written on expr-newfns-test.pdf (1 page, 80062 bytes).
+
+PDF statistics: 68 PDF objects out of 1000 (max. 8388607)
+ 46 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 1048576)
  16 words of extra memory for PDF output out of 10000 (max. 100000000)
 

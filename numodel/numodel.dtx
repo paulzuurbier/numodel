@@ -24,7 +24,7 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{numodel}[2026/05/26 v0.6.0
+\ProvidesPackage{numodel}[2026/05/30 v0.7.0
   Numerical physics models with Euler integration and Forrester diagrams]
 
 \RequirePackage{expl3}
@@ -32,6 +32,7 @@
 \RequirePackage{l3keys2e}
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}      % \leqslant / \geqslant in rendered <= / >=
+\RequirePackage{xfrac}        % \sfrac for slashed fractions in \textmodel
 \RequirePackage{tikz}
 \usetikzlibrary{shapes.symbols}
 \usetikzlibrary{arrows.meta}
@@ -293,6 +294,7 @@ end
 \tl_new:N \g__numodel_kw_atan_tl
 \tl_new:N \g__numodel_kw_min_tl
 \tl_new:N \g__numodel_kw_max_tl
+\tl_new:N \g__numodel_kw_floor_tl
 \tl_new:N \g__numodel_kw_stop_tl
 
 % Recomputes all tl caches from \g__numodel_syntax_tl.  Must be
@@ -322,6 +324,7 @@ end
     \tl_gset:Ne \g__numodel_kw_atan_tl     { \__numodel_kw:n {atan}     }
     \tl_gset:Ne \g__numodel_kw_min_tl      { \__numodel_kw:n {min}      }
     \tl_gset:Ne \g__numodel_kw_max_tl      { \__numodel_kw:n {max}      }
+    \tl_gset:Ne \g__numodel_kw_floor_tl    { \__numodel_kw:n {floor}    }
     \tl_gset:Ne \g__numodel_kw_stop_tl     { \__numodel_kw:n {stop}     }
     % tabularray continuation markers (used by longtblr in \textmodel)
     \tl_gset:Ne \tblrcontfootname { \__numodel_kw:n {contfoot} }
@@ -1073,19 +1076,99 @@ end
       { \c{text}\cB\{ \u{g__numodel_kw_acos_tl}\cE\}( } #1
     \regex_replace_all:nnN { atan \( }
       { \c{text}\cB\{ \u{g__numodel_kw_atan_tl}\cE\}( } #1
+    % Inverse reciprocal trig (degrees): rendered as
+    % 180/pi * <radian inverse>(1/arg).  The "1/arg" sits inside the
+    % parens so the argument must be captured (no nested parens) -- the
+    % closing brace then lands after it.  These must precede the radian
+    % inverse-reciprocals (acsc/asec/acot) AND the *d reciprocals
+    % (cscd/cotd/secd): "acscd(" contains "cscd(" and the bare acsc
+    % regex would mis-bite without the leading "a".
+    \regex_replace_all:nnN { acscd \( ([^()]*) \) }
+      { \c{sfrac}\cB\{180\cE\}\cB\{\c{pi}\cE\}\c{cdot}\x{20}
+        \c{text}\cB\{ \u{g__numodel_kw_asin_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
+    \regex_replace_all:nnN { asecd \( ([^()]*) \) }
+      { \c{sfrac}\cB\{180\cE\}\cB\{\c{pi}\cE\}\c{cdot}\x{20}
+        \c{text}\cB\{ \u{g__numodel_kw_acos_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
+    \regex_replace_all:nnN { acotd \( ([^()]*) \) }
+      { \c{sfrac}\cB\{180\cE\}\cB\{\c{pi}\cE\}\c{cdot}\x{20}
+        \c{text}\cB\{ \u{g__numodel_kw_atan_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
+    % Inverse reciprocal trig (radians): <radian inverse>(1/arg),
+    % e.g. acsc(x) -> ARCSIN(1/x).  Captured argument (no nested
+    % parens).  Must precede the reciprocal cot/csc/sec regexes:
+    % "acsc(" contains "csc(".
+    \regex_replace_all:nnN { acsc \( ([^()]*) \) }
+      { \c{text}\cB\{ \u{g__numodel_kw_asin_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
+    \regex_replace_all:nnN { asec \( ([^()]*) \) }
+      { \c{text}\cB\{ \u{g__numodel_kw_acos_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
+    \regex_replace_all:nnN { acot \( ([^()]*) \) }
+      { \c{text}\cB\{ \u{g__numodel_kw_atan_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
+    % Inverse trig (degrees): rendered as 180/pi * <radian inverse>.
+    % The 180/pi factor is a fixed prefix, so the head-only rewrite
+    % stays correct for any argument (the original ")" still closes
+    % the function).  Must precede sin/cos/tan: the trailing "d" keeps
+    % them from matching the radian regexes, but keep them together for
+    % readability.
+    \regex_replace_all:nnN { asind \( }
+      { \c{sfrac}\cB\{180\cE\}\cB\{\c{pi}\cE\}\c{cdot}\x{20}
+        \c{text}\cB\{ \u{g__numodel_kw_asin_tl}\cE\}( } #1
+    \regex_replace_all:nnN { acosd \( }
+      { \c{sfrac}\cB\{180\cE\}\cB\{\c{pi}\cE\}\c{cdot}\x{20}
+        \c{text}\cB\{ \u{g__numodel_kw_acos_tl}\cE\}( } #1
+    \regex_replace_all:nnN { atand \( }
+      { \c{sfrac}\cB\{180\cE\}\cB\{\c{pi}\cE\}\c{cdot}\x{20}
+        \c{text}\cB\{ \u{g__numodel_kw_atan_tl}\cE\}( } #1
+    % Forward trig (degrees): SIN(pi/180 * arg).  The pi/180 factor is
+    % a fixed prefix placed just after the opening paren, so this is a
+    % head-only rewrite (robust for any argument).  The trailing "d"
+    % keeps sind/cosd/tand from matching the radian sin/cos/tan below.
+    \regex_replace_all:nnN { sind \( }
+      { \c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}(\c{sfrac}\cB\{\c{pi}\cE\}\cB\{180\cE\}\c{cdot}\x{20} } #1
+    \regex_replace_all:nnN { cosd \( }
+      { \c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}(\c{sfrac}\cB\{\c{pi}\cE\}\cB\{180\cE\}\c{cdot}\x{20} } #1
+    \regex_replace_all:nnN { tand \( }
+      { \c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}(\c{sfrac}\cB\{\c{pi}\cE\}\cB\{180\cE\}\c{cdot}\x{20} } #1
     \regex_replace_all:nnN { sin \( }
       { \c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}( } #1
     \regex_replace_all:nnN { cos \( }
       { \c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}( } #1
     \regex_replace_all:nnN { \b tan \( }
       { \c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}( } #1
-    % Reciprocal trig functions: rendered as 1/<base function>.
+    % Reciprocal trig functions: rendered as a slashed fraction
+    % \sfrac{1}{<base>(arg)} so the "1/" no longer jams against the
+    % preceding term.  The argument is captured (([^()]*)) so the
+    % closing brace lands after it; this matches any argument WITHOUT
+    % nested parens.  The head-only "1/<base>(" fallbacks below catch
+    % the rare nested-argument case so it still translates (just
+    % without the \sfrac wrapper).
+    \regex_replace_all:nnN { cot \( ([^()]*) \) }
+      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}(\1)\cE\} } #1
+    \regex_replace_all:nnN { csc \( ([^()]*) \) }
+      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}(\1)\cE\} } #1
+    \regex_replace_all:nnN { sec \( ([^()]*) \) }
+      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}(\1)\cE\} } #1
     \regex_replace_all:nnN { cot \( }
       { 1/\c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}( } #1
     \regex_replace_all:nnN { csc \( }
       { 1/\c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}( } #1
     \regex_replace_all:nnN { sec \( }
       { 1/\c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}( } #1
+    % Reciprocal trig (degrees): \sfrac{1}{<base>(pi/180 * arg)}.  Both
+    % the reciprocal and the degree conversion are inside the fraction,
+    % so the argument is captured (no nested parens); a nested-argument
+    % call is left untranslated rather than risk mis-biting the longer
+    % acotd/acscd/asecd names (which were already consumed above).
+    \regex_replace_all:nnN { cotd \( ([^()]*) \) }
+      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}(\c{sfrac}\cB\{\c{pi}\cE\}\cB\{180\cE\}\c{cdot}\x{20}\1)\cE\} } #1
+    \regex_replace_all:nnN { cscd \( ([^()]*) \) }
+      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}(\c{sfrac}\cB\{\c{pi}\cE\}\cB\{180\cE\}\c{cdot}\x{20}\1)\cE\} } #1
+    \regex_replace_all:nnN { secd \( ([^()]*) \) }
+      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}(\c{sfrac}\cB\{\c{pi}\cE\}\cB\{180\cE\}\c{cdot}\x{20}\1)\cE\} } #1
+    % Floor and ceiling.  ceil(x) is rendered as -INT(-x) (the l3fp
+    % identity), reusing the floor keyword; argument captured.
+    \regex_replace_all:nnN { floor \( }
+      { \c{text}\cB\{ \u{g__numodel_kw_floor_tl}\cE\}( } #1
+    \regex_replace_all:nnN { ceil \( ([^()]*) \) }
+      { -\c{text}\cB\{ \u{g__numodel_kw_floor_tl}\cE\}(-\1) } #1
     % Two-argument extrema.
     \regex_replace_all:nnN { min \( }
       { \c{text}\cB\{ \u{g__numodel_kw_min_tl}\cE\}( } #1
@@ -2973,7 +3056,7 @@ end
 %
 %    \begin{macrocode}
 %<*EN>
-\ProvidesExplFile{numodel-EN.def}{2026/05/26}{0.6.0}
+\ProvidesExplFile{numodel-EN.def}{2026/05/30}{0.7.0}
   {numodel~keyword~table~--~English~(XMILE)}
 \cs_new:Npn \__numodel_kw_EN_if:           { IF~ }
 \cs_new:Npn \__numodel_kw_EN_then:         { ~THEN~ }
@@ -2998,6 +3081,7 @@ end
 \cs_new:Npn \__numodel_kw_EN_atan:         { ARCTAN }
 \cs_new:Npn \__numodel_kw_EN_min:          { MIN }
 \cs_new:Npn \__numodel_kw_EN_max:          { MAX }
+\cs_new:Npn \__numodel_kw_EN_floor:        { INT }
 \cs_new:Npn \__numodel_kw_EN_stop:         { ~STOP~ }
 \cs_new:Npn \__numodel_kw_EN_th_model:     { model }
 \cs_new:Npn \__numodel_kw_EN_th_initvals:  { initial~values }
@@ -3013,7 +3097,7 @@ end
 %
 %    \begin{macrocode}
 %<*NL>
-\ProvidesExplFile{numodel-NL.def}{2026/05/26}{0.6.0}
+\ProvidesExplFile{numodel-NL.def}{2026/05/30}{0.7.0}
   {numodel~keyword~table~--~Dutch~(CoachTaal)}
 \cs_new:Npn \__numodel_kw_NL_if:           { Als~ }
 \cs_new:Npn \__numodel_kw_NL_then:         { ~Dan~ }
@@ -3038,6 +3122,7 @@ end
 \cs_new:Npn \__numodel_kw_NL_atan:         { Arctan }
 \cs_new:Npn \__numodel_kw_NL_min:          { Min }
 \cs_new:Npn \__numodel_kw_NL_max:          { Max }
+\cs_new:Npn \__numodel_kw_NL_floor:        { Entier }
 \cs_new:Npn \__numodel_kw_NL_stop:         { ~Stop~ }
 \cs_new:Npn \__numodel_kw_NL_th_model:     { model }
 \cs_new:Npn \__numodel_kw_NL_th_initvals:  { startwaarden }

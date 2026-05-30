@@ -5,7 +5,7 @@ All notable changes to `numodel` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [0.7.0] — Unreleased
+## [0.7.0] — 2026-05-30
 
 ### Added
 - Multi-prefix `\diagrammodel`: the `prefix=` key now accepts a
@@ -24,6 +24,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `examples/test-multi-prefix.tex` — exercises the new feature
   alongside the legacy single-prefix paths (single yvar, multi yvar,
   multi prefix × single yvar, multi prefix × multi yvar).
+- Display translation for more expression functions inside `\mrule`
+  bodies, complementing the eight added in v0.4.0 (`sqrt`, `exp`,
+  `ln`, `sin`, `cos`, `tan`, `asin`, `acos`):
+  - `atan`, `min`, `max`, `floor`, and `ceil` (rendered as
+    `ARCTAN` / `Arctan`, `MIN` / `Min`, `MAX` / `Max`, `INT` / `Entier`
+    in the english / coachtaal syntax; `ceil(x)` as the l3fp identity
+    `-INT(-x)` / `-Entier(-x)`).
+  - Reciprocal trig `cot`, `csc`, `sec` — rendered as the slashed
+    fraction `\sfrac{1}{tan(…)}`, `\sfrac{1}{sin(…)}`,
+    `\sfrac{1}{cos(…)}` (l3fp has no direct token for them).  Arguments
+    containing nested parentheses fall back to the older inline
+    `1/tan(…)` form.
+  - Inverse reciprocal trig `acsc`, `asec`, `acot` — rendered as
+    `ARCSIN(\sfrac{1}{…})`, `ARCCOS(\sfrac{1}{…})`,
+    `ARCTAN(\sfrac{1}{…})`.
+  - Degree forward trig `sind`, `cosd`, `tand` — rendered as
+    `SIN(\sfrac{\pi}{180}·…)` etc.
+  - Degree inverse trig `asind`, `acosd`, `atand` — rendered as
+    `\sfrac{180}{\pi}·ARCSIN(…)` etc.
+  - Degree reciprocal trig `cotd`, `cscd`, `secd` — rendered as
+    `\sfrac{1}{TAN(\sfrac{\pi}{180}·…)}` etc.
+  - Degree inverse reciprocal trig `acscd`, `asecd`, `acotd` —
+    rendered as `\sfrac{180}{\pi}·ARCSIN(\sfrac{1}{…})` etc.
+
+  The functions whose conversion lives *inside* the parentheses
+  (`acsc`/`asec`/`acot`, the `…d` reciprocals, the `…d` inverse
+  reciprocals, and `ceil`) capture their argument, so a call whose
+  argument itself contains parentheses is left untranslated rather
+  than mis-rendered.  The two-argument `atan(y,x)` / `acot(y,x)` /
+  `atand(y,x)` / `acotd(y,x)` (`ARCTAN2`) forms are not translated.
+- `tests/expr-newfns-test.tex` — renders the new functions through
+  `\textmodel` in both the english and coachtaal syntaxes.
+
+### Changed
+- `\textmodel` now renders reciprocal trig functions (`cot`, `csc`,
+  `sec`) as a slashed `\sfrac` fraction instead of an inline `1/…`,
+  so the numerator no longer jams against a preceding term (e.g.
+  `a + \sfrac{1}{sin(x)}` rather than `a + 1/sin(x)`).  Requires the
+  new `xfrac` package dependency.
 
 ### Fixed
 - `\textmodel` rendering of multi-character numeric exponents.  The

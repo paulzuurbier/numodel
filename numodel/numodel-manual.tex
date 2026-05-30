@@ -617,12 +617,8 @@ native keyword.
   \textcolor{numorange}{\textit{INT(x+0.5)}}
     & \textcolor{numorange}{\texttt{round(x)}}
     & \textcolor{numorange}{\texttt{Round(x)}} \\
-  \textcolor{numorange}{\textit{INT(x)}}
-    & \textcolor{numorange}{\texttt{floor(x)}}
-    & \textcolor{numorange}{\texttt{Entier(x)}} \\
-  \textcolor{numorange}{\textit{-INT(-x)}}
-    & \textcolor{numorange}{\texttt{ceil(x)}}
-    & \textcolor{numorange}{\textit{-Entier(-x)}} \\
+  \textit{INT(x)} & \texttt{floor(x)} & \texttt{Entier(x)} \\
+  \textit{-INT(-x)} & \texttt{ceil(x)} & \textit{-Entier(-x)} \\
   \texttt{MIN(x,y)} & \texttt{min(x,y)} & \texttt{Min(x;y)} \\
   \texttt{MAX(x,y)} & \texttt{max(x,y)} & \texttt{Max(x;y)} \\
   \textcolor{numorange}{\textit{---}}
@@ -654,60 +650,30 @@ native keyword.
   \textit{1/TAN(x)} & \texttt{cot(x)} & \textit{1/Tan(x)} \\
   \textit{1/SIN(x)} & \texttt{csc(x)} & \textit{1/Sin(x)} \\
   \textit{1/COS(x)} & \texttt{sec(x)} & \textit{1/Cos(x)} \\
-  \textcolor{numorange}{\textit{ARCSIN(1/x)}}
-    & \textcolor{numorange}{\texttt{acsc(x)}}
-    & \textcolor{numorange}{\textit{Arcsin(1/x)}} \\
-  \textcolor{numorange}{\textit{ARCCOS(1/x)}}
-    & \textcolor{numorange}{\texttt{asec(x)}}
-    & \textcolor{numorange}{\textit{Arccos(1/x)}} \\
-  \textcolor{numorange}{\textit{ARCTAN(1/x)}}
-    & \textcolor{numorange}{\texttt{acot(x)}}
-    & \textcolor{numorange}{\textit{Arctan(1/x)}} \\
+  \textit{ARCSIN(1/x)} & \texttt{acsc(x)} & \textit{Arcsin(1/x)} \\
+  \textit{ARCCOS(1/x)} & \texttt{asec(x)} & \textit{Arccos(1/x)} \\
+  \textit{ARCTAN(1/x)} & \texttt{acot(x)} & \textit{Arctan(1/x)} \\
   \textcolor{numorange}{\textit{ARCTAN2(x,y)}}
     & \textcolor{numorange}{\texttt{acot(y,x)}}
     & \textcolor{numorange}{\textit{Arctan(x/y)}} \\
 
   \SetCell[c=3]{l} \itshape Trigonometry (degrees) \\
   \hline
-  \textcolor{numorange}{\textit{SIN(PI/180*x)}}
-    & \textcolor{numorange}{\texttt{sind(x)}}
-    & \textcolor{numorange}{\textit{Sin(Pi/180*x)}} \\
-  \textcolor{numorange}{\textit{COS(PI/180*x)}}
-    & \textcolor{numorange}{\texttt{cosd(x)}}
-    & \textcolor{numorange}{\textit{Cos(Pi/180*x)}} \\
-  \textcolor{numorange}{\textit{TAN(PI/180*x)}}
-    & \textcolor{numorange}{\texttt{tand(x)}}
-    & \textcolor{numorange}{\textit{Tan(Pi/180*x)}} \\
-  \textcolor{numorange}{\textit{180/PI*ARCSIN(x)}}
-    & \textcolor{numorange}{\texttt{asind(x)}}
-    & \textcolor{numorange}{\textit{180/Pi*Arcsin(x)}} \\
-  \textcolor{numorange}{\textit{180/PI*ARCCOS(x)}}
-    & \textcolor{numorange}{\texttt{acosd(x)}}
-    & \textcolor{numorange}{\textit{180/Pi*Arccos(x)}} \\
-  \textcolor{numorange}{\textit{180/PI*ARCTAN(x)}}
-    & \textcolor{numorange}{\texttt{atand(x)}}
-    & \textcolor{numorange}{\textit{180/Pi*Arctan(x)}} \\
+  \textit{SIN(PI/180*x)} & \texttt{sind(x)} & \textit{Sin(Pi/180*x)} \\
+  \textit{COS(PI/180*x)} & \texttt{cosd(x)} & \textit{Cos(Pi/180*x)} \\
+  \textit{TAN(PI/180*x)} & \texttt{tand(x)} & \textit{Tan(Pi/180*x)} \\
+  \textit{180/PI*ARCSIN(x)} & \texttt{asind(x)} & \textit{180/Pi*Arcsin(x)} \\
+  \textit{180/PI*ARCCOS(x)} & \texttt{acosd(x)} & \textit{180/Pi*Arccos(x)} \\
+  \textit{180/PI*ARCTAN(x)} & \texttt{atand(x)} & \textit{180/Pi*Arctan(x)} \\
   \textcolor{numorange}{\textit{180/PI*ARCTAN2(y,x)}}
     & \textcolor{numorange}{\texttt{atand(y,x)}}
     & \textcolor{numorange}{\textit{180/Pi*Arctan(y/x)}} \\
-  \textcolor{numorange}{\textit{1/TAN(PI/180*x)}}
-    & \textcolor{numorange}{\texttt{cotd(x)}}
-    & \textcolor{numorange}{\textit{1/Tan(Pi/180*x)}} \\
-  \textcolor{numorange}{\textit{1/SIN(PI/180*x)}}
-    & \textcolor{numorange}{\texttt{cscd(x)}}
-    & \textcolor{numorange}{\textit{1/Sin(Pi/180*x)}} \\
-  \textcolor{numorange}{\textit{1/COS(PI/180*x)}}
-    & \textcolor{numorange}{\texttt{secd(x)}}
-    & \textcolor{numorange}{\textit{1/Cos(Pi/180*x)}} \\
-  \textcolor{numorange}{\textit{180/PI*ARCSIN(1/x)}}
-    & \textcolor{numorange}{\texttt{acscd(x)}}
-    & \textcolor{numorange}{\textit{180/Pi*Arcsin(1/x)}} \\
-  \textcolor{numorange}{\textit{180/PI*ARCCOS(1/x)}}
-    & \textcolor{numorange}{\texttt{asecd(x)}}
-    & \textcolor{numorange}{\textit{180/Pi*Arccos(1/x)}} \\
-  \textcolor{numorange}{\textit{180/PI*ARCTAN(1/x)}}
-    & \textcolor{numorange}{\texttt{acotd(x)}}
-    & \textcolor{numorange}{\textit{180/Pi*Arctan(1/x)}} \\
+  \textit{1/TAN(PI/180*x)} & \texttt{cotd(x)} & \textit{1/Tan(Pi/180*x)} \\
+  \textit{1/SIN(PI/180*x)} & \texttt{cscd(x)} & \textit{1/Sin(Pi/180*x)} \\
+  \textit{1/COS(PI/180*x)} & \texttt{secd(x)} & \textit{1/Cos(Pi/180*x)} \\
+  \textit{180/PI*ARCSIN(1/x)} & \texttt{acscd(x)} & \textit{180/Pi*Arcsin(1/x)} \\
+  \textit{180/PI*ARCCOS(1/x)} & \texttt{asecd(x)} & \textit{180/Pi*Arccos(1/x)} \\
+  \textit{180/PI*ARCTAN(1/x)} & \texttt{acotd(x)} & \textit{180/Pi*Arctan(1/x)} \\
   \textcolor{numorange}{\textit{180/PI*ARCTAN2(x,y)}}
     & \textcolor{numorange}{\texttt{acotd(y,x)}}
     & \textcolor{numorange}{\textit{180/Pi*Arctan(x/y)}} \\
@@ -1151,8 +1117,9 @@ recorded series.
 \textsf{numodel} requires LuaLaTeX (the engine, for the Lua
 runtime) and TeX~Live~2022 or later.  Mandatory dependencies:
 \textsf{expl3}, \textsf{xparse}, \textsf{l3keys2e}, \textsf{amsmath},
-\textsf{amssymb}, \textsf{tikz}, \textsf{luacode}, \textsf{siunitx},
-\textsf{float}, and the sibling package \textsf{numodel-plot}
+\textsf{amssymb}, \textsf{xfrac}, \textsf{tikz}, \textsf{luacode},
+\textsf{siunitx}, \textsf{float}, and the sibling package
+\textsf{numodel-plot}
 (which itself pulls in \textsf{pgfplots}).  The companion Lua
 module |numodel.lua| must be installed alongside the |.sty| in a
 directory searched by |kpse|.

@@ -12,7 +12,7 @@ modules:
 `numodel` depends on `numodel-plot` for its `\diagrammodel` command;
 both modules ship together.
 
-The bundle is pre-1.0 (current release `v0.6.0`); breaking
+The bundle is pre-1.0 (current release `v0.7.0`); breaking
 changes may still occur.
 
 ## Build workflow

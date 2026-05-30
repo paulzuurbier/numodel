@@ -5,7 +5,7 @@ All notable changes to `numodel-plot` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [0.7.0] — 2026-05-26
+## [0.7.0] — 2026-05-30
 
 ### Added
 - New example `examples/numodel-plot-example-quadrants.tex` that

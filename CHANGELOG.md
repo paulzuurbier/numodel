@@ -8,6 +8,19 @@ For module-specific entries see `numodel/CHANGELOG.md` and
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 each module independently adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.7.0] — 2026-05-30
+
+- `numodel` 0.7.0 — multi-prefix `\diagrammodel` (one diagram across
+  several model prefixes); `\textmodel` fix for multi-character
+  numeric exponents (`T^{1.2}` instead of `T¹.2`); display
+  translation for more expression functions inside `\mrule` bodies
+  (`floor`, `ceil`, and the degree-valued and reciprocal trig
+  families), rendered with slashed `\sfrac` fractions (new `xfrac`
+  dependency).  See `numodel/CHANGELOG.md` for the full list.
+- `numodel-plot` 0.7.0 — semi-transparent backgrounds behind tick
+  labels, axis labels placed in the axis-arrow extension, and
+  tick-scale-label suppression fixes.  See `numodel-plot/CHANGELOG.md`.
+
 ## [0.6.0] — 2026-05-26
 
 - `numodel` 0.6.0 — new per-prefix accessor `\<prefix>steps`

@@ -6,18 +6,18 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line ....
 === drawplot returned, no errors ===
-Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
+Overfull \hbox (23.83621pt too wide) in paragraph at lines ...
 [][]
-\hbox(325.3279+0.0)x345.0, direction TLT
+\hbox(318.32896+0.0)x345.0, direction TLT
 .\localpar
 ..\localinterlinepenalty=0
 ..\localbrokenpenalty=0
 ..\localleftbox=null
 ..\localrightbox=null
 .\hbox(0.0+0.0)x15.0, direction TLT
-.\hbox(325.3279+0.0)x360.83514, direction TLT
-..\glue 67.97456
-..\hbox(0.0+0.0)x0.0, shifted -33.6032, direction TLT
+.\hbox(318.32896+0.0)x353.83621, direction TLT
+..\glue 63.30861
+..\hbox(0.0+0.0)x0.0, shifted -28.93724, direction TLT
 ...\pdfliteral origin{q }
 ...\pdfliteral origin{0 G }
 ...\pdfliteral origin{0 g }
@@ -63,15 +63,15 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ....\glue(\spaceskip) 0.0
 ....\pdfliteral origin{q }
 ....\hbox(0.0+0.0)x0.0, direction TLT
-.....\glue -67.97456
-.....\hbox(0.0+0.0)x0.0, shifted 33.6032, direction TLT
+.....\glue -63.30861
+.....\hbox(0.0+0.0)x0.0, shifted 28.93724, direction TLT
 ......\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ......\pdfliteral origin{q }
 ......\hbox(0.0+0.0)x0.0, direction TLT
-.......\hbox(325.3279+0.0)x360.83514, direction TLT
-........\hbox(325.3279+0.0)x360.83514, direction TLT
-.........\glue 67.97456
-.........\hbox(0.0+0.0)x0.0, shifted -33.6032, direction TLT
+.......\hbox(318.32896+0.0)x353.83621, direction TLT
+........\hbox(318.32896+0.0)x353.83621, direction TLT
+.........\glue 63.30861
+.........\hbox(0.0+0.0)x0.0, shifted -28.93724, direction TLT
 ..........\pdfliteral origin{q }
 ..........\pdfliteral origin{0 G }
 ..........\pdfliteral origin{0 g }
@@ -249,7 +249,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -261,9 +262,16 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{-3.48697 -12.0265 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
 ..............\glue -2.5
-..............\hbox(0.0+0.0)x0.0, shifted 12.11143, direction TLT
+..............\hbox(0.0+0.0)x0.0, shifted 9.77846, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
 ...............\hbox(0.0+0.0)x0.0, direction TLT
@@ -271,6 +279,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 0
 ..................\mathoff
@@ -285,7 +295,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -297,9 +308,16 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{24.85985 -12.0265 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
 ..............\glue 25.95276
-..............\hbox(0.0+0.0)x0.0, shifted 12.11143, direction TLT
+..............\hbox(0.0+0.0)x0.0, shifted 9.77846, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
 ...............\hbox(0.0+0.0)x0.0, direction TLT
@@ -307,6 +325,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 1
 ..................\mathoff
@@ -321,7 +341,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -333,9 +354,16 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{53.20668 -12.0265 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
 ..............\glue 54.40552
-..............\hbox(0.0+0.0)x0.0, shifted 12.11143, direction TLT
+..............\hbox(0.0+0.0)x0.0, shifted 9.77846, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
 ...............\hbox(0.0+0.0)x0.0, direction TLT
@@ -343,6 +371,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 2
 ..................\mathoff
@@ -357,7 +387,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -369,9 +400,16 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{81.5535 -12.0265 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
 ..............\glue 82.85828
-..............\hbox(0.0+0.0)x0.0, shifted 12.11143, direction TLT
+..............\hbox(0.0+0.0)x0.0, shifted 9.77846, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
 ...............\hbox(0.0+0.0)x0.0, direction TLT
@@ -379,6 +417,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 3
 ..................\mathoff
@@ -393,7 +433,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -405,9 +446,16 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{109.90033 -12.0265 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
 ..............\glue 111.31104
-..............\hbox(0.0+0.0)x0.0, shifted 12.11143, direction TLT
+..............\hbox(0.0+0.0)x0.0, shifted 9.77846, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
 ...............\hbox(0.0+0.0)x0.0, direction TLT
@@ -415,6 +463,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 4
 ..................\mathoff
@@ -429,7 +479,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -441,9 +492,16 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{138.24715 -12.0265 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
 ..............\glue 139.7638
-..............\hbox(0.0+0.0)x0.0, shifted 12.11143, direction TLT
+..............\hbox(0.0+0.0)x0.0, shifted 9.77846, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
 ...............\hbox(0.0+0.0)x0.0, direction TLT
@@ -451,6 +509,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 5
 ..................\mathoff
@@ -465,7 +525,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -477,9 +538,16 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{166.59398 -12.0265 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
 ..............\glue 168.21655
-..............\hbox(0.0+0.0)x0.0, shifted 12.11143, direction TLT
+..............\hbox(0.0+0.0)x0.0, shifted 9.77846, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
 ...............\hbox(0.0+0.0)x0.0, direction TLT
@@ -487,6 +555,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 6
 ..................\mathoff
@@ -501,7 +571,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -513,9 +584,16 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{194.9408 -12.0265 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
 ..............\glue 196.66931
-..............\hbox(0.0+0.0)x0.0, shifted 12.11143, direction TLT
+..............\hbox(0.0+0.0)x0.0, shifted 9.77846, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
 ...............\hbox(0.0+0.0)x0.0, direction TLT
@@ -523,6 +601,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 7
 ..................\mathoff
@@ -537,7 +617,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -549,9 +630,16 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{223.28763 -12.0265 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
 ..............\glue 225.12207
-..............\hbox(0.0+0.0)x0.0, shifted 12.11143, direction TLT
+..............\hbox(0.0+0.0)x0.0, shifted 9.77846, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
 ...............\hbox(0.0+0.0)x0.0, direction TLT
@@ -559,6 +647,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 8
 ..................\mathoff
@@ -573,7 +663,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -585,9 +676,16 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{251.63445 -12.0265 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
 ..............\glue 253.57483
-..............\hbox(0.0+0.0)x0.0, shifted 12.11143, direction TLT
+..............\hbox(0.0+0.0)x0.0, shifted 9.77846, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
 ...............\hbox(0.0+0.0)x0.0, direction TLT
@@ -595,6 +693,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 9
 ..................\mathoff
@@ -609,7 +709,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -621,9 +722,16 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{277.49057 -12.0265 11.95534 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
 ..............\glue 279.52757
-..............\hbox(0.0+0.0)x0.0, shifted 12.11143, direction TLT
+..............\hbox(0.0+0.0)x0.0, shifted 9.77846, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
 ...............\hbox(0.0+0.0)x0.0, direction TLT
@@ -631,6 +739,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x10.00003, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 1
 ..................\OT1/cmr/m/n/10 0
@@ -647,7 +757,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -657,8 +768,15 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{-9.29915 -4.85059 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
-..............\glue -10.66689
+..............\glue -8.33391
 ..............\hbox(0.0+0.0)x0.0, shifted 2.57571, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
@@ -667,6 +785,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 0
 ..................\mathoff
@@ -681,7 +801,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -691,8 +812,15 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{-17.04799 23.49577 14.72278 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
-..............\glue -18.44469
+..............\glue -16.11171
 ..............\hbox(0.0+0.0)x0.0, shifted -25.87659, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
@@ -701,6 +829,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x12.77782, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 0
 ..................\hbox(1.05554+1.94444)x2.77779, direction TLT
@@ -718,7 +848,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -728,8 +859,15 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{-9.29915 51.84215 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
-..............\glue -10.66689
+..............\glue -8.33391
 ..............\hbox(0.0+0.0)x0.0, shifted -54.32889, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
@@ -738,6 +876,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 1
 ..................\mathoff
@@ -752,7 +892,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -762,8 +903,15 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{-17.04799 80.1885 14.72278 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
-..............\glue -18.44469
+..............\glue -16.11171
 ..............\hbox(0.0+0.0)x0.0, shifted -82.78119, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
@@ -772,6 +920,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x12.77782, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 1
 ..................\hbox(1.05554+1.94444)x2.77779, direction TLT
@@ -789,7 +939,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -799,8 +950,15 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{-9.29915 108.53488 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
-..............\glue -10.66689
+..............\glue -8.33391
 ..............\hbox(0.0+0.0)x0.0, shifted -111.23349, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
@@ -809,6 +967,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 2
 ..................\mathoff
@@ -823,7 +983,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -833,8 +994,15 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{-17.04799 136.88126 14.72278 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
-..............\glue -18.44469
+..............\glue -16.11171
 ..............\hbox(0.0+0.0)x0.0, shifted -139.68579, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
@@ -843,6 +1011,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x12.77782, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 2
 ..................\hbox(1.05554+1.94444)x2.77779, direction TLT
@@ -860,7 +1030,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -870,8 +1041,15 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{-9.29915 165.22762 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
-..............\glue -10.66689
+..............\glue -8.33391
 ..............\hbox(0.0+0.0)x0.0, shifted -168.13809, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
@@ -880,6 +1058,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 3
 ..................\mathoff
@@ -894,7 +1074,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -904,8 +1085,15 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{-17.04799 193.57399 14.72278 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
-..............\glue -18.44469
+..............\glue -16.11171
 ..............\hbox(0.0+0.0)x0.0, shifted -196.5904, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
@@ -914,6 +1102,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x12.77782, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 3
 ..................\hbox(1.05554+1.94444)x2.77779, direction TLT
@@ -931,7 +1121,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -941,8 +1132,15 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{-9.29915 221.92036 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
-..............\glue -10.66689
+..............\glue -8.33391
 ..............\hbox(0.0+0.0)x0.0, shifted -225.0427, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
@@ -951,6 +1149,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 4
 ..................\mathoff
@@ -965,7 +1165,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -975,8 +1176,15 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{-17.04799 250.26672 14.72278 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
-..............\glue -18.44469
+..............\glue -16.11171
 ..............\hbox(0.0+0.0)x0.0, shifted -253.495, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
@@ -985,6 +1193,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x12.77782, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 4
 ..................\hbox(1.05554+1.94444)x2.77779, direction TLT
@@ -1002,7 +1212,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 ...........\hbox(0.0+0.0)x0.0, direction TLT
 ............\hbox(0.0+0.0)x0.0, direction TLT
 .............\pdfliteral origin{q }
-.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
@@ -1012,8 +1223,15 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
+.............\pdfliteral origin{1 g }
+.............\pdfliteral origin{/pgf@ca0.8 gs }
+.............\pdfliteral origin{-9.29915 278.6131 6.97394 9.70117 re }
+.............\pdfliteral origin{f }
+.............\glue(\spaceskip) 0.0
+.............\pdfliteral origin{Q }
+.............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
-..............\glue -10.66689
+..............\glue -8.33391
 ..............\hbox(0.0+0.0)x0.0, shifted -281.9473, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
@@ -1022,6 +1240,8 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .................\pdfliteral origin{0 G }
 .................\pdfliteral origin{0 g }
 .................\hbox(6.44444+1.293)x5.00002, direction TLT
+..................\pdfliteral origin{/pgf@ca1 gs }
+..................\pdfliteral origin{/pgf@CA1 gs }
 ..................\mathon
 ..................\OT1/cmr/m/n/10 5
 ..................\mathoff
@@ -1096,7 +1316,7 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
 ..............\glue 133.76381
-..............\hbox(0.0+0.0)x0.0, shifted 27.77022, direction TLT
+..............\hbox(0.0+0.0)x0.0, shifted 23.10426, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }
 ...............\hbox(0.0+0.0)x0.0, direction TLT
@@ -1134,7 +1354,7 @@ Overfull \hbox (30.83514pt too wide) in paragraph at lines ...
 .............\glue(\spaceskip) 0.0
 .............\pdfliteral origin{q }
 .............\hbox(0.0+0.0)x0.0, direction TLT
-..............\glue -64.64159
+..............\glue -59.97563
 ..............\hbox(0.0+0.0)x0.0, shifted -139.4415, direction TLT
 ...............\pdfliteral origin{1.0 0.0 0.0 1.0 0.0 0.0 cm }
 ...............\pdfliteral origin{q }

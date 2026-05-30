@@ -1,5 +1,12 @@
-% Test: display rendering of newly supported expression functions
-% (atan, cot, csc, sec, min, max).  Compile with lualatex.
+% Test: display rendering of newly supported expression functions.
+% v0.6.1: atan, cot, csc, sec, min, max.
+% v0.7.0: floor, ceil, the degree forward trig sind/cosd/tand, the
+%         degree inverse trig asind/acosd/atand, the radian inverse
+%         reciprocals acsc/asec/acot, the degree reciprocals
+%         cscd/cotd/secd, and the degree inverse reciprocals
+%         acscd/asecd/acotd.  (cot/csc/sec now render as \sfrac
+%         slashed fractions.)
+% Compile with lualatex.
 \documentclass{article}
 \usepackage{numodel}
 
@@ -10,7 +17,13 @@
 \mvar{A}{a}{0}{}{3}{stock}
 
 \mrule{A}{\tstA + atan(\tstX) + cot(\tstX) + csc(\tstX) + sec(\tstX)
-          + min(\tstX,\tstDt) + max(\tstX,\tstDt)}
+          + min(\tstX,\tstDt) + max(\tstX,\tstDt)
+          + floor(\tstX) + ceil(\tstX)
+          + asind(\tstX) + acosd(\tstX) + atand(\tstX)
+          + sind(\tstX) + cosd(\tstX) + tand(\tstX)
+          + acsc(\tstX) + asec(\tstX) + acot(\tstX)
+          + cscd(\tstX) + cotd(\tstX) + secd(\tstX)
+          + acscd(\tstX) + asecd(\tstX) + acotd(\tstX)}
 \mrule{T}{\tstT + \tstDt}
 \mstop{\tstT >= 2}
 
