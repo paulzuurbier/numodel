@@ -67,7 +67,19 @@
       "Bash(unzip -p numodel-bundle-ctan.zip numodel-bundle/numodel-plot.dtx)",
       "Bash(unzip -p numodel-bundle-ctan.zip numodel-bundle/numodel.lua)",
       "Bash(unzip -p numodel-bundle-ctan.zip numodel-bundle/release-0.7.0.txt)",
-      "Bash(unzip -p numodel-bundle-ctan.zip numodel-bundle/__TRACKED_VAR__)"
+      "Bash(unzip -p numodel-bundle-ctan.zip numodel-bundle/__TRACKED_VAR__)",
+      "Bash(kpsewhich luadraw.sty)",
+      "Bash(kpsewhich luadraw.lua)",
+      "Bash(kpsewhich -var-value TEXMFDIST)",
+      "Bash(ls \"$\\(kpsewhich -var-value TEXMFDIST\\)/tex/lualatex/luadraw\")",
+      "Bash(kpsewhich luadraw.pdf)",
+      "Bash(kpsewhich luadraw-doc.pdf)",
+      "PowerShell(\"numodel.sty: \" + \\(kpsewhich numodel.sty\\); \"numodel-plot.sty: \" + \\(kpsewhich numodel-plot.sty\\); \"numodel.lua: \" + \\(kpsewhich numodel.lua\\); \"numodel-EN.def: \" + \\(kpsewhich numodel-EN.def\\))",
+      "PowerShell(Remove-Item *)",
+      "PowerShell(Push-Location *)",
+      "PowerShell(Copy-Item *)",
+      "PowerShell(Set-Content *)",
+      "PowerShell(\"Installed FPEVAL.def: \" + \\(kpsewhich numodel-FPEVAL.def\\); $p = kpsewhich numodel.sty; \"sty: $p\"; if\\($p\\){ if\\(Select-String -Path $p -Pattern \"fpeval_bool\" -Quiet\\){\"sty contains FPEVAL code: YES\"}else{\"sty contains FPEVAL code: NO \\(stale\\)\"} })"
     ],
     "additionalDirectories": [
       "/private/tmp"

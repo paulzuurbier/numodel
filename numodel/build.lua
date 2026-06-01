@@ -49,6 +49,7 @@ installfiles = {
   "numodel.sty",
   "numodel-EN.def",
   "numodel-NL.def",
+  "numodel-FPEVAL.def",
   "numodel.lua",
 }
 

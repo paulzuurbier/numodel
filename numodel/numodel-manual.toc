@@ -9,7 +9,7 @@
 \contentsline {subsection}{\numberline {4.1}Variables and rules}{6}{subsection.4.1}%
 \contentsline {subsection}{\numberline {4.2}Expression reference}{7}{subsection.4.2}%
 \contentsline {subsection}{\numberline {4.3}Render commands}{9}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Series accessors}{10}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.4}Series accessors}{11}{subsection.4.4}%
 \contentsline {subsection}{\numberline {4.5}Namespace management}{11}{subsection.4.5}%
 \contentsline {subsection}{\numberline {4.6}Shared valves}{12}{subsection.4.6}%
 \contentsline {section}{\numberline {5}Variable types}{12}{section.5}%

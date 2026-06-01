@@ -6,10 +6,11 @@
 %   display-translated by numodel.  \computemodel verifies that the
 %   expressions also evaluate without error.
 %
-% The model body is wrapped in \fullmodel{<prefix>} and called twice --
-% once under syntax=EN (XMILE keywords) and once under syntax=NL
-% (CoachTaal keywords) -- so the rendered table appears in both forms
-% for side-by-side comparison of the display-translation layer.  The
+% The model body is wrapped in \fullmodel{<prefix>} and called three
+% times -- under syntax=EN (XMILE keywords), syntax=NL (CoachTaal
+% keywords) and syntax=FPEVAL (the rule body shown verbatim in l3fp /
+% \fpeval syntax) -- so the rendered table appears in all three forms
+% for side-by-side comparison of the display layer.  The
 % prefix-dependent rule bodies use the helper \vv{<name>}, which
 % expands to \<current-prefix><name>.
 %
@@ -225,6 +226,19 @@
 \numodelsetup{syntax=NL}
 
 \fullmodel{exprNL}
+
+\textmodel
+
+\computemodel
+
+% ======================================================================
+% Run 3: l3fp (\fpeval) syntax -- re-declare the model under a new
+% prefix so its display strings are baked verbatim in l3fp form
+% (lowercase function names, literal *, ^, &&, ?:, no IF/THEN/ELSE).
+% ======================================================================
+\numodelsetup{syntax=FPEVAL}
+
+\fullmodel{exprFP}
 
 \textmodel
 

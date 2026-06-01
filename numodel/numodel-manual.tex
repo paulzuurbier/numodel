@@ -295,6 +295,13 @@ The same keys can also be passed as package options:
     |IF|/|THEN|/|ELSE|, |AND|, |OR|, |ABS|, |SIGN|, \ldots
   \item[\texttt{NL}] Dutch CoachTaal keywords:
     |Als|/|Dan|/|Anders|, |EN|, |OF|, |Abs|, |Teken|, \ldots
+  \item[\texttt{FPEVAL}] (aliases |fpeval|, |l3fp|) shows each rule
+    body verbatim in l3fp (|\fpeval|) syntax, exactly as typed in
+    |\mrule| -- lowercase function names, literal |*|, |^|, |&&|,
+    |?:| -- typeset monospace.  Variable macros still resolve to
+    their display names; the ternary is \emph{not} expanded into
+    |IF|/|THEN|/|ELSE| and the stop row reads |stop:|~\meta{cond}.
+    Decimal mark defaults to |point|.
   \end{description}
   Each language tag |X| corresponds
   to a file |numodel-X.def| located via |kpse| when the package
@@ -395,8 +402,8 @@ The same keys can also be passed as package options:
     |output-decimal-marker={.}|, \textsf{pgfplots}
     |/pgf/number format/use period|).
   \end{description}
-  The default tracks |syntax|: |NL| picks |comma|, |EN| picks
-  |point|.  Other language files can publish a default by
+  The default tracks |syntax|: |NL| picks |comma|, |EN| and
+  |FPEVAL| pick |point|.  Other language files can publish a default by
   defining |\__numodel_kw_<LANG>_dsep_default:| (expanding to
   |point| or |comma|); when the macro is absent the default is
   |point|.  An explicit |decimal-separator| key locks that

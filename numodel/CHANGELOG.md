@@ -5,6 +5,20 @@ All notable changes to `numodel` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- `syntax=FPEVAL` (aliases `fpeval`, `l3fp`): a third rule-table
+  rendering that shows each `\mrule`/`\mstop` body verbatim in l3fp
+  (`\fpeval`) syntax — lowercase function names, literal `*`, `^`,
+  `&&`, `||`, `?:` — typeset monospace, instead of translating it
+  into XMILE/CoachTaal syllabus notation.  Variable macros still
+  resolve to their `\<name>text` display names (wrapped in
+  `\ensuremath` so subscripts and Greek render); the ternary is not
+  expanded into `IF`/`THEN`/`ELSE` and the stop row reads
+  `stop: <condition>`.  The decimal mark defaults to `point`.  Ships
+  as `numodel-FPEVAL.def`.
+
 ## [0.7.0] — 2026-05-30
 
 ### Added

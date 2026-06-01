@@ -1,6 +1,7 @@
 % numodel.dtx
 %
-% Docstrip source for numodel.sty, numodel-EN.def and numodel-NL.def.
+% Docstrip source for numodel.sty and the numodel-<LANG>.def keyword
+% tables (numodel-EN.def, numodel-NL.def, numodel-FPEVAL.def).
 % Run
 %   tex numodel.ins
 % to extract the derived files.  User-facing documentation lives
@@ -17,8 +18,8 @@
 % The Current Maintainer of this work is Paul Zuurbier.
 %
 % This work consists of the files numodel.dtx and numodel.ins, the
-% derived files numodel.sty, numodel-EN.def and numodel-NL.def, and the
-% companion Lua module numodel.lua.
+% derived files numodel.sty, numodel-EN.def, numodel-NL.def and
+% numodel-FPEVAL.def, and the companion Lua module numodel.lua.
 % \section{Implementation}
 %
 %    \begin{macrocode}
@@ -258,6 +259,13 @@ end
 
 \tl_new:N \g__numodel_syntax_tl
 
+% True while the active syntax is FPEVAL.  FPEVAL is special: instead
+% of translating the rule into syllabus notation, \textmodel shows the
+% rule body verbatim in l3fp (\fpeval) syntax -- lowercase function
+% names, literal *, ^, &&, ?: -- so it bypasses \__numodel_vars_to_display:N
+% and the ternary expansion in favour of \__numodel_vars_to_display_fpeval:N.
+\bool_new:N \g__numodel_fpeval_bool
+
 % Lookup (fully expandable): \__numodel_kw:n {<key>} returns the
 % translation in the current syntax language.  The key also controls
 % the surrounding spaces (see keys 'then' vs 'then_nl' etc.).  The
@@ -350,6 +358,8 @@ end
 \prop_gput:Nnn \g__numodel_syntax_aliases_prop { english }   { EN }
 \prop_gput:Nnn \g__numodel_syntax_aliases_prop { coachtaal } { NL }
 \prop_gput:Nnn \g__numodel_syntax_aliases_prop { dutch }     { NL }
+\prop_gput:Nnn \g__numodel_syntax_aliases_prop { l3fp }      { FPEVAL }
+\prop_gput:Nnn \g__numodel_syntax_aliases_prop { fpeval }    { FPEVAL }
 
 % Tags whose .def file has already been input during this run, so the
 % lookup only triggers \InputIfFileExists the first time.
@@ -392,6 +402,9 @@ end
       { \tl_set:Nn \l__numodel_syntax_tag_tl {#1} }
     \exp_args:NV \__numodel_load_syntax_def:n \l__numodel_syntax_tag_tl
     \tl_gset_eq:NN \g__numodel_syntax_tl \l__numodel_syntax_tag_tl
+    \str_if_eq:VnTF \g__numodel_syntax_tl { FPEVAL }
+      { \bool_gset_true:N  \g__numodel_fpeval_bool }
+      { \bool_gset_false:N \g__numodel_fpeval_bool }
     \__numodel_refresh_kw:
     \bool_if:NF \g__numodel_dsep_explicit_bool
       {
@@ -1181,6 +1194,48 @@ end
       { \c{text}\cB\{\u{g__numodel_kw_or_tl}\cE\} } #1
   }
 
+% --- FPEVAL display -------------------------------------------------
+% Show the rule body verbatim in l3fp (\fpeval) syntax, "as the user
+% typed it": lowercase function names, literal *, ^, &&, ||, ?:.  No
+% syllabus rewrite and no ternary expansion.  Only two things change:
+%   (a) variable macros \modXxx -> their \<name>text display name,
+%       wrapped in \ensuremath so subscripts/Greek still render; and
+%   (b) the few characters that are unsafe in the surrounding \texttt
+%       box (^, &, _, ~) are made text-safe.
+% The converted body is typeset monospace by \__numodel_fpeval_render:nn.
+\cs_new_protected:Npn \__numodel_vars_to_display_fpeval:N #1
+  {
+    % Character escaping first, before any braces are introduced below.
+    % (l3fp expressions never contain ~, #, $, so those need no handling;
+    % space tokens must be preserved verbatim, so they are left alone.)
+    \regex_replace_all:nnN { \^ } { \c{textasciicircum}\cB\{\cE\} } #1
+    \regex_replace_all:nnN { & }  { \c{&} } #1
+    \regex_replace_all:nnN { _ }  { \c{_} } #1
+    % Variable names -> \ensuremath{display name}
+    \seq_map_inline:Nn \g_mvar_names_seq
+      {
+        \cs_if_exist:cT { ##1 text }
+          {
+            \tl_set:Ne \l_tmpa_tl { \use:c { ##1 text } }
+            \regex_replace_all:nnN { \c{##1} }
+              { \c{ensuremath}\cB\{ \u{l_tmpa_tl} \cE\} } #1
+          }
+      }
+  }
+
+% Typesets one FPEVAL row: #1 = left-hand side (math display name),
+% #2 = converted body.  Protected so it survives the \exp_not:e in
+% \__numodel_build_table: and only expands inside the table's $...$,
+% where \texttt drops to a monospace text box.
+\cs_new_protected:Npn \__numodel_fpeval_render:nn #1 #2
+  { \texttt { \ensuremath {#1} ~=~ #2 } }
+
+% Typesets the FPEVAL stop row: #1 = stop label (baked keyword),
+% #2 = converted condition.  Rendered monospace like a labelled
+% comment, since l3fp itself has no stop construct.
+\cs_new_protected:Npn \__numodel_fpeval_stoprow:nn #1 #2
+  { \texttt { #1 ~ #2 } }
+
 % Ternary detection: cond ? true_expr : false_expr
 % Converted to: IF cond THEN lhs = true ELSE lhs = false ENDIF
 % (or the coachtaal equivalent).  Supports only flat (non-nested)
@@ -1274,6 +1329,21 @@ end
       {
         \tl_if_blank:VTF \l__numodel_aliasright_tl
           {
+            % Automatic display generation.  FPEVAL shows the body
+            % verbatim in l3fp syntax (no ternary expansion); every
+            % other syntax goes through the syllabus rewrite.
+            \bool_if:NTF \g__numodel_fpeval_bool
+              {
+                \tl_set:Nn \l__numodel_rhs_tl {#3}
+                \__numodel_vars_to_display_fpeval:N \l__numodel_rhs_tl
+                \tl_set:Ne \l__numodel_display_tl
+                  {
+                    \exp_not:n { \__numodel_fpeval_render:nn }
+                      { \exp_not:V \l__numodel_lhs_tl }
+                      { \exp_not:V \l__numodel_rhs_tl }
+                  }
+              }
+              {
             % Automatic display generation (ternary or normal)
             \__numodel_parse_ternary:nN {#3} \l__numodel_display_tl
             \bool_if:NTF \l__numodel_is_ternary_bool
@@ -1337,6 +1407,7 @@ end
                     \exp_not:V \l__numodel_rhs_tl
                   }
                 \typeout{MRULE~display:~\tl_to_str:N \l__numodel_display_tl}
+              }
               }
           }
           {
@@ -1434,15 +1505,29 @@ end
     % Generate display
     \tl_if_blank:VTF \l__numodel_alias_tl
       {
-        \tl_set:Nn \l__numodel_stop_tl {#1}
-        \__numodel_vars_to_display:N \l__numodel_stop_tl
-        \tl_set:Ne \l__numodel_display_tl
+        \bool_if:NTF \g__numodel_fpeval_bool
           {
-            \__numodel_kwt:n {if}
-            \exp_not:V \l__numodel_stop_tl
-            \__numodel_kwt:n {then_nl}
-            \__numodel_kwt:n {stop}
-            \__numodel_kwt:n {endif_nl}
+            % FPEVAL: "stop: <condition>" verbatim in l3fp syntax.
+            \tl_set:Nn \l__numodel_stop_tl {#1}
+            \__numodel_vars_to_display_fpeval:N \l__numodel_stop_tl
+            \tl_set:Ne \l__numodel_display_tl
+              {
+                \exp_not:n { \__numodel_fpeval_stoprow:nn }
+                  { \__numodel_kw:n {stop} }
+                  { \exp_not:V \l__numodel_stop_tl }
+              }
+          }
+          {
+            \tl_set:Nn \l__numodel_stop_tl {#1}
+            \__numodel_vars_to_display:N \l__numodel_stop_tl
+            \tl_set:Ne \l__numodel_display_tl
+              {
+                \__numodel_kwt:n {if}
+                \exp_not:V \l__numodel_stop_tl
+                \__numodel_kwt:n {then_nl}
+                \__numodel_kwt:n {stop}
+                \__numodel_kwt:n {endif_nl}
+              }
           }
       }
       {
@@ -3130,6 +3215,55 @@ end
 \cs_new:Npn \__numodel_kw_NL_conthead:     { (Vervolg) }
 \cs_new:Npn \__numodel_kw_NL_dsep_default: { comma }
 %</NL>
+%    \end{macrocode}
+%
+% \subsubsection{\texttt{numodel-FPEVAL.def} -- l3fp (\cs{fpeval})}
+%
+% Unlike EN/NL, FPEVAL does not translate the rule into syllabus
+% notation: \cs{textmodel} shows the rule body verbatim in l3fp
+% (\cs{fpeval}) syntax via |\__numodel_vars_to_display_fpeval:N|, so
+% the function-name and operator keywords below are never consulted on
+% the FPEVAL display path.  They are still defined (with their natural
+% l3fp spellings) because |\__numodel_refresh_kw:| populates the full
+% keyword cache for every syntax, and an undefined macro there would
+% error.  Only |stop| (the stop-row label), the table headers, the
+% continuation markers and |dsep_default| (=|point|) are actually used.
+%
+%    \begin{macrocode}
+%<*FPEVAL>
+\ProvidesExplFile{numodel-FPEVAL.def}{2026/05/30}{0.7.0}
+  {numodel~keyword~table~--~l3fp~(fpeval)~syntax}
+\cs_new:Npn \__numodel_kw_FPEVAL_if:           { }
+\cs_new:Npn \__numodel_kw_FPEVAL_then:         { ~?~ }
+\cs_new:Npn \__numodel_kw_FPEVAL_then_nl:      { ~? }
+\cs_new:Npn \__numodel_kw_FPEVAL_else:         { ~:~ }
+\cs_new:Npn \__numodel_kw_FPEVAL_else_nl:      { : }
+\cs_new:Npn \__numodel_kw_FPEVAL_endif:        { }
+\cs_new:Npn \__numodel_kw_FPEVAL_endif_nl:     { }
+\cs_new:Npn \__numodel_kw_FPEVAL_and:          { ~&&~ }
+\cs_new:Npn \__numodel_kw_FPEVAL_or:           { ~||~ }
+\cs_new:Npn \__numodel_kw_FPEVAL_not:          { ! }
+\cs_new:Npn \__numodel_kw_FPEVAL_sign:         { sign }
+\cs_new:Npn \__numodel_kw_FPEVAL_abs:          { abs }
+\cs_new:Npn \__numodel_kw_FPEVAL_sqrt:         { sqrt }
+\cs_new:Npn \__numodel_kw_FPEVAL_exp:          { exp }
+\cs_new:Npn \__numodel_kw_FPEVAL_ln:           { ln }
+\cs_new:Npn \__numodel_kw_FPEVAL_sin:          { sin }
+\cs_new:Npn \__numodel_kw_FPEVAL_cos:          { cos }
+\cs_new:Npn \__numodel_kw_FPEVAL_tan:          { tan }
+\cs_new:Npn \__numodel_kw_FPEVAL_asin:         { asin }
+\cs_new:Npn \__numodel_kw_FPEVAL_acos:         { acos }
+\cs_new:Npn \__numodel_kw_FPEVAL_atan:         { atan }
+\cs_new:Npn \__numodel_kw_FPEVAL_min:          { min }
+\cs_new:Npn \__numodel_kw_FPEVAL_max:          { max }
+\cs_new:Npn \__numodel_kw_FPEVAL_floor:        { floor }
+\cs_new:Npn \__numodel_kw_FPEVAL_stop:         { stop: }
+\cs_new:Npn \__numodel_kw_FPEVAL_th_model:     { model~(l3fp) }
+\cs_new:Npn \__numodel_kw_FPEVAL_th_initvals:  { initial~values }
+\cs_new:Npn \__numodel_kw_FPEVAL_contfoot:     { Continued~on~next~page }
+\cs_new:Npn \__numodel_kw_FPEVAL_conthead:     { (Continued) }
+\cs_new:Npn \__numodel_kw_FPEVAL_dsep_default: { point }
+%</FPEVAL>
 %    \end{macrocode}
 %
 % \Finale
