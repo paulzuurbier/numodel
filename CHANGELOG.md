@@ -8,6 +8,20 @@ For module-specific entries see `numodel/CHANGELOG.md` and
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 each module independently adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.8.0] — 2026-07-06
+
+- `numodel` 0.8.0 — new `syntax=FPEVAL` rule-table rendering (aliases
+  `fpeval`, `l3fp`) that shows `\mrule`/`\mstop` bodies verbatim in
+  l3fp syntax instead of translating them into syllabus notation;
+  ships as `numodel-FPEVAL.def`.  See `numodel/CHANGELOG.md`.
+- `numodel-plot` 0.8.0 — the tick-label backing is now a
+  semi-transparent halo that follows the glyph outlines of the scale
+  numbers (via the new `pdfrender` dependency) instead of a filled
+  rectangle, is applied only to axes drawn through the middle of the
+  plot, and covers the plotted curves as well as the grid (PGFPlots
+  `set layers`).  Halo colour adjustable via
+  `\colorlet{numodelhalo}{<color>}`.  See `numodel-plot/CHANGELOG.md`.
+
 ## [0.7.0] — 2026-05-30
 
 - `numodel` 0.7.0 — multi-prefix `\diagrammodel` (one diagram across

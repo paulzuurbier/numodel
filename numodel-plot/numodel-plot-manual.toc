@@ -3,6 +3,6 @@
 \contentsline {section}{\numberline {3}Configuration}{3}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Keys}{3}{subsection.3.1}%
 \contentsline {subsection}{\numberline {3.2}PGFPlots styles}{5}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Tick label backgrounds}{6}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.3}Tick label halos}{6}{subsection.3.3}%
 \contentsline {section}{\numberline {4}Public API}{6}{section.4}%
 \contentsline {section}{\numberline {5}Requirements}{7}{section.5}%

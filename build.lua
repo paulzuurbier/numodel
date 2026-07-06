@@ -25,6 +25,8 @@ excludefiles = {
   "*/testfiles",        -- developer-only l3build regression tests
   "*/examples",         -- runnable demos kept locally, not shipped
   "docs",               -- local reference PDFs, not shipped to CTAN
+  "release-*.txt",      -- announcement texts feed `l3build upload`,
+                        -- they do not belong in the CTAN zip itself
 }
 
 -- Bundle packaging -------------------------------------------------------
@@ -58,12 +60,14 @@ ctanreadme  = "README.md"
 -- Read the release announcement from release-<tag>.txt when present,
 -- so a fresh file per release is picked up automatically by
 -- `l3build upload`.  For releases where no announcement should be
--- sent (e.g. 0.4.0), simply omit the file; the upload then proceeds
--- with an empty `announcement` field.
+-- sent (e.g. 0.4.0, 0.8.0), simply omit the file; the announcement is
+-- then the empty string and the upload proceeds without one.  (It
+-- must be "" and not nil: l3build prompts interactively on stdin for
+-- a nil announcement, which hangs non-interactive runs.)
 local function read_release_notes()
   local fname = "release-" .. release_tag .. ".txt"
   local f = io.open(fname, "r")
-  if not f then return nil end
+  if not f then return "" end
   local s = f:read("a")
   f:close()
   return s

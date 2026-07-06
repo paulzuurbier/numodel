@@ -309,32 +309,42 @@ plot:
 \end{subfigure}
 \end{plotexample}
 
-\subsection{Tick label backgrounds}
+\subsection{Tick label halos}
 
-To keep scale numbers optically separated from the grid and from
-plot lines passing behind them, the |numodel/axis| style draws each
-tick label on a semi-transparent white rectangle (|fill=white|,
-|fill opacity=0.8|, |inner sep=1pt|).  The same style also keeps
-tick labels visible where a crossing axis would otherwise hide them
-(|hide obscured x ticks=false| and the $y$-counterpart); the white
-rectangle then provides the visual separation from the axis line.
+When |\calcplotdims| places an axis \emph{through the middle} of the
+plot (the data straddles zero), grid lines and plotted curves pass
+behind the scale numbers.  To keep those numbers readable, every
+tick label on such an axis is backed by a semi-transparent halo that
+follows the character outlines: the label is printed twice, first
+stroke-only --- a fat pen (|1.6pt|, round joins, 80\,\% opacity, via
+the \textsf{pdfrender} package) traces the glyph outlines --- and
+then the normal label on top.  Between and around the digits the
+grid and the curves run through untouched; there is no rectangular
+patch.  So that the halo covers the curves and not only the grid,
+the haloed labels are lifted onto the pgfplots layer
+|axis descriptions|, above the |main| layer carrying the curves
+(|set layers| is activated automatically in these cases).
 
+An axis placed on the plot edge (the default bottom/left, or the
+|top|/|right| placements used for single-sign data) leaves its
+labels on the white margin and gets no halo.  Tick labels also stay
+visible where a crossing axis would otherwise hide them
+(|hide obscured x ticks=false| and the $y$-counterpart); the halo
+provides the visual separation from the crossing axis line.
+
+The halo colour is the named colour |numodelhalo|, white by default.
 If the surrounding document has a coloured background --- a sidebar
 box, a slide template, the |plotexample| environment used in this
-manual --- the white rectangles will stand out against it.  Match
-them to the surrounding colour with
+manual --- match the halo to the surrounding colour with
 \begin{quote}
 \begin{verbatim}
-\pgfplotsset{numodel/axis/.append style={
-  xticklabel style={fill=<your-color>},
-  yticklabel style={fill=<your-color>}
-}}
+\colorlet{numodelhalo}{<your-color>}
 \end{verbatim}
 \end{quote}
-or remove the rectangles entirely with |fill=none|.  In pgfplots,
-|xticklabel style={...}| appends to the existing tick-label style
-rather than replacing it, so the other settings (number format,
-comma-as-decimal-separator, opacity) are preserved.
+The mechanism itself lives in the styles |numodel/xticklabel halo|
+and |numodel/yticklabel halo|; redefining them to be empty
+(|\pgfplotsset{numodel/xticklabel halo/.style={}}| and the
+$y$-counterpart) removes the halos entirely.
 
 \section{Public API}
 

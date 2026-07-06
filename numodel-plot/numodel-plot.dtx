@@ -28,7 +28,7 @@
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{numodel-plot}[2026/05/30 v0.7.0 Auto-sizing PGFPlots engine]
+\ProvidesPackage{numodel-plot}[2026/07/06 v0.8.0 Auto-sizing PGFPlots engine]
 
 \makeatletter
 
@@ -37,6 +37,7 @@
 \RequirePackage{l3keys2e}
 \RequirePackage{siunitx}
 \RequirePackage{pgfplots}
+\RequirePackage{pdfrender}
 \usepgfplotslibrary{fillbetween}
 
 \pgfplotsset{
@@ -58,13 +59,30 @@
   numodel/ticks/.style={
     tick style={black}
   },
-  % Semi-transparent white backing for tick labels.  Only applied to an
+  % Semi-transparent white halo behind tick labels.  Only applied to an
   % axis that \calcplotdims draws *through the middle* of the plot, where
   % curves pass behind the numbers; edge-placed axes leave their labels on
-  % the white margin and get no box (see \calcplotdims).  The matching
-  % inner sep=1pt lives in the base tick-label style so that the box and
-  % the box-less labels keep identical spacing.
-  numodel/ticklabel box/.style={fill=white, fill opacity=0.8, text opacity=1},
+  % the white margin and get no halo (see \calcplotdims).
+  %
+  % The halo follows the glyph outlines instead of boxing the label in a
+  % rectangle: the label text is wrapped in \nmp@ticklabelhalo (defined
+  % below), which emits it twice -- first stroke-only with a fat white
+  % pen (the halo), then normally on top of it.  \axisdefaultticklabel
+  % is pgfplots' stock label body, so number formatting and tick
+  % scaling stay exactly as without the halo.
+  %
+  % The halo has to cover the curves as well as the grid, so the haloed
+  % labels are lifted onto the `axis descriptions' layer, which sits
+  % above `main' (the curves) while the grid stays on `axis grid' below
+  % them.  This only takes effect when layered graphics is active;
+  % \calcplotdims switches that on (`set layers') in the same branches
+  % that apply these styles.
+  numodel/xticklabel halo/.style={
+    xticklabel={\nmp@ticklabelhalo{\axisdefaultticklabel}},
+    xticklabel style={/pgfplots/on layer=axis descriptions}},
+  numodel/yticklabel halo/.style={
+    yticklabel={\nmp@ticklabelhalo{\axisdefaultticklabel}},
+    yticklabel style={/pgfplots/on layer=axis descriptions}},
   numodel/axis/.style={
     xticklabel style={/pgf/number format/.cd, fixed, precision=6, fixed zerofill=false, use comma, 1000 sep={\,}, /tikz/.cd, text depth=0.3ex, inner sep=1pt},
     yticklabel style={/pgf/number format/.cd, fixed, precision=6, fixed zerofill=false, use comma, 1000 sep={\,}, /tikz/.cd, text depth=0.3ex, inner sep=1pt},
@@ -76,6 +94,28 @@
     ylabel style={rotate=-90},
     axis line style={-}
   }
+}
+
+% Glyph-following halo used by the `numodel/...ticklabel halo' styles.
+% The label is emitted twice: first with pdfrender's stroke-only text
+% rendering mode -- a fat pen traces the glyph outlines, at 80%
+% opacity so grid and curves still shimmer through in the halo -- and
+% then the untouched original on top.  The \rlap keeps the halo copy
+% out of the width, so tick-label spacing stays identical to the
+% halo-less labels on edge-placed axes.
+%
+% The halo colour is the named colour `numodelhalo' (white by
+% default); on a coloured document background redefine it with
+% \colorlet{numodelhalo}{<background colour>}.
+\colorlet{numodelhalo}{white}
+\newcommand{\nmp@ticklabelhalo}[1]{%
+  \rlap{%
+    \pgfsetstrokeopacity{0.8}%
+    \textpdfrender{TextRenderingMode=Stroke, LineWidth=1.6pt,%
+      LineJoinStyle=Round, LineCapStyle=Round, StrokeColor=numodelhalo}{#1}%
+    \pgfsetstrokeopacity{1}%
+  }%
+  #1%
 }
 
 \ExplSyntaxOn
@@ -438,21 +478,21 @@
 \edef\nmp@xAllNonPos{\fpeval{\xmax<=0 ? 1 : 0}}%
 % The x-axis is drawn through the middle only when the data straddles
 % y=0; there the x tick labels sit on top of the curves and need the
-% white backing box.  Edge placements (top / default bottom) leave the
-% labels on the white margin, so no box.
+% white halo.  Edge placements (top / default bottom) leave the
+% labels on the white margin, so no halo.
 \ifnum\nmp@yStraddles=1
-  \pgfplotsset{numodel/axis/.append style={axis x line*=middle,
-    xticklabel style={/pgfplots/numodel/ticklabel box}}}%
+  \pgfplotsset{numodel/axis/.append style={axis x line*=middle, set layers,
+    /pgfplots/numodel/xticklabel halo}}%
 \else
   \ifnum\nmp@yAllNonPos=1
     \pgfplotsset{numodel/axis/.append style={axis x line*=top}}%
   \fi
 \fi
-% Likewise the y-axis only gets a backing box when it is drawn through
+% Likewise the y-axis only gets a halo when it is drawn through
 % the middle (data straddles x=0).
 \ifnum\nmp@xStraddles=1
-  \pgfplotsset{numodel/axis/.append style={axis y line*=middle,
-    yticklabel style={/pgfplots/numodel/ticklabel box}}}%
+  \pgfplotsset{numodel/axis/.append style={axis y line*=middle, set layers,
+    /pgfplots/numodel/yticklabel halo}}%
 \else
   \ifnum\nmp@xAllNonPos=1
     \pgfplotsset{numodel/axis/.append style={axis y line*=right}}%

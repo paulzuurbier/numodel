@@ -5,19 +5,38 @@ All notable changes to `numodel-plot` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [0.8.0] — Unreleased
+## [0.8.0] — 2026-07-06
 
 ### Changed
-- The semi-transparent white backing box behind tick labels (added in
+- The semi-transparent white backing behind tick labels (added in
   0.7.0) is now applied **only to an axis that is drawn through the
   middle of the plot**, where curves pass behind the numbers. An axis
   placed on an edge (the default bottom/left, or the `top`/`right`
   placements used for single-sign data) leaves its labels on the white
-  margin and gets no box. In a quadrant I+IV plot, for example, the
-  x-axis (middle) keeps its box while the left-hand y-axis no longer
-  carries one, so the boxes no longer stand out where they served no
-  purpose. The box itself is now a named style, `numodel/ticklabel
-  box`, applied conditionally from `\calcplotdims`.
+  margin and gets no backing. In a quadrant I+IV plot, for example,
+  the x-axis (middle) keeps its backing while the left-hand y-axis no
+  longer carries one, so the backing no longer stands out where it
+  served no purpose.
+- The backing is no longer a filled rectangle but a **halo that
+  follows the glyph outlines** of the scale numbers. The label is
+  emitted twice: first stroke-only — a fat white pen (1.6pt, round
+  joins, 80% opacity) traces the character outlines via the
+  `pdfrender` package — and then the normal label on top. Between and
+  around the digits the grid and curves now run through untouched
+  instead of being cut off by a rectangular patch. The styles
+  `numodel/xticklabel halo` and `numodel/yticklabel halo` apply this
+  conditionally from `\calcplotdims`; the halo colour is the named
+  colour `numodelhalo` (white by default, adjustable with
+  `\colorlet{numodelhalo}{<color>}` for coloured backgrounds). New
+  dependency: `pdfrender` (supported on pdfTeX and LuaTeX).
+- The halo covers the plotted curves as well as the grid. Previously
+  the backed tick labels were drawn before the curves, so a curve
+  passing through a scale number ran *over* its backing, which only
+  masked the dotted grid lines. When `\calcplotdims` places an axis
+  through the middle it now activates PGFPlots layered graphics
+  (`set layers`) and lifts the haloed labels onto the
+  `axis descriptions` layer: the grid stays below the curves, the
+  halo covers both, and the number sits on top of its own halo.
 
 ## [0.7.0] — 2026-05-30
 
