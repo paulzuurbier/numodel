@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(kpsewhich -var-value TEXMFHOME)",
+      "Bash(kpsewhich -var-value TEXMFLOCAL)",
+      "Bash(kpsewhich numodel.sty)",
+      "Bash(kpsewhich numodel-plot.sty)",
+      "Bash(kpsewhich numodel.lua)",
+      "Read(//Users/pzu/Library/texmf/tex/**)",
+      "Read(//Users/pzu/Library/texmf/**)",
+      "Bash(kpsewhich --all numodel.sty)",
+      "Bash(l3build install *)"
+    ]
+  }
+}

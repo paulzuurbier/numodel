@@ -1,77 +1,40 @@
-This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  30 MAY 2026 20:53
- restricted system commands enabled.
+This is TeX, Version 3.141592653 (TeX Live 2026) (preloaded format=tex 2026.4.1)  25 JUN 2026 11:44
 **numodel-plot.ins
 (./numodel-plot.ins
-LaTeX2e <2025-11-01>
-L3 programming layer <2026-01-19>
-Lua module: luaotfload 2024-12-03 v3.29 Lua based OpenType font support
-Lua module: lualibs 2023-07-13 v2.76 ConTeXt Lua standard libraries.
-Lua module: lualibs-extended 2023-07-13 v2.76 ConTeXt Lua libraries -- extended 
-collection.
-luaotfload | conf : Root cache directory is "C:/Users/paulz/.texlive2026/texmf-v
-ar/luatex-cache/generic/names".
-luaotfload | init : Loading fontloader "fontloader-2023-12-28.lua" from kpse-res
-olved path "c:/texlive/2025/texmf-dist/tex/luatex/luaotfload/fontloader-2023-12-
-28.lua".
-Lua-only attribute luaotfload@noligature = 1
-luaotfload | init : Context OpenType loader version 3.134
-Inserting `luaotfload.node_processor' in `pre_linebreak_filter'.
-Inserting `luaotfload.node_processor' in `hpack_filter'.
-Inserting `luaotfload.glyph_stream' in `glyph_stream_provider'.
-Inserting `luaotfload.define_font' in `define_font'.
-Lua-only attribute luaotfload_color_attribute = 2
-luaotfload | conf : Root cache directory is "C:/Users/paulz/.texlive2026/texmf-v
-ar/luatex-cache/generic/names".
-Inserting `luaotfload.harf.strip_prefix' in `find_opentype_file'.
-Inserting `luaotfload.harf.strip_prefix' in `find_truetype_file'.
-Removing  `luaotfload.glyph_stream' from `glyph_stream_provider'.
-Inserting `luaotfload.harf.glyphstream' in `glyph_stream_provider'.
-Inserting `luaotfload.harf.finalize_vlist' in `post_linebreak_filter'.
-Inserting `luaotfload.harf.finalize_hlist' in `hpack_filter'.
-Inserting `luaotfload.cleanup_files' in `wrapup_run'.
-Inserting `luaotfload.harf.finalize_unicode' in `finish_pdffile'.
-Inserting `luaotfload.glyphinfo' in `glyph_info'.
-Lua-only attribute luaotfload.letterspace_done = 3
-Inserting `luaotfload.aux.set_sscale_dimens' in `luaotfload.patch_font'.
-Inserting `luaotfload.aux.set_font_index' in `luaotfload.patch_font'.
-Inserting `luaotfload.aux.patch_cambria_domh' in `luaotfload.patch_font'.
-Inserting `luaotfload.aux.fixup_fontdata' in `luaotfload.patch_font_unsafe'.
-Inserting `luaotfload.aux.set_capheight' in `luaotfload.patch_font'.
-Inserting `luaotfload.aux.set_xheight' in `luaotfload.patch_font'.
-Inserting `luaotfload.rewrite_fontname' in `luaotfload.patch_font'.
-Inserting `tracingstacklevels' in `input_level_string'. (c:/texlive/2025/texmf-
-dist/tex/latex/base/docstrip.tex
-\blockLevel=\count273
-\emptyLines=\count274
-\processedLines=\count275
-\commentsRemoved=\count276
-\commentsPassed=\count277
-\codeLinesPassed=\count278
-\TotalprocessedLines=\count279
-\TotalcommentsRemoved=\count280
-\TotalcommentsPassed=\count281
-\TotalcodeLinesPassed=\count282
-\NumberOfFiles=\count283
-\inFile=\read2
-\inputcheck=\read3
-\off@0=\count284
-\off@1=\count285
-\off@2=\count286
-\off@3=\count287
-\off@4=\count288
-\off@5=\count289
-\off@6=\count290
-\off@7=\count291
-\off@8=\count292
-\off@9=\count293
-\off@10=\count294
-\off@11=\count295
-\off@12=\count296
-\off@13=\count297
-\off@14=\count298
-\off@15=\count299
-\@maxfiles=\count300
-\@maxoutfiles=\count301
+(/usr/local/texlive/2026/texmf-dist/tex/latex/base/docstrip.tex
+\blockLevel=\count26
+\emptyLines=\count27
+\processedLines=\count28
+\commentsRemoved=\count29
+\commentsPassed=\count30
+\codeLinesPassed=\count31
+\TotalprocessedLines=\count32
+\TotalcommentsRemoved=\count33
+\TotalcommentsPassed=\count34
+\TotalcodeLinesPassed=\count35
+\NumberOfFiles=\count36
+\inFile=\read0
+\inputcheck=\read1
+\@tempcnta=\count37
+\off@0=\count38
+\off@1=\count39
+\off@2=\count40
+\off@3=\count41
+\off@4=\count42
+\off@5=\count43
+\off@6=\count44
+\off@7=\count45
+\off@8=\count46
+\off@9=\count47
+\off@10=\count48
+\off@11=\count49
+\off@12=\count50
+\off@13=\count51
+\off@14=\count52
+\off@15=\count53
+\@temptokena=\toks12
+\@maxfiles=\count54
+\@maxoutfiles=\count55
 
 Utility: `docstrip' v2.6c <2024-12-23>
 English documentation    <2025-09-23>
@@ -87,16 +50,14 @@ English documentation    <2025-09-23>
 
 )
 
-Generating file(s) ./numodel-plot.sty 
-
-\openout0 = ./numodel-plot.sty
+Generating file(s) numodel-plot.sty 
 
 Processing file numodel-plot.dtx -> numodel-plot.sty
 File numodel-plot.dtx ended by \endinput.
-Lines  processed: 513
-Comments removed: 32
+Lines  processed: 528
+Comments removed: 38
 Comments  passed: 0
-Codelines passed: 481
+Codelines passed: 490
 
 ***********************************************************
 *
@@ -113,21 +74,5 @@ Codelines passed: 481
 * itself is pure docstrip source and is no longer typesettable).
 *
 ***********************************************************
-)
-
-Here is how much of LuaTeX's memory you used:
- 327 strings out of 476076
- 100000,460012 words of node,token memory allocated
- 296 words of node memory still in use:
-   1 hlist, 3 kern, 1 glyph, 1 attribute, 39 glue_spec, 1 attribute_list nodes
-   avail lists: 2:10,3:3,4:1,5:1
- 22875 multiletter control sequences out of 65536+600000
- 14 fonts using 591679 bytes
- 12i,0n,15p,224b,75s stack positions out of 10000i,1000n,20000p,200000b,200000s
-
-warning  (pdf backend): no pages of output.
-
-PDF statistics: 0 PDF objects out of 1000 (max. 8388607)
- 0 named destinations out of 1000 (max. 1048576)
- 1 words of extra memory for PDF output out of 10000 (max. 100000000)
-
+ )
+No pages of output.

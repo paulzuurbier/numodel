@@ -5,6 +5,20 @@ All notable changes to `numodel-plot` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.8.0] — Unreleased
+
+### Changed
+- The semi-transparent white backing box behind tick labels (added in
+  0.7.0) is now applied **only to an axis that is drawn through the
+  middle of the plot**, where curves pass behind the numbers. An axis
+  placed on an edge (the default bottom/left, or the `top`/`right`
+  placements used for single-sign data) leaves its labels on the white
+  margin and gets no box. In a quadrant I+IV plot, for example, the
+  x-axis (middle) keeps its box while the left-hand y-axis no longer
+  carries one, so the boxes no longer stand out where they served no
+  purpose. The box itself is now a named style, `numodel/ticklabel
+  box`, applied conditionally from `\calcplotdims`.
+
 ## [0.7.0] — 2026-05-30
 
 ### Added

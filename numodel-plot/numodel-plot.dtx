@@ -58,9 +58,16 @@
   numodel/ticks/.style={
     tick style={black}
   },
+  % Semi-transparent white backing for tick labels.  Only applied to an
+  % axis that \calcplotdims draws *through the middle* of the plot, where
+  % curves pass behind the numbers; edge-placed axes leave their labels on
+  % the white margin and get no box (see \calcplotdims).  The matching
+  % inner sep=1pt lives in the base tick-label style so that the box and
+  % the box-less labels keep identical spacing.
+  numodel/ticklabel box/.style={fill=white, fill opacity=0.8, text opacity=1},
   numodel/axis/.style={
-    xticklabel style={/pgf/number format/.cd, fixed, precision=6, fixed zerofill=false, use comma, 1000 sep={\,}, /tikz/.cd, text depth=0.3ex, fill=white, fill opacity=0.8, text opacity=1, inner sep=1pt},
-    yticklabel style={/pgf/number format/.cd, fixed, precision=6, fixed zerofill=false, use comma, 1000 sep={\,}, /tikz/.cd, text depth=0.3ex, fill=white, fill opacity=0.8, text opacity=1, inner sep=1pt},
+    xticklabel style={/pgf/number format/.cd, fixed, precision=6, fixed zerofill=false, use comma, 1000 sep={\,}, /tikz/.cd, text depth=0.3ex, inner sep=1pt},
+    yticklabel style={/pgf/number format/.cd, fixed, precision=6, fixed zerofill=false, use comma, 1000 sep={\,}, /tikz/.cd, text depth=0.3ex, inner sep=1pt},
     hide obscured x ticks=false,
     hide obscured y ticks=false,
     axis lines=left,
@@ -429,15 +436,23 @@
 \edef\nmp@yAllNonPos{\fpeval{\ymax<=0 ? 1 : 0}}%
 \edef\nmp@xStraddles{\fpeval{(\xmin<0 && \xmax>0) ? 1 : 0}}%
 \edef\nmp@xAllNonPos{\fpeval{\xmax<=0 ? 1 : 0}}%
+% The x-axis is drawn through the middle only when the data straddles
+% y=0; there the x tick labels sit on top of the curves and need the
+% white backing box.  Edge placements (top / default bottom) leave the
+% labels on the white margin, so no box.
 \ifnum\nmp@yStraddles=1
-  \pgfplotsset{numodel/axis/.append style={axis x line*=middle}}%
+  \pgfplotsset{numodel/axis/.append style={axis x line*=middle,
+    xticklabel style={/pgfplots/numodel/ticklabel box}}}%
 \else
   \ifnum\nmp@yAllNonPos=1
     \pgfplotsset{numodel/axis/.append style={axis x line*=top}}%
   \fi
 \fi
+% Likewise the y-axis only gets a backing box when it is drawn through
+% the middle (data straddles x=0).
 \ifnum\nmp@xStraddles=1
-  \pgfplotsset{numodel/axis/.append style={axis y line*=middle}}%
+  \pgfplotsset{numodel/axis/.append style={axis y line*=middle,
+    yticklabel style={/pgfplots/numodel/ticklabel box}}}%
 \else
   \ifnum\nmp@xAllNonPos=1
     \pgfplotsset{numodel/axis/.append style={axis y line*=right}}%
