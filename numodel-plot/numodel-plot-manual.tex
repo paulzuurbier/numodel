@@ -48,14 +48,9 @@
   after skip=10pt,
 }
 
-% Match tick-label backgrounds to the plotexample colback so the
-% manual's example plots blend into the listing's gray frame instead
-% of the package default (fill=white).  See §"Tick label backgrounds"
-% in the body for how end users adapt this to their own document.
-\pgfplotsset{numodel/axis/.append style={%
-  xticklabel style={fill=black!3},%
-  yticklabel style={fill=black!3}%
-}}
+% No colour tweaks needed for the example plots: plotexample is a
+% tcolorbox, so the package's halo-color=auto default picks up its
+% colback for the tick-label halos.  See §"Tick label halos".
 
 \begin{document}
 
@@ -332,15 +327,23 @@ visible where a crossing axis would otherwise hide them
 (|hide obscured x ticks=false| and the $y$-counterpart); the halo
 provides the visual separation from the crossing axis line.
 
-The halo colour is the named colour |numodelhalo|, white by default.
-If the surrounding document has a coloured background --- a sidebar
-box, a slide template, the |plotexample| environment used in this
-manual --- match the halo to the surrounding colour with
+The halo colour is controlled by the setup key |halo-color|.  Its
+default, |halo-color=auto|, matches the halo to the surrounding
+background at every |\drawplot|: inside a \textsf{tcolorbox} it takes
+the box's |colback| (this manual's |plotexample| boxes rely on
+exactly that), on a \textsf{beamer} slide it takes the colour theme's
+|bg|, on a page coloured through the \textsf{pagecolor} package it
+takes |\thepagecolor|, and otherwise it falls back to white.  (Plain
+|\pagecolor| without the \textsf{pagecolor} package leaves no
+readable record, so it cannot be detected.)  A colour value pins the
+halo instead:
 \begin{quote}
 \begin{verbatim}
-\colorlet{numodelhalo}{<your-color>}
+\numodelplotsetup{halo-color=<your-color>}  % pin
+\numodelplotsetup{halo-color=auto}          % re-enable matching
 \end{verbatim}
 \end{quote}
+The resolved colour is exposed as the named colour |numodelhalo|.
 The mechanism itself lives in the styles |numodel/xticklabel halo|
 and |numodel/yticklabel halo|; redefining them to be empty
 (|\pgfplotsset{numodel/xticklabel halo/.style={}}| and the

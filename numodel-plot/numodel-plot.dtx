@@ -104,10 +104,44 @@
 % out of the width, so tick-label spacing stays identical to the
 % halo-less labels on edge-placed axes.
 %
-% The halo colour is the named colour `numodelhalo' (white by
-% default); on a coloured document background redefine it with
-% \colorlet{numodelhalo}{<background colour>}.
+% The halo colour is the named colour `numodelhalo'.  It is governed
+% by the `halo-color' setup key: an explicit colour pins it, the
+% default `auto' re-resolves it at every \drawplot against the
+% surrounding background.  LaTeX has no universal "what is behind me"
+% query, so `auto' probes the places where common environments
+% register their background, cascading from general to specific --
+% each later probe overrides the earlier ones when it applies:
+%
+%   white         -- base fallback (LaTeX's plain \pagecolor leaves
+%                    no readable trace);
+%   \thepagecolor -- the `pagecolor' package's record of \pagecolor;
+%   bg            -- beamer's background colour of the current
+%                    colour theme;
+%   tcbcolback    -- the current tcolorbox's background, but only
+%                    when actually inside a box: tcolorbox keeps the
+%                    (documented) counter `tcblayer' at the current
+%                    box nesting depth, and tcbcolback itself is
+%                    already defined at load time, so definedness
+%                    alone would misfire outside boxes.
 \colorlet{numodelhalo}{white}
+\newif\ifnmp@haloauto
+\nmp@haloautotrue
+\newcommand{\nmp@resolvehalocolor}{%
+  \ifnmp@haloauto
+    \colorlet{numodelhalo}{white}%
+    \ifdefined\thepagecolor
+      \colorlet{numodelhalo}{\thepagecolor}%
+    \fi
+    \ifcsname\string\color@bg\endcsname
+      \colorlet{numodelhalo}{bg}%
+    \fi
+    \ifcsname c@tcblayer\endcsname
+      \ifnum\value{tcblayer}>0
+        \colorlet{numodelhalo}{tcbcolback}%
+      \fi
+    \fi
+  \fi
+}
 \newcommand{\nmp@ticklabelhalo}[1]{%
   \rlap{%
     \pgfsetstrokeopacity{0.8}%
@@ -156,6 +190,16 @@
 
     xcmmax .code:n = \def\xcmmax{#1},
     ycmmax .code:n = \def\ycmmax{#1},
+
+    % Colour of the tick-label halo.  `auto' (the default) matches the
+    % surrounding background at each \drawplot (tcolorbox, beamer,
+    % pagecolor -- see \nmp@resolvehalocolor); any other value is a
+    % colour expression that pins the halo to that colour.
+    halo-color .code:n =
+      \str_if_eq:nnTF {#1} {auto}
+        { \nmp@haloautotrue }
+        { \nmp@haloautofalse
+          \colorlet{numodelhalo}{#1} },
   }
 
 \NewDocumentCommand{\numodelplotsetup}{m}
@@ -543,6 +587,9 @@
 \newcommand{\drawplot}[1]{
   \calcplotdims
   \begin{tikzpicture}
+    % Resolve halo-color=auto against the *current* surroundings; the
+    % tikzpicture group keeps the \colorlet local to this plot.
+    \nmp@resolvehalocolor
     \begin{axis}[
       numodel/grid,
       numodel/ticks,

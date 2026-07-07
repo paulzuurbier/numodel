@@ -5,6 +5,19 @@ All notable changes to `numodel-plot` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- New setup key `halo-color` for the tick-label halo colour. The
+  default `halo-color=auto` matches the halo to the surrounding
+  background at every `\drawplot`: inside a `tcolorbox` it takes the
+  box's `colback` (detected via the `tcblayer` nesting counter), on a
+  beamer slide the colour theme's `bg`, on a page coloured through
+  the `pagecolor` package `\thepagecolor`, and white otherwise. Any
+  other value pins the halo to that colour
+  (`\numodelplotsetup{halo-color=yellow!30}`); the resolved colour
+  remains exposed as the named colour `numodelhalo`.
+
 ## [0.8.0] — 2026-07-06
 
 ### Changed
