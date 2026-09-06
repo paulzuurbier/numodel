@@ -1,0 +1,58 @@
+% Regression test: \qtyPlain.
+%
+% Since v0.8.1 \qtyPlain is built on siunitx's documented code-level
+% interface instead of overriding siunitx internals.  This pins down
+% the contract: a mantissa of exactly 1 with no exponent left over
+% prints as the bare unit (and without the quantity-product symbol),
+% everything else prints exactly what \qty would, and all three
+% prefix-mode values behave consistently.
+%
+% siunitx's two printing hooks are replaced by \TYPE so the test
+% records what \qtyPlain decided to emit rather than a box full of
+% glyphs: a "number:" line means the mantissa survived, its absence
+% means it was suppressed.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage{siunitx}
+\usepackage{numodel-plot}
+\begin{document}
+\START
+\OMIT
+\ExplSyntaxOn
+\cs_set_protected:Npn \siunitx_print_number:n #1
+  { \TYPE { ~ number: ~ \detokenize {#1} } }
+\cs_set_protected:Npn \siunitx_print_unit:n #1
+  { \TYPE { ~ unit: ~ \detokenize {#1} } }
+\ExplSyntaxOff
+\newcommand\QP[3]{%
+  \TYPE{--- \detokenize{#1} | \detokenize{#2} | #3}%
+  \setbox0=\hbox{\qtyPlain[evaluate-expression=false, round-mode=none,
+    prefix-mode=#3, extract-mass-in-kilograms=true,
+    print-zero-exponent=false, print-unity-mantissa=false]{#1}{#2}}%
+}
+\newcommand\QPall[2]{%
+  \QP{#1}{#2}{extract-exponent}%
+  \QP{#1}{#2}{combine-exponent}%
+  \QP{#1}{#2}{input}%
+}
+\TIMO
+\TYPE{=== mantissa 1 collapses to the bare unit ===}
+\QPall{1e-3}{\km}
+\QPall{1}{\metre\per\second}
+\QPall{1e3}{\metre}
+\QPall{1}{\hertz}
+\QPall{1e-3}{\kilo\metre\per\second}
+\TYPE{=== mantissa kept otherwise ===}
+\QPall{2.5e6}{\gram}
+\QPall{4.2}{\kilo\metre}
+\QPall{10}{\metre}
+\QPall{1.0}{\metre}
+\QPall{1e-6}{\metre}
+\TYPE{=== sign, comparator and uncertainty suppress the collapse ===}
+\QP{-1}{\metre}{extract-exponent}
+\QP{<1}{\metre}{extract-exponent}
+\QP{1(1)}{\metre}{extract-exponent}
+\QP{1+-0.1}{\metre}{extract-exponent}
+\TYPE{=== a blank number falls back to \string\qty\space ===}
+\QP{}{\metre}{extract-exponent}
+\end{document}

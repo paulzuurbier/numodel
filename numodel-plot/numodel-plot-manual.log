@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  6 JUL 2026 16:25
+This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.4.10)  6 SEP 2026 20:04
  restricted system commands enabled.
  file:line:error style messages enabled.
 **c:/numodel-bundle/numodel-plot/numodel-plot-manual.tex
@@ -169,7 +169,7 @@ Package: iftex 2024/12/12 v1.0g TeX engine tests
 \Gm@layoutvoffset=\dimen167
 \Gm@dimlist=\toks20
 ) (./numodel-plot.sty
-Package: numodel-plot 2026/05/30 v0.7.0 Auto-sizing PGFPlots engine
+Package: numodel-plot 2026/07/06 v0.8.0 Auto-sizing PGFPlots engine
  (c:/texlive/2025/texmf-dist/tex/latex/l3kernel/expl3.sty
 Package: expl3 2026-01-19 L3 programming layer (loader) 
  (c:/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-luatex.def
@@ -494,7 +494,16 @@ Package pgfplots info on input line 82: Found new luatex: initializing lua comma
 File: tikzlibraryplotmarks.code.tex 2025-08-29 v3.1.11a (3.1.11a)
  (c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryplotmarks.code.tex
 File: pgflibraryplotmarks.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-))) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.fillbetween.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfcontrib/tikzlibraryfillbetween.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryintersections.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryintersections.code.tex
+))) (c:/texlive/2025/texmf-dist/tex/latex/pdfrender/pdfrender.sty
+Package: pdfrender 2023-12-07 v1.8 Access to some PDF graphics parameters (HO)
+Package pdfrender Info: \pdfmatch not found. Therefore the values
+(pdfrender)             of some parameters are not validated.
+ (c:/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
+)
+LaTeX Info: Redefining \pdfrender on input line 296.
+LaTeX Info: Redefining \textpdfrender on input line 312.
+) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.fillbetween.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfcontrib/tikzlibraryfillbetween.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryintersections.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryintersections.code.tex
 \pgf@intersect@solutions=\count347
 )) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfcontrib/tikzlibrarydecorations.softclip.code.tex (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/pgfcontrib/pgflibraryfillbetween.code.tex))) (c:/texlive/2025/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.decorations.softclip.code.tex))) (c:/texlive/2025/texmf-dist/tex/latex/caption/subcaption.sty
 Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
@@ -925,9 +934,7 @@ Package: textcomp 2024/04/24 v2.1b Standard LaTeX package
 Package: lineno 2026/03/08 line numbers on paragraphs v5.9
  (c:/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
- (c:/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
-Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
-))
+)
 \linenopenalty=\count381
 \output=\toks44
 \linenoprevgraf=\count382
@@ -1149,31 +1156,31 @@ Package hyperref Info: Option `bookmarksnumbered' set `true' on input line 75.
 \c@HD@hypercount=\count427
 \HD@helplength=\skip62
 )
-Package translations Info: No language package found. I am going to use `english' as default language. on input line 60.
+Package translations Info: No language package found. I am going to use `english' as default language. on input line 55.
  (./numodel-plot-manual.aux)
 \openout1 = numodel-plot-manual.aux
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 60.
-LaTeX Font Info:    ... okay on input line 60.
-Package doc Info: Made | a short reference for \verb on input line 60.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+Package doc Info: Made | a short reference for \verb on input line 55.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: luatex
@@ -1212,7 +1219,7 @@ Package doc Info: Made | a short reference for \verb on input line 60.
 (c:/texlive/2025/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl
 File: translations-basic-dictionary-english.trsl (english translation file `translations-basic-dictionary')
 )
-Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 60.
+Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 55.
  (c:/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count428
@@ -1239,17 +1246,17 @@ Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  TU/LeteSansMath(1)/m/n --> TU/Arial(0)/m/n on input line 60.
+(Font)                  TU/LeteSansMath(1)/m/n --> TU/Arial(0)/m/n on input line 55.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> TU/Arial(0)/m/it on input line 60.
+(Font)                  OT1/cmr/m/it --> TU/Arial(0)/m/it on input line 55.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> TU/Arial(0)/b/n on input line 60.
+(Font)                  OT1/cmr/bx/n --> TU/Arial(0)/b/n on input line 55.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 60.
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 55.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 60.
+(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 55.
 \c@lstlisting=\count434
-Package hyperref Info: Link coloring ON on input line 60.
+Package hyperref Info: Link coloring ON on input line 55.
 (./numodel-plot-manual.out) (./numodel-plot-manual.out)
 \@outlinefile=\write6
 
@@ -1258,8 +1265,8 @@ Package hyperref Info: Link coloring ON on input line 60.
 \HD@savedest@out=\write7
 
 \openout7 = numodel-plot-manual.hd
-Package doc Info: | already a short reference for \verb(*) on input line 60.
-Package doc Info: Deleted | as a short reference for \verb(*) on input line 60.
+Package doc Info: | already a short reference for \verb(*) on input line 55.
+Package doc Info: Deleted | as a short reference for \verb(*) on input line 55.
  (./numodel-plot-manual.toc)
 \tf@toc=\write8
 
@@ -1270,11 +1277,38 @@ Package doc Info: Deleted | as a short reference for \verb(*) on input line 60.
 \g__tcobox_out_iow=\write9
 
 \openout9 = numodel-plot-manual.listing
+ (./numodel-plot-manual.listing) (./numodel-plot-manual.listing
+\pgf@layerbox@axis background=\box146
+\pgf@layerboxsaved@axis background=\box147
+\pgf@layerbox@axis grid=\box148
+\pgf@layerboxsaved@axis grid=\box149
+\pgf@layerbox@axis ticks=\box150
+\pgf@layerboxsaved@axis ticks=\box151
+\pgf@layerbox@axis lines=\box152
+\pgf@layerboxsaved@axis lines=\box153
+\pgf@layerbox@axis tick labels=\box154
+\pgf@layerboxsaved@axis tick labels=\box155
+\pgf@layerbox@pre main=\box156
+\pgf@layerboxsaved@pre main=\box157
+\pgf@layerbox@axis descriptions=\box158
+\pgf@layerboxsaved@axis descriptions=\box159
+\pgf@layerbox@axis foreground=\box160
+\pgf@layerboxsaved@axis foreground=\box161
+Package pgfplots info on input line 5: Setting layers 'axis background,axis grid,axis ticks,axis lines,axis tick labels,pre main,main,axis descriptions,axis foreground'...
+Package pgfplots info on input line 5: Setting layers 'axis background,axis grid,axis ticks,axis lines,axis tick labels,pre main,main,axis descriptions,axis foreground'...
+Package pdfrender Info: New color stack `TextRenderingMode' = 2 on input line 5.
+Package pdfrender Info: New color stack `LineWidth' = 3 on input line 5.
+Package pdfrender Info: New color stack `LineJoinStyle' = 4 on input line 5.
+Package pdfrender Info: New color stack `LineCapStyle' = 5 on input line 5.
+)
+
+LaTeX Warning: Reference `sec:keys' on page 2 undefined on input line 149.
+
+
+\openout9 = numodel-plot-manual.listing
+(./numodel-plot-manual.listing) (./numodel-plot-manual.listing) [2] [3]
+\openout9 = numodel-plot-manual.listing
  (./numodel-plot-manual.listing) (./numodel-plot-manual.listing)
-\openout9 = numodel-plot-manual.listing
- (./numodel-plot-manual.listing) (./numodel-plot-manual.listing) [2]
-\openout9 = numodel-plot-manual.listing
- (./numodel-plot-manual.listing) (./numodel-plot-manual.listing) [3]
 \openout9 = numodel-plot-manual.listing
  (./numodel-plot-manual.listing) (./numodel-plot-manual.listing) [4]
 \openout9 = numodel-plot-manual.listing
@@ -1288,44 +1322,39 @@ LaTeX Warning: Marginpar on page 6 moved.
 
 LaTeX Warning: Marginpar on page 6 moved.
 
+[6]
 
-LaTeX Warning: Marginpar on page 6 moved.
+LaTeX Warning: Marginpar on page 7 moved.
 
-
-LaTeX Warning: Marginpar on page 6 moved.
-
-
-LaTeX Warning: Marginpar on page 6 moved.
-
-[6] [7] (./numodel-plot-manual.aux)
+[7] (./numodel-plot-manual.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 
 
-Package rerunfilecheck Warning: File `numodel-plot-manual.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
+LaTeX Warning: There were undefined references.
 
-Package rerunfilecheck Info: Checksums for `numodel-plot-manual.out':
-(rerunfilecheck)             Before: 949338B24ED709918BF1A3C6708BB29C;1077
-(rerunfilecheck)             After:  B2F24E77F3EB5BCB215187DAE6FD1D42;1047.
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+Package rerunfilecheck Info: File `numodel-plot-manual.out' has not changed.
+(rerunfilecheck)             Checksum: B2F24E77F3EB5BCB215187DAE6FD1D42;1047.
 Package rerunfilecheck Info: File `numodel-plot-manual.hd' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 )
 
 Here is how much of LuaTeX's memory you used:
- 51527 strings out of 476076
- 476932,1977958 words of node,token memory allocated
- 556 words of node memory still in use:
-   6 hlist, 2 vlist, 2 rule, 3 glue, 4 kern, 1 glyph, 9 attribute, 62 glue_spec, 9 attribute_list, 2 write nodes
-   avail lists: 1:1,2:12421,3:3549,4:195,5:11336,6:134,7:13759,8:16,9:23926,10:24,11:1360,12:1
- 72752 multiletter control sequences out of 65536+600000
- 109 fonts using 43861047 bytes
- 114i,12n,126p,801b,2883s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 51793 strings out of 476076
+ 476945,1977958 words of node,token memory allocated
+ 552 words of node memory still in use:
+   6 hlist, 2 vlist, 2 rule, 3 glue, 4 kern, 1 glyph, 8 attribute, 62 glue_spec, 8 attribute_list, 2 write nodes
+   avail lists: 2:11612,3:2804,4:513,5:10954,6:136,7:14206,8:15,9:23206,10:24,11:1316,12:1
+ 73013 multiletter control sequences out of 65536+600000
+ 109 fonts using 43860823 bytes
+ 114i,12n,126p,795b,2887s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Windows/Fonts/ARIALNI.TTF><c:/texlive/2025/texmf-dist/fonts/opentype/public/fira/FiraMono-Bold.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lete-sans-math/LeteSansMath.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmsans8-regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lete-sans-math/LeteSansMath.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmsans10-regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmsans9-regular.otf><c:/Windows/Fonts/arialbd.ttf><c:/texlive/2025/texmf-dist/fonts/opentype/public/fira/FiraMono-Regular.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lete-sans-math/LeteSansMath.otf><c:/texlive/2025/texmf-dist/fonts/opentype/public/lm/lmsans17-regular.otf><c:/Windows/Fonts/arial.ttf>
-Output written on numodel-plot-manual.pdf (7 pages, 137011 bytes).
+Output written on numodel-plot-manual.pdf (7 pages, 141384 bytes).
 
 PDF statistics: 276 PDF objects out of 1000 (max. 8388607)
  228 compressed objects within 3 object streams

@@ -28,14 +28,21 @@
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{numodel-plot}[2026/07/06 v0.8.0 Auto-sizing PGFPlots engine]
+\ProvidesPackage{numodel-plot}[2026/09/06 v0.9.0 Auto-sizing PGFPlots engine]
 
 \makeatletter
 
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 \RequirePackage{l3keys2e}
-\RequirePackage{siunitx}
+% \qtyPlain drives siunitx through its code-level interface.  Every
+% function it uses has been public since siunitx v3.0.0 (2021-05-17),
+% but the axis labels also rely on `print-unity-mantissa = false',
+% whose handling of a bare 1 was corrected in v3.3.8, and on the
+% empty-exponent case of `prefix-mode = combine-exponent', fixed in
+% v3.3.7.  Hence the v3.3.8 date: with anything older LaTeX warns
+% rather than letting the labels come out subtly wrong.
+\RequirePackage{siunitx}[2023-11-06]
 \RequirePackage{pgfplots}
 \RequirePackage{pdfrender}
 \usepgfplotslibrary{fillbetween}
@@ -200,6 +207,18 @@
         { \nmp@haloautotrue }
         { \nmp@haloautofalse
           \colorlet{numodelhalo}{#1} },
+
+    % How a scaled axis presents its power of ten in the axis label:
+    % `prefix' (the default) folds it into an SI prefix on the unit --
+    % t (ks) instead of t (10^3 s) -- falling back to the exponent
+    % form whenever no engineering prefix fits (see
+    % \__numodelplot_prefix_check:nn); `exponent' always shows the
+    % power of ten.
+    scale-format .choice:,
+    scale-format / prefix .code:n =
+      \tl_gset:Nn \g__numodelplot_scaleformat_tl {prefix},
+    scale-format / exponent .code:n =
+      \tl_gset:Nn \g__numodelplot_scaleformat_tl {exponent},
   }
 
 \NewDocumentCommand{\numodelplotsetup}{m}
@@ -208,59 +227,186 @@
 \ExplSyntaxOff
 
 \ExplSyntaxOn
-\bool_new:N \g__pzu_suppress_qp_bool
-\cs_new_eq:NN \__pzu_orig_int_output:nnn \__siunitx_number_output_integer:nnn
-\cs_new_eq:NN \__pzu_orig_qty_print_unit:n \__siunitx_quantity_print_unit:n
-\NewDocumentCommand{\qtyPlain}{O{} m m}{%
-  \group_begin:
-    \bool_gset_false:N \g__pzu_suppress_qp_bool
-    \cs_set:Npn \__siunitx_number_output_integer:nnn ##1##2##3 {
-      \bool_lazy_all:nTF
+
+% \qtyPlain[<options>]{<number>}{<unit>}
+%
+% Like siunitx's \qty, except that a mantissa of exactly 1 with no
+% exponent left over prints as the bare unit ("m", not "1 m") -- the
+% form an axis label wants when the scale factor has been absorbed
+% into the unit's own prefix.
+%
+% Up to v0.8.0 this was done by overriding two siunitx internals
+% (\__siunitx_number_output_integer:nnn and
+% \__siunitx_quantity_print_unit:n) and reading four internal
+% variables.  The investigation behind siunitx issue #864 established
+% that siunitx's documented code-level interface already exposes the
+% whole pipeline, so nothing below reaches into siunitx internals.
+%
+% The pipeline mirrors \__siunitx_quantity_parsed:nn: parse the
+% number, run the stage selected by prefix-mode, then print.  All
+% three prefix-mode values are handled, so \qtyPlain remains a
+% drop-in replacement for \qty rather than being tied to
+% extract-exponent.
+\tl_new:N \l__nmp_qty_number_tl
+\tl_new:N \l__nmp_qty_unit_tl
+\tl_new:N \l__nmp_qty_input_tl
+\tl_new:N \l__nmp_qty_rawunit_tl
+\fp_new:N \l__nmp_qty_exponent_fp
+
+% prefix-mode = extract-exponent: strip the SI prefixes off the unit
+% and fold their net power of ten into the number, then process
+% (rounding, exponent-mode, ...).  The order matters: prefixes come
+% off before the exponent is adjusted, processing runs last.
+\cs_new_protected:cpn { __nmp_qty_prefix_extract-exponent:n } #1
+  {
+    \siunitx_unit_format_extract_prefixes:nNN {#1}
+      \l__nmp_qty_unit_tl \l__nmp_qty_exponent_fp
+    \tl_set:Ne \l__nmp_qty_number_tl
+      {
+        \siunitx_number_adjust_exponent:Nn
+          \l__nmp_qty_number_tl \l__nmp_qty_exponent_fp
+      }
+    \siunitx_number_process:NN \l__nmp_qty_number_tl \l__nmp_qty_number_tl
+  }
+
+% prefix-mode = combine-exponent: process first, then lift the
+% exponent out of the number and hand it to the unit formatter, which
+% turns it into an SI prefix.
+\cs_new_protected:cpn { __nmp_qty_prefix_combine-exponent:n } #1
+  {
+    \siunitx_number_process:NN \l__nmp_qty_number_tl \l__nmp_qty_number_tl
+    \exp_after:wN \__nmp_qty_drop_exponent:nnnnnnn \l__nmp_qty_number_tl
+    \siunitx_unit_format_combine_exponent:nnN {#1}
+      \l__nmp_qty_exponent_fp \l__nmp_qty_unit_tl
+  }
+\cs_new_protected:Npn \__nmp_qty_drop_exponent:nnnnnnn #1#2#3#4#5#6#7
+  {
+    \fp_set:Nn \l__nmp_qty_exponent_fp { #6 0#7 }
+    \tl_set:Nn \l__nmp_qty_number_tl { {#1} {#2} {#3} {#4} {#5} { } { } }
+  }
+
+% prefix-mode = input: prefixes stay where the user wrote them.
+\cs_new_protected:Npn \__nmp_qty_prefix_input:n #1
+  {
+    \siunitx_number_process:NN \l__nmp_qty_number_tl \l__nmp_qty_number_tl
+    \siunitx_unit_format:nN {#1} \l__nmp_qty_unit_tl
+  }
+
+% #1-#7 are the seven groups \siunitx_number_parse:nN produces --
+% comparator, sign, integer, decimal, uncertainty, exponent sign,
+% exponent -- and #8 is the unit.  A number carrying an uncertainty
+% is handed straight to \qty: separate-uncertainty-units has three
+% layouts that are not worth reproducing here, and such a number
+% never reduces to the bare mantissa 1 that \qtyPlain exists to
+% suppress.  An unrecognised prefix-mode (a future siunitx value)
+% falls back the same way.
+\cs_new_protected:Npn \__nmp_qty_parsed:nnnnnnnn #1#2#3#4#5#6#7#8
+  {
+    \bool_lazy_and:nnTF
+      { \tl_if_blank_p:n {#5} }
+      { \cs_if_exist_p:c
+          { __nmp_qty_prefix_ \l_siunitx_quantity_prefix_mode_tl :n } }
+      {
+        \use:c { __nmp_qty_prefix_ \l_siunitx_quantity_prefix_mode_tl :n }
+          {#8}
+        \exp_after:wN \__nmp_qty_output:nnnnnnn \l__nmp_qty_number_tl
+      }
+      { \__nmp_qty_fallback: }
+  }
+
+% The one thing \qtyPlain does differently from \qty: a number that
+% has boiled down to a bare 1 prints as nothing at all, leaving the
+% unit to stand alone -- and with it goes the quantity-product symbol
+% that would otherwise separate the two.
+\cs_new_protected:Npn \__nmp_qty_output:nnnnnnn #1#2#3#4#5#6#7
+  {
+    \bool_lazy_all:nTF
+      {
+        { \tl_if_blank_p:n {#1} }           % no comparator
+        { \tl_if_blank_p:n {#2} }           % no sign
+        { \str_if_eq_p:nn {#3} { 1 } }      % integer part is exactly 1
+        { \tl_if_blank_p:n {#4} }           % no decimal part
+        { \tl_if_blank_p:n {#5} }           % no uncertainty
+        { \fp_compare_p:n { #6 0#7 = 0 } }  % exponent absent or zero
+      }
+      { \siunitx_print_unit:V \l__nmp_qty_unit_tl }
+      {
+        \siunitx_quantity_print:eV
+          { \siunitx_number_output:N \l__nmp_qty_number_tl }
+          \l__nmp_qty_unit_tl
+      }
+  }
+
+% Everything \qtyPlain does not special-case goes to \qty unchanged.
+% The options are already in force in the enclosing group, so they
+% need not be passed again.
+\cs_new_protected:Npn \__nmp_qty_fallback:
+  { \exp_args:NVV \qty \l__nmp_qty_input_tl \l__nmp_qty_rawunit_tl }
+
+\NewDocumentCommand{\qtyPlain}{O{} m m}
+  {
+    \group_begin:
+      \tl_set:Nn \l__nmp_qty_input_tl {#2}
+      \tl_set:Nn \l__nmp_qty_rawunit_tl {#3}
+      \keys_set:nn { siunitx } {#1}
+      \siunitx_unit_options_apply:n {#3}
+      \bool_lazy_and:nnTF
+        { \l_siunitx_number_parse_bool }
+        { ! \tl_if_blank_p:n {#2} }
         {
-          { \str_if_eq_p:nn { ##1 . ##2 } { 1. } }
-          { \str_if_eq_p:nn {##3} { 0 } }
-          { ! \l__siunitx_number_zero_exponent_bool }
-          { ! \l__siunitx_number_unity_mantissa_bool }
+          \siunitx_number_parse:nN {#2} \l__nmp_qty_number_tl
+          \tl_if_empty:NTF \l__nmp_qty_number_tl
+            { \__nmp_qty_fallback: }
+            {
+              \exp_after:wN \__nmp_qty_parsed:nnnnnnnn
+                \l__nmp_qty_number_tl {#3}
+            }
         }
-        { \bool_gset_true:N \g__pzu_suppress_qp_bool }
-        { \__pzu_orig_int_output:nnn {##1} {##2} {##3} }
-    }
-    \cs_set_protected:Npn \__siunitx_quantity_print_unit:n ##1 {
-      \bool_if:NTF \l__siunitx_quantity_break_bool
-        { \penalty \binoppenalty }
-        { \nobreak }
-      \bool_if:NF \g__pzu_suppress_qp_bool
-        { \tl_use:N \l__siunitx_quantity_product_tl }
-      \siunitx_print_unit:n {##1}
-    }
-    \qty[#1]{#2}{#3}%
-  \group_end:
-}
+        { \__nmp_qty_fallback: }
+    \group_end:
+  }
 \ExplSyntaxOff
 
 \ExplSyntaxOn
-\bool_new:N \l__pzu_noneng_bool
-\tl_const:Nn \c__pzu_noneng_tokens_tl {
-  \centi \deci \deca \hecto
-  \cm \cg \cL
-  \dm \dg \dL
-  \dam \dag \daL
-  \hm \hg \hL \hPa
-}
-\prg_new_protected_conditional:Npnn \__pzu_unit_has_noneng:n #1 { TF } {
-  \bool_set_false:N \l__pzu_noneng_bool
-  \tl_map_inline:Nn \c__pzu_noneng_tokens_tl {
-    \tl_if_in:nnT {#1} {##1}
-      { \bool_set_true:N \l__pzu_noneng_bool \tl_map_break: }
+
+% \pzuIfUnitNonEngTF{<unit macro>}{<true>}{<false>}
+%
+% True when the unit carries a power of ten that is not a multiple of
+% three -- cm, dm, daN, hPa and friends.  Such a unit already encodes
+% its own order of magnitude, so the label builders leave the axis
+% unscaled rather than stacking a second power of ten on top of it.
+%
+% The power of ten is the one siunitx itself extracts, i.e. the net
+% exponent of the whole unit expression.  It therefore sees through
+% abbreviations (\cm), through powers (\cm\squared is 10^{-4}, still
+% non-engineering, while \cm\cubed is 10^{-6}, which is not) and
+% through cancellation (\cm\per\cs is 10^{0}).  The hard-coded token
+% list this replaces could do none of that, and roughly half of the
+% control sequences it named (\cg, \dam, \hPa, ...) are not defined
+% by siunitx at all.
+%
+% The argument is expanded once, as it always was, so call sites pass
+% \xlabelunit rather than its contents.
+\tl_new:N \l__nmp_noneng_unit_tl
+\fp_new:N \l__nmp_noneng_exponent_fp
+\prg_new_protected_conditional:Npnn \__nmp_unit_noneng:n #1 { TF }
+  {
+    \group_begin:
+      \siunitx_unit_options_apply:n {#1}
+      \siunitx_unit_format_extract_prefixes:nNN {#1}
+        \l__nmp_noneng_unit_tl \l__nmp_noneng_exponent_fp
+      \fp_compare:nNnTF
+        {
+          \l__nmp_noneng_exponent_fp
+            - 3 * floor ( \l__nmp_noneng_exponent_fp / 3 )
+        }
+        = \c_zero_fp
+        { \group_end: \prg_return_false: }
+        { \group_end: \prg_return_true: }
   }
-  \bool_if:NTF \l__pzu_noneng_bool
-    { \prg_return_true: }
-    { \prg_return_false: }
-}
-\prg_generate_conditional_variant:Nnn \__pzu_unit_has_noneng:n { o } { TF }
-\NewDocumentCommand{\pzuIfUnitNonEngTF}{m m m}{%
-  \__pzu_unit_has_noneng:oTF {#1} {#2} {#3}%
-}
+\prg_generate_conditional_variant:Nnn \__nmp_unit_noneng:n { o } { TF }
+\NewDocumentCommand{\pzuIfUnitNonEngTF}{m m m}
+  { \__nmp_unit_noneng:oTF {#1} {#2} {#3} }
 \ExplSyntaxOff
 
 \ExplSyntaxOn
@@ -291,7 +437,7 @@
             \edef\xlabel{\noexpand$\noexpand\nmp@savedxlabelqty
               \noexpand\,/\noexpand\,(\noexpand\qtyPlain
               [evaluate-expression=false, round-mode=none,
-               prefix-mode=extract-exponent,
+               prefix-mode=\g__numodelplot_prefixmode_tl,
                extract-mass-in-kilograms=true,
                print-zero-exponent=false,
                print-unity-mantissa=false]%
@@ -302,7 +448,7 @@
             \edef\xlabel{\noexpand$\noexpand\nmp@savedxlabelqty
               \noexpand\,(\noexpand\qtyPlain
               [evaluate-expression=false, round-mode=none,
-               prefix-mode=extract-exponent,
+               prefix-mode=\g__numodelplot_prefixmode_tl,
                extract-mass-in-kilograms=true,
                print-zero-exponent=false,
                print-unity-mantissa=false]%
@@ -313,7 +459,7 @@
             \edef\xlabel{\noexpand$\noexpand\nmp@savedxlabelqty
               \noexpand\,[\noexpand\qtyPlain
               [evaluate-expression=false, round-mode=none,
-               prefix-mode=extract-exponent,
+               prefix-mode=\g__numodelplot_prefixmode_tl,
                extract-mass-in-kilograms=true,
                print-zero-exponent=false,
                print-unity-mantissa=false]%
@@ -325,7 +471,7 @@
           {
             \edef\xlabel{\noexpand$\noexpand\qtyPlain
               [evaluate-expression=false, round-mode=none,
-               prefix-mode=extract-exponent,
+               prefix-mode=\g__numodelplot_prefixmode_tl,
                extract-mass-in-kilograms=true,
                print-zero-exponent=false,
                print-unity-mantissa=false]%
@@ -360,7 +506,7 @@
             \edef\ylabel{\noexpand$\noexpand\nmp@savedylabelqty
               \noexpand\,/\noexpand\,(\noexpand\qtyPlain
               [evaluate-expression=false, round-mode=none,
-               prefix-mode=extract-exponent,
+               prefix-mode=\g__numodelplot_prefixmode_tl,
                extract-mass-in-kilograms=true,
                print-zero-exponent=false,
                print-unity-mantissa=false]%
@@ -371,7 +517,7 @@
             \edef\ylabel{\noexpand$\noexpand\nmp@savedylabelqty
               \noexpand\,(\noexpand\qtyPlain
               [evaluate-expression=false, round-mode=none,
-               prefix-mode=extract-exponent,
+               prefix-mode=\g__numodelplot_prefixmode_tl,
                extract-mass-in-kilograms=true,
                print-zero-exponent=false,
                print-unity-mantissa=false]%
@@ -382,7 +528,7 @@
             \edef\ylabel{\noexpand$\noexpand\nmp@savedylabelqty
               \noexpand\,[\noexpand\qtyPlain
               [evaluate-expression=false, round-mode=none,
-               prefix-mode=extract-exponent,
+               prefix-mode=\g__numodelplot_prefixmode_tl,
                extract-mass-in-kilograms=true,
                print-zero-exponent=false,
                print-unity-mantissa=false]%
@@ -394,7 +540,7 @@
           {
             \edef\ylabel{\noexpand$\noexpand\qtyPlain
               [evaluate-expression=false, round-mode=none,
-               prefix-mode=extract-exponent,
+               prefix-mode=\g__numodelplot_prefixmode_tl,
                extract-mass-in-kilograms=true,
                print-zero-exponent=false,
                print-unity-mantissa=false]%
@@ -434,6 +580,120 @@
 \ExplSyntaxOff
 
 \ExplSyntaxOn
+
+% How the power of ten of a scaled axis reaches the axis label.
+% \g__numodelplot_scaleformat_tl holds the user's wish (`prefix' or
+% `exponent', set through the scale-format key); the label builders
+% translate that per axis into \g__numodelplot_prefixmode_tl, the
+% actual siunitx prefix-mode value spliced into the \qtyPlain calls of
+% the emit-scaled routines: `combine-exponent' folds the exponent into
+% an SI prefix on the unit, `extract-exponent' keeps the 10^k form.
+\tl_new:N \g__numodelplot_scaleformat_tl
+\tl_gset:Nn \g__numodelplot_scaleformat_tl {prefix}
+\tl_new:N \g__numodelplot_prefixmode_tl
+\tl_gset:Nn \g__numodelplot_prefixmode_tl {extract-exponent}
+
+% Can 10^{#1} be folded into an SI prefix on unit #2?  siunitx's
+% combine-exponent divides the exponent by the power of the unit's
+% first atom and adds any existing prefix; if the result is not in its
+% prefix table it raises an *error*, and results like 10^1 (deca)
+% would be legal SI but unwanted engineering-wise.  So this check
+% mirrors that computation via the siunitx parser and additionally
+% requires a multiple of 3: 10^6 m^2 -> km^2 passes, 10^3 m^2 (k=1.5)
+% and 10^3 m^3 (deca) fall back to the exponent form.  Everything
+% lives behind \cs_if_exist guards because it reaches into siunitx
+% internals; if a future siunitx renames them the check just returns
+% false and the label keeps the always-safe 10^k form.
+%
+% This is now the only place in the package that touches siunitx
+% internals, and it is the one thing siunitx issue #864 asks for that
+% is genuinely unreachable today: \siunitx_unit_format_extract_-
+% prefixes:nNN reports the net power of ten of the whole unit but not
+% *which* prefix sat on *which* atom, which is exactly what deciding
+% the fold needs.  \l__siunitx_unit_parsed_prop holds it (prefix-n,
+% unit-n, power-n, ...); if siunitx ever exposes that, this routine
+% becomes internals-free like the rest.
+\bool_new:N \g__numodelplot_prefix_ok_bool
+\tl_new:N \l__numodelplot_power_tl
+\tl_new:N \l__numodelplot_prefix_tl
+\tl_new:N \l__numodelplot_target_tl
+\cs_new_protected:Npn \__numodelplot_prefix_check:nn #1#2
+  {
+    \bool_gset_false:N \g__numodelplot_prefix_ok_bool
+    \bool_lazy_all:nT
+      {
+        { \cs_if_exist_p:N \__siunitx_unit_parse:n }
+        { \cs_if_exist_p:N \__siunitx_unit_if_symbolic:nTF }
+        { \cs_if_exist_p:N \l_siunitx_unit_symbolic_seq }
+        { \cs_if_exist_p:N \l__siunitx_unit_parsed_prop }
+        { \cs_if_exist_p:N \l__siunitx_unit_prefixes_forward_prop }
+        { \cs_if_exist_p:N \l__siunitx_unit_prefixes_reverse_prop }
+      }
+      { \__numodelplot_prefix_check_aux:nn {#1} {#2} }
+  }
+\cs_new_protected:Npn \__numodelplot_prefix_check_aux:nn #1#2
+  {
+        \group_begin:
+          % unit macros only gain their parser meaning inside a
+          % formatting group; replicate what siunitx's own
+          % \__siunitx_unit_format:nNN sets up before parsing (the
+          % symbolic test, too, only answers correctly after this)
+          \seq_map_inline:Nn \l_siunitx_unit_symbolic_seq
+            { \cs_set_eq:Nc ##1 { __siunitx_unit_ \token_to_str:N ##1 :w } }
+          \__siunitx_unit_if_symbolic:nTF {#2}
+            { \__siunitx_unit_parse:n {#2} }
+            { \prop_clear:N \l__siunitx_unit_parsed_prop }
+          \prop_if_empty:NF \l__siunitx_unit_parsed_prop
+            {
+              \prop_get:NnNF \l__siunitx_unit_parsed_prop { power-1 }
+                \l__numodelplot_power_tl
+                { \tl_set:Nn \l__numodelplot_power_tl { 1 } }
+              \prop_get:NnNTF \l__siunitx_unit_parsed_prop { prefix-1 }
+                \l__numodelplot_prefix_tl
+                {
+                  \prop_get:NVNF \l__siunitx_unit_prefixes_forward_prop
+                    \l__numodelplot_prefix_tl \l__numodelplot_prefix_tl
+                    { \tl_set:Nn \l__numodelplot_prefix_tl { 0 } }
+                }
+                { \tl_set:Nn \l__numodelplot_prefix_tl { 0 } }
+              \tl_set:Nx \l__numodelplot_target_tl
+                {
+                  \fp_eval:n
+                    { #1 / \l__numodelplot_power_tl + \l__numodelplot_prefix_tl }
+                }
+              \fp_compare:nNnTF { \l__numodelplot_target_tl } = \c_zero_fp
+                { \bool_gset_true:N \g__numodelplot_prefix_ok_bool }
+                {
+                  % engineering only: target must be a multiple of 3
+                  \fp_compare:nNnT
+                    {
+                      \l__numodelplot_target_tl
+                      - 3 * trunc( \l__numodelplot_target_tl / 3 )
+                    } = \c_zero_fp
+                    {
+                      \prop_get:NVNT \l__siunitx_unit_prefixes_reverse_prop
+                        \l__numodelplot_target_tl \l__numodelplot_target_tl
+                        { \bool_gset_true:N \g__numodelplot_prefix_ok_bool }
+                    }
+                }
+            }
+        \group_end:
+  }
+
+% Pick the prefix-mode for one axis: combine-exponent when the user
+% asked for prefixes AND the fold is feasible, extract-exponent
+% otherwise.
+\cs_new_protected:Npn \__numodelplot_set_prefixmode:nn #1#2
+  {
+    \tl_gset:Nn \g__numodelplot_prefixmode_tl {extract-exponent}
+    \str_if_eq:VnT \g__numodelplot_scaleformat_tl {prefix}
+      {
+        \__numodelplot_prefix_check:nn {#1} {#2}
+        \bool_if:NT \g__numodelplot_prefix_ok_bool
+          { \tl_gset:Nn \g__numodelplot_prefixmode_tl {combine-exponent} }
+      }
+  }
+
 \NewDocumentCommand{\xlabelbuild}{}{
   \let\nmp@savedxlabelqty\xlabelqty
   \let\nmp@savedxlabelunit\xlabelunit
@@ -449,6 +709,8 @@
       \__numodelplot_xlabel_emit_unscaled:
     \else
       \edef\nmp@xlabelexpuse{\nmp@xlabelexp}
+      \exp_args:NnV \__numodelplot_set_prefixmode:nn
+        {\nmp@xlabelexp} \nmp@savedxlabelunit
       \__numodelplot_xlabel_emit_scaled:
       \edef\nmp@xlabelexpneg{\fpeval{-\nmp@xlabelexp}}
       \pznmpAppendXScaleTicks{\nmp@xlabelexpneg}
@@ -474,6 +736,8 @@
       \__numodelplot_ylabel_emit_unscaled:
     \else
       \edef\nmp@ylabelexpuse{\nmp@ylabelexp}
+      \exp_args:NnV \__numodelplot_set_prefixmode:nn
+        {\nmp@ylabelexp} \nmp@savedylabelunit
       \__numodelplot_ylabel_emit_scaled:
       \edef\nmp@ylabelexpneg{\fpeval{-\nmp@ylabelexp}}
       \pznmpAppendYScaleTicks{\nmp@ylabelexpneg}

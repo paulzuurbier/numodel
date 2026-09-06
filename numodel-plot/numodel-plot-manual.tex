@@ -139,13 +139,18 @@ argument (one or more |\addplot| lines).
 
 Labels are built automatically from |\xlabelqty|+|\xlabelunit| (and
 likewise for the $y$-axis).  If the data magnitude exceeds $10^{4}$
-or is below $10^{-2}$, a factor~$10^{n}$ is injected into the label
-and PGFPlots' own |scaled ticks| are configured so that tick numbers
-remain small.  In the next example the data magnitude is
+or is below $10^{-2}$, an engineering factor~$10^{n}$ (with $n$ a
+multiple of~3) is split off and PGFPlots' own |scaled ticks| are
+configured so that tick numbers remain small.  By default the factor
+is folded into an SI prefix on the unit --- 5000~m becomes
+\verb|s (km)| --- and only when no engineering prefix fits (say
+$10^{3}\,$m$^{2}$, which would need $10^{1.5}$ per metre) does the
+label fall back to showing the power of ten itself; the
+|scale-format| key (section~\ref{sec:keys}) forces that form
+globally.  In the next example the data magnitude is
 $5\times10^{7}$ and the unit |\mega\joule\per\kilo\gram| already
-carries two engineering prefixes; the package extracts every prefix
-and combines them with the magnitude into a single power-of-ten
-factor:
+carries a prefix on the leading unit; the injected $10^{6}$ combines
+with mega into tera, giving \verb|E (TJ/kg)|:
 \begin{plotexample}
 \def\xmin{0}   \def\xmax{10}
 \def\ymin{0}   \def\ymax{5e7}
@@ -168,7 +173,7 @@ Configuration is set through a single key--value interface:
 \end{verbatim}
 \end{quote}
 
-\subsection{Keys}
+\subsection{Keys}\label{sec:keys}
 
 \begin{description}
 \item[\texttt{axis-label-format}] Default |ieee|.  Determines the
@@ -184,10 +189,19 @@ Configuration is set through a single key--value interface:
   \end{tabular}
   \end{center}
   When scaling is applied (data exceeds $10^{4}$ or below
-  $10^{-2}$), the factor is integrated into the label, e.g.\
-  \verb|v (10^4 m/s)| for IEEE.  Under |qty-only| the exponent
-  remains in PGFPlots' scaled-tick label instead (otherwise the
-  scale information would be lost).
+  $10^{-2}$), the factor is integrated into the label according to
+  |scale-format|, e.g.\ \verb|v (km/s)| for IEEE.  Under |qty-only|
+  the exponent remains in PGFPlots' scaled-tick label instead
+  (otherwise the scale information would be lost).
+\item[\texttt{scale-format}] Default |prefix|.  How a scaled axis
+  presents its power of ten in the label.  |prefix| folds it into an
+  SI prefix on (the first unit atom of) the unit: \verb|s (km)|,
+  \verb|E (TJ/kg)|, \verb|m (Mg)|.  The fold respects unit powers
+  ($10^{6}\,$m$^{2}$ becomes km$^{2}$) and existing prefixes, and
+  silently falls back to the power-of-ten form whenever no
+  engineering prefix fits ($10^{3}\,$m$^{2}$, or $10^{3}\,$m$^{3}$
+  which would need the non-engineering deca).  |exponent| always
+  shows the power of ten: \verb|s (10^3 m)|.
 \item[\texttt{grid}] Default |mm-dots| (black millimetre dots,
   matching engineering millimetre paper).  Accepts |none|, or any
   PGFPlots style list which will be passed verbatim to the
@@ -382,17 +396,31 @@ Maximum axis dimensions in centimetres.  Can be set directly through
 
 \DescribeMacro{\qtyPlain}
 Like \textsf{siunitx}'s |\qty| but prints no numeric mantissa when
-the final output after prefix extraction has mantissa~1 and
-exponent~0.  Used internally to inject scale factors into axis
-labels; exposed because the same need recurs in other scaled-axis
-contexts.
+the number has come out as exactly~1 with no exponent left over: the
+unit then stands alone, without the |quantity-product| symbol that
+would otherwise separate the two.  Used internally to inject scale
+factors into axis labels; exposed because the same need recurs in
+other scaled-axis contexts.
+
+All three \textsf{siunitx} |prefix-mode| values are supported, and
+everything |\qtyPlain| does not special-case --- a number carrying an
+uncertainty, a blank number, |parse-numbers=false| --- is passed to
+|\qty| unchanged.  A mantissa of~1 that is preceded by a sign or a
+comparator (|-1|, |<1|) keeps its digit.
 
 \DescribeMacro{\pzuIfUnitNonEngTF}
-Boolean conditional testing whether a unit macro sequence contains a
-non-engineering SI prefix (|\centi|, |\deci|, |\deca|, |\hecto|,
-plus the \textsf{siunitx} short forms |\cm|, |\dm|, |\hPa|, \ldots).
+Boolean conditional testing whether a unit macro sequence carries a
+power of ten that is not a multiple of three --- |\centi|, |\deci|,
+|\deca|, |\hecto| and their \textsf{siunitx} abbreviations |\cm|,
+|\dm|, |\hL|, \ldots\ %
 Used internally to suppress scaling on units where the user has
 already encoded the order of magnitude; exposed for completeness.
+
+The verdict is the net power of ten \textsf{siunitx} itself extracts
+from the whole unit expression, so it accounts for unit powers and
+for prefixes that cancel: |\centi\metre\squared| is $10^{-4}$ and
+counts as non-engineering, while |\centi\metre\cubed| ($10^{-6}$)
+and |\centi\metre\per\centi\second| ($10^{0}$) do not.
 
 \section{Requirements}
 
@@ -401,5 +429,13 @@ already encoded the order of magnitude; exposed for completeness.
 labels), and \textsf{pgfplots} (with the |fillbetween| library).
 LuaLaTeX is not required at the plot layer (it is required by the
 sibling \textsf{numodel} package).
+
+\textsf{siunitx} is requested with a date of 2023-11-06 (v3.3.8).
+Everything the axis labels call has been public since \textsf{siunitx}
+v3.0.0, but two fixes in v3.3.7 and v3.3.8 --- the empty-exponent
+case of |prefix-mode=combine-exponent| and the printing of a bare~1
+under |print-unity-mantissa=false| --- are what keeps a scaled label
+correct.  An older \textsf{siunitx} produces a \LaTeX{} warning
+rather than an error, and the labels may come out subtly wrong.
 
 \end{document}

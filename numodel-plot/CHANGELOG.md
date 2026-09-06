@@ -5,9 +5,64 @@ All notable changes to `numodel-plot` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.9.0] — 2026-09-06
+
+### Changed
+- `\qtyPlain` no longer patches **siunitx** internals. It used to
+  override `\__siunitx_number_output_integer:nnn` and
+  `\__siunitx_quantity_print_unit:n` and read four internal
+  variables; it is now built entirely on siunitx's documented
+  code-level interface (`\siunitx_number_parse:nN`,
+  `\siunitx_unit_format_extract_prefixes:nNN`,
+  `\siunitx_number_adjust_exponent:Nn`, `\siunitx_number_process:NN`,
+  `\siunitx_quantity_print:`, `\siunitx_print_unit:`) — the
+  conclusion of the investigation behind siunitx issue #864, which
+  established that the whole `prefix-mode` pipeline is already
+  public. Axis labels are unchanged; the rewrite also fixes three
+  cases the override got wrong:
+  - `\qtyPlain{-1}{\metre}` and `\qtyPlain{<1}{\metre}` printed
+    `-m` and `<m`, dropping the mantissa behind a sign or
+    comparator; they now print `-1 m` and `<1 m`.
+  - `\qtyPlain{1(1)}{\metre}` printed `(1)m`; a number carrying an
+    uncertainty is now handed to `\qty` untouched.
+  - The mantissa suppression fired only when `\qtyPlain` was reached
+    through `\edef`, so a direct call under
+    `prefix-mode=combine-exponent` printed `1 km` where the same
+    call inside an axis label printed `km`. All three `prefix-mode`
+    values now behave identically either way.
+- `\pzuIfUnitNonEngTF` decides from the net power of ten siunitx
+  extracts from the unit rather than from a hard-coded list of prefix
+  control sequences — a list of which roughly half (`\cg`, `\dam`,
+  `\hPa`, …) named control sequences siunitx does not define at all.
+  Two units change verdict, both towards scaling:
+  - `\centi\metre\per\centi\second` — the prefixes cancel ($10^0$),
+    so the axis now scales instead of staying in `cm cs⁻¹`.
+  - `\centi\metre\cubed` — `cm³` is $10^{-6}$ m³, a multiple of
+    three, so a `cm³` axis now scales and is labelled `10⁻³ m³`
+    instead of keeping four-digit ticks under `cm³`.
+- **siunitx** is now requested with a date (`2023-11-06`, v3.3.8).
+  Every function used has been public since v3.0.0, but v3.3.7 and
+  v3.3.8 fixed the empty-exponent case of
+  `prefix-mode=combine-exponent` and the printing of a bare `1` under
+  `print-unity-mantissa=false`, both of which the scaled labels rely
+  on. An older siunitx warns rather than errors.
+- A scaled axis now presents its power of ten as an **SI prefix on
+  the unit** by default: `s (km)` instead of `s (10³ m)`, `E (TJ/kg)`
+  instead of `E (10⁶ MJ/kg)`, `m (Mg)` instead of `m (10³ kg)`. The
+  fold respects unit powers (`10⁶ m²` → `km²`) and existing prefixes,
+  and silently falls back to the power-of-ten form whenever no
+  engineering prefix fits (`10³ m²` needs 10^1.5 per metre; `10³ m³`
+  would need the non-engineering deca). Implemented with siunitx's
+  `prefix-mode=combine-exponent` plus an own feasibility pre-check
+  through the siunitx unit parser, because siunitx raises an error
+  for non-convertible exponents and offers no public parse API yet
+  (siunitx issue #864); the check is guarded so that a future siunitx
+  rename degrades gracefully to the power-of-ten form.
 
 ### Added
+- New setup key `scale-format` controlling the above: `prefix` (the
+  new default) folds the power of ten into the unit, `exponent`
+  restores the previous `s (10³ m)` presentation.
 - New setup key `halo-color` for the tick-label halo colour. The
   default `halo-color=auto` matches the halo to the surrounding
   background at every `\drawplot`: inside a `tcolorbox` it takes the
@@ -17,6 +72,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   other value pins the halo to that colour
   (`\numodelplotsetup{halo-color=yellow!30}`); the resolved colour
   remains exposed as the named colour `numodelhalo`.
+- Regression tests `p003-qtyplain` (the `\qtyPlain` contract across
+  all three `prefix-mode` values, including the sign, comparator and
+  uncertainty cases), `p004-unitnoneng` (the `\pzuIfUnitNonEngTF`
+  classification, abbreviations, unit powers and cancelling prefixes
+  included) and `p005-axislabels` (the label pipeline end to end:
+  both `scale-format` values, a `\gram` axis, a `\centi` axis, a
+  compound unit with cancelling prefixes and each of the five
+  `axis-label-format` values).
 
 ## [0.8.0] — 2026-07-06
 

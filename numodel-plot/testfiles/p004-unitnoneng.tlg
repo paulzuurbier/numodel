@@ -1,0 +1,30 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== engineering: no prefix, or a multiple of 10^3 ===
+\metre  -> ENG
+\kilo \metre  -> ENG
+\milli \metre  -> ENG
+\micro \metre  -> ENG
+\gram  -> ENG
+\kilogram  -> ENG
+\metre \per \second  -> ENG
+\newton \metre  -> ENG
+\percent  -> ENG
+\kilo \metre \squared  -> ENG
+\milli \metre \cubed  -> ENG
+=== non-engineering: centi, deci, deca, hecto ===
+\centi \metre  -> NONENG
+\deci \litre  -> NONENG
+\deca \metre  -> NONENG
+\hecto \pascal  -> NONENG
+=== abbreviations resolve like their spelled-out forms ===
+\cm  -> NONENG
+\dm  -> NONENG
+\hL  -> NONENG
+=== powers: the net exponent decides ===
+\square \centi \metre  -> NONENG
+\centi \metre \squared  -> NONENG
+\centi \metre \cubed  -> ENG
+=== cancelling prefixes leave nothing behind ===
+\centi \metre \per \centi \second  -> ENG
+(p004-unitnoneng.aux)

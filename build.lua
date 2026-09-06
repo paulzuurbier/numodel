@@ -31,10 +31,13 @@ excludefiles = {
 
 -- Bundle packaging -------------------------------------------------------
 
--- Preserve the per-module subdirectory layout in the source view of
--- the CTAN zip (without this, README.md/CHANGELOG.md from both
--- modules clash in a flat layout and one silently overwrites the
--- other).  The TDS view is always laid out by TDS rules regardless.
+-- Ask for the per-module subdirectory layout in the source view of
+-- the CTAN zip.  Note that this alone does NOT achieve it: `flatten`
+-- only guards copyctan()'s copyfiles() helper, and a module build run
+-- never reads this file, so inside a module it keeps its default of
+-- true.  The README.md/CHANGELOG.md collision it was meant to prevent
+-- is handled by ctansetup.lua, which both modules load; see the long
+-- comment there.  The TDS view is laid out by TDS rules regardless.
 flatten = false
 
 -- Do NOT ship a .tds.zip inside the upload archive: CTAN does not

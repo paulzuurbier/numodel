@@ -1,0 +1,44 @@
+numodel-bundle v0.9.0
+
+This release is numodel-plot only; numodel is version-synced with no
+functional changes.
+
+Highlights
+----------
+* A scaled axis now presents its power of ten as an SI prefix on the
+  unit: "s (km)" instead of "s (10^3 m)", "E (TJ/kg)" instead of
+  "E (10^6 MJ/kg)", "m (Mg)" instead of "m (10^3 kg)".  The fold
+  respects unit powers (10^6 m^2 -> km^2) and existing prefixes, and
+  falls back to the power-of-ten form whenever no engineering prefix
+  fits.  The new setup key scale-format=exponent restores the previous
+  presentation globally.
+* New setup key halo-color.  The default halo-color=auto matches the
+  tick-label halo to the surrounding background at every \drawplot:
+  a tcolorbox's colback, a beamer colour theme's bg, the pagecolor
+  package's \thepagecolor, and white otherwise.  Any other value pins
+  the halo to that colour.
+
+Under the hood
+--------------
+* \qtyPlain no longer patches siunitx internals.  It is now built
+  entirely on siunitx's documented code-level interface, following the
+  investigation behind siunitx issue #864, which established that the
+  whole prefix-mode pipeline is already public.  Axis labels are
+  unchanged; three edge cases the old override got wrong are fixed
+  (a mantissa of 1 behind a sign or comparator is no longer dropped,
+  a number carrying an uncertainty is passed through untouched, and
+  all three prefix-mode values now behave the same whether \qtyPlain
+  is called directly or reached through \edef).
+* \pzuIfUnitNonEngTF derives its verdict from the net power of ten
+  siunitx extracts from the unit instead of from a hard-coded list of
+  prefix control sequences.  Two units change verdict, both towards
+  scaling: \centi\metre\per\centi\second (the prefixes cancel) and
+  \centi\metre\cubed (cm^3 is 10^-6 m^3).
+
+Requirements
+------------
+* siunitx is now requested with a date of 2023-11-06 (v3.3.8).  An
+  older siunitx produces a LaTeX warning rather than an error, but
+  scaled axis labels may come out subtly wrong.
+
+See numodel/CHANGELOG.md and numodel-plot/CHANGELOG.md for the full list.

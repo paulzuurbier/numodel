@@ -8,6 +8,20 @@ For module-specific entries see `numodel/CHANGELOG.md` and
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 each module independently adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.9.0] — 2026-09-06
+
+- `numodel-plot` 0.9.0 — a scaled axis now shows its power of ten as
+  an SI prefix on the unit by default (`s (km)` instead of
+  `s (10³ m)`), controlled by the new `scale-format` key; the new
+  `halo-color` key makes the tick-label halo match the surrounding
+  background automatically. Internally, `\qtyPlain` no longer patches
+  siunitx internals — it is built on siunitx's documented code-level
+  interface — and `\pzuIfUnitNonEngTF` derives its verdict from the
+  unit's net power of ten rather than a hard-coded list of prefix
+  control sequences. siunitx 3.3.8 (2023-11-06) or newer is now
+  requested. See `numodel-plot/CHANGELOG.md`.
+- `numodel` 0.9.0 — version-sync release; no functional changes.
+
 ## [0.8.0] — 2026-07-06
 
 - `numodel` 0.8.0 — new `syntax=FPEVAL` rule-table rendering (aliases

@@ -1,0 +1,99 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== mantissa 1 collapses to the bare unit ===
+--- 1e-3 | \km  | extract-exponent
+ unit: \mathrm {m}
+--- 1e-3 | \km  | combine-exponent
+ unit: \mathrm {m}
+--- 1e-3 | \km  | input
+ number: 10^{-3}
+ unit: \mathrm {km}
+--- 1 | \metre \per \second  | extract-exponent
+ unit: \mathrm {m}\,\mathrm {s}^{-1}
+--- 1 | \metre \per \second  | combine-exponent
+ unit: \mathrm {m}\,\mathrm {s}^{-1}
+--- 1 | \metre \per \second  | input
+ unit: \mathrm {m}\,\mathrm {s}^{-1}
+--- 1e3 | \metre  | extract-exponent
+ number: 10^{3}
+ unit: \mathrm {m}
+--- 1e3 | \metre  | combine-exponent
+ unit: \mathrm {km}
+--- 1e3 | \metre  | input
+ number: 10^{3}
+ unit: \mathrm {m}
+--- 1 | \hertz  | extract-exponent
+ unit: \mathrm {Hz}
+--- 1 | \hertz  | combine-exponent
+ unit: \mathrm {Hz}
+--- 1 | \hertz  | input
+ unit: \mathrm {Hz}
+--- 1e-3 | \kilo \metre \per \second  | extract-exponent
+ unit: \mathrm {m}\,\mathrm {s}^{-1}
+--- 1e-3 | \kilo \metre \per \second  | combine-exponent
+ unit: \mathrm {m}\,\mathrm {s}^{-1}
+--- 1e-3 | \kilo \metre \per \second  | input
+ number: 10^{-3}
+ unit: \mathrm {km}\,\mathrm {s}^{-1}
+=== mantissa kept otherwise ===
+--- 2.5e6 | \gram  | extract-exponent
+ number: 2.5\times 10^{3}
+ unit: \mathrm {kg}
+--- 2.5e6 | \gram  | combine-exponent
+ number: 2.5
+ unit: \mathrm {Mg}
+--- 2.5e6 | \gram  | input
+ number: 2.5\times 10^{6}
+ unit: \mathrm {g}
+--- 4.2 | \kilo \metre  | extract-exponent
+ number: 4.2\times 10^{3}
+ unit: \mathrm {m}
+--- 4.2 | \kilo \metre  | combine-exponent
+ number: 4.2
+ unit: \mathrm {km}
+--- 4.2 | \kilo \metre  | input
+ number: 4.2
+ unit: \mathrm {km}
+--- 10 | \metre  | extract-exponent
+ number: 10
+ unit: \mathrm {m}
+--- 10 | \metre  | combine-exponent
+ number: 10
+ unit: \mathrm {m}
+--- 10 | \metre  | input
+ number: 10
+ unit: \mathrm {m}
+--- 1.0 | \metre  | extract-exponent
+ number: 1.0
+ unit: \mathrm {m}
+--- 1.0 | \metre  | combine-exponent
+ number: 1.0
+ unit: \mathrm {m}
+--- 1.0 | \metre  | input
+ number: 1.0
+ unit: \mathrm {m}
+--- 1e-6 | \metre  | extract-exponent
+ number: 10^{-6}
+ unit: \mathrm {m}
+--- 1e-6 | \metre  | combine-exponent
+ unit: \mathrm {\text {^^b5}m}
+--- 1e-6 | \metre  | input
+ number: 10^{-6}
+ unit: \mathrm {m}
+=== sign, comparator and uncertainty suppress the collapse ===
+--- -1 | \metre  | extract-exponent
+ number: -1
+ unit: \mathrm {m}
+--- <1 | \metre  | extract-exponent
+ number: \mathord {<}1
+ unit: \mathrm {m}
+--- 1(1) | \metre  | extract-exponent
+ number: 1(1)
+ unit: \mathrm {m}
+--- 1+-0.1 | \metre  | extract-exponent
+ number: 1.0(1)
+ unit: \mathrm {m}
+=== a blank number falls back to \qty ===
+---  | \metre  | extract-exponent
+ unit: \mathrm {m}
+(p003-qtyplain.aux)

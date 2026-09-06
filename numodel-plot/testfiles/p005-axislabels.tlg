@@ -1,0 +1,86 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== scale-format=prefix folds the power of ten into the unit ===
+\second  | 0..5000 | prefix -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=combine-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit })$
+ unit: \mathrm {ks}
+\metre \per \second  | 0..5e6 | prefix -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=combine-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e6}{\nmp@savedxlabelunit })$
+ unit: \mathrm {Mm}\,\mathrm {s}^{-1}
+\joule  | 0..3e-6 | prefix -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=combine-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e-6}{\nmp@savedxlabelunit })$
+ unit: \mathrm {\text {^^b5}J}
+\metre \per \second \squared  | 0..4000 | prefix -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=combine-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit })$
+ unit: \mathrm {km}\,\mathrm {s}^{-2}
+=== ... and falls back to 10^k when no prefix fits ===
+\metre \squared  | 0..4e6 | prefix -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=combine-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e6}{\nmp@savedxlabelunit })$
+ unit: \mathrm {km}^{2}
+\metre \cubed  | 0..4e3 | prefix -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=extract-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit })$
+ number: 10^{3}
+ unit: \mathrm {m}^{3}
+=== scale-format=exponent always shows the power of ten ===
+\second  | 0..5000 | exponent -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=extract-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit })$
+ number: 10^{3}
+ unit: \mathrm {s}
+\metre \per \second  | 0..5e6 | exponent -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=extract-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e6}{\nmp@savedxlabelunit })$
+ number: 10^{6}
+ unit: \mathrm {m}\,\mathrm {s}^{-1}
+\joule  | 0..3e-6 | exponent -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=extract-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e-6}{\nmp@savedxlabelunit })$
+ number: 10^{-6}
+ unit: \mathrm {J}
+=== a gram axis becomes kilograms ===
+\gram  | 0..2e6 | prefix -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=combine-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e6}{\nmp@savedxlabelunit })$
+ unit: \mathrm {Mg}
+\gram  | 0..2e6 | exponent -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=extract-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e6}{\nmp@savedxlabelunit })$
+ number: 10^{3}
+ unit: \mathrm {kg}
+=== non-engineering units are left unscaled ===
+\centi \metre  | 0..5000 | prefix -> macro:->$\nmp@savedxlabelqty \,(\si {\nmp@savedxlabelunit })$
+ unit: \mathrm {cm}
+\hecto \pascal  | 0..5000 | prefix -> macro:->$\nmp@savedxlabelqty \,(\si {\nmp@savedxlabelunit })$
+ unit: \mathrm {hPa}
+=== cancelling prefixes do scale (changed in v0.8.1) ===
+\centi \metre \per \centi \second  | 0..5000 | prefix -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=extract-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit })$
+ number: 10^{3}
+ unit: \mathrm {m}\,\mathrm {s}^{-1}
+\centi \metre \cubed  | 0..5000 | prefix -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=extract-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit })$
+ number: 10^{-3}
+ unit: \mathrm {m}^{3}
+=== a range that needs no scaling at all ===
+\metre  | 0..5 | prefix -> macro:->$\nmp@savedxlabelqty \,(\si {\nmp@savedxlabelunit })$
+ unit: \mathrm {m}
+=== every axis-label-format ===
+--- axis-label-format=iso
+\second  | 0..5000 | prefix -> macro:->$\nmp@savedxlabelqty \,/\,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=combine-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit })$
+ unit: \mathrm {ks}
+\second  | 0..5000 | exponent -> macro:->$\nmp@savedxlabelqty \,/\,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=extract-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit })$
+ number: 10^{3}
+ unit: \mathrm {s}
+\metre  | 0..5 | prefix -> macro:->$\nmp@savedxlabelqty \,/\,(\si {\nmp@savedxlabelunit })$
+ unit: \mathrm {m}
+--- axis-label-format=ieee
+\second  | 0..5000 | prefix -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=combine-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit })$
+ unit: \mathrm {ks}
+\second  | 0..5000 | exponent -> macro:->$\nmp@savedxlabelqty \,(\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=extract-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit })$
+ number: 10^{3}
+ unit: \mathrm {s}
+\metre  | 0..5 | prefix -> macro:->$\nmp@savedxlabelqty \,(\si {\nmp@savedxlabelunit })$
+ unit: \mathrm {m}
+--- axis-label-format=brackets
+\second  | 0..5000 | prefix -> macro:->$\nmp@savedxlabelqty \,[\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=combine-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit }]$
+ unit: \mathrm {ks}
+\second  | 0..5000 | exponent -> macro:->$\nmp@savedxlabelqty \,[\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=extract-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit }]$
+ number: 10^{3}
+ unit: \mathrm {s}
+\metre  | 0..5 | prefix -> macro:->$\nmp@savedxlabelqty \,[\si {\nmp@savedxlabelunit }]$
+ unit: \mathrm {m}
+--- axis-label-format=qty-only
+\second  | 0..5000 | prefix -> macro:->$\nmp@savedxlabelqty $
+\second  | 0..5000 | exponent -> macro:->$\nmp@savedxlabelqty $
+\metre  | 0..5 | prefix -> macro:->$\nmp@savedxlabelqty $
+--- axis-label-format=unit-only
+\second  | 0..5000 | prefix -> macro:->$\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=combine-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit }$
+ unit: \mathrm {ks}
+\second  | 0..5000 | exponent -> macro:->$\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=extract-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit }$
+ number: 10^{3}
+ unit: \mathrm {s}
+\metre  | 0..5 | prefix -> macro:->$\si {\nmp@savedxlabelunit }$
+ unit: \mathrm {m}
+(p005-axislabels.aux)

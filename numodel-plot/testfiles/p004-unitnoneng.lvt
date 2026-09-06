@@ -1,0 +1,51 @@
+% Regression test: \pzuIfUnitNonEngTF.
+%
+% Since v0.8.1 the verdict comes from the net power of ten siunitx
+% extracts from the unit, not from a hard-coded list of prefix
+% tokens.  The classification therefore sees through abbreviations
+% (\cm), through powers (\cm\squared, \cm\cubed) and through
+% cancellation (\cm\per\cs) -- the last two being the two places
+% where the answer changed.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage{siunitx}
+\usepackage{numodel-plot}
+\begin{document}
+\START
+\OMIT
+% \pzuIfUnitNonEngTF is protected, so let the branches record the
+% verdict in a macro \TYPE can expand.
+\newcommand\NE[1]{%
+  \def\NEunit{#1}%
+  \pzuIfUnitNonEngTF{\NEunit}{\def\NEverdict{NONENG}}{\def\NEverdict{ENG}}%
+  \TYPE{\detokenize{#1} -> \NEverdict}%
+}
+\TIMO
+\TYPE{=== engineering: no prefix, or a multiple of 10^3 ===}
+\NE{\metre}
+\NE{\kilo\metre}
+\NE{\milli\metre}
+\NE{\micro\metre}
+\NE{\gram}
+\NE{\kilogram}
+\NE{\metre\per\second}
+\NE{\newton\metre}
+\NE{\percent}
+\NE{\kilo\metre\squared}
+\NE{\milli\metre\cubed}
+\TYPE{=== non-engineering: centi, deci, deca, hecto ===}
+\NE{\centi\metre}
+\NE{\deci\litre}
+\NE{\deca\metre}
+\NE{\hecto\pascal}
+\TYPE{=== abbreviations resolve like their spelled-out forms ===}
+\NE{\cm}
+\NE{\dm}
+\NE{\hL}
+\TYPE{=== powers: the net exponent decides ===}
+\NE{\square\centi\metre}
+\NE{\centi\metre\squared}
+\NE{\centi\metre\cubed}
+\TYPE{=== cancelling prefixes leave nothing behind ===}
+\NE{\centi\metre\per\centi\second}
+\end{document}

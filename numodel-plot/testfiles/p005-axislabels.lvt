@@ -1,0 +1,79 @@
+% Regression test: the axis-label pipeline end to end.
+%
+% \xlabelbuild picks a power of ten for the axis, decides through
+% \pzuIfUnitNonEngTF whether the unit may be scaled at all, and then
+% through \__numodelplot_prefix_check:nn whether the power of ten can
+% be folded into an SI prefix.  \xlabel is assembled with \edef, so
+% \meaning prints the finished label as a plain token list.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage{siunitx}
+\usepackage{numodel-plot}
+\begin{document}
+\START
+\OMIT
+% Redirecting siunitx's two printing hooks to \TYPE records what the
+% label actually renders to, next to the token list \xlabelbuild
+% assembled.
+\ExplSyntaxOn
+\cs_set_protected:Npn \siunitx_print_number:n #1
+  { \TYPE { ~ ~ number: ~ \detokenize {#1} } }
+\cs_set_protected:Npn \siunitx_print_unit:n #1
+  { \TYPE { ~ ~ unit: ~ \detokenize {#1} } }
+\ExplSyntaxOff
+% Warm the maths fonts up here so their "External font loaded" notes
+% do not land in the recorded log.
+\setbox0=\hbox{$x^{1}_{2}\mathrm{m}$}
+\newcommand\LBL[5]{%
+  % #1 quantity  #2 unit  #3 xmin  #4 xmax  #5 scale-format
+  \begingroup
+    \numodelplotsetup{scale-format=#5}%
+    \def\xlabelqty{#1}\def\xlabelunit{#2}%
+    \def\xmin{#3}\def\xmax{#4}%
+    \xlabelbuild
+    \TYPE{\detokenize{#2}\space|\space#3..#4\space|\space#5\space->\space
+      \meaning\xlabel}%
+    \setbox0=\hbox{\xlabel}% \xlabel carries its own math shift
+
+  \endgroup
+}
+\newcommand\LBLfmt[1]{%
+  \begingroup
+    \numodelplotsetup{axis-label-format=#1}%
+    \TYPE{--- axis-label-format=#1}%
+    \LBL{t}{\second}{0}{5000}{prefix}%
+    \LBL{t}{\second}{0}{5000}{exponent}%
+    \LBL{x}{\metre}{0}{5}{prefix}%
+  \endgroup
+}
+\TIMO
+\TYPE{=== scale-format=prefix folds the power of ten into the unit ===}
+\LBL{t}{\second}{0}{5000}{prefix}
+\LBL{v}{\metre\per\second}{0}{5e6}{prefix}
+\LBL{E}{\joule}{0}{3e-6}{prefix}
+\LBL{a}{\metre\per\second\squared}{0}{4000}{prefix}
+\TYPE{=== ... and falls back to 10^k when no prefix fits ===}
+\LBL{A}{\metre\squared}{0}{4e6}{prefix}
+\LBL{V}{\metre\cubed}{0}{4e3}{prefix}
+\TYPE{=== scale-format=exponent always shows the power of ten ===}
+\LBL{t}{\second}{0}{5000}{exponent}
+\LBL{v}{\metre\per\second}{0}{5e6}{exponent}
+\LBL{E}{\joule}{0}{3e-6}{exponent}
+\TYPE{=== a gram axis becomes kilograms ===}
+\LBL{m}{\gram}{0}{2e6}{prefix}
+\LBL{m}{\gram}{0}{2e6}{exponent}
+\TYPE{=== non-engineering units are left unscaled ===}
+\LBL{x}{\centi\metre}{0}{5000}{prefix}
+\LBL{p}{\hecto\pascal}{0}{5000}{prefix}
+\TYPE{=== cancelling prefixes do scale (changed in v0.8.1) ===}
+\LBL{q}{\centi\metre\per\centi\second}{0}{5000}{prefix}
+\LBL{V}{\centi\metre\cubed}{0}{5000}{prefix}
+\TYPE{=== a range that needs no scaling at all ===}
+\LBL{x}{\metre}{0}{5}{prefix}
+\TYPE{=== every axis-label-format ===}
+\LBLfmt{iso}
+\LBLfmt{ieee}
+\LBLfmt{brackets}
+\LBLfmt{qty-only}
+\LBLfmt{unit-only}
+\end{document}
