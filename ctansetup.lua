@@ -20,7 +20,7 @@
 -- Both modules list README.md and CHANGELOG.md there, and the bundle
 -- root lists its own two under exactly those names, so all three
 -- pairs collide on one filename.  The bundle root is copied last by
--- ctan(), so it wins: up to and including v0.8.0 the CTAN zip shipped
+-- ctan(), so it wins: up to and including v0.9.0 the CTAN zip shipped
 -- only the bundle-level README and CHANGELOG, and the two module
 -- CHANGELOGs -- the ones the bundle CHANGELOG tells readers to
 -- consult -- never reached CTAN at all.
@@ -38,28 +38,38 @@
 --
 -- The fix
 -- -------
--- Copy the module's own text files a second time, into a per-module
--- subdirectory of the CTAN package.  That is where the bundle
--- CHANGELOG's cross-references already point ("see
--- numodel/CHANGELOG.md and numodel-plot/CHANGELOG.md") and what the
--- bundle build.lua's `flatten = false` was reaching for.
+-- All the collision needs is six distinct names, not six distinct
+-- paths.  CTAN prefers a flat source archive, so each module's text
+-- files are re-copied under a module-qualified name --
+-- CHANGELOG-numodel.md, README-numodel-plot.md, and so on -- rather
+-- than into a per-module subdirectory.  The bundle root keeps the
+-- unsuffixed README.md / CHANGELOG.md, which is what CTAN shows.
 --
 -- copyctan is a global defined by l3build-ctan.lua, which l3build
 -- loads before build.lua, so it can simply be wrapped.  Everything it
 -- reads (ctandir, ctanpkg, textfiledir, textfiles) is resolved at
--- call time, i.e. after l3build-variables.lua has run.
+-- call time, i.e. after l3build-variables.lua has run.  Copy-then-
+-- rename is the same two-step l3build itself uses for `ctanreadme`;
+-- it also frees the plain name again for the next writer, so the
+-- module runs and the bundle root do not tread on each other.
 
 local stock_copyctan = copyctan
 
 function copyctan()
   stock_copyctan()
-  local moduledir = ctandir .. "/" .. ctanpkg .. "/" .. module
-  mkdir(moduledir)
+  local pkgdir = ctandir .. "/" .. ctanpkg
   for _, file in pairs(textfiles) do
+    local base, ext = file:match("^(.+)%.([^.]+)$")
+    local target = base and (base .. "-" .. module .. "." .. ext)
+                        or (file .. "-" .. module)
     -- Fail loudly: a silent miss here is the very bug this file
     -- exists to correct.
-    if cp(file, textfiledir, moduledir) ~= 0 then
-      error("ctansetup: could not copy " .. file .. " into " .. moduledir)
+    if cp(file, textfiledir, pkgdir) ~= 0 then
+      error("ctansetup: could not copy " .. file .. " into " .. pkgdir)
+    end
+    ren(pkgdir, file, target)
+    if not fileexists(pkgdir .. "/" .. target) then
+      error("ctansetup: " .. target .. " did not reach the CTAN tree")
     end
   end
 end

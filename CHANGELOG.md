@@ -1,12 +1,29 @@
 # Changelog — numodel-bundle
 
 This file aggregates release-level changes across the whole bundle.
-For module-specific entries see `numodel/CHANGELOG.md` and
-`numodel-plot/CHANGELOG.md` (shipped under
-`doc/latex/numodel-bundle/<module>/` in the installation tree).
+For module-specific entries see the per-module changelogs: in the
+repository they are `numodel/CHANGELOG.md` and
+`numodel-plot/CHANGELOG.md`, in the CTAN archive
+`CHANGELOG-numodel.md` and `CHANGELOG-numodel-plot.md`, and in the
+installation tree `doc/latex/numodel-bundle/<module>/CHANGELOG.md`.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 each module independently adheres to [Semantic Versioning](https://semver.org/).
+
+## [Unreleased]
+
+### Fixed
+- CTAN packaging: the two module `README.md`/`CHANGELOG.md` pairs now
+  reach the CTAN archive, under module-qualified names
+  (`CHANGELOG-numodel.md`, `README-numodel-plot.md`, …). l3build
+  copies `textfiles` flat into the package directory, so both modules
+  and the bundle root wrote to the same two names and the bundle root
+  — copied last — won; up to and including 0.9.0 the module
+  changelogs never reached CTAN at all, even though this file points
+  readers at them. Handled by the new `ctansetup.lua`, which both
+  module builds load. The archive uploaded for 0.9.0 solved the
+  collision with per-module subdirectories instead; CTAN prefers a
+  flat archive, hence the names.
 
 ## [0.9.0] — 2026-09-06
 

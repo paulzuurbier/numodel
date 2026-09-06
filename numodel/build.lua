@@ -16,11 +16,11 @@ maindir = ".."
 -- ../tagsetup.lua for the workflow.
 dofile(maindir .. "/tagsetup.lua")
 
--- CTAN packaging: share the wrapper that also copies this module's
--- README.md / CHANGELOG.md into a per-module subdirectory of the CTAN
--- package.  Without it both modules and the bundle root collide on
--- those two filenames and only the bundle root's copies survive.  See
--- ../ctansetup.lua.
+-- CTAN packaging: share the wrapper that re-copies this module's
+-- README.md / CHANGELOG.md under a module-qualified name.  Without it
+-- both modules and the bundle root collide on those two filenames in
+-- the flat CTAN archive and only the bundle root's copies survive.
+-- See ../ctansetup.lua.
 dofile(maindir .. "/ctansetup.lua")
 
 -- Engines / formats ------------------------------------------------------
