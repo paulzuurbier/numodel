@@ -1,7 +1,9 @@
-numodel-bundle v0.9.0
+numodel-bundle v0.9.1
 
 This release is numodel-plot only; numodel is version-synced with no
-functional changes.
+functional changes.  It is also the first published release carrying
+the 0.9.0 work: that archive was prepared but never published, so the
+changes below reach users here.
 
 Highlights
 ----------
@@ -17,6 +19,18 @@ Highlights
   a tcolorbox's colback, a beamer colour theme's bg, the pagecolor
   package's \thepagecolor, and white otherwise.  Any other value pins
   the halo to that colour.
+
+Fixed
+-----
+* \qtyPlain produced wrong output on siunitx 3.5.0 and newer.  siunitx
+  renamed the variable holding the current prefix-mode from
+  \l_siunitx_quantity_prefix_mode_tl -- a documented public variable
+  through v3.4.14 -- to \l_siunitx_quantity_prefix_mode_str, leaving
+  the old name declared but never assigned.  Reading the stale name
+  resolved an empty mode and fell through to plain \qty, so every
+  scaled axis label silently gained a spurious "1": "t (1 ks)" instead
+  of "t (ks)".  Nothing errored.  The mode is now read from whichever
+  variable carries a value, so both siunitx generations work.
 
 Under the hood
 --------------
@@ -35,10 +49,17 @@ Under the hood
   scaling: \centi\metre\per\centi\second (the prefixes cancel) and
   \centi\metre\cubed (cm^3 is 10^-6 m^3).
 
+Packaging
+---------
+* The bundle now ships one README and one CHANGELOG, both at the
+  bundle root, on CTAN maintainer request.  The former per-module
+  README/CHANGELOG pairs have been merged into them; module-specific
+  entries live under a per-module heading within each release.
+
 Requirements
 ------------
 * siunitx is now requested with a date of 2023-11-06 (v3.3.8).  An
   older siunitx produces a LaTeX warning rather than an error, but
   scaled axis labels may come out subtly wrong.
 
-See numodel/CHANGELOG.md and numodel-plot/CHANGELOG.md for the full list.
+See CHANGELOG.md for the full list.

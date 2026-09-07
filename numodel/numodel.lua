@@ -1,6 +1,6 @@
 -- ====================================================================
 -- numodel.lua --- Lua data store for the numodel package (per-prefix)
--- numodel.lua  v0.9.0  2026/09/06
+-- numodel.lua  v0.9.1  2026/09/07
 -- ====================================================================
 --
 -- Copyright (C) 2026 Paul Zuurbier <mail@paulzuurbier.nl>

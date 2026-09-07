@@ -1,0 +1,73 @@
+% Regression test: which siunitx variable \qtyPlain reads for the
+% current prefix-mode.
+%
+% siunitx v3.5.0 renamed \l_siunitx_quantity_prefix_mode_tl (a
+% documented public variable through v3.4.14) to
+% \l_siunitx_quantity_prefix_mode_str, leaving the old name declared
+% but unassigned. v0.9.0 read only the tl, so on siunitx 3.5+ it
+% resolved an empty mode, fell through to \qty, and every scaled axis
+% label gained a spurious `1'. Nothing errored.
+%
+% Both namings are emulated here, so the resolution order is pinned on
+% whichever siunitx happens to be installed. The two variables are
+% given *different* values, so reading the wrong one shows up as wrong
+% output rather than as no output. prefix-mode is deliberately not
+% passed as an option: \qtyPlain's own \keys_set would otherwise
+% overwrite the emulation on one siunitx generation but not the other.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage{siunitx}
+\usepackage{numodel-plot}
+\begin{document}
+\START
+\OMIT
+\ExplSyntaxOn
+% Make sure both names exist, whichever siunitx this is.
+\cs_if_exist:NF \l_siunitx_quantity_prefix_mode_str
+  { \str_new:N \l_siunitx_quantity_prefix_mode_str }
+\cs_if_exist:NF \l_siunitx_quantity_prefix_mode_tl
+  { \tl_new:N \l_siunitx_quantity_prefix_mode_tl }
+% Which mode does \qtyPlain resolve from this pair of variables?
+\cs_new_protected:Npn \nmpmode #1#2
+  {
+    \group_begin:
+      \str_set:Nn \l_siunitx_quantity_prefix_mode_str {#1}
+      \tl_set:Nn \l_siunitx_quantity_prefix_mode_tl {#2}
+      \TYPE { str=[#1] ~ tl=[#2] ~ -> ~ mode=[ \__nmp_qty_mode: ] }
+    \group_end:
+  }
+% ... and what does it then print?  Not called with both variables
+% empty: siunitx's own dispatch reads the very same variable, so an
+% empty mode breaks \qty itself, which is siunitx's business and not
+% something to record here.
+\cs_new_protected:Npn \nmpmodeout #1#2
+  {
+    \nmpmode {#1} {#2}
+    \group_begin:
+      \str_set:Nn \l_siunitx_quantity_prefix_mode_str {#1}
+      \tl_set:Nn \l_siunitx_quantity_prefix_mode_tl {#2}
+      \setbox0 = \hbox
+        {
+          \qtyPlain
+            [ print-unity-mantissa = false , print-zero-exponent = false ]
+            { 1e3 } { \metre }
+        }
+    \group_end:
+  }
+\cs_set_protected:Npn \siunitx_print_number:n #1
+  { \TYPE { ~ number: ~ \detokenize {#1} } }
+\cs_set_protected:Npn \siunitx_print_unit:n #1
+  { \TYPE { ~ unit: ~ \detokenize {#1} } }
+\ExplSyntaxOff
+\TIMO
+\TYPE{=== siunitx 3.5 and newer: the str wins over the stale tl ===}
+% Reading the tl here would give 10^3 m where km is correct.
+\nmpmodeout{combine-exponent}{extract-exponent}
+\nmpmodeout{extract-exponent}{combine-exponent}
+\TYPE{=== siunitx 3.4 and older: only the tl carries a value ===}
+\nmpmodeout{}{combine-exponent}
+\nmpmodeout{}{extract-exponent}
+\nmpmodeout{}{input}
+\TYPE{=== neither set: the mode resolves empty, so \string\qty\space runs ===}
+\nmpmode{}{}
+\end{document}

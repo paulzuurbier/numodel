@@ -31,16 +31,16 @@ excludefiles = {
 
 -- Bundle packaging -------------------------------------------------------
 
--- CTAN wants a flat source archive, which is what l3build produces
--- here anyway: `flatten` only guards copyctan()'s copyfiles() helper,
--- and a module build run never reads this file, so inside a module it
--- keeps its default of true regardless of what we set.  Left at false
--- to document the intent for the bundle's own copyctan pass.  The
--- README.md/CHANGELOG.md collision that a flat layout causes is
--- handled by ctansetup.lua, which both modules load and which gives
--- their copies module-qualified names; see the long comment there.
--- The TDS view is laid out by TDS rules regardless.
-flatten = false
+-- CTAN wants a flat source archive with exactly one README and one
+-- CHANGELOG, and that is what this bundle produces: both come from
+-- the bundle root, and neither module contributes text files of its
+-- own (see each module's `textfiles`).  That also sidesteps l3build's
+-- copyctan(), which copies `textfiles` flat into the package
+-- directory: three copies under two filenames would silently
+-- overwrite each other, with the bundle root -- copied last -- the
+-- only survivor.  `flatten` is left at its default; it only guards
+-- copyctan()'s copyfiles() helper, and a module build run never reads
+-- this file anyway.  The TDS view is laid out by TDS rules regardless.
 
 -- Do NOT ship a .tds.zip inside the upload archive: CTAN does not
 -- require it and Erik Braun (CTAN maintainer) has asked us to omit it

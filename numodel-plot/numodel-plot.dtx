@@ -28,7 +28,7 @@
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{numodel-plot}[2026/09/06 v0.9.0 Auto-sizing PGFPlots engine]
+\ProvidesPackage{numodel-plot}[2026/09/07 v0.9.1 Auto-sizing PGFPlots engine]
 
 \makeatletter
 
@@ -292,23 +292,49 @@
     \siunitx_unit_format:nN {#1} \l__nmp_qty_unit_tl
   }
 
+% The prefix-mode currently in force, as a string.
+%
+% siunitx v3.5.0 renamed the variable holding it from
+% \l_siunitx_quantity_prefix_mode_tl -- a documented public variable
+% up to and including v3.4.14 -- to
+% \l_siunitx_quantity_prefix_mode_str, and left the old name
+% declared but no longer assigned.  Reading the stale one therefore
+% yields an *empty* mode and no error at all, and a \cs_if_exist
+% guard does not catch it either: on siunitx 3.5 and newer, v0.9.0 of
+% this package silently degraded every \qtyPlain to a plain \qty, so
+% a scaled axis label read `t (1 ks)' instead of `t (ks)'.
+%
+% Prefer the str, fall back to the tl, and leave the result empty if
+% neither carries anything -- an empty mode matches no
+% \__nmp_qty_prefix_...:n and so takes the \qty branch below, which is
+% what an unknown mode should do anyway.
+\cs_new:Npn \__nmp_qty_mode:
+  {
+    \bool_lazy_and:nnTF
+      { \cs_if_exist_p:N \l_siunitx_quantity_prefix_mode_str }
+      { ! \tl_if_empty_p:N \l_siunitx_quantity_prefix_mode_str }
+      { \tl_use:N \l_siunitx_quantity_prefix_mode_str }
+      {
+        \cs_if_exist:NT \l_siunitx_quantity_prefix_mode_tl
+          { \tl_use:N \l_siunitx_quantity_prefix_mode_tl }
+      }
+  }
+
 % #1-#7 are the seven groups \siunitx_number_parse:nN produces --
 % comparator, sign, integer, decimal, uncertainty, exponent sign,
 % exponent -- and #8 is the unit.  A number carrying an uncertainty
 % is handed straight to \qty: separate-uncertainty-units has three
 % layouts that are not worth reproducing here, and such a number
 % never reduces to the bare mantissa 1 that \qtyPlain exists to
-% suppress.  An unrecognised prefix-mode (a future siunitx value)
-% falls back the same way.
+% suppress.  An unrecognised or unreadable prefix-mode falls back the
+% same way.
 \cs_new_protected:Npn \__nmp_qty_parsed:nnnnnnnn #1#2#3#4#5#6#7#8
   {
     \bool_lazy_and:nnTF
       { \tl_if_blank_p:n {#5} }
-      { \cs_if_exist_p:c
-          { __nmp_qty_prefix_ \l_siunitx_quantity_prefix_mode_tl :n } }
+      { \cs_if_exist_p:c { __nmp_qty_prefix_ \__nmp_qty_mode: :n } }
       {
-        \use:c { __nmp_qty_prefix_ \l_siunitx_quantity_prefix_mode_tl :n }
-          {#8}
+        \use:c { __nmp_qty_prefix_ \__nmp_qty_mode: :n } {#8}
         \exp_after:wN \__nmp_qty_output:nnnnnnn \l__nmp_qty_number_tl
       }
       { \__nmp_qty_fallback: }

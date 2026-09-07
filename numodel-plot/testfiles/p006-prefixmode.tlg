@@ -1,0 +1,20 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== siunitx 3.5 and newer: the str wins over the stale tl ===
+str=[combine-exponent] tl=[extract-exponent] -> mode=[combine-exponent]
+ unit: \mathrm {km}
+str=[extract-exponent] tl=[combine-exponent] -> mode=[extract-exponent]
+ number: 10^{3}
+ unit: \mathrm {m}
+=== siunitx 3.4 and older: only the tl carries a value ===
+str=[] tl=[combine-exponent] -> mode=[combine-exponent]
+ unit: \mathrm {km}
+str=[] tl=[extract-exponent] -> mode=[extract-exponent]
+ number: 10^{3}
+ unit: \mathrm {m}
+str=[] tl=[input] -> mode=[input]
+ number: 10^{3}
+ unit: \mathrm {m}
+=== neither set: the mode resolves empty, so \qty runs ===
+str=[] tl=[] -> mode=[]
+(p006-prefixmode.aux)

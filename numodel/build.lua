@@ -16,13 +16,6 @@ maindir = ".."
 -- ../tagsetup.lua for the workflow.
 dofile(maindir .. "/tagsetup.lua")
 
--- CTAN packaging: share the wrapper that re-copies this module's
--- README.md / CHANGELOG.md under a module-qualified name.  Without it
--- both modules and the bundle root collide on those two filenames in
--- the flat CTAN archive and only the bundle root's copies survive.
--- See ../ctansetup.lua.
-dofile(maindir .. "/ctansetup.lua")
-
 -- Engines / formats ------------------------------------------------------
 
 -- numodel depends on LuaTeX features (luacode, the Lua iteration
@@ -75,12 +68,15 @@ typesetfiles = {"numodel-manual.tex"}
 typesetdeps = {maindir .. "/numodel-plot"}
 unpackdeps  = {}
 
--- Extra files shipped in the CTAN zip but not installed into TDS.
 -- The runnable examples in examples/ stay in the repo for local
 -- development but are NOT shipped to CTAN (kept lean: only the
 -- broodnodige files end up in the upload).  See the bundle-level
 -- excludefiles for the corresponding sweep.
-textfiles    = {"README.md", "CHANGELOG.md"}
+-- The bundle ships a single README.md and CHANGELOG.md, both from the
+-- bundle root, so this module contributes no text files of its own.
+-- (CTAN asked for one of each; before that, all three copies collided
+-- on two filenames in the flat archive.)
+textfiles    = {}
 
 -- Regression tests ------------------------------------------------------
 
