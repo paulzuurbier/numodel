@@ -1,0 +1,92 @@
+% siunitx-matrix.tex -- axis-label harness for siunitx-matrix.sh
+%
+% Renders every axis-label case that depends on siunitx behaviour:
+% the label pipeline (\xlabelbuild) under all three scale-format
+% values, the fold feasibility check, the non-engineering guard, and
+% \qtyPlain called directly under all three prefix-mode values.  The
+% runner extracts the rendered text with pdftotext and diffs it across
+% siunitx versions, so the output is deliberately plain: one case per
+% line, each prefixed with a stable tag.
+%
+% Compiled with pdflatex; numodel-plot.sty and siunitx.sty are taken
+% from wherever TEXINPUTS points first.
+\documentclass{article}
+\usepackage[margin=1cm]{geometry}
+\usepackage{numodel-plot}
+\pagestyle{empty}
+
+\makeatletter
+% \LBL{qty}{unit}{xmin}{xmax}{scale-format}: one axis label
+\newcommand\LBL[5]{%
+  \begingroup
+    \numodelplotsetup{scale-format=#5}%
+    \def\xlabelqty{#1}\def\xlabelunit{#2}%
+    \def\xmin{#3}\def\xmax{#4}%
+    \xlabelbuild
+    \par\noindent LBL[\detokenize{#2}|#3..#4|#5]=\xlabel
+  \endgroup
+}
+\makeatother
+% \Q{number}{unit}{prefix-mode}: \qtyPlain directly
+\newcommand\Q[3]{%
+  \par\noindent Q[#1|\detokenize{#2}|#3]=%
+  \qtyPlain[prefix-mode=#3,
+            print-unity-mantissa=false,
+            print-zero-exponent=false]{#1}{#2}%
+}
+
+\begin{document}
+
+\section*{scale-format=prefix: fold the power of ten into the unit}
+\LBL{t}{\second}{0}{5000}{prefix}
+\LBL{v}{\metre\per\second}{0}{5e6}{prefix}
+\LBL{E}{\joule}{0}{3e-6}{prefix}
+\LBL{a}{\metre\per\second\squared}{0}{4000}{prefix}
+\LBL{m}{\gram}{0}{2e6}{prefix}
+\LBL{E}{\mega\joule\per\kilo\gram}{0}{5e7}{prefix}
+
+\section*{... and fall back to 10\textasciicircum k when no prefix fits}
+\LBL{A}{\metre\squared}{0}{4e6}{prefix}
+\LBL{V}{\metre\cubed}{0}{4e3}{prefix}
+
+\section*{scale-format=exponent: every prefix out}
+\LBL{t}{\second}{0}{5000}{exponent}
+\LBL{v}{\metre\per\second}{0}{5e6}{exponent}
+\LBL{E}{\joule}{0}{3e-6}{exponent}
+\LBL{m}{\gram}{0}{2e6}{exponent}
+\LBL{E}{\mega\joule\per\kilo\gram}{0}{5e7}{exponent}
+
+\section*{scale-format=input: unit as written}
+\LBL{t}{\second}{0}{5000}{input}
+\LBL{x}{\kilo\metre}{0}{5000}{input}
+\LBL{m}{\gram}{0}{2e6}{input}
+\LBL{E}{\mega\joule\per\kilo\gram}{0}{5e7}{input}
+
+\section*{non-engineering units stay unscaled}
+\LBL{x}{\centi\metre}{0}{5000}{prefix}
+\LBL{p}{\hecto\pascal}{0}{5000}{prefix}
+
+\section*{cancelling prefixes do scale}
+\LBL{q}{\centi\metre\per\centi\second}{0}{5000}{prefix}
+\LBL{V}{\centi\metre\cubed}{0}{5000}{prefix}
+
+\section*{no scaling needed}
+\LBL{x}{\metre}{0}{5}{prefix}
+
+\section*{\textbackslash qtyPlain directly, all three prefix-mode values}
+\Q{1e6}{\metre}{combine-exponent}
+\Q{1e6}{\metre}{extract-exponent}
+\Q{1e6}{\metre}{input}
+\Q{1}{\mega\metre}{extract-exponent}
+\Q{1}{\mega\metre}{input}
+\Q{1e3}{\kilo\metre}{combine-exponent}
+\Q{1e3}{\kilo\metre}{extract-exponent}
+\Q{1e3}{\kilo\metre}{input}
+\Q{1e-3}{\km}{extract-exponent}
+\Q{1}{\metre\per\second}{extract-exponent}
+\Q{2.5e6}{\gram}{extract-exponent}
+\Q{-1}{\metre}{extract-exponent}
+\Q{<1}{\metre}{extract-exponent}
+\Q{1(1)}{\metre}{extract-exponent}
+
+\end{document}

@@ -194,7 +194,7 @@ stays manual), and re-run `l3build doc` to refresh the typeset PDFs.
 The CTAN archive is flat and carries exactly one `README.md` and one
 `CHANGELOG.md`, both from the bundle root.
 
-### Per-module Lua-level tests
+### Per-module tests outside l3build
 
 `numodel/tests/` contains a separate Lua test suite that exercises
 `numodel.lua` directly (no LaTeX run).  Run via
@@ -204,7 +204,26 @@ cd numodel/tests
 texlua run.lua
 ```
 
-These tests are independent of the l3build regression tests in
+`numodel-plot/tests/` holds the siunitx compatibility matrix.
+`numodel-plot` drives siunitx through its code-level interface, and
+its `scale-format=prefix` feasibility check reaches a few siunitx
+internals behind `\cs_if_exist` guards — a renamed internal never
+errors, the label just silently comes out in the `10^k` form.  The
+only way to know a siunitx release is fine is to render against it,
+which `l3build check` cannot do (it always uses the installed
+siunitx).  `siunitx-matrix.sh` downloads each requested siunitx git
+ref, builds its `.sty`, renders `siunitx-matrix.tex` against it and
+diffs the labels with those from the installed siunitx:
+
+```
+cd numodel-plot/tests
+bash siunitx-matrix.sh v3.3.8 v3.5.10 v3.6.0
+```
+
+Every version must come out identical.  Run it before each release,
+and whenever siunitx releases.
+
+Both are independent of the l3build regression tests in
 `numodel/testfiles/` and `numodel-plot/testfiles/`.
 
 ## Layout
@@ -234,6 +253,7 @@ numodel-bundle/
     numodel-plot-manual.tex
     examples/
     testfiles/
+    tests/            siunitx compatibility matrix (bash siunitx-matrix.sh)
 ```
 
 ## License
