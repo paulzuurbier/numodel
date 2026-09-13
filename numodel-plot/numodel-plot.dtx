@@ -208,17 +208,24 @@
         { \nmp@haloautofalse
           \colorlet{numodelhalo}{#1} },
 
-    % How a scaled axis presents its power of ten in the axis label:
-    % `prefix' (the default) folds it into an SI prefix on the unit --
-    % t (ks) instead of t (10^3 s) -- falling back to the exponent
-    % form whenever no engineering prefix fits (see
-    % \__numodelplot_prefix_check:nn); `exponent' always shows the
-    % power of ten.
+    % How a scaled axis presents its power of ten in the axis label.
+    % Take a y-range up to 5e7 in \mega\joule\per\kilo\gram, so the
+    % axis is scaled by 10^6:
+    %   `prefix'   (the default) folds the power of ten into an SI
+    %              prefix on the unit, E (TJ/kg), falling back to
+    %              `exponent' whenever no engineering prefix fits
+    %              (see \__numodelplot_prefix_check:nn);
+    %   `exponent' pulls every prefix out of the unit and shows one
+    %              power of ten on the bare unit, E (10^12 J/kg);
+    %   `input'    leaves the unit exactly as the user wrote it and
+    %              puts the power of ten in front, E (10^6 MJ/kg).
     scale-format .choice:,
     scale-format / prefix .code:n =
       \tl_gset:Nn \g__numodelplot_scaleformat_tl {prefix},
     scale-format / exponent .code:n =
       \tl_gset:Nn \g__numodelplot_scaleformat_tl {exponent},
+    scale-format / input .code:n =
+      \tl_gset:Nn \g__numodelplot_scaleformat_tl {input},
   }
 
 \NewDocumentCommand{\numodelplotsetup}{m}
@@ -608,12 +615,14 @@
 \ExplSyntaxOn
 
 % How the power of ten of a scaled axis reaches the axis label.
-% \g__numodelplot_scaleformat_tl holds the user's wish (`prefix' or
-% `exponent', set through the scale-format key); the label builders
-% translate that per axis into \g__numodelplot_prefixmode_tl, the
-% actual siunitx prefix-mode value spliced into the \qtyPlain calls of
-% the emit-scaled routines: `combine-exponent' folds the exponent into
-% an SI prefix on the unit, `extract-exponent' keeps the 10^k form.
+% \g__numodelplot_scaleformat_tl holds the user's wish (`prefix',
+% `exponent' or `input', set through the scale-format key); the label
+% builders translate that per axis into \g__numodelplot_prefixmode_tl,
+% the actual siunitx prefix-mode value spliced into the \qtyPlain
+% calls of the emit-scaled routines: `combine-exponent' folds the
+% exponent into an SI prefix on the unit, `extract-exponent' pulls
+% every prefix out and keeps one 10^k on the bare unit, `input' leaves
+% the unit as written and puts the 10^k in front of it.
 \tl_new:N \g__numodelplot_scaleformat_tl
 \tl_gset:Nn \g__numodelplot_scaleformat_tl {prefix}
 \tl_new:N \g__numodelplot_prefixmode_tl
@@ -626,97 +635,130 @@
 % would be legal SI but unwanted engineering-wise.  So this check
 % mirrors that computation via the siunitx parser and additionally
 % requires a multiple of 3: 10^6 m^2 -> km^2 passes, 10^3 m^2 (k=1.5)
-% and 10^3 m^3 (deca) fall back to the exponent form.  Everything
-% lives behind \cs_if_exist guards because it reaches into siunitx
-% internals; if a future siunitx renames them the check just returns
-% false and the label keeps the always-safe 10^k form.
+% and 10^3 m^3 (deca) fall back to the exponent form.
 %
-% This is now the only place in the package that touches siunitx
-% internals, and it is the one thing siunitx issue #864 asks for that
-% is genuinely unreachable today: \siunitx_unit_format_extract_-
-% prefixes:nNN reports the net power of ten of the whole unit but not
-% *which* prefix sat on *which* atom, which is exactly what deciding
-% the fold needs.  \l__siunitx_unit_parsed_prop holds it (prefix-n,
-% unit-n, power-n, ...); if siunitx ever exposes that, this routine
-% becomes internals-free like the rest.
+% Two ways to get at the parsed unit, chosen at run time:
+%
+%   * siunitx 3.6 and newer expose \siunitx_unit_parse:nN, which
+%     fills a caller-supplied prop with prefix-n / unit-n / power-n
+%     and does its own symbolic set-up (added for siunitx issue
+%     #864).  3.6 also drops the internal \__siunitx_unit_parse:n, so
+%     without this path the check would silently fail there and
+%     every `prefix' label would come out in the 10^k form.
+%   * Up to 3.5 the same data sits in \l__siunitx_unit_parsed_prop,
+%     reachable only through internals and only after replicating
+%     the set-up that \__siunitx_unit_format:nNN performs.
+%
+% Both paths then need the prefix <-> power-of-ten mapping, which is
+% still internal in every siunitx to date (the two props below), and
+% both sit behind \cs_if_exist guards: if a future siunitx renames
+% something the check just returns false and the label keeps the
+% always-safe 10^k form.
 \bool_new:N \g__numodelplot_prefix_ok_bool
+\prop_new:N \l__numodelplot_parsed_prop
 \tl_new:N \l__numodelplot_power_tl
 \tl_new:N \l__numodelplot_prefix_tl
 \tl_new:N \l__numodelplot_target_tl
 \cs_new_protected:Npn \__numodelplot_prefix_check:nn #1#2
   {
     \bool_gset_false:N \g__numodelplot_prefix_ok_bool
-    \bool_lazy_all:nT
+    \bool_lazy_and:nnT
+      { \cs_if_exist_p:N \l__siunitx_unit_prefixes_forward_prop }
+      { \cs_if_exist_p:N \l__siunitx_unit_prefixes_reverse_prop }
       {
-        { \cs_if_exist_p:N \__siunitx_unit_parse:n }
-        { \cs_if_exist_p:N \__siunitx_unit_if_symbolic:nTF }
-        { \cs_if_exist_p:N \l_siunitx_unit_symbolic_seq }
-        { \cs_if_exist_p:N \l__siunitx_unit_parsed_prop }
-        { \cs_if_exist_p:N \l__siunitx_unit_prefixes_forward_prop }
-        { \cs_if_exist_p:N \l__siunitx_unit_prefixes_reverse_prop }
+        \cs_if_exist:NTF \siunitx_unit_parse:nN
+          { \__numodelplot_prefix_check_public:nn {#1} {#2} }
+          {
+            \bool_lazy_all:nT
+              {
+                { \cs_if_exist_p:N \__siunitx_unit_parse:n }
+                { \cs_if_exist_p:N \__siunitx_unit_if_symbolic:nTF }
+                { \cs_if_exist_p:N \l_siunitx_unit_symbolic_seq }
+                { \cs_if_exist_p:N \l__siunitx_unit_parsed_prop }
+              }
+              { \__numodelplot_prefix_check_internal:nn {#1} {#2} }
+          }
       }
-      { \__numodelplot_prefix_check_aux:nn {#1} {#2} }
-  }
-\cs_new_protected:Npn \__numodelplot_prefix_check_aux:nn #1#2
-  {
-        \group_begin:
-          % unit macros only gain their parser meaning inside a
-          % formatting group; replicate what siunitx's own
-          % \__siunitx_unit_format:nNN sets up before parsing (the
-          % symbolic test, too, only answers correctly after this)
-          \seq_map_inline:Nn \l_siunitx_unit_symbolic_seq
-            { \cs_set_eq:Nc ##1 { __siunitx_unit_ \token_to_str:N ##1 :w } }
-          \__siunitx_unit_if_symbolic:nTF {#2}
-            { \__siunitx_unit_parse:n {#2} }
-            { \prop_clear:N \l__siunitx_unit_parsed_prop }
-          \prop_if_empty:NF \l__siunitx_unit_parsed_prop
-            {
-              \prop_get:NnNF \l__siunitx_unit_parsed_prop { power-1 }
-                \l__numodelplot_power_tl
-                { \tl_set:Nn \l__numodelplot_power_tl { 1 } }
-              \prop_get:NnNTF \l__siunitx_unit_parsed_prop { prefix-1 }
-                \l__numodelplot_prefix_tl
-                {
-                  \prop_get:NVNF \l__siunitx_unit_prefixes_forward_prop
-                    \l__numodelplot_prefix_tl \l__numodelplot_prefix_tl
-                    { \tl_set:Nn \l__numodelplot_prefix_tl { 0 } }
-                }
-                { \tl_set:Nn \l__numodelplot_prefix_tl { 0 } }
-              \tl_set:Nx \l__numodelplot_target_tl
-                {
-                  \fp_eval:n
-                    { #1 / \l__numodelplot_power_tl + \l__numodelplot_prefix_tl }
-                }
-              \fp_compare:nNnTF { \l__numodelplot_target_tl } = \c_zero_fp
-                { \bool_gset_true:N \g__numodelplot_prefix_ok_bool }
-                {
-                  % engineering only: target must be a multiple of 3
-                  \fp_compare:nNnT
-                    {
-                      \l__numodelplot_target_tl
-                      - 3 * trunc( \l__numodelplot_target_tl / 3 )
-                    } = \c_zero_fp
-                    {
-                      \prop_get:NVNT \l__siunitx_unit_prefixes_reverse_prop
-                        \l__numodelplot_target_tl \l__numodelplot_target_tl
-                        { \bool_gset_true:N \g__numodelplot_prefix_ok_bool }
-                    }
-                }
-            }
-        \group_end:
   }
 
-% Pick the prefix-mode for one axis: combine-exponent when the user
-% asked for prefixes AND the fold is feasible, extract-exponent
-% otherwise.
+% siunitx >= 3.6: one public call, the prop is ours.
+\cs_new_protected:Npn \__numodelplot_prefix_check_public:nn #1#2
+  {
+    \siunitx_unit_parse:nN {#2} \l__numodelplot_parsed_prop
+    \__numodelplot_prefix_decide:nN {#1} \l__numodelplot_parsed_prop
+  }
+
+% siunitx <= 3.5: unit macros only gain their parser meaning inside a
+% formatting group; replicate what siunitx's own
+% \__siunitx_unit_format:nNN sets up before parsing (the symbolic
+% test, too, only answers correctly after this).
+\cs_new_protected:Npn \__numodelplot_prefix_check_internal:nn #1#2
+  {
+    \group_begin:
+      \seq_map_inline:Nn \l_siunitx_unit_symbolic_seq
+        { \cs_set_eq:Nc ##1 { __siunitx_unit_ \token_to_str:N ##1 :w } }
+      \__siunitx_unit_if_symbolic:nTF {#2}
+        { \__siunitx_unit_parse:n {#2} }
+        { \prop_clear:N \l__siunitx_unit_parsed_prop }
+      \__numodelplot_prefix_decide:nN {#1} \l__siunitx_unit_parsed_prop
+    \group_end:
+  }
+
+% Shared decision, given the exponent #1 and a parsed-unit prop #2.
+% An empty prop means a literal unit: nothing to fold into.
+\cs_new_protected:Npn \__numodelplot_prefix_decide:nN #1#2
+  {
+    \prop_if_empty:NF #2
+      {
+        \prop_get:NnNF #2 { power-1 } \l__numodelplot_power_tl
+          { \tl_set:Nn \l__numodelplot_power_tl { 1 } }
+        \prop_get:NnNTF #2 { prefix-1 } \l__numodelplot_prefix_tl
+          {
+            \prop_get:NVNF \l__siunitx_unit_prefixes_forward_prop
+              \l__numodelplot_prefix_tl \l__numodelplot_prefix_tl
+              { \tl_set:Nn \l__numodelplot_prefix_tl { 0 } }
+          }
+          { \tl_set:Nn \l__numodelplot_prefix_tl { 0 } }
+        \tl_set:Nx \l__numodelplot_target_tl
+          {
+            \fp_eval:n
+              { #1 / \l__numodelplot_power_tl + \l__numodelplot_prefix_tl }
+          }
+        \fp_compare:nNnTF { \l__numodelplot_target_tl } = \c_zero_fp
+          { \bool_gset_true:N \g__numodelplot_prefix_ok_bool }
+          {
+            % engineering only: target must be a multiple of 3
+            \fp_compare:nNnT
+              {
+                \l__numodelplot_target_tl
+                - 3 * trunc( \l__numodelplot_target_tl / 3 )
+              } = \c_zero_fp
+              {
+                \prop_get:NVNT \l__siunitx_unit_prefixes_reverse_prop
+                  \l__numodelplot_target_tl \l__numodelplot_target_tl
+                  { \bool_gset_true:N \g__numodelplot_prefix_ok_bool }
+              }
+          }
+      }
+  }
+
+% Pick the prefix-mode for one axis.  `input' maps straight onto
+% siunitx's own `input'; `prefix' becomes combine-exponent when the
+% fold is feasible and extract-exponent otherwise; `exponent' is
+% always extract-exponent.
 \cs_new_protected:Npn \__numodelplot_set_prefixmode:nn #1#2
   {
     \tl_gset:Nn \g__numodelplot_prefixmode_tl {extract-exponent}
-    \str_if_eq:VnT \g__numodelplot_scaleformat_tl {prefix}
+    \str_case:Vn \g__numodelplot_scaleformat_tl
       {
-        \__numodelplot_prefix_check:nn {#1} {#2}
-        \bool_if:NT \g__numodelplot_prefix_ok_bool
-          { \tl_gset:Nn \g__numodelplot_prefixmode_tl {combine-exponent} }
+        {input}
+          { \tl_gset:Nn \g__numodelplot_prefixmode_tl {input} }
+        {prefix}
+          {
+            \__numodelplot_prefix_check:nn {#1} {#2}
+            \bool_if:NT \g__numodelplot_prefix_ok_bool
+              { \tl_gset:Nn \g__numodelplot_prefixmode_tl {combine-exponent} }
+          }
       }
   }
 

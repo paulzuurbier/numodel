@@ -9,6 +9,41 @@ given release is listed as a version-sync entry.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the bundle adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### numodel-plot
+
+#### Added
+- `scale-format=input`, a third way for a scaled axis to present its
+  power of ten. The existing two rewrite the unit: `prefix` folds the
+  factor into an SI prefix and `exponent` pulls *every* prefix out —
+  including those the user wrote — and shows one power of ten on the
+  bare unit. `input` leaves the unit exactly as written and puts the
+  axis factor in front of it. For a $y$-range up to $5\times10^7$ in
+  `\mega\joule\per\kilo\gram` the three read `E (TJ/kg)`,
+  `E (10¹² J/kg)` and `E (10⁶ MJ/kg)`; for `\kilo\metre` scaled by
+  $10^3$, `input` gives `10³ km` where `exponent` gives `10⁶ m`. Maps
+  straight onto siunitx's own `prefix-mode=input`. The default stays
+  `prefix`. Regression test `p005-axislabels` now runs the same
+  prefixed unit through all three values.
+
+#### Changed
+- The feasibility check behind `scale-format=prefix` — "can 10^k be
+  folded into a prefix on this unit?" — now has two ways to obtain
+  the parsed unit and picks one at run time. On siunitx 3.6 and newer
+  it calls the new public `\siunitx_unit_parse:nN` (added for siunitx
+  issue #864); on 3.5 and older it keeps reading
+  `\l__siunitx_unit_parsed_prop` through the internals it always
+  used. Needed because 3.6 also drops the internal
+  `\__siunitx_unit_parse:n`: without the second path the `\cs_if_exist`
+  guard would have shut on 3.6 and every `prefix` label would have
+  silently come out in the 10^k form — `s (10³ m)` instead of
+  `s (km)` — the moment 3.6 reached MiKTeX. Verified against real
+  builds of siunitx 3.3.8, 3.4.14, 3.5.10 and the 3.6 development
+  branch: all four render every label identically. The prefix ↔
+  power-of-ten mapping is still read from siunitx's two internal
+  props, which remain the package's last internal references.
+
 ## [0.9.1] — 2026-09-07
 
 The first published release carrying the 0.9.0 work listed below it:

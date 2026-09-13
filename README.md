@@ -131,7 +131,7 @@ renders a full `tikzpicture`+`axis`. Labels are built from
 \numodelplotsetup{
   axis-label-format = ieee,    % ieee | iso | brackets | qty-only | unit-only
   grid              = mm-dots, % mm-dots | none | <pgfplots-style-list>
-  scale-format      = prefix,  % prefix | exponent
+  scale-format      = prefix,  % prefix | exponent | input
   halo-color        = auto,    % auto | <colour expression>
   xcmmax            = 12,      % max axis width  (cm)
   ycmmax            = 10       % max axis height (cm)

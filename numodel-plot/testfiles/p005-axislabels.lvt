@@ -43,6 +43,7 @@
     \TYPE{--- axis-label-format=#1}%
     \LBL{t}{\second}{0}{5000}{prefix}%
     \LBL{t}{\second}{0}{5000}{exponent}%
+    \LBL{t}{\second}{0}{5000}{input}%
     \LBL{x}{\metre}{0}{5}{prefix}%
   \endgroup
 }
@@ -59,9 +60,20 @@
 \LBL{t}{\second}{0}{5000}{exponent}
 \LBL{v}{\metre\per\second}{0}{5e6}{exponent}
 \LBL{E}{\joule}{0}{3e-6}{exponent}
+\TYPE{=== the same unit under all three scale-format values ===}
+% A unit carrying its own prefix tells the three apart: prefix folds
+% 10^6 with mega into tera, exponent pulls the mega out as well and
+% shows 10^12 on the bare unit, input keeps MJ/kg and puts 10^6 in
+% front of it.
+\LBL{E}{\mega\joule\per\kilo\gram}{0}{5e7}{prefix}
+\LBL{E}{\mega\joule\per\kilo\gram}{0}{5e7}{exponent}
+\LBL{E}{\mega\joule\per\kilo\gram}{0}{5e7}{input}
+\LBL{x}{\kilo\metre}{0}{5000}{input}
+\LBL{t}{\second}{0}{5000}{input}
 \TYPE{=== a gram axis becomes kilograms ===}
 \LBL{m}{\gram}{0}{2e6}{prefix}
 \LBL{m}{\gram}{0}{2e6}{exponent}
+\LBL{m}{\gram}{0}{2e6}{input}
 \TYPE{=== non-engineering units are left unscaled ===}
 \LBL{x}{\centi\metre}{0}{5000}{prefix}
 \LBL{p}{\hecto\pascal}{0}{5000}{prefix}
