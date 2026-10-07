@@ -1,0 +1,9 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== Single y-variable with a robust unit ===
+=== Two y-variables sharing a robust unit ===
+=== Unit mismatch: warning names the units as strings ===
+Package numodel Warning: Variable 'rcI' has a different unit from the first variable (expected '\V '). Skipping it in \diagrammodel so the remaining series share a common y-axis.
+[1
+] [2] [3] (m004-diagrammodel-robust-unit.aux)
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.

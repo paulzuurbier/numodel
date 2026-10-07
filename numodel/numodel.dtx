@@ -2774,19 +2774,23 @@ end
         \tl_set:Ne \l__numodel_yfull_tl { \l__numodel_eff_prefix_tl ##1 }
         \int_compare:nNnTF { \l__numodel_yidx_int } = { 1 }
           {
-            \tl_set:Ne \l__numodel_yunit_first_tl
-              { \use:c { \l__numodel_yfull_tl unitraw } }
+            % Copy the unit tokens verbatim (v-type, no full
+            % expansion): units may be robust commands with an
+            % optional argument (e.g. physunits' \V), which break
+            % inside an e-/x-expansion.
+            \tl_set:Nv \l__numodel_yunit_first_tl
+              { \l__numodel_yfull_tl unitraw }
             \clist_put_right:Nn \l__numodel_yshort_clist {##1}
           }
           {
-            \tl_set:Ne \l_tmpa_tl
-              { \use:c { \l__numodel_yfull_tl unitraw } }
+            \tl_set:Nv \l_tmpa_tl
+              { \l__numodel_yfull_tl unitraw }
             \str_if_eq:VVTF \l_tmpa_tl \l__numodel_yunit_first_tl
               { \clist_put_right:Nn \l__numodel_yshort_clist {##1} }
               {
                 \msg_warning:nnee { numodel } { unit-mismatch }
-                  { \tl_use:N \l__numodel_yfull_tl }
-                  { \tl_use:N \l__numodel_yunit_first_tl }
+                  { \tl_to_str:N \l__numodel_yfull_tl }
+                  { \tl_to_str:N \l__numodel_yunit_first_tl }
               }
           }
       }
@@ -2828,7 +2832,7 @@ end
           { \use:c { \l__numodel_eff_prefix_tl ##1 text } }
       }
     \edef\ylabelqty{\tl_use:N \l__numodel_yqty_tl}
-    \edef\ylabelunit{\tl_use:N \l__numodel_yunit_first_tl}
+    \edef\ylabelunit{\exp_not:V \l__numodel_yunit_first_tl}
     \begin{figure}[H]
     \centering
     \group_begin:

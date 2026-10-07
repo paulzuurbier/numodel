@@ -9,6 +9,33 @@ given release is listed as a version-sync entry.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the bundle adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### numodel
+
+#### Fixed
+- `\diagrammodel` broke when the unit of a y-variable is a **robust
+  command with an optional argument**, such as the unit macros of
+  `physunits` (loaded by `physconst`): `\DeclareRobustCommand{\V}[1][ ]{…}`.
+  The y-unit went through full expansion (`\tl_set:Ne` for the
+  unit-compatibility check and `\edef\ylabelunit{\tl_use:N …}` for the
+  axis label), which expanded `\V` down to its `\kernel@ifnextchar` and
+  failed with `Use of \reserved@a doesn't match its definition`,
+  followed by some twenty follow-up errors. The x-axis was never
+  affected, because `\xlabelunit` is set with `\def`. The unit tokens
+  are now copied verbatim (`\tl_set:Nv`, `\exp_not:V`), so the axis
+  label is unchanged and the unit comparison now compares the
+  unexpanded unit text. The `unit-mismatch` warning passed the same
+  tokens through `\tl_use:N` into a fully expanded message argument and
+  would have failed in the same way; it now uses `\tl_to_str:N`. New
+  regression test `m004-diagrammodel-robust-unit` emulates such units
+  (single series, two series sharing a unit, and a unit mismatch) and
+  fails on 0.9.1.
+
+### numodel-plot
+
+No changes.
+
 ## [0.9.1] — 2026-09-07
 
 The first published release carrying the 0.9.0 work listed below it:

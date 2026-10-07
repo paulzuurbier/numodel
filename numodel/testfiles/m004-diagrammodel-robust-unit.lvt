@@ -1,0 +1,39 @@
+% Regression test: \diagrammodel must not fully expand the y-unit.
+% Packages such as physunits (loaded by physconst) define units as
+% robust commands with an optional argument, e.g.
+%   \DeclareRobustCommand{\V}[1][ ]{...}
+% Up to 0.9.1 the y-unit went through \tl_set:Ne / \edef, which broke
+% with "Use of \reserved@a doesn't match its definition".  The units are
+% emulated here so the test does not depend on physunits itself.  Any
+% such error would show up in the log between \TIMO and \end{document}.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=EN]{numodel}
+\DeclareRobustCommand{\V}[1][ ]{\ensuremath{\mathrm{V}}}
+\DeclareRobustCommand{\A}[1][ ]{\ensuremath{\mathrm{A}}}
+% Wide enough for the two-series diagram: no overfull-box dumps in the log
+\setlength{\textwidth}{16cm}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{rc}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{0.1}{\s}{2}{system}
+\mvar{U}{U}{10}{\V}{2}{stock}
+\mvar{W}{U_2}{5}{\V}{2}{hulp}
+\mvar{I}{I}{1}{\A}{2}{hulp}
+\mrule{W}{\rcU / 2}
+\mrule{I}{\rcU / 10}
+\mrule{U}{\rcU - \rcU * \rcDt}
+\mrule{T}{\rcT + \rcDt}
+\mstop{\rcT >= 1}
+\computemodel
+\diagrammodel{T}{U}{rc-warmup} % loads fonts and pgfplots internals
+\TIMO
+\TYPE{=== Single y-variable with a robust unit ===}
+\diagrammodel{T}{U}{rc-u-t}
+\TYPE{=== Two y-variables sharing a robust unit ===}
+\diagrammodel{T}{U,W}{rc-uw-t}
+\TYPE{=== Unit mismatch: warning names the units as strings ===}
+\diagrammodel{T}{U,I}{rc-ui-t}
+\end{document}
