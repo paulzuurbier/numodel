@@ -145,12 +145,14 @@ configured so that tick numbers remain small.  By default the factor
 is folded into an SI prefix on the unit --- 5000~m becomes
 \verb|s (km)| --- and only when no engineering prefix fits (say
 $10^{3}\,$m$^{2}$, which would need $10^{1.5}$ per metre) does the
-label fall back to showing the power of ten itself; the
-|scale-format| key (section~\ref{sec:keys}) forces that form
-globally.  In the next example the data magnitude is
-$5\times10^{7}$ and the unit |\mega\joule\per\kilo\gram| already
-carries a prefix on the leading unit; the injected $10^{6}$ combines
-with mega into tera, giving \verb|E (TJ/kg)|:
+label fall back to showing the power of ten itself.  The
+|scale-format| key (section~\ref{sec:keys}) selects between three
+presentations of the same factor.  In the next example the data
+magnitude is $5\times10^{7}$ and the unit |\mega\joule\per\kilo\gram|
+already carries a prefix on the leading unit; with the default the
+injected $10^{6}$ combines with mega into tera, giving
+\verb|E (TJ/kg)| --- the alternatives would read
+\verb|E (10^12 J/kg)| and \verb|E (10^6 MJ/kg)|:
 \begin{plotexample}
 \def\xmin{0}   \def\xmax{10}
 \def\ymin{0}   \def\ymax{5e7}
@@ -194,14 +196,28 @@ Configuration is set through a single key--value interface:
   the exponent remains in PGFPlots' scaled-tick label instead
   (otherwise the scale information would be lost).
 \item[\texttt{scale-format}] Default |prefix|.  How a scaled axis
-  presents its power of ten in the label.  |prefix| folds it into an
-  SI prefix on (the first unit atom of) the unit: \verb|s (km)|,
-  \verb|E (TJ/kg)|, \verb|m (Mg)|.  The fold respects unit powers
-  ($10^{6}\,$m$^{2}$ becomes km$^{2}$) and existing prefixes, and
-  silently falls back to the power-of-ten form whenever no
-  engineering prefix fits ($10^{3}\,$m$^{2}$, or $10^{3}\,$m$^{3}$
-  which would need the non-engineering deca).  |exponent| always
-  shows the power of ten: \verb|s (10^3 m)|.
+  presents its power of ten in the label.  Taking a $y$-range up to
+  $5\times10^{7}$ in |\mega\joule\per\kilo\gram|, so that the axis is
+  scaled by $10^{6}$:
+  \begin{center}
+  \begin{tabular}{lll}
+    \texttt{prefix}   & \verb|E (TJ/kg)|      & fold into an SI prefix (default) \\
+    \texttt{exponent} & \verb|E (10^12 J/kg)| & every prefix out, one power of ten \\
+    \texttt{input}    & \verb|E (10^6 MJ/kg)| & unit as written, power of ten in front \\
+  \end{tabular}
+  \end{center}
+  |prefix| folds the factor into an SI prefix on (the first unit atom
+  of) the unit: \verb|s (km)|, \verb|E (TJ/kg)|, \verb|m (Mg)|.  The
+  fold respects unit powers ($10^{6}\,$m$^{2}$ becomes km$^{2}$) and
+  existing prefixes, and silently falls back to the |exponent| form
+  whenever no engineering prefix fits ($10^{3}\,$m$^{2}$, or
+  $10^{3}\,$m$^{3}$ which would need the non-engineering deca).
+  |exponent| pulls every prefix out of the unit --- also those the
+  user wrote --- and shows a single power of ten on the bare unit:
+  \verb|s (10^3 m)|, \verb|E (10^12 J/kg)|.  |input| leaves the unit
+  exactly as written and puts the axis factor in front of it:
+  \verb|s (10^3 m)|, \verb|E (10^6 MJ/kg)|; use it when the unit's own
+  prefix carries meaning that should stay visible.
 \item[\texttt{grid}] Default |mm-dots| (black millimetre dots,
   matching engineering millimetre paper).  Accepts |none|, or any
   PGFPlots style list which will be passed verbatim to the
