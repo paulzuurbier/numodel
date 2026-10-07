@@ -960,6 +960,9 @@ end
     \cs_gset:cpe { \l__numodel_fullname_tl gridyinit } { \tl_use:N \l__numodel_gridy_tl }
     % Pillar A — Lua-side meta for compute_layout (additive in A1).
     % Detokenize text so that \luaescapestring works on bare chars.
+    % The start value, unit and significant figures are not used by
+    % the layout; they complete the model for numodel.get_model
+    % (exporters such as numodel-coach).
     \tl_set:Ne \l__numodel_scratch_tl { \detokenize {#2} }
     \directlua{ numodel.set_meta(
       "\g_numodel_current_prefix_tl",
@@ -967,7 +970,11 @@ end
       { type  = "\tl_use:N \l__numodel_type_tl",
         text  = "\luaescapestring{\l__numodel_scratch_tl}",
         gridx = \tl_use:N \l__numodel_gridx_tl,
-        gridy = \tl_use:N \l__numodel_gridy_tl }) }
+        gridy = \tl_use:N \l__numodel_gridy_tl,
+        value = "\tl_if_blank:nF {#3} { \fp_eval:n {#3} }",
+        value_expr = "\luaescapestring{\detokenize{#3}}",
+        unit  = "\luaescapestring{\detokenize{#4}}",
+        sigfigs = "\luaescapestring{\detokenize{#5}}" }) }
     \cs_gset:cpe { \l__numodel_fullname_tl alias }      { \exp_not:V \l__numodel_alias_tl }
     \cs_gset:cpe { \l__numodel_fullname_tl aliasleft }  { \exp_not:V \l__numodel_aliasleft_tl }
     \cs_gset:cpe { \l__numodel_fullname_tl aliasright } { \exp_not:V \l__numodel_aliasright_tl }
@@ -1439,7 +1446,8 @@ end
       "\g_numodel_current_prefix_tl",
       "\l__numodel_fullname_tl",
       "\luaescapestring{\l__numodel_scratch_tl}",
-      "\bool_if:NTF \l__numodel_is_ternary_bool { ternary } { calc }") }
+      "\bool_if:NTF \l__numodel_is_ternary_bool { ternary } { calc }",
+      \IfBooleanTF {#1} { true } { false }) }
   }
 
 % ====================================================================
@@ -1462,6 +1470,9 @@ end
       \int_gincr:N \g_mrule_counter_int
       \seq_gput_right:Nn \g_mrule_seq {#2}
       \seq_gput_right:Nn \g_mrule_type_seq { rule }
+      \directlua{ numodel.add_ruletext(
+        "\g_numodel_current_prefix_tl",
+        "\luaescapestring{\detokenize{#2}}") }
     }
 }
 
@@ -1502,6 +1513,9 @@ end
     \int_gincr:N \g_mrule_counter_int
     % Store expression for execution (always the actual condition)
     \tl_gset:Nn \g_numodel_stop_expr_tl {#1}
+    \directlua{ numodel.set_stop(
+      "\g_numodel_current_prefix_tl",
+      "\luaescapestring{\detokenize{#1}}") }
     % Generate display
     \tl_if_blank:VTF \l__numodel_alias_tl
       {

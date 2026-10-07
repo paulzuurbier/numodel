@@ -150,7 +150,8 @@ end
 local function list_tests()
     local found = {}
     -- texlua has lfs sometimes; fall back to a hard-coded ordered list.
-    local known = { "flow", "layout", "causals", "edge_cases", "wrap" }
+    local known = { "flow", "layout", "causals", "edge_cases", "wrap",
+                    "model_api" }
     for _, topic in ipairs(known) do
         if (not filter) or filter == topic then
             local path = script_dir .. "test_" .. topic .. ".lua"

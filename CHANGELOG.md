@@ -13,6 +13,20 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
 
 ### numodel
 
+#### Added
+- Lua export API `numodel.get_model(prefix)`: returns a copy of the
+  complete model, so that other packages can export it without
+  touching numodel's TeX internals. It lists the variables in
+  declaration order (full and short name, display text, type, start
+  value both evaluated and as written, siunitx unit as written,
+  significant figures) and every row in `\textmodel` order: rules
+  (`calc`, `ternary`, with the star of `\mrule*`), `\mruletext` rows
+  and the `\mstop` condition. `\mvar`, `\mrule`, `\mruletext` and
+  `\mstop` now pass this data to Lua; what numodel typesets is
+  unchanged. `numodel.dump_model(prefix)` prints it for debugging. First
+  step towards exporting models to CMA Coach 7. New regression test
+  `m005-model-api` and Lua test `test_model_api`.
+
 #### Fixed
 - `\diagrammodel` broke when the unit of a y-variable is a **robust
   command with an optional argument**, such as the unit macros of

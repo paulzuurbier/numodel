@@ -67,26 +67,108 @@ maakt Coach de tekst opnieuw uit het (lege) `ModelXML`, en dan is het
 model weg. Met `CanSwitchModelModes = 00` kan de leerling niet wisselen;
 dat is getest en werkt.
 
+## Architectuur
+
+Besloten op 7 oktober 2026: **twee lagen, met een aparte module
+`numodel-coach`.**
+
+**Laag 1 — in numodel zelf: het model als platte tekst + een Lua-interface.**
+- De vertaling naar Coachtaal hangt aan de syntaxisbestanden
+  (`numodel-NL.def` enz.). In een aparte module zou die logica dubbel
+  onderhouden moeten worden.
+- Het is breder bruikbaar dan Coach: een `.txt` per model, later
+  kopieerblokken of `/ActualText` (bij een overstap op Linux), of
+  andere exportdoelen.
+- Exportmodules lezen het model alleen via een gedocumenteerde
+  Lua-functie (werknaam `numodel.get_model(prefix)`), nooit via
+  interne TeX-namen (`\__numodel_…`).
+
+**Laag 2 — module `numodel-coach`: het CMA-bestand.**
+- Het formaat is niet gedocumenteerd en kan breken bij een update van
+  Coach. Dan is alleen deze module stuk, niet numodel.
+- Coach wordt vrijwel alleen in Nederland en Vlaanderen gebruikt; de
+  meeste gebruikers van numodel hebben het niet nodig.
+- Het sjabloon en de binaire schrijver horen niet in de kern.
+- Laden: `\usepackage{numodel-coach}` na numodel. In tegenstelling tot
+  numodel-plot (dat volledig los staat) hangt deze module af van
+  numodel, met de Lua-interface als enige koppeling.
+- Naam `numodel-coach` en niet `numodel-export`: het algemene deel zit
+  al in laag 1. Een eventueel tweede doel krijgt een eigen module op
+  dezelfde interface, bijvoorbeeld `numodel-xmile` (XMILE: open
+  standaard voor systeemdynamica, gelezen door o.a. Stella en Insight
+  Maker).
+
+### Wat de Lua-kant nu al heeft en wat ontbreekt
+
+Gecontroleerd in `numodel.lua` en `numodel.dtx` (versie 0.9.1):
+
+| Gegeven | Nu in Lua? | Opmerking |
+|---|---|---|
+| variabelen in declaratievolgorde, type, rasterpositie | ja (`set_meta`) | `text` is de TeX-weergave, bijv. `v` of `F_{res}` |
+| modelregels in volgorde | ja (`add_rule`) | ruwe expressie met macronamen (`\ballV + \ballG * \ballDt`), soort `calc`/`ternary` |
+| stopconditie (`\mstop`) | ja (`set_stop`) | sinds 7-10-2026 |
+| startwaarden | ja (`value`, `value_expr`) | sinds 7-10-2026; zonder startwaarde: `nil` |
+| eenheden | ja (`unit`) | ruwe siunitx-tekst (`\m \per \s `); omzetting naar Coach-tekst nog nodig |
+| significante cijfers | ja (`sigfigs`) | vijfde argument van `\mvar` |
+| `\mruletext` | ja (rij `text`) | vrije TeX, niet betrouwbaar te exporteren → waarschuwing |
+| aliassen | n.v.t. | alleen weergave; export gebruikt de rekenregel |
+
+De omzetting naar NL-syntaxis gebeurt nu in TeX met regex
+(`\__numodel_vars_to_display:N`) en levert wiskundemodus op (`\cdot`,
+`\leqslant`, …). De platte-tekstroute heeft een eigen vertaling naar
+ASCII nodig: een parallelle TeX-functie, of in Lua op de ruwe
+expressie uit `add_rule`.
+
+### Besluiten over namen en eenheden (7-10-2026)
+
+- **Namen:** automatisch afgeleid uit de TeX-weergave:
+  `F_{res}` → `F_res`, `\Delta t` → `Δt`, `\text{…}` en accolades
+  weg. Geen aparte sleutel per variabele.
+- **Eenheden:** via een vertaaltabel in numodel(-coach)
+  (`\m\per\s` → `m/s`, `\micro\gram` → `ugram`); geen nieuwe
+  sleutel of extra argument bij `\mvar`.
+
+### Coach-conventies (uit de voorbeeldbestanden van CMA)
+
+- Eenheden: `m/s^2`, `kg*m/s^2`, `mol/(L*s)`, `1/s`, `ugram`
+  (micro als `u`), `Ohm`, `%`, ook vrije tekst als `dag` of `aantal`.
+- Namen mogen `_` en blokhaken bevatten: `v_k`, `m_sat`,
+  `k_heen`, `[A]`. In UTF-16 kan ook `Δ` (Coach gebruikt zelf `Δt`).
+- De instelling `AngleUnits` in `Description` bepaalt graden of
+  radialen; relevant voor `sind`/`cosd`.
+
 ## Plan
 
 ### Fase 1 — tekstmodel, wisselen uit (eerst doen)
 
-1. **Coachtaal als platte tekst uit numodel.** Een nieuwe uitvoerroute
-   naast de huidige tabel. Die zet regels in NL-syntaxis (`Als … Dan …
-   EindAls`, `Teken`, `Sqrt`, …) zonder wiskundemodus om: ASCII `*`,
+Volgt de opzet in twee lagen uit [Architectuur](#architectuur).
+
+1. ✅ **Klaar (7-10-2026, nog niet gecommit):** `numodel.get_model(prefix)` en
+   `numodel.dump_model(prefix)` in `numodel.lua`; tests `m005-model-api`
+   en `tests/test_model_api.lua`.
+   **Laag 1 in numodel: Lua-interface.** Vul de modeltabel in
+   `numodel.lua` aan tot alles wat een export nodig heeft (zie de
+   tabel bij Architectuur). Bied het aan via één gedocumenteerde
+   functie, bijvoorbeeld `numodel.get_model(prefix)`.
+2. **Laag 1 in numodel: platte tekst.** Een uitvoerroute naast de
+   huidige tabel. Die zet regels in NL-syntaxis (`Als … Dan …
+   EindAls`, `Teken`, `Sqrt`, …) om zonder wiskundemodus: ASCII `*`,
    `-`, `:=`, decimale komma en `Stop`. Startwaarden krijgen hun eenheid
-   als commentaar (`'m/s`).
-2. **Bestandsschrijver in Lua** (numodel draait al op LuaLaTeX). Port
-   `cma.py` + `make_textmodel.py` naar `numodel.lua`:
-   - sjabloon = het lege tekstmodel, ingebed in numodel of meegeleverd
-     als bestand;
+   als commentaar (`'m/s`). Te testen met een eenvoudige
+   `.txt`-export per model.
+3. **Laag 2, module `numodel-coach`: bestandsschrijver in Lua.** Port
+   `cma.py` + `make_textmodel.py`:
+   - bij voorkeur het sjabloon in Lua opbouwen in plaats van een
+     door Coach opgeslagen bestand mee te leveren (licentie, en er staat
+     nu bijvoorbeeld "FaceTime HD-camera" in);
    - vul `ModelBody`, `ModelInit`, `VarList`, en `stop`/`step` in
      `ModelXML`;
    - zet `CanSwitchModelModes` op `00` en `Mode` op `01`.
-3. **Interface**, bijvoorbeeld `\textmodel[coachfile=vrije-val]` of
-   een sleutel in `\numodelsetup`. Het bestand komt in een map naar
-   keuze (voor Classroom); optioneel gaat het als bijlage in de PDF.
-4. **Testen**
+4. **Laag 2: interface**, bijvoorbeeld `\coachmodel[file=vrije-val]`
+   of een sleutel in `\numodelsetup` die `numodel-coach` toevoegt. Het
+   bestand komt in een map naar keuze (voor Classroom); optioneel gaat
+   het als bijlage in de PDF.
+5. **Testen**
    - Een regressietest die een `.cma7` maakt en controleert dat
      `cma.py` het kan teruglezen.
    - Handmatig in Coach op de Chromebook: openen, rekenen, eenheden.

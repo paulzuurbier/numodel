@@ -163,8 +163,12 @@ end
 --
 -- Per-prefix substructures populated below:
 --
---   meta[name] = { type, text, gridx_init, gridy_init, decl_order }
+--   meta[name] = { type, text, gridx_init, gridy_init, decl_order,
+--                  value, value_expr, unit, sigfigs }
 --   rules[i]   = { target, expr, kind }
+--   program[i] = { kind, target, expr, starred, text }
+--                (every model row in display order; see get_model)
+--   stop       = raw \mstop condition (or nil)
 --   deps[target]      = { src1, src2, ... }   (declaration-order set)
 --   flows.inflow[stock]        = flow_var
 --   flows.outflow[stock]       = flow_var
@@ -179,8 +183,9 @@ end
 
 local function ensure_meta(p)
     local m = ensure(p)
-    m.meta  = m.meta  or {}
-    m.rules = m.rules or {}
+    m.meta    = m.meta    or {}
+    m.rules   = m.rules   or {}
+    m.program = m.program or {}
     return m
 end
 
@@ -194,16 +199,45 @@ function M.set_meta(p, name, opts)
         gridx_init = tonumber(opts.gridx) or -1,
         gridy_init = tonumber(opts.gridy) or -1,
         decl_order = order,
+        -- Export data (all optional; the layout pipeline ignores them).
+        -- value      = evaluated start value, nil without a start value
+        -- value_expr = start value as the user wrote it (detokenized)
+        -- unit       = siunitx unit as the user wrote it (detokenized)
+        -- sigfigs    = significant figures (fifth \mvar argument)
+        value      = tonumber(opts.value),
+        value_expr = opts.value_expr,
+        unit       = opts.unit,
+        sigfigs    = tonumber(opts.sigfigs),
     }
 end
 
-function M.add_rule(p, target, expr, kind)
+function M.add_rule(p, target, expr, kind, starred)
     local m = ensure_meta(p)
     m.rules[#m.rules + 1] = {
         target = target,
         expr   = expr or "",
         kind   = kind or "calc",
     }
+    m.program[#m.program + 1] = {
+        kind    = kind or "calc",
+        target  = target,
+        expr    = expr or "",
+        starred = starred and true or false,
+    }
+end
+
+-- Free-text row (\mruletext): display only, never executed.
+function M.add_ruletext(p, text)
+    local m = ensure_meta(p)
+    m.program[#m.program + 1] = { kind = "text", text = text or "" }
+end
+
+-- Stop condition (\mstop).  Also recorded as a program row, so that
+-- exporters see it at the position where it appears in \textmodel.
+function M.set_stop(p, expr)
+    local m = ensure_meta(p)
+    m.stop = expr or ""
+    m.program[#m.program + 1] = { kind = "stop", expr = m.stop }
 end
 
 -- --- helpers ----------------------------------------------------------
@@ -1344,6 +1378,98 @@ function M.dump_layout(p)
             "  %s -> %s bend=%s tgt_is_valve=%s",
             c.src, c.tgt, c.bend, tostring(c.tgt_is_valve))
     end
+    out[#out+1] = ""
+    return table.concat(out, "\n")
+end
+
+-- ====================================================================
+-- Model export API
+-- ====================================================================
+-- The supported way for other packages (e.g. numodel-coach) to read a
+-- model.  Returns a fresh copy, so callers may modify it freely:
+--
+--   {
+--     prefix = "ball",
+--     vars = {                         -- declaration order
+--       { name = "ballV", short = "V", text = "v", type = "stock",
+--         value = 0, value_expr = "0", unit = "\\m \\per \\s ",
+--         sigfigs = 3, has_start = true },
+--       ...
+--     },
+--     program = {                      -- rows in \textmodel order
+--       { kind = "calc",    target = "ballV", expr = "\\ballV + ..." },
+--       { kind = "ternary", target = ..., expr = "c ? a : b",
+--         starred = false },
+--       { kind = "text",    text = "..." },     -- \mruletext
+--       { kind = "stop",    expr = "\\ballY <= 2" },
+--     },
+--     stop = "\\ballY <= 2",          -- nil without \mstop
+--   }
+--
+-- Expressions and units are the detokenized user input: variables
+-- appear as their full macro names (\ballV), units as siunitx macros.
+-- Translating them is up to the exporter.  Returns nil for an unknown
+-- prefix.
+
+local function copy_row(r)
+    local c = {}
+    for k, v in pairs(r) do c[k] = v end
+    return c
+end
+
+function M.get_model(p)
+    local m = M.models[p]
+    if not m then return nil end
+    local out = { prefix = p, vars = {}, program = {}, stop = m.stop }
+    local seen = {}
+    for name, meta in var_iter(m) do
+        -- \mvar on an existing name registers it a second time; the
+        -- export lists every variable once, at its first position.
+        if meta and not seen[name] then
+            seen[name] = true
+            out.vars[#out.vars + 1] = {
+                name       = name,
+                short      = name:sub(1, #p) == p and name:sub(#p + 1) or name,
+                text       = meta.text,
+                type       = meta.type,
+                value      = meta.value,
+                value_expr = meta.value_expr,
+                unit       = meta.unit,
+                sigfigs    = meta.sigfigs,
+                has_start  = meta.value ~= nil,
+            }
+        end
+    end
+    for i, r in ipairs(m.program or {}) do
+        out.program[i] = copy_row(r)
+    end
+    return out
+end
+
+-- Human-readable dump of get_model(p), for tests and debugging.
+function M.dump_model(p)
+    local g = M.get_model(p)
+    if not g then return "(no model)\n" end
+    local out = { "prefix=" .. p, "vars:" }
+    for _, v in ipairs(g.vars) do
+        out[#out+1] = string.format(
+            "  %s: short=%s type=%s text=%s value=%s value_expr=%s"
+            .. " unit=%s sigfigs=%s",
+            v.name, v.short, v.type, v.text, tostring(v.value),
+            tostring(v.value_expr), tostring(v.unit), tostring(v.sigfigs))
+    end
+    out[#out+1] = "program:"
+    for _, r in ipairs(g.program) do
+        if r.kind == "text" then
+            out[#out+1] = "  text: " .. r.text
+        elseif r.kind == "stop" then
+            out[#out+1] = "  stop: " .. r.expr
+        else
+            out[#out+1] = string.format("  %s%s: %s := %s", r.kind,
+                r.starred and "*" or "", r.target, r.expr)
+        end
+    end
+    out[#out+1] = "stop=" .. tostring(g.stop)
     out[#out+1] = ""
     return table.concat(out, "\n")
 end

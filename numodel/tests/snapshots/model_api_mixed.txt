@@ -1,0 +1,10 @@
+prefix=osc
+vars:
+  oscT: short=T type=system text=t value=0 value_expr=0 unit=\s  sigfigs=3
+  oscFres: short=Fres type=aux text=F_{\text {res}} value=nil value_expr= unit=\newton  sigfigs=3
+  oscK: short=K type=constant text=k value=7 value_expr=7 unit=\newton \per \m  sigfigs=3
+program:
+  calc: oscFres := -\oscK * \oscT 
+  ternary*: oscT := \oscT < 1 ? \oscT + 1 : \oscT - 1
+  text: \text {(rest weggelaten)}
+stop=nil

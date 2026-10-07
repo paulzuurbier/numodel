@@ -1,0 +1,34 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== Free fall ===
+prefix=ball
+vars:
+  ballT: short=T type=system text=t value=0 value_expr=0 unit=\s  sigfigs=2
+  ballDt: short=Dt type=system text=dt value=0.05 value_expr=0.05 unit=\s  sigfigs=2
+  ballV: short=V type=stock text=v value=0 value_expr=0 unit=\m \per \s  sigfigs=3
+  ballY: short=Y type=stock text=y value=100 value_expr=100 unit=\m  sigfigs=3
+  ballG: short=G type=constant text=g value=-9.81 value_expr=-9.81 unit=\m \per \s \squared  sigfigs=3
+program:
+  calc: ballV := \ballV + \ballG * \ballDt 
+  calc: ballY := \ballY + \ballV * \ballDt 
+  calc: ballT := \ballT + \ballDt 
+  stop: \ballY <= 2
+stop=\ballY <= 2
+=== Mixed rows, no stop condition ===
+prefix=osc
+vars:
+  oscT: short=T type=system text=t value=0 value_expr=0 unit=\s  sigfigs=2
+  oscDt: short=Dt type=system text=\Delta t value=0.01 value_expr=0.01 unit=\s  sigfigs=2
+  oscFres: short=Fres type=aux text=F_{\text {res}} value=nil value_expr= unit=\newton  sigfigs=3
+  oscK: short=K type=constant text=k value=6 value_expr=2*3 unit=\newton \per \m  sigfigs=3
+  oscA: short=A type=aux text=a value=1 value_expr=1 unit=\m \per \s \squared  sigfigs=3
+program:
+  calc: oscFres := -\oscK * \oscA 
+  ternary*: oscA := \oscT < 1 ? \oscA + 1 : \oscA - 1
+  text: \text {(rest weggelaten)}
+  calc: oscT := \oscT + \oscDt 
+stop=nil
+=== Unknown prefix ===
+nil
+=== End ===
+(m005-model-api.aux)
