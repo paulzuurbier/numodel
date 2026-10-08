@@ -1,6 +1,6 @@
 -- ====================================================================
 -- numodel.lua --- Lua data store for the numodel package (per-prefix)
--- numodel.lua  v0.9.1  2026/09/07
+-- numodel.lua  v0.10.0  2026/10/08
 -- ====================================================================
 --
 -- Copyright (C) 2026 Paul Zuurbier <mail@paulzuurbier.nl>
@@ -230,6 +230,22 @@ function M.add_rule(p, target, expr, kind, starred)
         expr    = expr or "",
         starred = starred and true or false,
     }
+end
+
+-- Axis range of variable name as drawn by \diagrammodel (after
+-- \calcplotdims rounding).  A variable shown in several diagrams gets
+-- the union of their ranges.
+function M.set_axis(p, name, lo, hi)
+    local m = ensure_meta(p)
+    lo, hi = tonumber(lo), tonumber(hi)
+    if not (lo and hi) then return end
+    m.axis = m.axis or {}
+    local a = m.axis[name]
+    if a then
+        a.min, a.max = math.min(a.min, lo), math.max(a.max, hi)
+    else
+        m.axis[name] = { min = lo, max = hi }
+    end
 end
 
 -- Free-text row (\mruletext): display only, never executed.
@@ -1399,7 +1415,8 @@ end
 --     vars = {                         -- declaration order
 --       { name = "ballV", short = "V", text = "v", type = "stock",
 --         value = 0, value_expr = "0", unit = "\\m \\per \\s ",
---         sigfigs = 3, has_start = true },
+--         sigfigs = 3, has_start = true,
+--         axis_min = 0, axis_max = 100 },  -- \diagrammodel range, or nil
 --       ...
 --     },
 --     program = {                      -- rows in \textmodel order
@@ -1446,6 +1463,8 @@ function M.get_model(p)
                 unit       = meta.unit,
                 sigfigs    = meta.sigfigs,
                 has_start  = meta.value ~= nil,
+                axis_min   = m.axis and m.axis[name] and m.axis[name].min,
+                axis_max   = m.axis and m.axis[name] and m.axis[name].max,
             }
         end
     end
@@ -1466,6 +1485,10 @@ function M.dump_model(p)
             .. " unit=%s sigfigs=%s",
             v.name, v.short, v.type, v.text, tostring(v.value),
             tostring(v.value_expr), tostring(v.unit), tostring(v.sigfigs))
+        if v.axis_min then
+            out[#out] = out[#out] .. string.format(" axis=[%s,%s]",
+                tostring(v.axis_min), tostring(v.axis_max))
+        end
     end
     out[#out+1] = "program:"
     for _, r in ipairs(g.program) do
@@ -1548,6 +1571,9 @@ local greek = {
     Pi = "Π", Sigma = "Σ", Upsilon = "Υ", Phi = "Φ", Psi = "Ψ",
     Omega = "Ω",
 }
+-- Public: also used by numodel-coach for instruction texts.
+M.greek = greek
+
 -- Wrappers whose argument is kept as-is: \text{res} -> res.
 local name_wrappers = {
     text = true, mathrm = true, mathit = true, mathbf = true,

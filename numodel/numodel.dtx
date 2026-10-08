@@ -25,7 +25,7 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{numodel}[2026/09/07 v0.9.1
+\ProvidesPackage{numodel}[2026/10/08 v0.10.0
   Numerical physics models with Euler integration and Forrester diagrams]
 
 \RequirePackage{expl3}
@@ -2914,6 +2914,19 @@ end
         \tl_put_right:Nn \l__numodel_plotbody_tl {#4}
         \exp_args:NV \__numodel_draw_plot:n \l__numodel_plotbody_tl
       }
+    % Record the axis ranges as drawn (\calcplotdims has rounded
+    % \xmin ... \ymax to the tick lattice, still inside this group) for
+    % numodel.get_model, so exporters can give a variable the same axis
+    % range as its graph in the document.
+    \clist_map_inline:Nn \l__numodel_eff_prefixes_clist
+      {
+        \directlua{ numodel.set_axis("##1", "##1#2", "\xmin", "\xmax") }
+        \clist_map_inline:Nn \l__numodel_yshort_clist
+          {
+            \directlua{ numodel.set_axis("##1", "##1####1",
+              "\ymin", "\ymax") }
+          }
+      }
     \group_end:
     \caption{$\tl_use:N \l__numodel_yqty_tl$($\use:c{\l__numodel_xname_tl text}$)\text{-diagram}}
     % If the project-specific worksheet system is loaded, pick the
@@ -3165,7 +3178,7 @@ end
 %
 %    \begin{macrocode}
 %<*EN>
-\ProvidesExplFile{numodel-EN.def}{2026/09/07}{0.9.1}
+\ProvidesExplFile{numodel-EN.def}{2026/10/08}{0.10.0}
   {numodel~keyword~table~--~English~(XMILE)}
 \cs_new:Npn \__numodel_kw_EN_if:           { IF~ }
 \cs_new:Npn \__numodel_kw_EN_then:         { ~THEN~ }
@@ -3206,7 +3219,7 @@ end
 %
 %    \begin{macrocode}
 %<*NL>
-\ProvidesExplFile{numodel-NL.def}{2026/09/07}{0.9.1}
+\ProvidesExplFile{numodel-NL.def}{2026/10/08}{0.10.0}
   {numodel~keyword~table~--~Dutch~(CoachTaal)}
 \cs_new:Npn \__numodel_kw_NL_if:           { Als~ }
 \cs_new:Npn \__numodel_kw_NL_then:         { ~Dan~ }
@@ -3255,7 +3268,7 @@ end
 %
 %    \begin{macrocode}
 %<*FPEVAL>
-\ProvidesExplFile{numodel-FPEVAL.def}{2026/09/07}{0.9.1}
+\ProvidesExplFile{numodel-FPEVAL.def}{2026/10/08}{0.10.0}
   {numodel~keyword~table~--~l3fp~(fpeval)~syntax}
 \cs_new:Npn \__numodel_kw_FPEVAL_if:           { }
 \cs_new:Npn \__numodel_kw_FPEVAL_then:         { ~?~ }

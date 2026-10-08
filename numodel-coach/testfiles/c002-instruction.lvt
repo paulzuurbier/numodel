@@ -1,0 +1,62 @@
+% Regression test: the coachinstruction environment defines a model's
+% instruction text without typesetting it; \coachinstructiontext shows
+% it in the PDF and \coachmodel writes the same source to Coach's
+% instruction window (HTML plus a plain-text copy).  A second definition
+% for the same model replaces the first with a warning; showing the
+% text of a model without one warns.  The conversion covers paragraphs,
+% bold/italic, a list, inline math with sub/superscripts and Greek,
+% siunitx quantities with a decimal comma, and an unknown command
+% (warning, text kept).
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\usepackage{numodel-coach}
+\providecommand\foo[1]{#1}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{osc}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\newmodelprefix{ball}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.05}{\s}{2}{systeem}
+\mvar{Y}{y}{100}{\m}{3}{voorraad}
+\mrule{Y}{\ballY - 1}
+\mrule{T}{\ballT + \ballDt}
+\mstop{\ballY <= 2}
+\setbox0=\vbox{\hsize=40em
+\begin{coachinstruction}
+Eerste versie, wordt vervangen.
+\end{coachinstruction}}
+\TIMO
+\TYPE{=== The definition typesets nothing ===}
+\TYPE{\ifdim\ht0=0pt empty\else not empty\fi}
+\TYPE{=== Redefinition warns ===}
+\begin{coachinstruction}
+Een bal valt van \qty{100}{\m}. Neem $g = \qty{9.81}{\m\per\s\squared}$
+en $\Delta t = \qty{0.05}{\s}$.
+
+Opdrachten:
+\begin{itemize}
+  \item Bereken de \textbf{eindsnelheid} $v_{\text{eind}}$.
+  \item Wat gebeurt er als $F_{\text{w}} = k\cdot v^2$?
+\end{itemize}
+Gebruik \emph{Simuleren}~-- zie \foo{de uitleg}.
+\end{coachinstruction}
+\OMIT
+\setbox1=\vbox{\hsize=40em \coachinstructiontext}
+\setbox2=\vbox{\hsize=40em \coachinstructiontext[prefix=ball]}
+\TIMO
+\TYPE{=== \string\coachinstructiontext\space typesets it, as often as wanted ===}
+\TYPE{\ifdim\ht1>20pt yes\else no\fi\space\ifdim\ht2=\ht1 same\else different\fi}
+\TYPE{=== A model without instruction warns ===}
+\setbox3=\vbox{\coachinstructiontext[prefix=osc]}
+\TYPE{=== Written to Coach ===}
+\coachmodel{instructie}
+\directlua{
+  local f = io.open("instructie.cma7", "rb")
+  local s = numodelcoach.dump(f:read("a")); f:close()
+  s = s:match("^(.-)ModelBody:")
+  for line in s:gmatch("[^\string\n]+") do texio.write_nl(line) end}
+\TYPE{=== End ===}
+\end{document}

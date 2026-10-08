@@ -1,0 +1,38 @@
+% Regression test: a variable's axis range in the Coach file (VarList
+% Min/Max) is the range of its graph in the document, as drawn by
+% \diagrammodel after \calcplotdims rounding.  t appears in two
+% diagrams and gets the union; variables without a diagram keep Coach's
+% default 0..10.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\usepackage{numodel-coach}
+\setlength{\textwidth}{16cm}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{ball}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.05}{\s}{2}{systeem}
+\mvar{V}{v}{0}{\m\per\s}{3}{voorraad}
+\mvar{Y}{y}{100}{\m}{3}{voorraad}
+\mvar{G}{g}{-9.81}{\m\per\s\squared}{3}{constante}
+\mrule{V}{\ballV + \ballG * \ballDt}
+\mrule{Y}{\ballY + \ballV * \ballDt}
+\mrule{T}{\ballT + \ballDt}
+\mstop{\ballY <= 2}
+\computemodel
+\diagrammodel{T}{Y}{ball-yt}
+\diagrammodel{T}{V}{ball-vt}
+\TIMO
+\TYPE{=== Coach variable list ===}
+\coachmodel{as}
+\directlua{
+  local f = io.open("as.cma7", "rb")
+  local s = numodelcoach.dump(f:read("a")); f:close()
+  for line in s:match("VarList:(.*)$"):gmatch("[^\string\n]+") do
+    if line:find("Name") or line:find("Min") or line:find("Max") then
+      texio.write_nl(line) end
+  end}
+\TYPE{=== End ===}
+\end{document}

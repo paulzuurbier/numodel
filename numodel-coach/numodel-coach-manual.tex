@@ -1,0 +1,211 @@
+% File: numodel-coach-manual.tex
+% Standalone manual for the numodel-coach package.
+
+\documentclass{ltxdoc}
+\usepackage[left=3.5cm, right=2cm, top=2cm, bottom=2cm,
+            marginparwidth=3.5cm, marginparsep=0.3cm]{geometry}
+\usepackage[syntax=NL]{numodel}
+\usepackage{numodel-coach}
+\usepackage{booktabs}
+
+% Fonts.  fontspec + unicode-math require LuaLaTeX.
+\usepackage{fontspec}
+\setmainfont{Arial}
+\usepackage{unicode-math}
+\setmathfont{Lete Sans Math}
+\setmonofont{Fira Mono}
+
+% Breakable inline verbatim (see numodel-manual.tex for rationale).
+\usepackage{fvextra}
+\AtBeginDocument{%
+  \MakeShortVerb{\|}%
+  \DeleteShortVerb{\|}%
+  \DefineShortVerb[breaklines,breakanywhere]{\|}%
+}
+
+\begin{document}
+
+\GetFileInfo{numodel-coach.sty}
+
+\title{The \textsf{numodel-coach} package\\[0.5ex]
+  \large Export \textsf{numodel} models to CMA Coach~7}
+\author{Paul Zuurbier\\\texttt{mail@paulzuurbier.nl}}
+\date{\fileversion\ (\filedate)}
+\maketitle
+
+\begin{abstract}
+\noindent
+\textsf{numodel-coach} writes a model declared with \textsf{numodel}
+as a modelling activity for CMA Coach~7 (a \texttt{.cma7} file), in
+Coach's text mode. Pupils open the file in Coach and get exactly the
+model of the text, without retyping it from the PDF. The model rules
+and initial values are \textsf{numodel}'s Coachtaal rendering
+(\texttt{numodel.plaintext}); the file can also be embedded in the PDF.
+\end{abstract}
+
+\section{Usage}
+
+Load the package after \textsf{numodel} (LuaLaTeX only):
+\begin{verbatim}
+\usepackage[syntax=NL]{numodel}
+\usepackage{numodel-coach}
+\end{verbatim}
+After the model is declared, \cs{coachmodel} writes it:
+\begin{verbatim}
+\newmodelprefix{ball}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.05}{\s}{2}{systeem}
+\mvar{V}{v}{0}{\m\per\s}{3}{voorraad}
+\mvar{Y}{y}{100}{\m}{3}{voorraad}
+\mvar{G}{g}{-9.81}{\m\per\s\squared}{3}{constante}
+\mrule{V}{\ballV + \ballG * \ballDt}
+\mrule{Y}{\ballY + \ballV * \ballDt}
+\mrule{T}{\ballT + \ballDt}
+\mstop{\ballY <= 2}
+\textmodel
+\coachmodel{vrije-val}
+\end{verbatim}
+This writes \texttt{vrije-val.cma7} with the model rules
+\begin{verbatim}
+v := v + g*dt
+y := y + v*dt
+t := t + dt
+Als y <= 2 Dan Stop EindAls
+\end{verbatim}
+and the initial values
+\begin{verbatim}
+t := 0      's
+dt := 0,05  's
+v := 0      'm/s
+y := 100    'm
+g := -9,81  'm/s^2
+\end{verbatim}
+All variables are listed in Coach's variable list (for tables and
+graphs) with their units.
+
+\DescribeMacro{\coachmodel}
+\cs{coachmodel}\oarg{options}\marg{name} writes the model with the
+current prefix to \meta{name}\texttt{.cma7} (no extension is added
+when \meta{name} has one). Options: \texttt{prefix=}\meta{prefix} for
+another model, and \texttt{dir}, \texttt{attach} and \texttt{switch}
+as below.
+
+\DescribeMacro{\coachsetup}
+\cs{coachsetup}\marg{options} sets defaults for all following
+\cs{coachmodel} calls:
+\begin{description}
+  \item[\texttt{dir=}\meta{directory}] Directory for the files,
+    relative to the working directory; created when missing. Default:
+    the working directory.
+  \item[\texttt{attach=true/false}] Also embed the file in the PDF
+    (with \textsf{embedfile}). Default \texttt{false}. Whether readers
+    can open embedded files depends on the PDF viewer.
+  \item[\texttt{switch=true/false}] Allow switching between Coach's
+    text and graphical view. Default \texttt{false}: Coach derives
+    the text view from the graphical model, which
+    \textsf{numodel-coach} leaves empty, so switching would lose the
+    model.
+\end{description}
+
+\section{Instruction text}
+
+\DescribeEnv{coachinstruction}
+The environment \texttt{coachinstruction}\oarg{prefix=\meta{prefix}}
+defines the instruction text of a model (by default the current one).
+It typesets nothing.
+
+\DescribeMacro{\coachinstructiontext}
+\cs{coachinstructiontext}\oarg{prefix=\meta{prefix}} typesets that text
+in the PDF, wherever you want it and as often as you like (or not at
+all), and \cs{coachmodel} writes it to Coach's instruction window. The
+PDF and Coach thus share one source:
+\begin{verbatim}
+\begin{coachinstruction}
+Een bal valt vanuit rust van \qty{100}{\m}. Neem
+$g = \qty{9.81}{\m\per\s\squared}$.
+
+Opdrachten:
+\begin{enumerate}
+  \item Bereken de \textbf{eindsnelheid} $v_{\text{eind}}$.
+\end{enumerate}
+\end{coachinstruction}
+
+\coachinstructiontext   % the text in the PDF
+\coachmodel{vrije-val}  % the same text in Coach
+\end{verbatim}
+A model has one instruction text: a second \texttt{coachinstruction}
+for the same model replaces the first, with a warning. The text is
+typeset where \cs{coachinstructiontext} stands, so anything in it that
+depends on its position (a counter, say) takes its value there.
+
+Coach shows HTML in its instruction window; the body is converted
+from the following LaTeX:
+\begin{itemize}
+  \item paragraphs (blank lines), |\\|, |\newline|;
+  \item |\textbf|, |\emph|, |\textit|, |\underline|,
+    |\textsuperscript|, |\textsubscript|; |\text| and similar
+    wrappers keep their text;
+  \item |itemize| and |enumerate| with |\item|;
+  \item inline math (|$...$|, |\(...\)|): letters in italics,
+    |_| and |^| as sub- and superscript, Greek letters, |\frac|,
+    |\sqrt|, |\cdot|, relations such as |\leq|;
+  \item |\qty|, |\num|, |\unit| (and |\SI|, |\si|): numbers with
+    a decimal comma, units in Coach's notation;
+  \item |~|, |--|, |---|, quotes, and a handful of symbols
+    (|\ldots|, |\times|, |\degree|, \dots).
+\end{itemize}
+Any other command gives a warning; its braced argument is kept as
+text. Display math, tables and pictures are not converted.
+
+\section{What is exported}
+
+\begin{itemize}
+  \item \emph{Model rules} in the order of \cs{textmodel}: \cs{mrule}
+    as an assignment, conditional rules as
+    \texttt{Als \dots\ Dan \dots\ Anders \dots\ EindAls} (on several
+    lines for \cs{mrule*}), \cs{mstop} as
+    \texttt{Als \dots\ Dan Stop EindAls}. A \cs{mruletext} row becomes a
+    comment, with a warning. The display keys \texttt{alias},
+    \texttt{aliasleft} and \texttt{aliasright} do not apply: Coach gets
+    the calculation.
+  \item \emph{Initial values} of all variables with a start value,
+    with the unit as a comment.
+  \item \emph{Variable list}: every variable, with its unit, so it can
+    be put in Coach's table and graphs. The axis range Coach uses for
+    a new graph or meter is the range of the variable's graph in the
+    document: the axis limits \cs{diagrammodel} drew (the union, when
+    the variable appears in several diagrams). Variables without a
+    diagram get Coach's default 0 to 10. Call \cs{coachmodel} after
+    the diagrams. Coach shows two decimals.
+  \item \emph{Names}: the display name without formatting
+    (|F_{\text{res}}| becomes \texttt{F\_res}, |\Delta t|
+    becomes \texttt{Δt}). Names Coachtaal does not allow bare, and its
+    reserved words, are put in brackets: \texttt{[ω]}, \texttt{[Max]}.
+  \item \emph{Units}: siunitx units in Coach's notation:
+    |\m\per\s\squared| becomes \texttt{m/s\^{}2},
+    |\mole\per\litre\per\second| becomes \texttt{mol/(L*s)}.
+  \item \emph{Iterations}: the number of iterations in Coach's model
+    settings is \textsf{numodel}'s \texttt{maxiter}
+    (|\numodelsetup{maxiter=...}|, default 20000). The
+    \texttt{Stop} rule ends the run; \texttt{maxiter} is only the upper
+    limit.
+\end{itemize}
+
+Expressions are translated with care for the differences between
+\textsf{l3fp} and Coachtaal: Coach gives unary minus and |^| the
+same priority, so |-x^2| is exported as |-(x^2)|; comparisons
+combined with \texttt{EN}/\texttt{OF} get the parentheses Coachtaal
+requires. Whatever cannot be exported exactly (a two-argument
+\texttt{atan}, a nested conditional, an unknown unit macro) is reported
+as a package warning naming the model and the file.
+
+\section{The file format}
+
+CMA does not document the \texttt{.cma7} format. \textsf{numodel-coach}
+starts from an empty modelling activity saved by Coach~7.0 in text
+mode (stored as Lua data in \texttt{numodel-coach-template.lua}) and
+fills in the model rules, initial values, variable list and iteration
+count. Files written this way were tested with Coach~7 on Chromebooks.
+A later Coach version may change the format; please report problems.
+
+\end{document}

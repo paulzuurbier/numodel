@@ -1,0 +1,42 @@
+% Regression test: \coachmodel writes a Coach 7 text-model activity.
+% The file is read back with numodelcoach.dump: switching to the
+% graphical view is off by default and on with switch=true, the view is
+% the text view, the iteration count follows numodel's maxiter, and the
+% model rules, initial values and variable list are the Coachtaal
+% rendering of the model.  An exported free-text row gives a warning.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\usepackage{numodel-coach}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{ball}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.05}{\s}{2}{systeem}
+\mvar{V}{v}{0}{\m\per\s}{3}{voorraad}
+\mvar{Y}{y}{100}{\m}{3}{voorraad}
+\mvar{G}{g}{-9.81}{\m\per\s\squared}{3}{constante}
+\mvar{Fz}{F_{\text{z}}}{}{\newton}{3}{hulp}
+\mrule{Fz}{0.5 * \ballG}
+\mruletext{\text{(massa 0,5 kg)}}
+\mrule{V}{\ballV + \ballG * \ballDt}
+\mrule{Y}{\ballY + \ballV * \ballDt}
+\mrule{T}{\ballT + \ballDt}
+\mstop{\ballY <= 2}
+\numodelsetup{maxiter=500}
+\TIMO
+\TYPE{=== Default: no switching, maxiter iterations ===}
+\coachmodel[dir=coach-out]{vrije-val}
+\directlua{
+  local f = io.open("coach-out/vrije-val.cma7", "rb")
+  local s = numodelcoach.dump(f:read("a")); f:close()
+  for line in s:gmatch("[^\string\n]*") do texio.write_nl(line) end}
+\TYPE{=== switch=true ===}
+\coachmodel[switch=true]{vrije-val-wissel.cma7}
+\directlua{
+  local f = io.open("vrije-val-wissel.cma7", "rb")
+  local s = numodelcoach.dump(f:read("a")); f:close()
+  texio.write_nl(s:match("^[^\string\n]*"))}
+\TYPE{=== End ===}
+\end{document}

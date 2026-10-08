@@ -207,7 +207,14 @@ Volgt de opzet in twee lagen uit [Architectuur](#architectuur).
    `-`, `:=`, decimale komma en `Stop`. Startwaarden krijgen hun eenheid
    als commentaar (`'m/s`). Te testen met een eenvoudige
    `.txt`-export per model.
-3. **Laag 2, module `numodel-coach`: bestandsschrijver in Lua.** Port
+3. ✅ **Klaar (8-10-2026, nog niet gecommit):** map `numodel-coach/` met
+   `numodel-coach.dtx` (`\coachmodel`, `\coachsetup`),
+   `numodel-coach.lua` (schrijver, byte-identiek aan de geteste
+   Python-versie), `numodel-coach-template.lua` (opgeschoond sjabloon,
+   gegenereerd door `tools/gen_template.py`), handleiding en test
+   `c001-coachmodel`. `attach=true` werkt (embedfile; de bijlage is
+   byte-identiek aan het geschreven bestand).
+   **Laag 2, module `numodel-coach`: bestandsschrijver in Lua.** Port
    `cma.py` + `make_textmodel.py`:
    - bij voorkeur het sjabloon in Lua opbouwen in plaats van een
      door Coach opgeslagen bestand mee te leveren (licentie, en er staat
@@ -247,12 +254,45 @@ ook als `\graphicmodel` voorkomen.
 
 ## Open vragen
 
-- Welke modellen uit de module moeten een bestand krijgen, en hoe
-  heten de bestanden?
-- Opent de Coach-app een `.cma7` rechtstreeks vanuit Drive/Classroom
-  op de Chromebook? (Getest is alleen dat de bestanden zelf werken.)
-- Moet ook de instructietekst van de activiteit (`NewText`/`HTMLText`)
-  gevuld worden, bijvoorbeeld met de opdracht uit de module?
+- ✅ `vrije-val-pakket.cma7` (opgeschoond sjabloon, iteraties uit
+  `maxiter`) opent goed in Coach (8-10-2026).
+- ✅ Bijlage in de PDF: zichtbaar in Adobe, **niet** in de PDF-viewer
+  van Chrome (8-10-2026). Voor leerlingen op Chromebooks dus de map in
+  Classroom; `attach` blijft als optie voor wie Adobe gebruikt.
+- ✅ `instructie-test.cma7`: het instructievenster toont de opmaak
+  keurig (alinea's, vet, cursief, sub/sup, lijsten, Δ, ≤, °C;
+  8-10-2026).
+- ✅ **VarList Min/Max/Decimalen:** alleen weergave-instellingen in
+  Coach. Min/Max = asbereik van een nieuwe grafiek of meter met die
+  variabele; decimalen = aantal decimalen in tabel en waardeweergave
+  (Coach kent geen significante cijfers). Besluit 8-10-2026: decimalen
+  blijven 2; Min/Max = het asbereik van `\diagrammodel` (dezelfde
+  grafiek als in de PDF, na afronding door `\calcplotdims`; vereniging
+  bij meerdere diagrammen), anders 0–10. Gebouwd; test
+  `c003-axis-range`; in Coach getest met `asbereik-test.cma7`.
+- ✅ **Asbereik getest in Coach** (8-10-2026): nieuwe grafieken krijgen
+  de assen van de PDF.
+- ✅ **CTAN:** numodel-coach gaat mee; l3build levert al een platte
+  zip (gecontroleerd met `l3build ctan`). Bundelbeschrijving in
+  `build.lua` en README bijgewerkt. Over CMA: geen bezwaar verwacht
+  (de module bevordert het gebruik van Coach).
+- ✅ **Instructietekst** (gebouwd 8-10-2026): de omgeving
+  `coachinstruction` *definieert* de instructie van een model (één per
+  prefix; een tweede geeft een waarschuwing) en zet niets;
+  `\coachinstructiontext[prefix=…]` *toont* hem in de PDF, nul of meer
+  keer; `\coachmodel` schrijft hem naar Coach. Eén bron. HTML-weergave
+  in Coach getest: ziet er keurig uit.
+
+- **Verspreiden onder leerlingen** (afweging Paul, 8-10-2026): via
+  Classroom moeten leerlingen eerst doorklikken voordat de
+  downloadknop verschijnt; dat moet in de klas goed worden uitgelegd.
+  Een rechtstreeks gedeelde map in Google Drive is korter, maar een
+  nieuwe route. Tussenvorm: de gedeelde Drive-map als link in
+  Classroom plaatsen (vertrouwd beginpunt, kortere weg). Nog na te
+  gaan: opent de Coach-app een `.cma7` rechtstreeks vanuit Drive op de
+  Chromebook?
+- Welke modellen uit de NLT-module een bestand krijgen, hoort bij het
+  schrijven van die module, niet bij het pakket.
 
 ## Bestanden in deze map
 
@@ -265,6 +305,9 @@ ook als `\graphicmodel` voorkomen.
 | `vrije-val.cma7`, `vrije-val.cmr7` | proef: tekstmodel, wisselen mogelijk (model verdwijnt na wisselen) |
 | `vrije-val-vast.cma7` | proef: tekstmodel, wisselen uitgezet — **dit is het doelformaat voor fase 1** |
 | `iteraties-250.cma7` | test van het aantal iteraties: harmonische trilling met Δt = 0,01 en een stopconditie bij t ≥ 10, maar 250 iteraties ingesteld. Verwacht: Modelinstellingen toont 250, de run eindigt bij t = 2,49 |
+| `vrije-val-pakket.cma7`, `coachtest.pdf` | gemaakt met het pakket `numodel-coach` zelf; de PDF bevat het `.cma7` als bijlage. Getest: opent in Coach; bijlage alleen zichtbaar in Adobe |
+| `instructie-test.cma7`, `instr.pdf` | test van `coachinstruction`: dezelfde tekst in de PDF en in het instructievenster van Coach. Getest: ziet er keurig uit |
+| `asbereik-test.cma7`, `asbereik.pdf` | test van het asbereik uit `\diagrammodel` |
 | `oscillator-vast.cma7` | test van de platte-tekstvertaling: `[ω]`, `Δt`, haakjes bij `EN`, berekende startwaarden (`k := 2*3`, `[ω] := Sqrt(k/m)`), `'`-commentaar in de modelregels; nog te testen in Coach. Het model is een syntaxtest, geen zinnige fysica |
 
 Het sjabloon `0. Leeg model tekst.cmr7` staat in de root van de repo

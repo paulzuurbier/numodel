@@ -1,0 +1,82 @@
+numodel-bundle v0.10.0
+
+Write a numerical model once, and get everything a physics lesson
+needs from it.
+
+numodel lets you declare a model in LaTeX -- its variables with start
+values and siunitx units, its rules, a stop condition -- and does the
+rest.  It computes the model (Euler integration in Lua) and typesets it
+in every form teaching material uses: the text model in the notation
+pupils know from their syllabus (English, or Dutch Coachtaal, with
+further languages as drop-in files), the Forrester stock-and-flow
+diagram, laid out automatically from the rules, and graphs of the
+computed results.  Because all of these come from one declaration, the
+text, the diagram and the graphs can never disagree; change a start
+value and every view follows.
+
+The graphs come from numodel-plot, which is also usable on its own.
+It sizes each plot to a whole number of tick intervals, writes axis
+labels in the IEEE or ISO 80000-1 style, folds the power of ten of a
+scaled axis into an SI prefix -- "s (km)" rather than "s (10^3 m)" --
+and places the labels sensibly for one-, two- and four-quadrant plots.
+
+New: numodel-coach -- from the text straight into Coach
+-------------------------------------------------------
+In many Dutch secondary schools, pupils build and run their models in
+CMA Coach 7.  Until now that meant retyping the model from the
+textbook, where the formatted table of a PDF does not copy.  The new
+module numodel-coach writes the model as a Coach 7 activity:
+
+    \coachmodel{free-fall}      % writes free-fall.cma7
+
+Pupils open the file and find exactly the model of the text, ready to
+run.  This is more than a copy of the rules:
+
+* The rules are translated into Coachtaal with care for where the two
+  languages differ.  Coach gives unary minus and powers the same
+  priority, so -x^2 is written -(x^2); comparisons joined by AND/OR get
+  the parentheses Coachtaal requires; numbers get a decimal comma and
+  function arguments the semicolon separator; names Coachtaal does not
+  allow bare are put in brackets.  Whatever cannot be translated
+  exactly is reported as a warning, never silently changed.
+* Units become comments on the initial values, and every variable
+  appears in Coach's variable list with its unit -- and with the axis
+  range of its graph in the document, so a new graph in Coach looks
+  like the one in the text.
+* An instruction text is written once in LaTeX, typeset in the PDF
+  where you want it and shown in Coach's instruction window as well:
+  paragraphs, lists, emphasis, and inline formulas with sub- and
+  superscripts all carry over.
+* The iteration count follows numodel's maxiter setting; the file can
+  also be embedded in the PDF.
+
+CMA does not document the .cma7 format.  numodel-coach was developed
+against files saved by Coach 7.0 and tested with Coach 7 on
+Chromebooks; reports from other Coach versions are welcome.
+
+numodel
+-------
+* A documented Lua interface opens the model to other tools:
+  numodel.get_model returns the complete model (variables, start
+  values, units, rules in order, stop condition, axis ranges), and
+  numodel.plaintext renders it as plain text in Coachtaal or the
+  English notation.  numodel-coach is its first user.
+* Fixed: \diagrammodel failed when the unit of a y-variable is a
+  robust command with an optional argument, such as the unit macros of
+  physunits.
+
+numodel-plot
+------------
+* scale-format=input: a scaled axis can now keep its unit exactly as
+  written and put the factor in front of it ("10^3 km"), next to the
+  existing prefix ("Mm") and exponent ("10^6 m") forms.
+* Ready for siunitx 3.6, which removes an internal that the SI-prefix
+  axis labels relied on; verified against siunitx 3.3.8, 3.4, 3.5 and
+  the 3.6 development branch.
+
+Documentation
+-------------
+* The README is now written for users of the packages; each of the
+  three packages has its own manual.
+
+See CHANGELOG.md for the full list.

@@ -1,0 +1,70 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== Default: no switching, maxiter iterations ===
+Package numodel-coach Warning: Model 'ball' (coach-out/vrije-val.cma7): free-text row exported as a comment: (massa 0,5 kg)
+Package numodel-coach Info: Wrote Coach activity 'coach-out/vrije-val.cma7'.
+CanSwitchModelModes=0
+Mode=1
+start=0
+stop=499
+step=1
+Instruction text:
+Instruction HTML:
+<body><p>&nbsp;</p></body>
+ModelBody:
+F_z := 0,5*g
+' (massa 0,5 kg)
+v := v + g*dt
+y := y + v*dt
+t := t + dt
+Als y <= 2 Dan Stop EindAls
+ModelInit:
+t := 0      's
+dt := 0,05  's
+v := 0      'm/s
+y := 100    'm
+g := -9,81  'm/s^2
+VarList:
+  Number=6
+  Name1=t
+  Label1=t
+  Unit1=s
+  Min1=0.0
+  Max1=10.0
+  Decimals1=2
+  Name2=dt
+  Label2=dt
+  Unit2=s
+  Min2=0.0
+  Max2=10.0
+  Decimals2=2
+  Name3=v
+  Label3=v
+  Unit3=m/s
+  Min3=0.0
+  Max3=10.0
+  Decimals3=2
+  Name4=y
+  Label4=y
+  Unit4=m
+  Min4=0.0
+  Max4=10.0
+  Decimals4=2
+  Name5=g
+  Label5=g
+  Unit5=m/s^2
+  Min5=0.0
+  Max5=10.0
+  Decimals5=2
+  Name6=F_z
+  Label6=F_z
+  Unit6=N
+  Min6=0.0
+  Max6=10.0
+  Decimals6=2
+=== switch=true ===
+Package numodel-coach Warning: Model 'ball' (vrije-val-wissel.cma7): free-text row exported as a comment: (massa 0,5 kg)
+Package numodel-coach Info: Wrote Coach activity 'vrije-val-wissel.cma7'.
+CanSwitchModelModes=1
+=== End ===
+(c001-coachmodel.aux)

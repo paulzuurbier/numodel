@@ -27,6 +27,8 @@ excludefiles = {
   "docs",               -- local reference PDFs, not shipped to CTAN
   "release-*.txt",      -- announcement texts feed `l3build upload`,
                         -- they do not belong in the CTAN zip itself
+  "DEVELOPMENT.md",     -- build/test/release notes for developers
+  "coach-proef",        -- numodel-coach background and prototypes
 }
 
 -- Bundle packaging -------------------------------------------------------
@@ -85,14 +87,15 @@ uploadconfig = {
   uploader    = "Paul Zuurbier",
   email       = "mail@paulzuurbier.nl",
   license     = "lppl1.3c",
-  summary     = "Numerical physics models with Forrester diagrams and auto-sized plots",
+  summary     = "Numerical physics models with Forrester diagrams, auto-sized plots and Coach export",
   description = [[
 A LuaLaTeX bundle for writing and rendering numerical models
 (Euler-integrated dynamical systems) directly inside LaTeX documents,
 aimed at physics teaching material.  The bundle contains numodel
-(the modelling engine with stock-and-flow diagrams) and numodel-plot
+(the modelling engine with stock-and-flow diagrams), numodel-plot
 (a PGFPlots styling layer that auto-sizes plots to whole-number tick
-intervals).
+intervals) and numodel-coach (exports a model as a CMA Coach 7
+modelling activity).
 ]],
   topic       = {"physics", "luatex", "diagram", "diagram-flow",
                  "graphics-plot", "pgf-tikz", "teaching", "use-luatex"},

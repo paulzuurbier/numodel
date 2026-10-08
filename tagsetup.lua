@@ -14,9 +14,11 @@
 --   numodel-plot/build.lua          (via maindir)
 --
 -- Workflow for a release bump:
---   1. l3build tag 0.5.0 -d 2026-05-23
---      (or: l3build tag 0.5.0-pre -d 2026-05-23 for a pre-release;
---      pre-release suffixes after a dash are accepted.)
+--   1. l3build tag 0.5.0           (on the release day: the date
+--      defaults to today; a -d/--date option from the bundle root is
+--      rejected by the modules as an extra tag)
+--      (or: l3build tag 0.5.0-pre for a pre-release; pre-release
+--      suffixes after a dash are accepted.)
 --   2. Hand-edit CHANGELOG.md at the bundle root to describe what
 --      changed.  It is the bundle's only changelog -- entries are
 --      grouped per release and then per module.  Changelog content is
@@ -35,8 +37,8 @@
 -- release_date constants and the propagation would silently no-op.
 tagfiles = {"*.dtx", "*.ins", "*.lua", "build.lua", "README.md"}
 
-release_date = "2026/09/07"
-release_tag  = "0.9.1"
+release_date = "2026/10/08"
+release_tag  = "0.10.0"
 
 -- Version strings may include a pre-release suffix (`0.5.0-pre`,
 -- `1.0.0-rc.2`, ...).  Pattern matches the alphanumeric + dot/dash
@@ -57,10 +59,11 @@ function update_tag(file, content, tagname, tagdate)
     content = content:gsub(
       "(\\Provides[A-Za-z]+{[^}]+}%[)%d%d%d%d/%d%d/%d%d " .. VERSION_PAT,
       "%1" .. tagdate .. " v" .. tagname)
-    -- \ProvidesExplFile{...}{YYYY/MM/DD}{vX.Y.Z}{...}  (the `v`
-    -- prefix is optional in this form so accept both)
+    -- \ProvidesExplFile / \ProvidesExplPackage
+    -- {...}{YYYY/MM/DD}{vX.Y.Z}{...}  (the `v` prefix is optional in
+    -- this form so accept both)
     content = content:gsub(
-      "(\\ProvidesExplFile{[^}]+}){%d%d%d%d/%d%d/%d%d}{v?[%w%.%-]+}",
+      "(\\ProvidesExpl%a+{[^}]+}){%d%d%d%d/%d%d/%d%d}{v?[%w%.%-]+}",
       "%1{" .. tagdate .. "}{" .. tagname .. "}")
   elseif file:match("%.ins$") then
     -- copyright year line

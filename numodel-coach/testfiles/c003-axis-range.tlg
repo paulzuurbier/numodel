@@ -1,0 +1,23 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== Coach variable list ===
+Package numodel-coach Info: Wrote Coach activity 'as.cma7'.
+  Name1=t
+  Min1=0.0
+  Max1=4.5
+  Name2=dt
+  Min2=0.0
+  Max2=10.0
+  Name3=v
+  Min3=-45.0
+  Max3=0.0
+  Name4=y
+  Min4=0.0
+  Max4=100.0
+  Name5=g
+  Min5=0.0
+  Max5=10.0
+=== End ===
+[1
+] [2] (c003-axis-range.aux)
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
