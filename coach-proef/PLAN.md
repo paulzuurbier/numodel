@@ -128,6 +128,53 @@ expressie uit `add_rule`.
   (`\m\per\s` → `m/s`, `\micro\gram` → `ugram`); geen nieuwe
   sleutel of extra argument bij `\mvar`.
 
+### CoachTaal volgens de handleiding
+
+Bron: `docs/Coach_7_Guide_NL.pdf`, hoofdstuk 12 (blz. 209–222).
+
+- **Namen:** kaal alleen `A–Z a–z 0–9` en `£ _ & ~ ! | { } [ ]`, niet
+  beginnend met een cijfer, hoofdlettergevoelig. Tussen `[ ]` vervallen
+  alle beperkingen (`[2πr]`). Gereserveerde woorden (lijst op blz. 212,
+  hoofdletterongevoelig) mogen niet als naam. `dt`, `deltat` en `Δt`
+  zijn in een tekstmodel hetzelfde. → numodel: kaal waar mogelijk,
+  anders tussen haken (`[ω]`, `[Max]`); `Δt` blijft kaal.
+- **Getallen:** decimaalteken volgens het besturingssysteem (komma of
+  punt), mag niet met het scheidingsteken beginnen (`0,5`, niet `,5`);
+  `1,5E-3`; max. 11 significante cijfers.
+- **Rangorde:** unair `-` en `^` prioriteit 1, `* /` 2, `+ -` 3,
+  vergelijkingen 4; gelijke prioriteit van links naar rechts. Dus
+  `-x^2` = `(-x)^2` en `a^b^c` = `(a^b)^c` — anders dan l3fp.
+- **Logisch:** `Niet` (1), `En` (2), `Of` (3); spaties eromheen
+  verplicht; vergelijkingen in een logische expressie tussen haakjes.
+  Waar/Onwaar = `Aan`/`Uit` = 255/0.
+- **Vergelijkingen:** `= <> < > <= >=`.
+- **Toekenning:** `:=`, `=` of `Wordt`.
+- **Functies:** `Sin Cos Tan` (graden/radialen volgens instelling),
+  `Arcsin Arccos Arctan` (radialen), `Exp Ln Log Sqr Sqrt Abs Entier
+  Round Fac Max(x1;x2;…) Min(…) Rand Teken`, `Puls(x;b;l;h)`,
+  `PulsHerhaald(x;b;l;i;h)`; argumenten gescheiden door `;`.
+- **Commentaar:** niet beschreven in de handleiding. `'` werkte in de
+  proef met de startwaarden; nog na te gaan in de modelregels (de
+  `\mruletext`-rij wordt `' tekst`).
+- **Aantal iteraties:** standaard 101, in te stellen bij
+  Modelinstellingen. Coach leidt het af uit `ModelXML`:
+  (`stop` − `start`)/`step` + 1. Bevestigd: 10/0,1 + 1 = 101 (leeg
+  model) en 10/0,01 + 1 = 1001 (`oscillator-vast.cma7`). Een tekstmodel
+  heeft zijn eigen stapgrootte in de startwaarden, dus numodel-coach
+  zet `start=0`, `step=1`, `stop=N−1` (`iteration_settings` in
+  `make_textmodel.py`). Te bevestigen met `iteraties-250.cma7`.
+
+### Aantal iteraties in het Coach-bestand
+
+Besloten op 8-10-2026: **één boekhouding, `maxiter`.** Het Coach-bestand
+krijgt als aantal iteraties de waarde van `\numodelsetup{maxiter=…}`
+(standaard 20000), via `numodel.get_model(p).maxiter`. De `Stop`-regel
+in het model beëindigt de run; `maxiter` is alleen de bovengrens, zodat
+het model blijft werken als een leerling parameters aanpast. Het aantal
+stappen van `\computemodel` wordt niet gebruikt, en er komt geen aparte
+sleutel per bestand: wie voor één model een ander aantal wil, zet
+`\numodelsetup{maxiter=…}` vóór de export van dat model.
+
 ### Coach-conventies (uit de voorbeeldbestanden van CMA)
 
 - Eenheden: `m/s^2`, `kg*m/s^2`, `mol/(L*s)`, `1/s`, `ugram`
@@ -150,7 +197,11 @@ Volgt de opzet in twee lagen uit [Architectuur](#architectuur).
    `numodel.lua` aan tot alles wat een export nodig heeft (zie de
    tabel bij Architectuur). Bied het aan via één gedocumenteerde
    functie, bijvoorbeeld `numodel.get_model(prefix)`.
-2. **Laag 1 in numodel: platte tekst.** Een uitvoerroute naast de
+2. ✅ **Klaar (7-10-2026, nog niet gecommit):** `numodel.plaintext`,
+   `plain_expr`, `plain_name`, `plain_unit`, `write_plaintext` in
+   `numodel.lua`; tests `m006-plaintext` en `tests/test_plaintext.lua`.
+   Te verifiëren in Coach met `oscillator-vast.cma7` (zie hieronder).
+   **Laag 1 in numodel: platte tekst.** Een uitvoerroute naast de
    huidige tabel. Die zet regels in NL-syntaxis (`Als … Dan …
    EindAls`, `Teken`, `Sqrt`, …) om zonder wiskundemodus: ASCII `*`,
    `-`, `:=`, decimale komma en `Stop`. Startwaarden krijgen hun eenheid
@@ -213,6 +264,8 @@ ook als `\graphicmodel` voorkomen.
 | `maak_vrije_val.py` | maakt de drie proefbestanden opnieuw (draaien vanuit de repo-root) |
 | `vrije-val.cma7`, `vrije-val.cmr7` | proef: tekstmodel, wisselen mogelijk (model verdwijnt na wisselen) |
 | `vrije-val-vast.cma7` | proef: tekstmodel, wisselen uitgezet — **dit is het doelformaat voor fase 1** |
+| `iteraties-250.cma7` | test van het aantal iteraties: harmonische trilling met Δt = 0,01 en een stopconditie bij t ≥ 10, maar 250 iteraties ingesteld. Verwacht: Modelinstellingen toont 250, de run eindigt bij t = 2,49 |
+| `oscillator-vast.cma7` | test van de platte-tekstvertaling: `[ω]`, `Δt`, haakjes bij `EN`, berekende startwaarden (`k := 2*3`, `[ω] := Sqrt(k/m)`), `'`-commentaar in de modelregels; nog te testen in Coach. Het model is een syntaxtest, geen zinnige fysica |
 
 Het sjabloon `0. Leeg model tekst.cmr7` staat in de root van de repo
 (opgeslagen in Coach V7.0.723). De voorbeeldbestanden van CMA staan op

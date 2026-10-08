@@ -4,6 +4,7 @@
 % row in \textmodel order and the stop condition.  Covers a start value
 % given as an expression, a variable without start value, a starred
 % ternary, a free-text row, an aliased rule and a model without \mstop.
+% maxiter mirrors \numodelsetup.
 \input{regression-test.tex}
 \documentclass{article}
 \usepackage[syntax=NL]{numodel}
@@ -30,6 +31,7 @@
 \mrule*{A}{\oscT < 1 ? \oscA + 1 : \oscA - 1}
 \mruletext{\text{(rest weggelaten)}}
 \mrule[aliasright=\cdots]{T}{\oscT + \oscDt}
+\numodelsetup{maxiter=5000}
 \TIMO
 \TYPE{=== Free fall ===}
 \directlua{

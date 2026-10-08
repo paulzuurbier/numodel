@@ -504,7 +504,13 @@ end
   {
     syntax              .code:n =
       { \__numodel_set_syntax:n {#1} },
-    maxiter             .int_gset:N = \g_numodel_maxiter_int,
+    % maxiter is mirrored in Lua for numodel.get_model (exporters).
+    maxiter             .code:n =
+      {
+        \int_gset:Nn \g_numodel_maxiter_int {#1}
+        \directlua{ numodel.set_setting("maxiter",
+          \int_use:N \g_numodel_maxiter_int) }
+      },
     graphscalex         .code:n = { \tl_gset:Nn \dgridx {#1} },
     graphscaley         .code:n = { \tl_gset:Nn \dgridy {#1} },
     gridmaxx            .int_gset:N = \g_numodel_gridmaxx_int,

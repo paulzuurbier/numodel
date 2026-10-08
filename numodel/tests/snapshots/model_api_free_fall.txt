@@ -11,3 +11,4 @@ program:
   calc: ballT := \ballT + \ballDt 
   stop: \ballY <= 2
 stop=\ballY <= 2
+maxiter=20000

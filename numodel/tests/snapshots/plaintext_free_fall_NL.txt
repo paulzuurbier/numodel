@@ -1,0 +1,13 @@
+body:
+v := v + g*dt
+y := y + v*dt
+t := t + dt
+Als y <= 2 Dan Stop EindAls
+init:
+t := 0      's
+dt := 0,05  's
+v := 0      'm/s
+y := 100    'm
+g := -9,81  'm/s^2
+warnings:
+

@@ -1,0 +1,23 @@
+body:
+F_res := -k*x
+Als (t < 1) EN (x > 0) Dan
+  v := v + F_res/m*Δt
+Anders
+  v := v
+EindAls
+Als x >= 0 Dan X2 := x Anders X2 := -x EindAls
+' (demping weggelaten)
+x := x + v*Δt
+t := t + Δt
+Als t >= 10 Dan Stop EindAls
+init:
+t := 0            's
+Δt := 0,01        's
+m := 0,5          'kg
+k := 2*3          'N/m
+v := 0            'm/s
+x := 0,1          'm
+[ω] := Sqrt(k/m)  '1/s
+warnings:
+variables oscX and oscX2 both export as 'x'; using 'X2' for oscX2
+free-text row exported as a comment: (demping weggelaten)

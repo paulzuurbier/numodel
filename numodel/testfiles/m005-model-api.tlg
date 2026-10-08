@@ -14,6 +14,7 @@ program:
   calc: ballT := \ballT + \ballDt 
   stop: \ballY <= 2
 stop=\ballY <= 2
+maxiter=5000
 === Mixed rows, no stop condition ===
 prefix=osc
 vars:
@@ -28,6 +29,7 @@ program:
   text: \text {(rest weggelaten)}
   calc: oscT := \oscT + \oscDt 
 stop=nil
+maxiter=5000
 === Unknown prefix ===
 nil
 === End ===

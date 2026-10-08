@@ -33,8 +33,20 @@ def replace(items, name, kids):
             items[k] = ('cont', it[1], it[2], kids); return
     raise KeyError(name)
 
-def build(template, body, init, variables, xml_settings=None):
+def iteration_settings(iterations):
+    """ModelXML settings for a given number of iterations.
+
+    Coach derives the iteration count from <start>, <stop> and <step>
+    as (stop - start)/step + 1 (empty model: 10/0,1 + 1 = 101).  A text
+    model defines its own time step in the initial values, so <step>
+    only sets the count here; integers keep it exact.
+    """
+    return {'start': '0', 'stop': str(int(iterations) - 1), 'step': '1'}
+
+def build(template, body, init, variables, xml_settings=None, iterations=None):
     magic, items = cma.parse(open(template, 'rb').read())
+    if iterations is not None:
+        xml_settings = dict(xml_settings or {}, **iteration_settings(iterations))
     replace(items, 'ModelBody', text_pair('', body))
     replace(items, 'ModelInit', text_pair('', init))
     vl = [leaf('Number', 2, struct.pack('<i', len(variables)))]

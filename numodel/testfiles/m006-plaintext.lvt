@@ -1,0 +1,45 @@
+% Regression test: numodel.plaintext renders a model, declared with the
+% ordinary user commands, as plain Coachtaal (model rules and initial
+% values).  Covers decimal commas, siunitx units as comments, a Greek
+% name, a start value computed from other variables, a starred
+% conditional with a logical operator, a free-text row (comment plus
+% warning) and the stop condition.  Also checks that the English
+% dialect switches keywords and the decimal mark.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=EN]{numodel}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{osc}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{\Delta t}{0.01}{\s}{2}{system}
+\mvar{M}{m}{0.5}{\kilo\gram}{2}{constant}
+\mvar{K}{k}{2*3}{\newton\per\m}{3}{constant}
+\mvar{Fres}{F_{\text{res}}}{}{\newton}{3}{aux}
+\mvar{A}{a}{}{\m\per\s\squared}{3}{aux}
+\mvar{V}{v}{0}{\m\per\s}{3}{stock}
+\mvar{X}{x}{0.1}{\m}{3}{stock}
+\mvar{W}{\omega}{sqrt(\oscK/\oscM)}{\per\s}{3}{aux}
+\mrule{Fres}{-\oscK * \oscX}
+\mrule{A}{\oscFres / \oscM}
+\mrule*{V}{\oscT < 1 && \oscX > 0 ? \oscV + \oscA * \oscDt : \oscV}
+\mruletext{\text{(damping omitted)}}
+\mrule{X}{\oscX + \oscV * \oscDt}
+\mrule[aliasright=\cdots]{T}{\oscT + \oscDt}
+\mstop{\oscT >= 10}
+\TIMO
+\directlua{
+  local function show(title, s)
+    texio.write_nl(title)
+    for line in s:gmatch("[^\string\n]+") do texio.write_nl(line) end
+  end
+  local r = numodel.plaintext("osc")
+  show("=== Coachtaal: model rules ===", r.body)
+  show("=== Coachtaal: initial values ===", r.init)
+  show("=== Warnings ===", table.concat(r.warnings, "\string\n"))
+  r = numodel.plaintext("osc", { dialect = "EN" })
+  show("=== EN: model rules ===", r.body)
+  show("=== EN: initial values ===", r.init)}
+\TYPE{=== End ===}
+\end{document}

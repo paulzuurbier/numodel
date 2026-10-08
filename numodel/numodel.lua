@@ -33,6 +33,12 @@
 local M = {}
 numodel = M
 M.models = {}  -- prefix -> {varlist, steps, nsteps}
+-- Package settings that exporters need (mirrored from \numodelsetup).
+M.settings = { maxiter = 20000 }
+
+function M.set_setting(name, value)
+    M.settings[name] = value
+end
 debug = true
 
 local function ensure(p)
@@ -1404,6 +1410,8 @@ end
 --       { kind = "stop",    expr = "\\ballY <= 2" },
 --     },
 --     stop = "\\ballY <= 2",          -- nil without \mstop
+--     maxiter = 20000,                 -- \numodelsetup{maxiter}; also
+--                                      -- the exported iteration count
 --   }
 --
 -- Expressions and units are the detokenized user input: variables
@@ -1420,7 +1428,8 @@ end
 function M.get_model(p)
     local m = M.models[p]
     if not m then return nil end
-    local out = { prefix = p, vars = {}, program = {}, stop = m.stop }
+    local out = { prefix = p, vars = {}, program = {}, stop = m.stop,
+        maxiter = M.settings.maxiter }
     local seen = {}
     for name, meta in var_iter(m) do
         -- \mvar on an existing name registers it a second time; the
@@ -1470,8 +1479,706 @@ function M.dump_model(p)
         end
     end
     out[#out+1] = "stop=" .. tostring(g.stop)
+    out[#out+1] = "maxiter=" .. tostring(g.maxiter)
     out[#out+1] = ""
     return table.concat(out, "\n")
+end
+
+-- ====================================================================
+-- Plain-text rendering (Coachtaal and the English syllabus notation)
+-- ====================================================================
+-- Turns a model from get_model into plain text that can be typed into
+-- modelling software: model rules and initial values, without math
+-- mode.  Used by exporters such as numodel-coach; usable on its own
+-- for a .txt per model (write_plaintext).
+--
+--   numodel.plain_name(text)           TeX display name -> plain name
+--   numodel.plain_unit(unit)           siunitx input    -> "m/s^2"
+--   numodel.plain_expr(expr, names, D) l3fp expression  -> plain text
+--   numodel.plaintext(p, opts)         { body, init, names, warnings }
+--   numodel.write_plaintext(p, path, opts)
+--
+-- opts.dialect is "NL" (Coachtaal, the default) or "EN".  The keyword
+-- tables below mirror numodel-NL.def / numodel-EN.def; keep them in
+-- sync.  They are separate because an export follows the target
+-- software, not the syntax the document typesets.
+
+M.dialects = {
+    NL = {
+        ["if"] = "Als", ["then"] = "Dan", ["else"] = "Anders",
+        endif = "EindAls", ["and"] = "EN", ["or"] = "OF",
+        ["not"] = "NIET", stop = "Stop",
+        sign = "Teken", abs = "Abs", sqrt = "Sqrt", exp = "Exp",
+        ln = "Ln", sin = "Sin", cos = "Cos", tan = "Tan",
+        asin = "Arcsin", acos = "Arccos", atan = "Arctan",
+        min = "Min", max = "Max", floor = "Entier", round = "Round",
+        pi = "Pi",
+        decimal = ",", argsep = ";", comment = "'",
+        th_model = "Modelregels", th_initvals = "Startwaarden",
+    },
+    EN = {
+        ["if"] = "IF", ["then"] = "THEN", ["else"] = "ELSE",
+        endif = "ENDIF", ["and"] = "AND", ["or"] = "OR",
+        ["not"] = "NOT", stop = "STOP",
+        sign = "SIGN", abs = "ABS", sqrt = "SQRT", exp = "EXP",
+        ln = "LN", sin = "SIN", cos = "COS", tan = "TAN",
+        asin = "ARCSIN", acos = "ARCCOS", atan = "ARCTAN",
+        min = "MIN", max = "MAX", floor = "INT", round = "ROUND",
+        pi = "PI",
+        decimal = ".", argsep = ",", comment = "'",
+        th_model = "Model rules", th_initvals = "Initial values",
+    },
+}
+
+local function trim(s) return (s:gsub("^%s+", ""):gsub("%s+$", "")) end
+-- Length in characters (UTF-8), for aligning comments after Δt or [ω].
+local function ulen(s) return utf8.len(s) or #s end
+
+-- --- names ------------------------------------------------------------
+
+local greek = {
+    alpha = "α", beta = "β", gamma = "γ", delta = "δ",
+    epsilon = "ε", varepsilon = "ε", zeta = "ζ", eta = "η",
+    theta = "θ", vartheta = "θ", iota = "ι", kappa = "κ",
+    lambda = "λ", mu = "μ", nu = "ν", xi = "ξ", pi = "π",
+    rho = "ρ", varrho = "ρ", sigma = "σ", tau = "τ",
+    upsilon = "υ", phi = "φ", varphi = "φ", chi = "χ", psi = "ψ",
+    omega = "ω",
+    Gamma = "Γ", Delta = "Δ", Theta = "Θ", Lambda = "Λ", Xi = "Ξ",
+    Pi = "Π", Sigma = "Σ", Upsilon = "Υ", Phi = "Φ", Psi = "Ψ",
+    Omega = "Ω",
+}
+-- Wrappers whose argument is kept as-is: \text{res} -> res.
+local name_wrappers = {
+    text = true, mathrm = true, mathit = true, mathbf = true,
+    mathsf = true, mathtt = true, textrm = true, textit = true,
+    textbf = true, textnormal = true, operatorname = true,
+    boldsymbol = true, mathnormal = true,
+}
+-- Spacing commands: dropped.
+local name_spacing = { [","] = true, [";"] = true, [":"] = true,
+    ["!"] = true, [" "] = true, quad = true, qquad = true }
+
+-- CoachTaal reserved words (Coach 7 handleiding, "Gereserveerde
+-- woorden"); compared case-insensitively.  A variable with such a name
+-- is put in brackets.
+local reserved = {}
+for w in ([[Aan Abs Afgeleide AfgeleideGlad Als Anders ArcCos ArcSin
+    ArcTan Bezier Bit Cos Dan Delta DeltaFil Doe Domein DrukAf
+    EenheidStap EindAls EindDoe EindFunctie EindProcedure En Entier Exp
+    Fac Filter Functie Geluid Herhaal Histogram Index Integraal Kolom Ln
+    Log LoopTijd Max Min Niet Niveau Of Pi Procedure Puls PulsHerhaald
+    Rand Repeteer ResetTellers Round Sin SlaOp Som Spline Sqr Sqrt Stop
+    Stopwatch Tan Teken Tel Teller TotDat TotHier TussenTijd
+    TweedeAfgeleide TweedeAfgeleideGlad Uit Wacht WasBitHoog WasBitLaag
+    WisData Wordt ZetAan ZetAanAbsoluut ZetNiveau ZetUit ZetUitAbsoluut
+    Zodra Zolang]]):gmatch("%a+") do
+    reserved[w:lower()] = true
+end
+
+-- TeX display name -> plain name, e.g. F_{\text{res}} -> F_res,
+-- \Delta t -> Δt.  CoachTaal allows bare names of ASCII letters,
+-- digits and _ (not starting with a digit), plus Δt for the time
+-- step; anything else -- other Greek letters, spaces, reserved
+-- words -- is put in brackets, as Coach itself does: [ω], [Max].
+-- Returns the name and, for unknown control sequences, a warning.
+function M.plain_name(text)
+    local warn
+    local s = (text or ""):gsub("\\(%a+)%s*", function(cs)
+        if greek[cs] then return greek[cs] end
+        if name_wrappers[cs] then return "" end
+        if name_spacing[cs] then return "" end
+        warn = "unknown control sequence \\" .. cs .. " in name '"
+            .. text .. "'"
+        return cs
+    end)
+    s = s:gsub("\\([^%a])", function(c)
+        return name_spacing[c] and "" or c
+    end)
+    s = s:gsub("[{}%s$]", "")
+    if s == "" then return "[]", "empty name for '" .. tostring(text) .. "'" end
+    if s == "Δt" then return s, warn end
+    if s:find("^[%a_][%w_]*$") and not reserved[s:lower()] then
+        return s, warn
+    end
+    return "[" .. s .. "]", warn
+end
+
+-- --- units ------------------------------------------------------------
+
+local unit_symbols = {
+    metre = "m", meter = "m", m = "m", second = "s", s = "s",
+    gram = "g", g = "g", kilogram = "kg", kg = "kg",
+    ampere = "A", A = "A", kelvin = "K", K = "K", mole = "mol",
+    mol = "mol", candela = "cd", cd = "cd",
+    newton = "N", N = "N", joule = "J", J = "J", watt = "W", W = "W",
+    pascal = "Pa", Pa = "Pa", hertz = "Hz", Hz = "Hz",
+    coulomb = "C", C = "C", volt = "V", V = "V", ohm = "Ohm",
+    farad = "F", F = "F", tesla = "T", T = "T", weber = "Wb",
+    Wb = "Wb", henry = "H", H = "H", siemens = "S", S = "S",
+    becquerel = "Bq", Bq = "Bq", gray = "Gy", Gy = "Gy",
+    sievert = "Sv", Sv = "Sv", lumen = "lm", lux = "lx",
+    litre = "L", liter = "L", L = "L", l = "L",
+    minute = "min", hour = "h", h = "h", day = "d",
+    degreeCelsius = "°C", celsius = "°C", degree = "°",
+    percent = "%", bar = "bar", electronvolt = "eV", eV = "eV",
+    astronomicalunit = "au", au = "au", dalton = "Da", Da = "Da",
+    tonne = "t", hectare = "ha", angstrom = "Å", bel = "B",
+    decibel = "dB", dB = "dB", neper = "Np", radian = "rad",
+    steradian = "sr", arcminute = "'", arcsecond = "''",
+}
+local unit_prefixes = {
+    quecto = "q", ronto = "r", yocto = "y", zepto = "z", atto = "a",
+    femto = "f", pico = "p", nano = "n", micro = "u", milli = "m",
+    centi = "c", deci = "d", deca = "da", deka = "da", hecto = "h",
+    kilo = "k", mega = "M", giga = "G", tera = "T", peta = "P",
+    exa = "E", zetta = "Z", yotta = "Y", ronna = "R", quetta = "Q",
+}
+-- siunitx abbreviations with a prefix built in (\km, \mA, ...).
+local unit_abbrev = {
+    fg = "fg", pg = "pg", ng = "ng", ug = "ug", mg = "mg",
+    pm = "pm", nm = "nm", um = "um", mm = "mm", cm = "cm",
+    dm = "dm", km = "km", as = "as", fs = "fs", ps = "ps",
+    ns = "ns", us = "us", ms = "ms", fmol = "fmol", pmol = "pmol",
+    nmol = "nmol", umol = "umol", mmol = "mmol", kmol = "kmol",
+    pA = "pA", nA = "nA", uA = "uA", mA = "mA", kA = "kA",
+    ul = "uL", ml = "mL", hl = "hL", uL = "uL", mL = "mL",
+    hL = "hL", mHz = "mHz", kHz = "kHz", MHz = "MHz", GHz = "GHz",
+    mN = "mN", kN = "kN", MN = "MN", kPa = "kPa", MPa = "MPa",
+    GPa = "GPa", mohm = "mOhm", kohm = "kOhm", Mohm = "MOhm",
+    pV = "pV", nV = "nV", uV = "uV", mV = "mV", kV = "kV",
+    nW = "nW", uW = "uW", mW = "mW", kW = "kW", MW = "MW",
+    GW = "GW", uJ = "uJ", mJ = "mJ", kJ = "kJ", MJ = "MJ",
+    GJ = "GJ", meV = "meV", keV = "keV", MeV = "MeV", GeV = "GeV",
+    TeV = "TeV", kWh = "kWh", fF = "fF", pF = "pF", nF = "nF",
+    uF = "uF", mF = "mF", nH = "nH", uH = "uH", mH = "mH",
+    mT = "mT", uT = "uT", nT = "nT",
+}
+
+local function fmt_power(sym, e)
+    if e == 1 then return sym end
+    return sym .. "^" .. tostring(e)
+end
+
+-- siunitx unit input -> Coach-style plain unit: \m\per\s\squared ->
+-- m/s^2, \kilo\gram\metre\per\second\squared -> kg*m/s^2,
+-- \mole\per\litre\per\second -> mol/(L*s), \per\second -> 1/s.
+-- Literal input (m/s, kg.m) is passed through without braces/spaces.
+-- Returns the unit and, for unknown macros, a warning.
+function M.plain_unit(unit)
+    unit = unit or ""
+    if not unit:find("\\") then
+        local lit = unit:gsub("[{}%s~]", "")
+        return lit, nil
+    end
+    local factors, warn = {}, nil
+    local prefix, pre_power, per = "", nil, false
+    local i, n = 1, #unit
+    local function add(sym)
+        local e = pre_power or 1
+        factors[#factors + 1] = { sym = prefix .. sym, e = per and -e or e }
+        prefix, pre_power, per = "", nil, false
+    end
+    local function last_power(k)
+        local f = factors[#factors]
+        if f then f.e = f.e * k end
+    end
+    local function read_group()
+        local j = unit:find("%S", i)
+        if not j or unit:sub(j, j) ~= "{" then return nil end
+        local k = unit:find("}", j, true)
+        if not k then return nil end
+        i = k + 1
+        return tonumber(trim(unit:sub(j + 1, k - 1)))
+    end
+    while i <= n do
+        local c = unit:sub(i, i)
+        if c == "\\" then
+            local cs = unit:match("^%a+", i + 1) or ""
+            i = i + 1 + #cs
+            if cs == "per" then per = true
+            elseif cs == "square" then pre_power = 2
+            elseif cs == "cubic" then pre_power = 3
+            elseif cs == "squared" then last_power(2)
+            elseif cs == "cubed" then last_power(3)
+            elseif cs == "tothe" then
+                local k = read_group(); if k then last_power(k) end
+            elseif cs == "raiseto" then pre_power = read_group()
+            elseif unit_prefixes[cs] then prefix = unit_prefixes[cs]
+            elseif unit_symbols[cs] then add(unit_symbols[cs])
+            elseif unit_abbrev[cs] then add(unit_abbrev[cs])
+            elseif cs ~= "" then
+                warn = "unknown unit macro \\" .. cs .. " in '"
+                    .. trim(unit) .. "'"
+                add(cs)
+            end
+        elseif c:match("[%a%%°]") then
+            -- Literal symbol mixed with macros (\kilo m): take a run.
+            local run = unit:match("^[%a%%°\128-\255]+", i)
+            i = i + #run
+            add(run)
+        else
+            i = i + 1
+        end
+    end
+    local num, den = {}, {}
+    for _, f in ipairs(factors) do
+        if f.e > 0 then num[#num + 1] = fmt_power(f.sym, f.e)
+        elseif f.e < 0 then den[#den + 1] = fmt_power(f.sym, -f.e) end
+    end
+    local s = #num > 0 and table.concat(num, "*") or (#den > 0 and "1" or "")
+    if #den == 1 then s = s .. "/" .. den[1]
+    elseif #den > 1 then s = s .. "/(" .. table.concat(den, "*") .. ")" end
+    return s, warn
+end
+
+-- --- expressions ------------------------------------------------------
+-- An l3fp expression is parsed into a tree with l3fp's precedence and
+-- printed with CoachTaal's.  The two differ, which is why a token-level
+-- rewrite is not enough (Coach 7 handleiding, "Expressies"):
+--   * Coach gives unary minus and ^ the same priority and evaluates
+--     left to right, so l3fp's -x^2 = -(x^2) and a^b^c = a^(b^c) need
+--     explicit parentheses.
+--   * Relational expressions combined with En/Of/Niet must be in
+--     parentheses: (x > 1) En (x < 2).
+--   * l3fp binds juxtaposition tighter than / (1/2pi = 1/(2pi)); Coach
+--     needs an explicit, parenthesised product.
+-- Parentheses the user wrote are kept; others are added only where
+-- needed.
+
+local two_char_ops = {
+    ["<="] = true, [">="] = true, ["!="] = true, ["=="] = true,
+    ["&&"] = true, ["||"] = true, ["**"] = true,
+}
+
+local function tokenize(expr)
+    local toks, i, n = {}, 1, #expr
+    while i <= n do
+        local c = expr:sub(i, i)
+        if c:match("%s") then
+            i = i + 1
+        elseif c == "\\" then
+            local cs = expr:match("^%a+", i + 1)
+            if cs then
+                toks[#toks + 1] = { t = "var", s = cs }
+                i = i + 1 + #cs
+            else
+                i = i + 2      -- control symbol (\, etc.): ignore
+            end
+        elseif expr:match("^%.?%d", i) then
+            local num = expr:match("^%d*%.?%d*", i)
+            local ex = expr:match("^[eE][+-]?%d+", i + #num)
+            if ex then num = num .. ex end
+            toks[#toks + 1] = { t = "num", s = num }
+            i = i + #num
+        elseif c:match("%a") then
+            local id = expr:match("^%a+", i)
+            toks[#toks + 1] = { t = "id", s = id }
+            i = i + #id
+        elseif two_char_ops[expr:sub(i, i + 1)] then
+            local op = expr:sub(i, i + 1)
+            toks[#toks + 1] = { t = "op", s = op == "**" and "^" or op }
+            i = i + 2
+        elseif c == "{" or c == "(" then
+            toks[#toks + 1] = { t = "(" }; i = i + 1
+        elseif c == "}" or c == ")" then
+            toks[#toks + 1] = { t = ")" }; i = i + 1
+        elseif c == "," then
+            toks[#toks + 1] = { t = "," }; i = i + 1
+        else
+            toks[#toks + 1] = { t = "op", s = c }; i = i + 1
+        end
+    end
+    return toks
+end
+
+-- l3fp binding powers (higher binds tighter).
+local infix_bp = {
+    ["?"] = 1, ["||"] = 2, ["&&"] = 3,
+    ["<"] = 4, [">"] = 4, ["<="] = 4, [">="] = 4, ["="] = 4,
+    ["=="] = 4, ["!="] = 4,
+    ["+"] = 5, ["-"] = 5, ["*"] = 6, ["/"] = 6,
+    imul = 7, ["^"] = 9,
+}
+local PREFIX_BP = 8      -- unary +, -, !
+
+local function starts_operand(tk)
+    return tk and (tk.t == "num" or tk.t == "var" or tk.t == "id"
+        or tk.t == "(")
+end
+
+-- Pratt parser over the token list.  Nodes:
+--   {k="num",s} {k="var",s} {k="id",s} {k="call",s,args}
+--   {k="paren",e} {k="neg",e} {k="pos",e} {k="not",e}
+--   {k="bin",op,a,b} {k="tern",c,a,b}
+local function parse(toks, W)
+    local pos = 1
+    local function peek() return toks[pos] end
+    local function take() pos = pos + 1; return toks[pos - 1] end
+    local expr
+    local function nud()
+        local tk = take()
+        if not tk then
+            W[#W + 1] = "incomplete expression"
+            return { k = "num", s = "0" }
+        end
+        if tk.t == "num" then return { k = "num", s = tk.s } end
+        if tk.t == "var" then return { k = "var", s = tk.s } end
+        if tk.t == "id" then
+            local nx = peek()
+            if nx and nx.t == "(" then
+                take()
+                local args = {}
+                if peek() and peek().t ~= ")" then
+                    args[1] = expr(0)
+                    while peek() and peek().t == "," do
+                        take(); args[#args + 1] = expr(0)
+                    end
+                end
+                if peek() and peek().t == ")" then take() end
+                return { k = "call", s = tk.s, args = args }
+            end
+            return { k = "id", s = tk.s }
+        end
+        if tk.t == "(" then
+            local e = expr(0)
+            if peek() and peek().t == ")" then take() end
+            return { k = "paren", e = e }
+        end
+        if tk.t == "op" and (tk.s == "-" or tk.s == "+" or tk.s == "!") then
+            local e = expr(PREFIX_BP)
+            return { k = tk.s == "-" and "neg" or tk.s == "+" and "pos"
+                or "not", e = e }
+        end
+        W[#W + 1] = "unexpected '" .. (tk.s or tk.t) .. "' in expression"
+        return nud()
+    end
+    expr = function(rbp)
+        local left = nud()
+        while true do
+            local tk = peek()
+            if not tk then break end
+            local op, bp
+            if tk.t == "op" and infix_bp[tk.s] then
+                op, bp = tk.s, infix_bp[tk.s]
+            elseif starts_operand(tk) then
+                op, bp = "imul", infix_bp.imul
+            else
+                break        -- ")", ",", ":" or junk: let the caller see it
+            end
+            if bp <= rbp then break end
+            if op ~= "imul" then take() end
+            if op == "?" then
+                local a = expr(0)
+                if peek() and peek().t == "op" and peek().s == ":" then take() end
+                local b = expr(bp - 1)          -- right associative
+                left = { k = "tern", c = left, a = a, b = b }
+            elseif op == "^" then
+                left = { k = "bin", op = "^", a = left, b = expr(bp - 1) }
+            else
+                left = { k = "bin", op = op, a = left, b = expr(bp) }
+            end
+        end
+        return left
+    end
+    local tree = expr(0)
+    if pos <= #toks then
+        W[#W + 1] = "trailing input ignored in expression"
+    end
+    return tree
+end
+
+local function fmt_number(s, D)
+    if s:sub(1, 1) == "." then s = "0" .. s end
+    s = s:gsub("[eE]", "E")
+    if D.decimal ~= "." then s = s:gsub("%.", D.decimal) end
+    return s
+end
+
+local relational = { ["<"] = true, [">"] = true, ["<="] = true,
+    [">="] = true, ["="] = true, ["=="] = true, ["!="] = true }
+
+-- CoachTaal printing strength (higher binds tighter).
+local function strength(n)
+    if n.k == "bin" then
+        local op = n.op
+        if op == "^" then return 60 end
+        if op == "*" or op == "/" or op == "imul" then return 50 end
+        if op == "+" or op == "-" then return 40 end
+        if relational[op] then return 30 end
+        if op == "&&" then return 20 end
+        if op == "||" then return 10 end
+    elseif n.k == "neg" or n.k == "pos" then return 60
+    elseif n.k == "not" then return 25
+    elseif n.k == "tern" then return 0 end
+    return 100      -- num, var, id, call, paren
+end
+
+local print_node
+
+local function paren(s) return "(" .. s .. ")" end
+
+-- Function call -> plain text.  Rewrites that produce an operator
+-- expression come back parenthesised, so they stay correct in any
+-- context (x/cot(y) -> x/(1/Tan(y))).
+local function print_call(n, ctx)
+    local D, W = ctx.D, ctx.W
+    local args = {}
+    for i, a in ipairs(n.args) do args[i] = print_node(a, ctx) end
+    local a1 = args[1] or ""
+    -- Argument as a factor: parenthesised unless atomic.
+    local f1 = n.args[1] and strength(n.args[1]) >= 100 and a1 or paren(a1)
+    local function call(f, s) return f .. "(" .. s .. ")" end
+    local deg = D.pi .. "/180*" .. f1
+    local rad = "180/" .. D.pi .. "*"
+    local direct = {
+        sign = D.sign, abs = D.abs, sqrt = D.sqrt, exp = D.exp,
+        ln = D.ln, sin = D.sin, cos = D.cos, tan = D.tan,
+        asin = D.asin, acos = D.acos, floor = D.floor,
+        min = D.min, max = D.max,
+    }
+    local name = n.s
+    if direct[name] then
+        return call(direct[name], table.concat(args, D.argsep))
+    elseif name == "round" then
+        if #args >= 2 then
+            local p = "10^" .. (strength(n.args[2]) >= 100 and args[2]
+                or paren(args[2]))
+            return paren(call(D.round, f1 .. "*" .. p) .. "/" .. p)
+        end
+        return call(D.round, a1)
+    elseif name == "trunc" then
+        return call(D.sign, a1) .. "*" .. call(D.floor, call(D.abs, a1))
+    elseif name == "atan" then
+        if #args == 2 then
+            W[#W + 1] = "atan(y,x) exported as " .. D.atan
+                .. "(y/x): the quadrant is lost"
+            local y = strength(n.args[1]) >= 100 and args[1] or paren(args[1])
+            local x = strength(n.args[2]) >= 100 and args[2] or paren(args[2])
+            return call(D.atan, y .. "/" .. x)
+        end
+        return call(D.atan, a1)
+    elseif name == "ceil" then
+        return paren("-" .. call(D.floor, "-" .. f1))
+    elseif name == "cot" then return paren("1/" .. call(D.tan, a1))
+    elseif name == "csc" then return paren("1/" .. call(D.sin, a1))
+    elseif name == "sec" then return paren("1/" .. call(D.cos, a1))
+    elseif name == "acot" then return call(D.atan, "1/" .. f1)
+    elseif name == "acsc" then return call(D.asin, "1/" .. f1)
+    elseif name == "asec" then return call(D.acos, "1/" .. f1)
+    elseif name == "sind" then return call(D.sin, deg)
+    elseif name == "cosd" then return call(D.cos, deg)
+    elseif name == "tand" then return call(D.tan, deg)
+    elseif name == "cotd" then return paren("1/" .. call(D.tan, deg))
+    elseif name == "cscd" then return paren("1/" .. call(D.sin, deg))
+    elseif name == "secd" then return paren("1/" .. call(D.cos, deg))
+    elseif name == "asind" then return paren(rad .. call(D.asin, a1))
+    elseif name == "acosd" then return paren(rad .. call(D.acos, a1))
+    elseif name == "atand" then return paren(rad .. call(D.atan, a1))
+    elseif name == "acotd" then return paren(rad .. call(D.atan, "1/" .. f1))
+    elseif name == "acscd" then return paren(rad .. call(D.asin, "1/" .. f1))
+    elseif name == "asecd" then return paren(rad .. call(D.acos, "1/" .. f1))
+    end
+    W[#W + 1] = "function " .. name .. "() has no plain-text equivalent;"
+        .. " exported unchanged"
+    return call(name, table.concat(args, D.argsep))
+end
+
+print_node = function(n, ctx)
+    local D, W = ctx.D, ctx.W
+    local k = n.k
+    if k == "num" then return fmt_number(n.s, D)
+    elseif k == "var" then
+        local nm = ctx.names[n.s]
+        if not nm then
+            W[#W + 1] = "unknown variable \\" .. n.s
+            nm = n.s
+        end
+        return nm
+    elseif k == "id" then
+        local s = n.s
+        if s == "pi" then return D.pi
+        elseif s == "deg" then return paren(D.pi .. "/180")
+        elseif s == "true" then return "1"
+        elseif s == "false" then return "0" end
+        W[#W + 1] = "unknown identifier '" .. s .. "'"
+        return s
+    elseif k == "call" then return print_call(n, ctx)
+    elseif k == "paren" then return paren(print_node(n.e, ctx))
+    elseif k == "neg" or k == "pos" then
+        -- Coach: -x^2 = (-x)^2, so a power operand needs parentheses.
+        local e = n.e
+        local s = print_node(e, ctx)
+        if strength(e) < 100 then s = paren(s) end
+        return (k == "neg" and "-" or "+") .. s
+    elseif k == "not" then
+        -- Niet x, Niet(x > 1)
+        local s = print_node(n.e, ctx)
+        if n.e.k == "paren" then return D["not"] .. s end
+        if strength(n.e) < 100 then return D["not"] .. paren(s) end
+        return D["not"] .. " " .. s
+    elseif k == "tern" then
+        W[#W + 1] = "nested conditional (?:) cannot be exported"
+        return paren(print_node(n.c, ctx) .. " ? " .. print_node(n.a, ctx)
+            .. " : " .. print_node(n.b, ctx))
+    end
+    -- Binary operator.
+    local op, a, b = n.op, n.a, n.b
+    local s = strength(n)
+    local sa, sb = print_node(a, ctx), print_node(b, ctx)
+    local la, lb = strength(a), strength(b)
+    local wrap_a, wrap_b
+    if op == "&&" or op == "||" then
+        -- Relational operands of En/Of must be parenthesised.
+        wrap_a = (a.k == "bin" and relational[a.op]) or la < s
+        wrap_b = (b.k == "bin" and relational[b.op]) or lb < s
+    elseif op == "^" then
+        -- Coach evaluates ^ left to right, at the priority of unary
+        -- minus: both operands must be atomic, except that a negated
+        -- atom may stand in the exponent (A^-B).
+        wrap_a = la <= 60
+        wrap_b = lb < 60 or (b.k == "bin" and b.op == "^")
+            or ((b.k == "neg" or b.k == "pos") and strength(b.e) < 100)
+    elseif relational[op] then
+        wrap_a = la <= s
+        wrap_b = lb <= s
+    else
+        wrap_a = la < s
+        -- Left to right: a-(b+c), a/(b*c) and a/(2pi) keep their group.
+        wrap_b = lb < s or (lb == s and (op == "-" or op == "/"
+            or op == "imul"))
+    end
+    if wrap_a then sa = paren(sa) end
+    if wrap_b then sb = paren(sb) end
+    local sym
+    if op == "&&" then sym = " " .. D["and"] .. " "
+    elseif op == "||" then sym = " " .. D["or"] .. " "
+    elseif op == "==" then sym = " = "
+    elseif op == "!=" then sym = " <> "
+    elseif relational[op] or op == "+" or op == "-" then
+        sym = " " .. op .. " "
+    elseif op == "imul" then sym = "*"
+    else sym = op end
+    return sa .. sym .. sb
+end
+
+-- l3fp expression -> plain text in dialect D (a table from M.dialects
+-- or a dialect name).  names maps control-word names (without the
+-- backslash) to plain names.  Returns the text and a list of warnings.
+function M.plain_expr(expr, names, D)
+    if type(D) ~= "table" then D = M.dialects[D or "NL"] end
+    local W = {}
+    local tree = parse(tokenize(expr or ""), W)
+    return print_node(tree, { D = D, W = W, names = names or {} }), W
+end
+
+-- Split a top-level conditional "c ? a : b" (as in \mrule).  Returns
+-- the printed condition and branches, or nil when expr is not one.
+local function plain_ternary(expr, names, D, W)
+    local tree = parse(tokenize(expr or ""), W)
+    if tree.k ~= "tern" then return nil end
+    local ctx = { D = D, W = W, names = names }
+    return print_node(tree.c, ctx), print_node(tree.a, ctx),
+        print_node(tree.b, ctx)
+end
+
+-- Whole model -> { body = rules text, init = initial values text,
+-- names = { fullname -> plain name }, warnings = { ... } }.
+function M.plaintext(p, opts)
+    opts = opts or {}
+    local D = M.dialects[opts.dialect or "NL"]
+    if not D then error("numodel: unknown dialect " .. tostring(opts.dialect)) end
+    local g = M.get_model(p)
+    if not g then return nil end
+    local W, names, used = {}, {}, {}
+    local function note(w) if w then W[#W + 1] = w end end
+    for _, v in ipairs(g.vars) do
+        local nm, w = M.plain_name(v.text)
+        note(w)
+        if used[nm] then
+            note("variables " .. used[nm] .. " and " .. v.name
+                .. " both export as '" .. nm .. "'; using '" .. v.short
+                .. "' for " .. v.name)
+            nm = v.short
+        end
+        used[nm] = v.name
+        names[v.name] = nm
+    end
+    local function expr(e)
+        local s, ws = M.plain_expr(e, names, D)
+        for _, w in ipairs(ws) do W[#W + 1] = w end
+        return s
+    end
+    local body = {}
+    for _, r in ipairs(g.program) do
+        if r.kind == "calc" then
+            body[#body + 1] = names[r.target] .. " := " .. expr(r.expr)
+        elseif r.kind == "ternary" then
+            local c, a, b = plain_ternary(r.expr, names, D, W)
+            local lhs = names[r.target]
+            if not c then
+                body[#body + 1] = lhs .. " := " .. expr(r.expr)
+            elseif r.starred then
+                body[#body + 1] = D["if"] .. " " .. c .. " " .. D["then"]
+                body[#body + 1] = "  " .. lhs .. " := " .. a
+                body[#body + 1] = D["else"]
+                body[#body + 1] = "  " .. lhs .. " := " .. b
+                body[#body + 1] = D.endif
+            else
+                body[#body + 1] = D["if"] .. " " .. c .. " " .. D["then"]
+                    .. " " .. lhs .. " := " .. a .. " " .. D["else"]
+                    .. " " .. lhs .. " := " .. b .. " " .. D.endif
+            end
+        elseif r.kind == "stop" then
+            body[#body + 1] = D["if"] .. " " .. expr(r.expr) .. " "
+                .. D["then"] .. " " .. D.stop .. " " .. D.endif
+        elseif r.kind == "text" then
+            -- Free TeX: keep its words as a comment.
+            local t = r.text:gsub("\\%a+%s*", " "):gsub("[{}$\\]", "")
+            t = trim(t:gsub("%s+", " "))
+            note("free-text row exported as a comment: " .. t)
+            body[#body + 1] = D.comment .. " " .. t
+        end
+    end
+    -- Initial values: name := value, unit as an aligned comment.
+    local rows, width = {}, 0
+    for _, v in ipairs(g.vars) do
+        if v.has_start then
+            local lhs = names[v.name] .. " := " .. expr(v.value_expr)
+            local u, w = M.plain_unit(v.unit)
+            note(w)
+            rows[#rows + 1] = { lhs, u }
+            if ulen(lhs) > width then width = ulen(lhs) end
+        end
+    end
+    local init = {}
+    for _, r in ipairs(rows) do
+        if r[2] ~= "" then
+            init[#init + 1] = r[1] .. string.rep(" ", width - ulen(r[1]) + 2)
+                .. D.comment .. r[2]
+        else
+            init[#init + 1] = r[1]
+        end
+    end
+    return {
+        body = table.concat(body, "\n") .. "\n",
+        init = table.concat(init, "\n") .. "\n",
+        names = names,
+        warnings = W,
+    }
+end
+
+-- Write model rules and initial values to one text file, each part
+-- under a comment header.  Returns the plaintext table.
+function M.write_plaintext(p, path, opts)
+    local r = M.plaintext(p, opts)
+    if not r then return nil end
+    local D = M.dialects[(opts and opts.dialect) or "NL"]
+    local f = assert(io.open(path, "w"))
+    f:write(D.comment, " ", D.th_model, "\n", r.body, "\n",
+            D.comment, " ", D.th_initvals, "\n", r.init)
+    f:close()
+    return r
 end
 
 -- --- thin TeX-side getters (called via \directlua) -------------------

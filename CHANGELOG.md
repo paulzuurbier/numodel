@@ -21,11 +21,33 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   value both evaluated and as written, siunitx unit as written,
   significant figures) and every row in `\textmodel` order: rules
   (`calc`, `ternary`, with the star of `\mrule*`), `\mruletext` rows
-  and the `\mstop` condition. `\mvar`, `\mrule`, `\mruletext` and
-  `\mstop` now pass this data to Lua; what numodel typesets is
+  and the `\mstop` condition. It also gives the `maxiter` setting, which
+  exporters use as the iteration count of the target software.
+  `\mvar`, `\mrule`, `\mruletext`, `\mstop` and the `maxiter` key now
+  pass this data to Lua; what numodel typesets is
   unchanged. `numodel.dump_model(prefix)` prints it for debugging. First
   step towards exporting models to CMA Coach 7. New regression test
   `m005-model-api` and Lua test `test_model_api`.
+- Plain-text rendering of a model in Coachtaal (or the English
+  syllabus notation): `numodel.plaintext(prefix, {dialect = "NL"|"EN"})`
+  returns the model rules and the initial values as text that can be
+  typed or pasted into modelling software; `numodel.write_plaintext`
+  writes them to a file. Expressions are parsed with l3fp's operator
+  precedence and printed with Coachtaal's, adding parentheses only where
+  the two differ: `-x^2` becomes `-(x^2)` (Coach gives unary minus and
+  `^` the same priority), `a^b^c` becomes `a^(b^c)`, `1/2pi` becomes
+  `1/(2*Pi)`, and comparisons joined by `&&`/`||` get the parentheses
+  Coachtaal requires: `(x > 1) EN (x < 2)`. Decimal comma and `;` as
+  argument separator in Coachtaal; functions without a Coachtaal
+  counterpart are rewritten (`cot`, `ceil`, `round(x,n)`, degree
+  variants such as `sind`). Names are derived from the display text
+  (`F_{\text{res}}` → `F_res`, `\Delta t` → `Δt`); names Coachtaal does
+  not allow bare, and reserved words, are put in brackets (`[ω]`,
+  `[Max]`). siunitx units are translated with a built-in table
+  (`\m\per\s\squared` → `m/s^2`, `\mole\per\litre\per\second` →
+  `mol/(L*s)`) and written as comments after the initial values.
+  Anything that cannot be translated exactly is reported as a warning.
+  New regression test `m006-plaintext` and Lua test `test_plaintext`.
 
 #### Fixed
 - `\diagrammodel` broke when the unit of a y-variable is a **robust

@@ -1,0 +1,46 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== Coachtaal: model rules ===
+F_res := -k*x
+a := F_res/m
+Als (t < 1) EN (x > 0) Dan
+  v := v + a*Δt
+Anders
+  v := v
+EindAls
+' (damping omitted)
+x := x + v*Δt
+t := t + Δt
+Als t >= 10 Dan Stop EindAls
+=== Coachtaal: initial values ===
+t := 0            's
+Δt := 0,01        's
+m := 0,5          'kg
+k := 2*3          'N/m
+v := 0            'm/s
+x := 0,1          'm
+[ω] := Sqrt(k/m)  '1/s
+=== Warnings ===
+free-text row exported as a comment: (damping omitted)
+=== EN: model rules ===
+F_res := -k*x
+a := F_res/m
+IF (t < 1) AND (x > 0) THEN
+  v := v + a*Δt
+ELSE
+  v := v
+ENDIF
+' (damping omitted)
+x := x + v*Δt
+t := t + Δt
+IF t >= 10 THEN STOP ENDIF
+=== EN: initial values ===
+t := 0            's
+Δt := 0.01        's
+m := 0.5          'kg
+k := 2*3          'N/m
+v := 0            'm/s
+x := 0.1          'm
+[ω] := SQRT(k/m)  '1/s
+=== End ===
+(m006-plaintext.aux)

@@ -8,3 +8,4 @@ program:
   ternary*: oscT := \oscT < 1 ? \oscT + 1 : \oscT - 1
   text: \text {(rest weggelaten)}
 stop=nil
+maxiter=20000
