@@ -5,8 +5,6 @@ yes
 === \numodelsetup{blanks=filled} equals the per-table key ===
 yes
 === The model computes with the full rules ===
-COMPUTE start
-COMPUTE done
 steps: 6, final h below 0: 1
 === plaintext open / filled ===
 --- open

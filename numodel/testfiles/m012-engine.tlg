@@ -1,0 +1,24 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== engine=compare ===
+Package numodel Info: engine=compare: Lua and \fp_eval:n agree for model 'p'.
+fpeval: steps 11, v 9.728417279787808, n 7
+=== engine=lua (a fresh copy: \computemodel continues from the current values) ===
+\g__numodel_pl_rulecounter_int=\count...
+\g__numodel_pl_steps_int=\count...
+lua: steps 11, v 9.72841727979, n 7
+=== Unknown function: fallback ===
+Package numodel Info: Model 'q' computed with \fp_eval:n instead of Lua: unknown function 'fact'.
+fallback: steps 11, n 6
+Package numodel Warning: Model 'q' computed with \fp_eval:n instead of Lua: unknown function 'fact'.
+=== Global setting ===
+\g__numodel_pg_rulecounter_int=\count...
+\g__numodel_pg_steps_int=\count...
+steps 11, v 9.72841727979
+=== maxiter in the Lua engine ===
+\g__numodel_pm_rulecounter_int=\count...
+\g__numodel_pm_steps_int=\count...
+Package numodel Warning: computemodel stopped after 5 iterations (safety limit). Check stop condition.
+steps 6
+=== End ===
+(m012-engine.aux)

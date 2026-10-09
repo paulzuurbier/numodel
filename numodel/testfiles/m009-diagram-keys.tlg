@@ -7,8 +7,10 @@ after legend list + line + caption: figure 2
 after float=false: figure 3
 [2]
 after nocaption: figure 3 (unchanged)
+after axis/plot/series pass-through: figure 4
 === Unknown style warns ===
 Package numodel Warning: Key 'style' accepts only marks,line,both, or empty to reset. Got: 'dots'.
+[3]
 === End ===
-[3] [4] (m009-diagram-keys.aux)
+[4] [5] (m009-diagram-keys.aux)
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.

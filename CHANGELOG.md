@@ -14,6 +14,15 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
 ### numodel
 
 #### Added
+- `\tablemodel[keys]{Name,Name,...}`: a table of computed values, one
+  column per variable (headed "symbol (unit)"), one row per step
+  (`steps=0-5` or a list), rounded to each variable's significant
+  figures. `row=state` shows the state of step n with the auxiliary
+  values computed from it (recorded in step n+1), the row a pupil
+  computes by hand. `blank` leaves the cells empty in the pupil's
+  version (`blanks=open`) except the first column and the first
+  `given` rows. `num={Name={...}}` passes siunitx options per column,
+  `table={...}` tabularray options. Regression test `m013-tablemodel`.
 - `\mstepat{<Name>}{<Var>}{<value>}` (and `\mstepatp` with an explicit
   prefix): the value of a variable at the first step where another
   variable -- usually the time -- has reached a value, so the text no
@@ -52,6 +61,29 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   shown in full. `\computemodel` always uses the full rules.
   `numodel.plaintext` follows the setting (`' F_z := ...` comments when
   open). Regression test `m010-blanks`.
+- A Lua engine for `\computemodel`: `engine=lua` (`\numodelsetup`,
+  package option, or `\computemodel[engine=...]`) compiles the rules --
+  with the parser of the plain-text rendering -- into Lua functions and
+  runs the model loop in Lua. The H3 parachute model (8131 steps) takes
+  0.03 s instead of 9.3 s; the answer version of the NLT module
+  "Modelleren" compiles in 23 s instead of 45 s, with an identical
+  text. Rules stay in l3fp syntax; TeX macros other than the model's
+  variables are expanded once, as `\fp_eval` would see them. A model
+  that cannot be translated falls back to `\fp_eval` (info message).
+  Comparisons use a relative tolerance of 1e-9, so binary rounding
+  (ten steps of 0.1 give 0.99999999999999989) does not move a stop
+  condition by a step; final values are returned to TeX with 12
+  significant digits. `engine=compare` runs both engines, keeps the
+  `\fp_eval` results and reports whether they agree. The default stays
+  `fpeval`. All 25 models of the examples and tests agree. Regression
+  test `m012-engine`.
+- `\diagrammodel` plots at most `plot-points` points per series
+  (`\numodelsetup`, default 1000; `points=` per diagram; 0 for all).
+  A longer series is thinned by distance in the diagram, so flat
+  stretches lose overlapping marks while every step of a fast change
+  stays visible; no point is moved or invented, and only the plot is
+  affected. The 8131-point parachute diagram takes 0.24 s instead of
+  2.3 s and looks the same. Lua test `test_coords`.
 - Changing and copying models. `\copymodel[Name=value,
   blank={...}]{source}{copy}` creates a model with all declarations of
   source, references renamed (`\sprongV` → `\foutV`), start values and
@@ -65,6 +97,12 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   consistent. A copy of the H3 parachute model computes exactly like
   the same model written out in full. Regression test
   `m011-copymodel`.
+- `\diagrammodel[axis={...}, plot={...}, series={{...},{...}}]` passes
+  pgfplots options on unchanged, after numodel's own: for the axis
+  (legend position and style, ...), for every series (mark size, ...),
+  and per series in series order. numodel keeps its own keys for what
+  concerns the model and the layout and leaves drawing details to
+  pgfplots, instead of growing a key for each of them.
 - `numodel.nice_range(lo, hi, cmmax)`: the axis range `\calcplotdims`
   would give a series. `numodel.get_model` uses it for a variable that
   no `\diagrammodel` has drawn, so every computed variable has an axis
@@ -92,6 +130,20 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   warning naming both and the consequence, instead of the generic
   "being redefined"; documents relying on `T` next to `Tmax` keep
   compiling.
+
+#### Fixed
+- numodel no longer writes its trace output to the log: lines such as
+  `MVAR start`, `BUILD_TABLE emit rule num` and `TEXTMODEL table` --
+  left-over debugging, some 1800 lines for the NLT module "Modelleren",
+  two thirds of its log. `\numodelsetup{debug=true}` brings them back;
+  when off, their content is not even expanded.
+- `numodel.lua` set the global `debug = true`, replacing Lua's standard
+  `debug` library for the whole document (any package calling
+  `debug.traceback` would have failed). Removed; it was unused.
+- The `maxiter` warning lacked a space ("after 5iterations").
+- `\diagrammodel[float=false]` no longer makes the caption package warn
+  that `hypcap=true` is ignored: outside a float hypcap is switched off
+  locally (only when caption is loaded).
 
 #### Documentation
 - The manual said that the accessors `num`, `qty` and `pre` hold the

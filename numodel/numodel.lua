@@ -39,7 +39,6 @@ M.settings = { maxiter = 20000, blanks = "open" }
 function M.set_setting(name, value)
     M.settings[name] = value
 end
-debug = true
 
 local function ensure(p)
     if not M.models[p] then
@@ -82,16 +81,52 @@ function M.end_step(p)
     m.nsteps = m.nsteps + 1
 end
 
-function M.get_coords(p, xvar, yvar)
+-- Coordinates of the series yvar against xvar.  maxpoints (optional,
+-- 0 or nil: all) thins a long series for plotting, by distance in the
+-- plot: with both axes scaled to their range, a sample is left out when
+-- it lies closer than L/maxpoints to the last sample kept, where L is
+-- the length of the whole curve.  Flat stretches, where thousands of
+-- samples overlap, are thinned; fast changes, where consecutive steps
+-- lie apart, keep every step.  No point is invented or moved; the first
+-- and the last are always kept, and the data itself is untouched.
+function M.get_coords(p, xvar, yvar, maxpoints)
     local m = M.models[p]
     if not m then return end
     local xd = m.steps[xvar]
     local yd = m.steps[yvar]
     if not xd or not yd then return end
     local n = math.min(#xd, #yd)
+    local keep = nil                          -- nil: keep all
+    maxpoints = tonumber(maxpoints) or 0
+    if maxpoints > 1 and n > maxpoints then
+        local xlo, xhi, ylo, yhi = math.huge, -math.huge, math.huge, -math.huge
+        for i = 1, n do
+            local x, y = xd[i], yd[i]
+            if x < xlo then xlo = x end
+            if x > xhi then xhi = x end
+            if y < ylo then ylo = y end
+            if y > yhi then yhi = y end
+        end
+        local sx = (xhi > xlo) and 1 / (xhi - xlo) or 0
+        local sy = (yhi > ylo) and 1 / (yhi - ylo) or 0
+        local function dist(i, j)
+            local dx, dy = (xd[i] - xd[j]) * sx, (yd[i] - yd[j]) * sy
+            return math.sqrt(dx * dx + dy * dy)
+        end
+        local L = 0
+        for i = 2, n do L = L + dist(i, i - 1) end
+        local h = L / maxpoints
+        if h > 0 then
+            keep = { [1] = true, [n] = true }
+            local last = 1
+            for i = 2, n - 1 do
+                if dist(i, last) >= h then keep[i] = true; last = i end
+            end
+        end
+    end
     local parts = {}
     for i = 1, n do
-        if xd[i] and yd[i] then
+        if (not keep or keep[i]) and xd[i] and yd[i] then
             parts[#parts + 1] = "(" .. xd[i] .. "," .. yd[i] .. ")"
         end
     end
@@ -182,6 +217,45 @@ function M.get_at(p, name, at, value)
         tostring(times[#times])),
         { "Call \\computemodel first, and ask for a value within ",
           "the simulated range." })
+end
+
+-- --- \tablemodel ----------------------------------------------------------
+
+-- Step list from a spec such as "0-5" or "0,1,2,10-12" (0-based steps).
+function M.parse_steps(spec)
+    local out = {}
+    for part in (spec or ""):gmatch("[^,]+") do
+        part = part:gsub("%s", "")
+        local a, b = part:match("^(%d+)%-(%d+)$")
+        if a then
+            for i = tonumber(a), tonumber(b) do out[#out + 1] = i end
+        elseif part:match("^%d+$") then
+            out[#out + 1] = tonumber(part)
+        end
+    end
+    return out
+end
+
+-- For \tablemodel: the step numbers of spec, as a TeX clist.
+function M.tex_steps(spec)
+    tex.sprint(table.concat(M.parse_steps(spec), ","))
+end
+
+-- Value of full variable name at step i (0-based), or nothing when
+-- that step was not recorded.  With row = "state", an auxiliary
+-- variable is taken from step i+1: the value computed from the state of
+-- step i (see "What a step contains" in the manual).
+function M.tex_cell(p, name, i, row)
+    local m = M.models[p]
+    local data = m and m.steps and m.steps[name]
+    if not data then return end
+    i = tonumber(i)
+    if row == "state" and m.meta and m.meta[name]
+       and m.meta[name].type == "aux" then
+        i = i + 1
+    end
+    local x = data[i + 1]
+    if x then tex.sprint(M.tex_number(x)) end
 end
 
 -- --- name collisions ----------------------------------------------------
@@ -2260,6 +2334,290 @@ local function plain_ternary(expr, names, D, W)
     local ctx = { D = D, W = W, names = names }
     return print_node(tree.c, ctx), print_node(tree.a, ctx),
         print_node(tree.b, ctx)
+end
+
+-- ====================================================================
+-- Lua engine (\computemodel[engine=lua])
+-- ====================================================================
+-- Compiles the l3fp rule expressions -- parsed with the same parser as
+-- the plain-text rendering above -- into Lua functions and runs the
+-- model loop in Lua: some hundreds of times faster than \fp_eval.
+--
+-- l3fp computes in decimal, Lua in binary doubles.  Values agree to
+-- about 15 significant digits, but a comparison on a boundary can tip:
+-- 10 steps of 0.1 give 0.99999999999999989, so "t >= 1" would hold one
+-- step late.  Comparisons therefore use a relative tolerance of 1e-9,
+-- which reproduces l3fp's decisions (checked on 800 combinations of
+-- time step and stop time).
+--
+-- Expressions must use model variables, numbers, operators and l3fp
+-- functions only; TeX macros other than model variables are expanded
+-- by the TeX side before compilation.  Whatever cannot be compiled
+-- makes compile_model return nil and a reason; \computemodel then
+-- falls back to \fp_eval for that model.
+
+local EPS = 1e-9
+local function tol(a, b)
+    return EPS * math.max(1, math.abs(a), math.abs(b))
+end
+-- Runtime helpers available to compiled code (as upvalue H).
+local H = {}
+function H.lt(a, b) return (a < b - tol(a, b)) and 1 or 0 end
+function H.le(a, b) return (a <= b + tol(a, b)) and 1 or 0 end
+function H.gt(a, b) return (a > b + tol(a, b)) and 1 or 0 end
+function H.ge(a, b) return (a >= b - tol(a, b)) and 1 or 0 end
+function H.eq(a, b) return (math.abs(a - b) <= tol(a, b)) and 1 or 0 end
+function H.ne(a, b) return (math.abs(a - b) > tol(a, b)) and 1 or 0 end
+-- l3fp's && and || return an operand, like Lua's and/or with 0 as false.
+function H.and_(a, b) if a == 0 then return a end return b end
+function H.or_(a, b) if a ~= 0 then return a end return b end
+function H.not_(a) return (a == 0) and 1 or 0 end
+function H.tern(c, a, b) if c ~= 0 then return a end return b end
+function H.sign(x) return (x > 0 and 1) or (x < 0 and -1) or 0 end
+-- l3fp rounds ties to even.
+local function round_even(x)
+    local f = math.floor(x)
+    local d = x - f
+    if d > 0.5 then return f + 1 end
+    if d < 0.5 then return f end
+    return (f % 2 == 0) and f or f + 1
+end
+function H.round(x, n)
+    n = n or 0
+    local s = 10^n
+    return round_even(x * s) / s
+end
+function H.trunc(x, n)
+    n = n or 0
+    local s = 10^n
+    local y = x * s
+    return (y >= 0 and math.floor(y) or math.ceil(y)) / s
+end
+function H.ceil(x, n)
+    n = n or 0
+    local s = 10^n
+    return math.ceil(x * s) / s
+end
+function H.floor(x, n)
+    n = n or 0
+    local s = 10^n
+    return math.floor(x * s) / s
+end
+function H.min(...) return math.min(...) end
+function H.max(...) return math.max(...) end
+function H.atan(y, x)
+    if x == nil then return math.atan(y) end
+    return math.atan(y, x)
+end
+local DEG = math.pi / 180
+local lua_fn = {
+    sqrt = "math.sqrt", exp = "math.exp", ln = "math.log", abs = "math.abs",
+    sin = "math.sin", cos = "math.cos", tan = "math.tan",
+    asin = "math.asin", acos = "math.acos",
+    sign = "H.sign", round = "H.round", trunc = "H.trunc",
+    ceil = "H.ceil", floor = "H.floor", min = "H.min", max = "H.max",
+    atan = "H.atan",
+}
+-- Functions defined through others: name -> Lua template ($1 = arg).
+local lua_fn_tpl = {
+    cot = "(1/math.tan($1))", csc = "(1/math.sin($1))",
+    sec = "(1/math.cos($1))",
+    acot = "math.atan(1/($1))", acsc = "math.asin(1/($1))",
+    asec = "math.acos(1/($1))",
+    sind = "math.sin(DEG*($1))", cosd = "math.cos(DEG*($1))",
+    tand = "math.tan(DEG*($1))",
+    cotd = "(1/math.tan(DEG*($1)))", cscd = "(1/math.sin(DEG*($1)))",
+    secd = "(1/math.cos(DEG*($1)))",
+    asind = "(math.asin($1)/DEG)", acosd = "(math.acos($1)/DEG)",
+    atand = "(math.atan($1)/DEG)",
+    acotd = "(math.atan(1/($1))/DEG)", acscd = "(math.asin(1/($1))/DEG)",
+    asecd = "(math.acos(1/($1))/DEG)",
+}
+local lua_const = { pi = "math.pi", deg = "DEG", ["true"] = "1",
+    ["false"] = "0", inf = "math.huge", nan = "(0/0)" }
+local lua_binop = { ["+"] = "+", ["-"] = "-", ["*"] = "*", ["/"] = "/",
+    imul = "*", ["^"] = "^" }
+local lua_cmp = { ["<"] = "H.lt", ["<="] = "H.le", [">"] = "H.gt",
+    [">="] = "H.ge", ["="] = "H.eq", ["=="] = "H.eq", ["!="] = "H.ne",
+    ["&&"] = "H.and_", ["||"] = "H.or_" }
+
+-- AST (from parse) -> Lua expression source.  vars: set of control-word
+-- names that are model variables.  Raises an error string for anything
+-- it cannot translate.
+local function to_lua(n, vars)
+    local k = n.k
+    if k == "num" then
+        local s = n.s
+        if s:sub(1, 1) == "." then s = "0" .. s end
+        return "(" .. s .. ")"
+    elseif k == "var" then
+        if not vars[n.s] then error("\\" .. n.s .. " is not a variable of this model", 0) end
+        return "v[\"" .. n.s .. "\"]"
+    elseif k == "id" then
+        local c = lua_const[n.s]
+        if not c then error("unknown name '" .. n.s .. "'", 0) end
+        return c
+    elseif k == "paren" then return "(" .. to_lua(n.e, vars) .. ")"
+    elseif k == "neg" then return "(-" .. to_lua(n.e, vars) .. ")"
+    elseif k == "pos" then return to_lua(n.e, vars)
+    elseif k == "not" then return "H.not_(" .. to_lua(n.e, vars) .. ")"
+    elseif k == "tern" then
+        return "H.tern(" .. to_lua(n.c, vars) .. "," .. to_lua(n.a, vars)
+            .. "," .. to_lua(n.b, vars) .. ")"
+    elseif k == "call" then
+        local args = {}
+        for i, a in ipairs(n.args) do args[i] = to_lua(a, vars) end
+        if lua_fn[n.s] then
+            return lua_fn[n.s] .. "(" .. table.concat(args, ",") .. ")"
+        elseif lua_fn_tpl[n.s] and #args == 1 then
+            return (lua_fn_tpl[n.s]:gsub("%$1", function() return args[1] end))
+        end
+        error("unknown function '" .. n.s .. "'", 0)
+    elseif k == "bin" then
+        local a, b = to_lua(n.a, vars), to_lua(n.b, vars)
+        if lua_binop[n.op] then
+            return "(" .. a .. lua_binop[n.op] .. b .. ")"
+        elseif lua_cmp[n.op] then
+            return lua_cmp[n.op] .. "(" .. a .. "," .. b .. ")"
+        end
+        error("unknown operator '" .. n.op .. "'", 0)
+    end
+    error("cannot translate expression", 0)
+end
+
+local function compile_expr(expr, vars)
+    local W = {}
+    local tree = parse(tokenize(expr or ""), W)
+    if #W > 0 then error(W[1], 0) end
+    local src = "local v = ...; return " .. to_lua(tree, vars)
+    local f, err = load(src, "=numodel rule", "t", { H = H, math = math, DEG = DEG })
+    if not f then error(err, 0) end
+    return f
+end
+
+-- Compile model p: rules = { {target, expr}, ... } in execution order,
+-- stop = the stop expression.  Expressions are the TeX side's expanded,
+-- detokenized form (model variables as \<fullname>).  Returns the
+-- compiled model or nil and a reason.
+function M.compile_model(p, rules, stop)
+    local m = M.models[p]
+    if not m then return nil, "unknown model" end
+    local vars = {}
+    for _, name in ipairs(m.varlist) do vars[name] = true end
+    local ok, res = pcall(function()
+        local c = { rules = {}, stop = compile_expr(stop, vars) }
+        for i, r in ipairs(rules) do
+            if not vars[r[1]] then error("rule for unknown variable " .. r[1], 0) end
+            c.rules[i] = { r[1], compile_expr(r[2], vars) }
+        end
+        return c
+    end)
+    if not ok then return nil, res end
+    return res
+end
+
+-- Run compiled model c for p from the start values init (name ->
+-- number), exactly like \computemodel's loop: record every variable,
+-- count the step, stop when the condition holds, else run the rules in
+-- order; give up after maxiter steps.  Unless dry, the series are
+-- stored as \computemodel's are.  Returns steps, final values, and
+-- whether maxiter was hit.
+function M.run_compiled(p, c, init, maxiter, dry)
+    local m = M.models[p]
+    local names = {}
+    local seen = {}
+    for _, n in ipairs(m.varlist) do
+        if not seen[n] then seen[n] = true; names[#names + 1] = n end
+    end
+    local v = {}
+    for _, n in ipairs(names) do v[n] = tonumber(init[n]) or 0 end
+    local series = {}
+    for _, n in ipairs(names) do series[n] = {} end
+    local steps, hit = 0, false
+    local rules, stop = c.rules, c.stop
+    while true do
+        for _, n in ipairs(names) do
+            local s = series[n]; s[#s + 1] = v[n]
+        end
+        steps = steps + 1
+        if stop(v) == 1 then break end      -- as \computemodel: exactly 1
+        for i = 1, #rules do
+            local r = rules[i]
+            v[r[1]] = r[2](v)
+        end
+        if steps > maxiter then hit = true; break end
+    end
+    if not dry then
+        m.steps = series
+        m.nsteps = steps
+    end
+    return steps, v, hit
+end
+
+-- A number as TeX gets it back: what \fp_eval would accept, rounded to
+-- 12 significant digits so that binary noise (162.6000000000094 after
+-- 8130 steps of 0.02) does not show when a value is typeset directly.
+function M.tex_number(x)
+    if x ~= x then return "nan" end
+    if x == math.huge then return "inf" end
+    if x == -math.huge then return "-inf" end
+    x = tonumber(string.format("%.12g", x))
+    if x == math.floor(x) and math.abs(x) < 1e15 then
+        return string.format("%d", x)
+    end
+    return (string.format("%.12g", x))
+end
+
+-- Called from \computemodel.  Compiles and runs the model; on success
+-- stores the final values in M.engine_result for the TeX side.
+-- Returns nothing; the TeX side reads M.engine_status ("ok" or the
+-- reason for falling back).
+M.engine_rules = {}
+function M.engine_add_rule(target, expr)
+    M.engine_rules[#M.engine_rules + 1] = { target, expr }
+end
+function M.engine_run(p, stop, maxiter, dry)
+    local c, why = M.compile_model(p, M.engine_rules, stop)
+    M.engine_rules = {}
+    if not c then
+        M.engine_status = why
+        return
+    end
+    local init = M.engine_init or {}
+    local steps, v, hit = M.run_compiled(p, c, init, tonumber(maxiter), dry)
+    M.engine_result = { steps = steps, values = v, hit = hit }
+    M.engine_status = "ok"
+end
+-- engine=compare: after the \fp_eval run (whose series are stored),
+-- compare with the Lua run kept in M.engine_result.  Returns a short
+-- description of the differences, or "" when they agree.
+function M.engine_compare(p)
+    local r = M.engine_result
+    local m = M.models[p]
+    if not r or not m or not m.steps then return "" end
+    local out = {}
+    if r.steps ~= m.nsteps then
+        out[#out + 1] = string.format("%d steps instead of %d", r.steps, m.nsteps)
+    end
+    for name, series in pairs(m.steps) do
+        local a, b = series[#series], r.values[name]
+        if a and b then
+            local scale = 1
+            for _, x in ipairs(series) do
+                if math.abs(x) > scale then scale = math.abs(x) end
+            end
+            if math.abs(a - b) > 1e-8 * scale then
+                out[#out + 1] = string.format("%s = %s instead of %s", name,
+                    M.tex_number(b), M.tex_number(a))
+            end
+        end
+    end
+    table.sort(out)
+    return table.concat(out, "; ")
+end
+M.engine_init = {}
+function M.engine_set_init(name, value)
+    M.engine_init[name] = tonumber(value)
 end
 
 -- Whole model -> { body = rules text, init = initial values text,

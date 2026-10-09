@@ -170,6 +170,24 @@
 
 \ExplSyntaxOn
 
+% engine: fpeval (default; every rule through \fp_eval), lua (rules
+% compiled to Lua, some hundreds of times faster; falls back to fpeval
+% when a model cannot be compiled) or compare (runs both, keeps the
+% fpeval results and warns where the Lua run differs).
+\tl_new:N \g__numodel_engine_tl
+\tl_gset:Nn \g__numodel_engine_tl { fpeval }
+\tl_new:N \l__numodel_cmd_engine_tl
+\tl_new:N \l__numodel_eff_engine_tl
+\tl_new:N \l__numodel_engine_status_tl
+\tl_new:N \l__numodel_engine_expr_tl
+
+% Trace output for numodel's own debugging, off by default
+% (\numodelsetup{debug=true}).  The argument is not even expanded when
+% it is off.
+\bool_new:N \g__numodel_debug_bool
+\cs_new_protected:Npn \__numodel_debug:n #1
+  { \bool_if:NT \g__numodel_debug_bool { \typeout {#1} } }
+
 % blanks: open (default; the pupil's version shows "lhs = \cdots" for
 % every \mvar/\mrule/\mstop with the blank key) or filled (the answer
 % version shows them in full).  \textmodel and \coachmodel can
@@ -603,6 +621,13 @@ end
     start-format        .code:n =
       { \__numodel_setup_choice:Nnnn \g__numodel_startfmt_tl
           { start-format } { rounded , input } {#1} },
+    engine              .code:n =
+      { \__numodel_setup_choice:Nnnn \g__numodel_engine_tl
+          { engine } { fpeval , lua , compare } {#1} },
+    debug               .bool_gset:N = \g__numodel_debug_bool,
+    % Maximum number of points per series that \diagrammodel plots
+    % (0: all).  A long series is thinned for the plot only.
+    plot-points         .int_gset:N = \g__numodel_plotpoints_int,
     % open: pupil's version (blanks shown as \cdots), filled: answers.
     % Mirrored in Lua for numodel.plaintext / numodel-coach.
     blanks              .code:n =
@@ -647,6 +672,7 @@ end
   {
     syntax        = EN,
     maxiter       = 20000,
+    plot-points   = 1000,
     graphscalex   = 2,
     graphscaley   = 2,
     diagram-style = tight,
@@ -670,6 +696,8 @@ end
     units               .meta:nn = { numodel / setup }{ units               = #1 },
     start-format        .meta:nn = { numodel / setup }{ start-format        = #1 },
     blanks              .meta:nn = { numodel / setup }{ blanks              = #1 },
+    engine              .meta:nn = { numodel / setup }{ engine              = #1 },
+    plot-points         .meta:nn = { numodel / setup }{ plot-points         = #1 },
     tblrenv             .meta:nn = { numodel / setup }{ tblrenv             = #1 },
     decimal-separator   .meta:nn = { numodel / setup }{ decimal-separator   = #1 },
   }
@@ -753,27 +781,27 @@ end
 % Public commands for prefix management
 \NewDocumentCommand{\newmodelprefix}{ m }
   {
-    \typeout{NEWPREFIX~start:~#1}
+    \__numodel_debug:n{NEWPREFIX~start:~#1}
     \seq_if_in:NnTF \g_numodel_prefixes_seq {#1}
       { \msg_error:nnn { numodel } { prefix-exists } {#1} }
       {
-        \typeout{NEWPREFIX~save~current:~\g_numodel_current_prefix_tl}
+        \__numodel_debug:n{NEWPREFIX~save~current:~\g_numodel_current_prefix_tl}
         % Save current state under the previous prefix (if any)
         \tl_if_empty:NF \g_numodel_current_prefix_tl
           { \exp_args:NV \__numodel_save_state:n \g_numodel_current_prefix_tl }
-        \typeout{NEWPREFIX~register}
+        \__numodel_debug:n{NEWPREFIX~register}
         % Register new prefix + init backup vars + Lua state
         \seq_gput_right:Nn \g_numodel_prefixes_seq {#1}
-        \typeout{NEWPREFIX~init_backup}
+        \__numodel_debug:n{NEWPREFIX~init_backup}
         \__numodel_init_backup:n {#1}
-        \typeout{NEWPREFIX~lua_init}
+        \__numodel_debug:n{NEWPREFIX~lua_init}
         \directlua{ numodel.init_prefix("#1") }
-        \typeout{NEWPREFIX~clear_state}
+        \__numodel_debug:n{NEWPREFIX~clear_state}
         % Clear current state and set the prefix
         \__numodel_clear_state:
-        \typeout{NEWPREFIX~set_current}
+        \__numodel_debug:n{NEWPREFIX~set_current}
         \tl_gset:Nn \g_numodel_current_prefix_tl {#1}
-        \typeout{NEWPREFIX~done:~#1}
+        \__numodel_debug:n{NEWPREFIX~done:~#1}
       }
   }
 
@@ -861,6 +889,10 @@ end
           }
       },
     legend                     .default:n = true,
+    % \computemodel-only: engine=fpeval|lua|compare for this run.
+    engine                     .code:n =
+      { \__numodel_local_choice:Nnnn \l__numodel_cmd_engine_tl
+          { engine } { fpeval , lua , compare } {#1} },
     % \textmodel-only: blanks=open|filled for this table.
     blanks                     .code:n =
       { \__numodel_local_choice:Nnnn \l__numodel_cmd_blanks_tl
@@ -875,6 +907,15 @@ end
     caption                    .tl_set:N   = \l__numodel_cmd_caption_tl,
     nocaption                  .bool_set:N = \l__numodel_cmd_nocaption_bool,
     nocaption                  .default:n  = true,
+    % pgfplots options passed on unchanged, after numodel's own (so they
+    % override them): axis= for the axis, plot= for every series,
+    % series={{...},{...}} for one series each, in series order.
+    axis                       .tl_set:N   = \l__numodel_cmd_axis_tl,
+    plot                       .tl_set:N   = \l__numodel_cmd_plot_tl,
+    series                     .code:n     =
+      { \seq_set_split:Nnn \l__numodel_cmd_series_seq { , } {#1} },
+    % Maximum number of plotted points per series, as plot-points.
+    points                     .tl_set:N   = \l__numodel_cmd_points_tl,
     % Maximum axis size in cm, as \numodelplotsetup{xcmmax,ycmmax}.
     xcmmax                     .tl_set:N   = \l__numodel_cmd_xcmmax_tl,
     ycmmax                     .tl_set:N   = \l__numodel_cmd_ycmmax_tl,
@@ -882,6 +923,7 @@ end
 \bool_new:N  \l__numodel_cmd_legend_bool
 \clist_new:N \l__numodel_cmd_legend_clist
 \tl_new:N    \l__numodel_cmd_blanks_tl
+\seq_new:N   \l__numodel_cmd_series_seq
 \tl_new:N    \l__numodel_cmd_style_tl
 \bool_new:N  \l__numodel_single_series_bool
 \tl_new:N    \l__numodel_series_opts_tl
@@ -1038,7 +1080,7 @@ end
 % log".  Any prefix= key is ignored here: the caller has already
 % switched to the right model.
 \cs_new_protected:Npn \__numodel_mvar_exec:nnnnnnn #1#2#3#4#5#6#7 {%
-  \typeout{MVAR~start:~#2}
+  \__numodel_debug:n{MVAR~start:~#2}
   % Parse optional keys (prefix, gridx, gridy, alias, aliasleft, aliasright,
   % flowarrow-cloud-tip)
   \tl_set:Nn \l__numodel_gridx_tl { -1 }
@@ -1050,15 +1092,15 @@ end
   \tl_clear:N \l__numodel_mvar_flowcloud_tl
   \tl_clear:N \l__numodel_mvar_startfmt_tl
   \bool_set_false:N \l__numodel_blank_bool
-  \typeout{MVAR~before-keys-set}
+  \__numodel_debug:n{MVAR~before-keys-set}
   \keys_set:nn { numodel / mvar } {#1}
   \tl_clear:N \l__numodel_cmd_prefix_tl
-  \typeout{MVAR~after-keys-set}
+  \__numodel_debug:n{MVAR~after-keys-set}
   \__numodel_resolve_eff_prefix:
-  \typeout{MVAR~eff:~\l__numodel_eff_prefix_tl}
+  \__numodel_debug:n{MVAR~eff:~\l__numodel_eff_prefix_tl}
   \__numodel_with_prefix:Nn \l__numodel_eff_prefix_tl
     { \__numodel_mvar_body:nnnnnn {#2}{#3}{#4}{#5}{#6}{#7} }%
-  \typeout{MVAR~done:~#2}
+  \__numodel_debug:n{MVAR~done:~#2}
 }
 \makeatother
 
@@ -1079,7 +1121,7 @@ end
       { \msg_error:nn { numodel } { no-prefix } }
     % Full name = current prefix + short name (#1)
     \tl_set:Ne \l__numodel_fullname_tl { \g_numodel_current_prefix_tl #1 }
-    \typeout{MVAR~body~fullname:~\l__numodel_fullname_tl}
+    \__numodel_debug:n{MVAR~body~fullname:~\l__numodel_fullname_tl}
     % Register in the per-prefix seq.  The defqty registration is
     % optional: it only fires when the user has loaded the project-
     % specific 'defqty' system (used for worksheet expansion).
@@ -1219,7 +1261,7 @@ end
 \msg_new:nnn { numodel } { empty-use }
   { Model~variable~'#1'~has~no~start~value~and~is~used~before~assignment. }
 \msg_new:nnn { numodel } { maxiter }
-  { computemodel~stopped~after~\int_use:N \g_numodel_maxiter_int ~iterations~
+  { computemodel~stopped~after~\int_use:N \g_numodel_maxiter_int \c_space_tl iterations~
     (safety~limit).~Check~stop~condition. }
 \msg_new:nnn { numodel } { no-stop }
   { computemodel:~no~stop~condition~defined.~Use~\token_to_str:N \mstop\space
@@ -1274,8 +1316,8 @@ end
 
 \cs_new_protected:Npn \__numodel_vars_to_display:N #1
   {
-    \typeout{VTD~input:~\tl_to_str:N #1}
-    \typeout{VTD~seq:~\seq_use:Nn \g_mvar_names_seq {|}}
+    \__numodel_debug:n{VTD~input:~\tl_to_str:N #1}
+    \__numodel_debug:n{VTD~seq:~\seq_use:Nn \g_mvar_names_seq {|}}
     % Multi-character numeric superscripts.  \fp_eval:n accepts
     % '^1.2' (and '^12', '^-3', ...), but TeX math mode binds only
     % the next single token to ^, so 'T^1.2' would typeset as
@@ -1298,11 +1340,11 @@ end
     % Variable names -> display names
     \seq_map_inline:Nn \g_mvar_names_seq
       {
-        \typeout{VTD~iter:~##1}
+        \__numodel_debug:n{VTD~iter:~##1}
         \cs_if_exist:cT { ##1 text }
           {
             \tl_set:Ne \l_tmpa_tl { \use:c { ##1 text } }
-            \typeout{VTD~replace~\c{##1}~with~\l_tmpa_tl}
+            \__numodel_debug:n{VTD~replace~\c{##1}~with~\l_tmpa_tl}
             \regex_replace_all:nnN { \c{##1} } { \u{l_tmpa_tl} } #1
           }
       }
@@ -1556,7 +1598,7 @@ end
 % Executes one \mrule declaration (#1 = star as a boolean) in the
 % current model; the public \mrule logs it first.
 \cs_new_protected:Npn \__numodel_mrule_exec:nnnn #1#2#3#4 {%
-  \typeout{MRULE~start:~#3}
+  \__numodel_debug:n{MRULE~start:~#3}
   \bool_set_false:N \l__numodel_is_ternary_bool
   \bool_set_false:N \l__numodel_blank_bool
   % Parse keys (prefix, alias, aliasleft, aliasright; gridx/gridy ignored)
@@ -1568,7 +1610,7 @@ end
   \__numodel_resolve_eff_prefix:
   \__numodel_with_prefix:Nn \l__numodel_eff_prefix_tl
     { \__numodel_mrule_body:nnn {#1}{#3}{#4} }%
-  \typeout{MRULE~done:~#3}
+  \__numodel_debug:n{MRULE~done:~#3}
 }
 
 \cs_new_protected:Npn \__numodel_mrule_body:nnn #1 #2 #3
@@ -1663,13 +1705,13 @@ end
                 % Ordinary assignment: lhs = rhs
                 \tl_set:Nn \l__numodel_rhs_tl {#3}
                 \__numodel_vars_to_display:N \l__numodel_rhs_tl
-                \typeout{MRULE~rhs~after:~\tl_to_str:N \l__numodel_rhs_tl}
+                \__numodel_debug:n{MRULE~rhs~after:~\tl_to_str:N \l__numodel_rhs_tl}
                 \tl_set:Ne \l__numodel_display_tl
                   {
                     \exp_not:V \l__numodel_lhs_tl \exp_not:n { \,=\, }
                     \exp_not:V \l__numodel_rhs_tl
                   }
-                \typeout{MRULE~display:~\tl_to_str:N \l__numodel_display_tl}
+                \__numodel_debug:n{MRULE~display:~\tl_to_str:N \l__numodel_display_tl}
               }
               }
           }
@@ -1755,7 +1797,7 @@ end
 \tl_new:N \l__numodel_stop_tl
 % Executes one \mstop declaration in the current model.
 \cs_new_protected:Npn \__numodel_mstop_exec:nnn #1#2#3 {%
-  \typeout{MSTOP~start}
+  \__numodel_debug:n{MSTOP~start}
   % Parse keys (only alias is honoured; prefix via key resolver)
   \tl_clear:N \l__numodel_alias_tl
   \tl_clear:N \l__numodel_aliasleft_tl
@@ -1767,7 +1809,7 @@ end
   \__numodel_resolve_eff_prefix:
   \__numodel_with_prefix:Nn \l__numodel_eff_prefix_tl
     { \__numodel_mstop_body:n {#3} }%
-  \typeout{MSTOP~done}
+  \__numodel_debug:n{MSTOP~done}
 }
 
 \cs_new_protected:Npn \__numodel_mstop_body:n #1
@@ -2444,7 +2486,7 @@ end
 \cs_new_protected:Npn \__numodel_build_row:
   {
         \int_incr:N \l__numodel_startrow_int
-        \typeout{BUILD_TABLE~row:~\int_use:N \l__numodel_row_int~type:~\seq_item:Nn \g_mrule_type_seq { \l__numodel_row_int }}
+        \__numodel_debug:n{BUILD_TABLE~row:~\int_use:N \l__numodel_row_int~type:~\seq_item:Nn \g_mrule_type_seq { \l__numodel_row_int }}
         % Check type: rule -> show number, cont -> blank
         \bool_lazy_or:nnTF
           {
@@ -2470,7 +2512,7 @@ end
           {
             % Numbered row
             \int_incr:N \l__numodel_dispnum_int
-            \typeout{BUILD_TABLE~emit~rule~num:~\int_use:N \l__numodel_dispnum_int~content:~\seq_item:Nn \g_mrule_seq { \l__numodel_row_int }}
+            \__numodel_debug:n{BUILD_TABLE~emit~rule~num:~\int_use:N \l__numodel_dispnum_int~content:~\seq_item:Nn \g_mrule_seq { \l__numodel_row_int }}
             \tl_gput_right:Ne \g__numodel_table_tl
               {
                 \exp_not:n { \rule{0pt}{2.6ex} }
@@ -2479,7 +2521,7 @@ end
                 \exp_not:e { \seq_item:Nn \g_mrule_seq { \l__numodel_row_int } }
                 \exp_not:n { $ & }
               }
-            \typeout{BUILD_TABLE~after-emit~table~tail:~\tl_tail:N \g__numodel_table_tl}
+            \__numodel_debug:n{BUILD_TABLE~after-emit~table~tail:~\tl_tail:N \g__numodel_table_tl}
           }
         % Initial-value column (independent of rule/cont)
         \int_compare:nNnTF { \l__numodel_startrow_int } > { \l__numodel_numstarts_int }
@@ -2495,12 +2537,12 @@ end
 
 \cs_new_protected:Npn \__numodel_build_table:
   {
-    \typeout{BUILD_TABLE~rules:~\seq_use:Nn \g_mrule_seq {|}}
-    \typeout{BUILD_TABLE~types:~\seq_use:Nn \g_mrule_type_seq {|}}
+    \__numodel_debug:n{BUILD_TABLE~rules:~\seq_use:Nn \g_mrule_seq {|}}
+    \__numodel_debug:n{BUILD_TABLE~types:~\seq_use:Nn \g_mrule_type_seq {|}}
     \int_set:Nn \l__numodel_numrules_int  { \seq_count:N \g_mrule_seq }
     \int_set:Nn \l__numodel_numstarts_int { \seq_count:N \g_mvar_start_seq }
-    \typeout{BUILD_TABLE~numrules:~\int_use:N \l__numodel_numrules_int}
-    \typeout{BUILD_TABLE~numstarts:~\int_use:N \l__numodel_numstarts_int}
+    \__numodel_debug:n{BUILD_TABLE~numrules:~\int_use:N \l__numodel_numrules_int}
+    \__numodel_debug:n{BUILD_TABLE~numstarts:~\int_use:N \l__numodel_numstarts_int}
     \int_zero:N \l__numodel_row_int
     \int_zero:N \l__numodel_dispnum_int
     \int_zero:N \l__numodel_startrow_int
@@ -2517,7 +2559,7 @@ end
       { { \__numodel_kw:n {th_initvals} } }
     \tl_gput_right:Nn \g__numodel_table_tl
       { \\ \hline }
-    \typeout{BUILD_TABLE~before-step~table:~\tl_to_str:N \g__numodel_table_tl}
+    \__numodel_debug:n{BUILD_TABLE~before-step~table:~\tl_to_str:N \g__numodel_table_tl}
     \int_step_inline:nn { \l__numodel_numrules_int }
       {
         \int_incr:N \l__numodel_row_int
@@ -2546,7 +2588,7 @@ end
   }
 
 \NewDocumentCommand{\textmodel}{ O{} }{%
-  \typeout{TEXTMODEL~start}
+  \__numodel_debug:n{TEXTMODEL~start}
   \tl_clear:N \l__numodel_cmd_prefix_tl
   \tl_clear:N \l__numodel_cmd_units_tl
   \tl_clear:N \l__numodel_cmd_tblrenv_tl
@@ -2579,16 +2621,186 @@ end
       \group_begin:
         \__numodel_apply_dsep:
         \__numodel_build_table:
-        \typeout{TEXTMODEL~table:~\tl_to_str:N \g__numodel_table_tl}
+        \__numodel_debug:n{TEXTMODEL~table:~\tl_to_str:N \g__numodel_table_tl}
         \tl_use:N \g__numodel_table_tl
       \group_end:
     }%
   \bool_gset_eq:NN \g__numodel_units_bool \l__numodel_saved_units_bool
   \tl_gset_eq:NN \g__numodel_tblrenv_tl \l__numodel_saved_tblrenv_tl
-  \typeout{TEXTMODEL~done}
+  \__numodel_debug:n{TEXTMODEL~done}
 }
 \bool_new:N \l__numodel_saved_units_bool
 \tl_new:N \l__numodel_saved_tblrenv_tl
+
+% ====================================================================
+% \tablemodel
+% ====================================================================
+% \tablemodel[keys]{Name,Name,...}: a table with the values of the
+% given variables, one row per step, after \computemodel.  Keys:
+%   prefix  model (default: the current one)
+%   steps   which steps: 0-5 (default), 0,1,2,10-12
+%   row     step (default): every value from step n; state: the state
+%           of step n with the auxiliary values computed from it (taken
+%           from step n+1, see "What a step contains")
+%   blank   empty cells in the pupil's version (blanks=open), except the
+%           first column and the first `given` rows
+%   given   rows always filled with blank (an example row), default 0
+%   blanks  open|filled for this table, as \numodelsetup{blanks}
+%   num     siunitx options per column: num={T={round-precision=0}}
+%   table   tabularray options added to the table
+% Numbers are rounded to each variable's significant figures, with the
+% decimal marker of the syntax.
+
+\keys_define:nn { numodel / table }
+  {
+    prefix .tl_set:N   = \l__numodel_cmd_prefix_tl ,
+    steps  .tl_set:N   = \l__numodel_tab_steps_tl ,
+    row    .code:n     =
+      { \__numodel_local_choice:Nnnn \l__numodel_tab_row_tl
+          { row } { step , state } {#1} } ,
+    blank  .bool_set:N = \l__numodel_tab_blank_bool ,
+    blank  .default:n  = true ,
+    given  .int_set:N  = \l__numodel_tab_given_int ,
+    blanks .code:n     =
+      { \__numodel_local_choice:Nnnn \l__numodel_cmd_blanks_tl
+          { blanks } { open , filled } {#1} } ,
+    num    .code:n     =
+      {
+        \prop_clear:N \l__numodel_tab_num_prop
+        \keyval_parse:nnn { \use_none:n }
+          { \prop_put:Nnn \l__numodel_tab_num_prop } {#1}
+      } ,
+    table  .tl_set:N   = \l__numodel_tab_table_tl ,
+  }
+\tl_new:N   \l__numodel_tab_row_tl
+\prop_new:N \l__numodel_tab_num_prop
+\tl_new:N   \l__numodel_tab_body_tl
+\tl_new:N   \l__numodel_tab_opts_tl
+\clist_new:N \l__numodel_tab_vars_clist
+\clist_new:N \l__numodel_tab_rows_clist
+\int_new:N  \l__numodel_tab_rowno_int
+\int_new:N  \l__numodel_tab_colno_int
+\bool_new:N \l__numodel_tab_empty_bool
+
+\NewDocumentCommand{\tablemodel}{ O{} m }
+  {
+    \tl_clear:N \l__numodel_cmd_prefix_tl
+    \tl_set:Nn  \l__numodel_tab_steps_tl { 0-5 }
+    \tl_clear:N \l__numodel_tab_row_tl
+    \bool_set_false:N \l__numodel_tab_blank_bool
+    \int_zero:N \l__numodel_tab_given_int
+    \tl_clear:N \l__numodel_cmd_blanks_tl
+    \prop_clear:N \l__numodel_tab_num_prop
+    \tl_clear:N \l__numodel_tab_table_tl
+    \keys_set:nn { numodel / table } {#1}
+    \__numodel_resolve_eff_prefix:
+    \tl_set:Ne \l__numodel_eff_blanks_tl
+      {
+        \tl_if_empty:NTF \l__numodel_cmd_blanks_tl
+          { \tl_use:N \g__numodel_blanks_tl }
+          { \tl_use:N \l__numodel_cmd_blanks_tl }
+      }
+    \clist_set:Nn \l__numodel_tab_vars_clist {#2}
+    \clist_set:Ne \l__numodel_tab_rows_clist
+      {
+        \directlua{ numodel.tex_steps(
+          "\luaescapestring{ \tl_use:N \l__numodel_tab_steps_tl }") }
+      }
+    \group_begin:
+      \__numodel_apply_dsep:
+      \__numodel_tab_build:
+      \__numodel_debug:n
+        { TABLEMODEL~body:~\tl_to_str:N \l__numodel_tab_body_tl }
+      \tl_use:N \l__numodel_tab_body_tl
+    \group_end:
+  }
+
+% Header "symbol (unit)" and one row per step into \l__numodel_tab_body_tl.
+\cs_new_protected:Npn \__numodel_tab_build:
+  {
+    \tl_set:Ne \l__numodel_tab_body_tl
+      {
+        \exp_not:N \begin{tblr}
+          {
+            colspec = { * { \clist_count:N \l__numodel_tab_vars_clist } { c } } ,
+            hlines , vlines , row{1} = { font = \exp_not:N \bfseries } ,
+            \exp_not:V \l__numodel_tab_table_tl
+          }
+      }
+    % header
+    \int_zero:N \l__numodel_tab_colno_int
+    \clist_map_inline:Nn \l__numodel_tab_vars_clist
+      {
+        \int_incr:N \l__numodel_tab_colno_int
+        \int_compare:nNnF { \l__numodel_tab_colno_int } = { 1 }
+          { \tl_put_right:Nn \l__numodel_tab_body_tl { & } }
+        \tl_put_right:Ne \l__numodel_tab_body_tl
+          {
+            $ \exp_not:v { \l__numodel_eff_prefix_tl ##1 text } $
+            \tl_if_blank:eF { \exp_not:v { \l__numodel_eff_prefix_tl ##1 unitraw } }
+              {
+                \c_space_tl
+                ( \exp_not:N \unit { \exp_not:v { \l__numodel_eff_prefix_tl ##1 unitraw } } )
+              }
+          }
+      }
+    \tl_put_right:Nn \l__numodel_tab_body_tl { \\ }
+    % rows
+    \int_zero:N \l__numodel_tab_rowno_int
+    \clist_map_inline:Nn \l__numodel_tab_rows_clist
+      {
+        \int_incr:N \l__numodel_tab_rowno_int
+        \int_zero:N \l__numodel_tab_colno_int
+        \clist_map_inline:Nn \l__numodel_tab_vars_clist
+          {
+            \int_incr:N \l__numodel_tab_colno_int
+            \int_compare:nNnF { \l__numodel_tab_colno_int } = { 1 }
+              { \tl_put_right:Nn \l__numodel_tab_body_tl { & } }
+            % Empty in the pupil's version: blank, not the first column,
+            % past the given rows.
+            \bool_set:Nn \l__numodel_tab_empty_bool
+              {
+                \l__numodel_tab_blank_bool
+                && \str_if_eq_p:Vn \l__numodel_eff_blanks_tl { open }
+                && \int_compare_p:nNn { \l__numodel_tab_colno_int } > { 1 }
+                && \int_compare_p:nNn
+                     { \l__numodel_tab_rowno_int } > { \l__numodel_tab_given_int }
+              }
+            \bool_if:NF \l__numodel_tab_empty_bool
+              { \__numodel_tab_cell:nn {####1} {##1} }
+          }
+        \tl_put_right:Nn \l__numodel_tab_body_tl { \\ }
+      }
+    \tl_put_right:Nn \l__numodel_tab_body_tl { \end{tblr} }
+  }
+
+% One cell: variable #1 (short name) at step #2, rounded to its
+% significant figures, with the column's own siunitx options last.
+\cs_new_protected:Npn \__numodel_tab_cell:nn #1#2
+  {
+    \tl_set:Ne \l_tmpa_tl
+      {
+        \directlua{ numodel.tex_cell("\l__numodel_eff_prefix_tl",
+          "\l__numodel_eff_prefix_tl #1", #2,
+          "\tl_use:N \l__numodel_tab_row_tl") }
+      }
+    \tl_if_empty:NF \l_tmpa_tl
+      {
+        \prop_get:NnNF \l__numodel_tab_num_prop {#1} \l__numodel_tab_opts_tl
+          { \tl_clear:N \l__numodel_tab_opts_tl }
+        \tl_put_right:Ne \l__numodel_tab_body_tl
+          {
+            \exp_not:N \num
+              [ round-mode = figures ,
+                round-precision = \use:c { \l__numodel_eff_prefix_tl #1 sign } ,
+                exponent-mode = threshold ,
+                exponent-thresholds = -3 \c_colon_str
+                  \use:c { \l__numodel_eff_prefix_tl #1 sign } ,
+                \exp_not:V \l__numodel_tab_opts_tl ]
+              { \exp_not:V \l_tmpa_tl }
+          }
+      }
+  }
 
 % ====================================================================
 % \computemodel
@@ -2632,19 +2844,25 @@ end
 
 
 \NewDocumentCommand{\computemodel}{ O{} }{%
-  \typeout{COMPUTE~start}
+  \__numodel_debug:n{COMPUTE~start}
   \tl_clear:N \l__numodel_cmd_prefix_tl
+  \tl_clear:N \l__numodel_cmd_engine_tl
   \keys_set:nn { numodel / cmd } {#1}
+  \tl_set:Ne \l__numodel_eff_engine_tl
+    {
+      \tl_if_empty:NTF \l__numodel_cmd_engine_tl
+        { \tl_use:N \g__numodel_engine_tl }
+        { \tl_use:N \l__numodel_cmd_engine_tl }
+    }
   \__numodel_resolve_eff_prefix:
   \__numodel_with_prefix:Nn \l__numodel_eff_prefix_tl
     { \__numodel_compute_body: }%
-  \typeout{COMPUTE~done}
+  \__numodel_debug:n{COMPUTE~done}
 }
 
-\cs_new_protected:Npn \__numodel_compute_body:
+% The \fp_eval loop (engine=fpeval, and the reference of compare).
+\cs_new_protected:Npn \__numodel_compute_fpeval:
   {
-    \tl_if_empty:NT \g_numodel_stop_expr_tl
-      { \msg_error:nn { numodel } { no-stop } }
     \int_gzero:N \g_numodel_steps_int
     % Initialise Lua storage for this prefix
     \directlua{ numodel.init("\g_numodel_current_prefix_tl") }
@@ -2669,6 +2887,117 @@ end
             \msg_warning:nn { numodel } { maxiter }
           }
       }
+  }
+
+% Hand the model to the Lua engine: start values, then every rule and
+% the stop condition with TeX macros other than the model's variables
+% expanded (a \defqty value, a document constant), so that only
+% variables, numbers and l3fp syntax reach the compiler.  Sets
+% \l__numodel_engine_status_tl to "ok" or the reason it cannot be used.
+\cs_new_protected:Npn \__numodel_engine_run:n #1
+  {
+    \seq_map_inline:Nn \g_mvar_names_seq
+      {
+        \directlua{ numodel.engine_set_init("##1",
+          "\luaescapestring{ \use:c {##1} }") }
+      }
+    \group_begin:
+      \seq_map_inline:Nn \g_mvar_names_seq
+        { \cs_set:cpe {##1} { \exp_not:N \exp_not:N \exp_not:c {##1} } }
+      \seq_map_inline:Nn \g_mrule_calc_seq
+        { \__numodel_engine_rule:nn ##1 }
+      \tl_set:Ne \l__numodel_engine_expr_tl { \g_numodel_stop_expr_tl }
+      \directlua{ numodel.engine_run("\g_numodel_current_prefix_tl",
+        "\luaescapestring{ \tl_to_str:N \l__numodel_engine_expr_tl }",
+        \int_use:N \g_numodel_maxiter_int, #1) }
+    \group_end:
+    \tl_set:Ne \l__numodel_engine_status_tl
+      { \directlua{ tex.sprint(-2, numodel.engine_status) } }
+  }
+\cs_new_protected:Npn \__numodel_engine_rule:nn #1#2
+  {
+    \tl_set:Ne \l__numodel_engine_expr_tl {#2}
+    \directlua{ numodel.engine_add_rule("#1",
+      "\luaescapestring{ \tl_to_str:N \l__numodel_engine_expr_tl }") }
+  }
+
+\cs_generate_variant:Nn \msg_info:nnnn { nnee }
+\cs_generate_variant:Nn \msg_warning:nnnn { nnee }
+\cs_new_protected:Npn \numodelmaxiterwarning
+  { \msg_warning:nn { numodel } { maxiter } }
+\msg_new:nnn { numodel } { engine-fallback }
+  { Model~'#1'~computed~with~\token_to_str:N \fp_eval:n\space instead~
+    of~Lua:~#2. }
+\msg_new:nnn { numodel } { engine-differs }
+  { engine=compare:~Lua~and~\token_to_str:N \fp_eval:n\space differ~
+    for~model~'#1':~#2. }
+\msg_new:nnn { numodel } { engine-agrees }
+  { engine=compare:~Lua~and~\token_to_str:N \fp_eval:n\space agree~
+    for~model~'#1'. }
+
+\cs_new_protected:Npn \__numodel_compute_body:
+  {
+    \tl_if_empty:NT \g_numodel_stop_expr_tl
+      { \msg_error:nn { numodel } { no-stop } }
+    \str_case:VnF \l__numodel_eff_engine_tl
+      {
+        { lua }
+          {
+            \__numodel_engine_run:n { false }
+            \str_if_eq:VnTF \l__numodel_engine_status_tl { ok }
+              {
+                % The Lua run has stored the series; set the final
+                % values and the step count as the fpeval loop does.
+                \seq_map_inline:Nn \g_mvar_names_seq
+                  {
+                    \cs_gset:cpe {##1}
+                      {
+                        \directlua{ tex.sprint(numodel.tex_number(
+                          numodel.engine_result.values["##1"])) }
+                      }
+                  }
+                \int_gset:Nn \g_numodel_steps_int
+                  { \directlua{ tex.sprint(numodel.engine_result.steps) } }
+                \directlua{ if~numodel.engine_result.hit~then~
+                  tex.sprint(string.char(92).."numodelmaxiterwarning")~end }
+              }
+              {
+                \msg_info:nnee { numodel } { engine-fallback }
+                  { \g_numodel_current_prefix_tl }
+                  { \l__numodel_engine_status_tl }
+                \__numodel_compute_fpeval:
+              }
+          }
+        { compare }
+          {
+            \__numodel_engine_run:n { true }
+            \__numodel_compute_fpeval:
+            \str_if_eq:VnTF \l__numodel_engine_status_tl { ok }
+              {
+                \tl_set:Ne \l__numodel_engine_status_tl
+                  {
+                    \directlua{ tex.sprint(-2, numodel.engine_compare(
+                      "\g_numodel_current_prefix_tl")) }
+                  }
+                \tl_if_empty:NTF \l__numodel_engine_status_tl
+                  {
+                    \msg_info:nne { numodel } { engine-agrees }
+                      { \g_numodel_current_prefix_tl }
+                  }
+                  {
+                    \msg_warning:nnee { numodel } { engine-differs }
+                      { \g_numodel_current_prefix_tl }
+                      { \l__numodel_engine_status_tl }
+                  }
+              }
+              {
+                \msg_warning:nnee { numodel } { engine-fallback }
+                  { \g_numodel_current_prefix_tl }
+                  { \l__numodel_engine_status_tl }
+              }
+          }
+      }
+      { \__numodel_compute_fpeval: }
     \__numodel_set_minmax_from_lua:
     % Public per-prefix step-count accessor: \<prefix>steps holds the
     % number of recorded samples (= iterations of the loop above).
@@ -2694,6 +3023,14 @@ end
 
 % Variant with explicit prefix as first argument (instead of an
 % optional argument, so the macro stays fully expandable).
+% Coordinates for \diagrammodel: thinned to plot-points (or points=).
+\cs_new:Npn \__numodel_plot_coords:nnn #1#2#3
+  {
+    \directlua{ numodel.get_coords("#1", "#1" .. "#2", "#1" .. "#3",
+      \tl_if_empty:NTF \l__numodel_cmd_points_tl
+        { \int_use:N \g__numodel_plotpoints_int }
+        { \tl_use:N \l__numodel_cmd_points_tl } ) }
+  }
 \cs_new:Npn \mcoordsp #1#2#3
   {
     \directlua{ numodel.get_coords(
@@ -2912,7 +3249,7 @@ end
 
 \cs_new_protected:Npn \__numodel_build_graphic:
   {
-    \typeout{BUILD:~step~0~reset~auto-positions}
+    \__numodel_debug:n{BUILD:~step~0~reset~auto-positions}
     % --- Reset gridx/gridy to the original user input ---
     % Auto-layout writes positions to var.gridx/gridy.  On a second
     % \graphicmodel call those would, without reset, be treated as
@@ -2932,13 +3269,13 @@ end
       { \bool_set_true:N \l__numodel_keep_natural_bool }
     \str_if_eq:VnT \g__numodel_diagram_style_tl { edu }
       { \bool_set_true:N \l__numodel_keep_natural_bool }
-    \typeout{BUILD:~step~1~lua~layout~writeback}
+    \__numodel_debug:n{BUILD:~step~1~lua~layout~writeback}
     % Pillar A — Lua is the single source of truth for flow detection
     % and auto-layout.  The writeback clears and fills \<var>gridx/gridy
     % and the flow-props that downstream emitters (place_node,
     % flow-builders, emit_natural_and_phantom, emit_stock_valve) read.
     \__numodel_lua_layout_writeback:
-    \typeout{BUILD:~step~2~tikzpicture}
+    \__numodel_debug:n{BUILD:~step~2~tikzpicture}
     % --- Build tikzpicture ---
     % Render order matters: each segment overlays the previous one,
     % so we draw flows first (one continuous arrow per flow), then
@@ -2954,8 +3291,8 @@ end
     % Nodes (stocks, aux, const, clouds; flows -> flows_tl,
     % valves -> valves_tl)
     \seq_map_inline:Nn \g_mvar_names_seq
-      { \typeout{NODE:~##1} \__numodel_place_node:n {##1} }
-    \typeout{BUILD:~step~5~stock-valve~nodes}
+      { \__numodel_debug:n{NODE:~##1} \__numodel_place_node:n {##1} }
+    \__numodel_debug:n{BUILD:~step~5~stock-valve~nodes}
     % Stock-as-flow valve nodes
     \prop_map_inline:Nn \l__numodel_stock_valve_prop
       {
@@ -2971,13 +3308,13 @@ end
         \tl_if_in:nnF {##1} { __sv }
           { \__numodel_emit_stock_phantom_valve:nn {##1} {##2} }
       }
-    \typeout{BUILD:~step~6~flow~arrows}
+    \__numodel_debug:n{BUILD:~step~6~flow~arrows}
     % Flow arrows (one segment each; drawn underneath the valves)
     \tl_gput_right:NV \g__numodel_graphic_tl \l__numodel_flows_tl
-    \typeout{BUILD:~step~6a~valve~nodes}
+    \__numodel_debug:n{BUILD:~step~6a~valve~nodes}
     % Valve nodes (white-filled, drawn ON TOP of the flow arrows)
     \tl_gput_right:NV \g__numodel_graphic_tl \l__numodel_valves_tl
-    \typeout{BUILD:~step~6b+7~causal~arrows~(Lua)}
+    \__numodel_debug:n{BUILD:~step~6b+7~causal~arrows~(Lua)}
     % A2: causal arrows via Lua — emit_causals demultiplexes on
     % tgt_is_valve and pushes to \g__numodel_graphic_tl or
     % \l__numodel_late_causals_tl respectively.  Afterwards append
@@ -2985,7 +3322,7 @@ end
     % from the flow-builders (step 6/6a) and those from emit_causals.
     \__numodel_lua_emit_causals:
     \tl_gput_right:NV \g__numodel_graphic_tl \l__numodel_late_causals_tl
-    \typeout{BUILD:~step~8~done}
+    \__numodel_debug:n{BUILD:~step~8~done}
     \tl_gput_right:Nn \g__numodel_graphic_tl
       { \end{tikzpicture} }
   }
@@ -3624,6 +3961,10 @@ end
     \bool_set_false:N \l__numodel_cmd_nocaption_bool
     \tl_clear:N \l__numodel_cmd_xcmmax_tl
     \tl_clear:N \l__numodel_cmd_ycmmax_tl
+    \tl_clear:N \l__numodel_cmd_points_tl
+    \tl_clear:N \l__numodel_cmd_axis_tl
+    \tl_clear:N \l__numodel_cmd_plot_tl
+    \seq_clear:N \l__numodel_cmd_series_seq
     \keys_set:nn { numodel / cmd } {#1}
     \__numodel_resolve_eff_prefix:
     % --- Parse prefix list -----------------------------------------
@@ -3720,6 +4061,9 @@ end
         % As capt-of's \captionof: \caption needs only \@captype.
         \begin{center}
         \cs_set:cpn { @captype } { figure }
+        % Outside a float hypcap has no anchor to place; switch it off
+        % (locally) instead of letting caption warn for every diagram.
+        \cs_if_exist:NT \captionsetup { \captionsetup { hypcap = false } }
       }
     \group_begin:
     \__numodel_apply_dsep:
@@ -3727,6 +4071,11 @@ end
       { \cs_set:Npe \xcmmax { \tl_use:N \l__numodel_cmd_xcmmax_tl } }
     \tl_if_empty:NF \l__numodel_cmd_ycmmax_tl
       { \cs_set:Npe \ycmmax { \tl_use:N \l__numodel_cmd_ycmmax_tl } }
+    \tl_if_empty:NF \l__numodel_cmd_axis_tl
+      {
+        \exp_args:Ne \pgfplotsset
+          { numodel/axis/.append~style = { \exp_not:V \l__numodel_cmd_axis_tl } }
+      }
     % --- Build the plot body ---------------------------------------
     % One \addplot per (prefix, yvar) pair, prefix-major: all y-vars of
     % the first prefix come before any of the second.  A single series
@@ -3780,9 +4129,12 @@ end
                         , color = \__numodel_series_color:n
                                   { \int_use:N \l__numodel_yidx_int }
                       }
+                    , \exp_not:V \l__numodel_cmd_plot_tl
+                    , \seq_item:Nn \l__numodel_cmd_series_seq
+                        { \l__numodel_yidx_int }
                   ]
                 coordinates {
-                  \mcoordsp { ##1 } { #2 } { ####1 }
+                  \__numodel_plot_coords:nnn { ##1 } { #2 } { ####1 }
                 } ;
                 \bool_if:nT
                   {

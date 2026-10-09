@@ -1,0 +1,41 @@
+% Regression test: \tablemodel.  One column per variable, header
+% "symbol (unit)", one row per step from steps=; values rounded to each
+% variable's significant figures (siunitx options per column with
+% num=).  row=state takes auxiliary variables from step n+1, so a row
+% shows the state of step n with the values computed from it.  blank
+% leaves cells empty in the pupil's version (blanks=open) except the
+% first column and the first `given` rows; blanks=filled fills them.
+% The built table is logged through \numodelsetup{debug=true}.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{d}
+\mvar{T}{t}{0}{\s}{3}{system}
+\mvar{Dt}{\Delta t}{1}{\s}{2}{system}
+\mvar{V}{v}{0}{\m\per\s}{3}{stock}
+\mvar{Fw}{F_{\text{w}}}{}{\N}{3}{aux}
+\mvar{A}{a}{}{\m\per\s\squared}{3}{aux}
+\mrule{Fw}{0.24 * \dV^2}
+\mrule{A}{(784.8 - \dFw) / 80}
+\mrule{V}{\dV + \dA * \dDt}
+\mrule{T}{\dT + \dDt}
+\mstop{\dT >= 5}
+\computemodel
+\setbox0=\vbox{\tablemodel{T,V}}
+\numodelsetup{debug=true}
+\TIMO
+\TYPE{=== row=state, blank with one given row, time as integer ===}
+\setbox0=\vbox{\tablemodel[steps=0-2, row=state, blank, given=1,
+  num={T={round-mode=places, round-precision=0}}]{T,V,Fw,A}}
+\TYPE{=== the same, blanks=filled ===}
+\setbox0=\vbox{\tablemodel[steps=0-2, row=state, blank, given=1, blanks=filled,
+  num={T={round-mode=places, round-precision=0}}]{T,V,Fw,A}}
+\TYPE{=== row=step (default), a step list ===}
+\setbox0=\vbox{\tablemodel[steps={0,4-5}]{T,V,Fw}}
+\TYPE{=== row=state past the last step: empty cell ===}
+\setbox0=\vbox{\tablemodel[steps=5, row=state]{T,Fw}}
+\TYPE{=== End ===}
+\end{document}

@@ -2,8 +2,8 @@
 % float=false (no float: fits a minipage or a box; the caption still
 % counts as a figure), caption={...}, nocaption (no caption, no
 % figure number), legend={...} (one label per series), legend=true for a
-% single series, style=line/both, and xcmmax/ycmmax for a smaller
-% diagram.  Every call must compile; the figure counter shows which
+% single series, style=line/both, xcmmax/ycmmax for a smaller
+% diagram, and pgfplots options passed on with axis=, plot=, series=.  Every call must compile; the figure counter shows which
 % calls produced a caption.
 \input{regression-test.tex}
 \documentclass{article}
@@ -37,6 +37,9 @@
 \TYPE{after float=false: figure \thefigure}
 \diagrammodel[prefix=b, float=false, nocaption]{T}{V}{geen}
 \TYPE{after nocaption: figure \thefigure\space (unchanged)}
+\diagrammodel[prefix={a,b}, axis={legend pos=south east},
+  plot={mark size=1.6pt}, series={{}, {mark size=0.4pt, gray}}]{T}{V}{pass}
+\TYPE{after axis/plot/series pass-through: figure \thefigure}
 \TYPE{=== Unknown style warns ===}
 \diagrammodel[prefix=b, style=dots]{T}{V}{dots}
 \TYPE{=== End ===}

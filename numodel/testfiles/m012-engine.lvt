@@ -1,0 +1,70 @@
+% Regression test: \computemodel[engine=lua|compare].
+% engine=lua compiles the rules to Lua; the results must equal the
+% \fp_eval ones (engine=compare runs both and reports "agree").
+% Covered: TeX macros inside \mrule that \fp_eval would expand -- a
+% \defqty-like value (\edef), \fpeval{...}, a macro whose expansion
+% contains model variables, a variable of another model, \numexpr --;
+% a stop condition on a decimal boundary (10 steps of 0.1 reach t = 1
+% only up to binary rounding: Lua must stop at the same step); and an
+% l3fp function the compiler does not know, which falls back to
+% \fp_eval with an info message (lua) or a warning (compare).
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{other}
+\mvar{G}{g}{9.81}{\m\per\s\squared}{3}{constant}
+\edef\myK{0.24}                      % as \defqty defines its base macro
+\newcommand\myFz{\pm * \otherG}      % expands to model variables
+\newcommand\mkmodel[1]{%
+  \newmodelprefix{#1}
+  \mvar{T}{t}{0}{\s}{2}{system}
+  \mvar{Dt}{dt}{0.1}{\s}{2}{system}
+  \mvar{m}{m}{80}{\kg}{2}{constant}
+  \mvar{V}{v}{0}{\m\per\s}{3}{stock}
+  \mvar{Fz}{F_z}{}{\N}{3}{aux}
+  \mvar{Fw}{F_w}{}{\N}{3}{aux}
+  \mvar{N}{n}{0}{}{2}{aux}}
+\renewcommand\pm{\csname\currentp m\endcsname}
+\newcommand\currentp{p}
+\mkmodel{p}
+\mrule{Fz}{\myFz}
+\mrule{Fw}{\myK * \pV^2 * \fpeval{1/2} * 2}
+\mrule{N}{\the\numexpr 3+4\relax + 0 * \pT}
+\mrule{V}{\pV + (\pFz - \pFw) / \pm * \pDt}
+\mrule{T}{\pT + \pDt}
+\mstop{\pT >= 1}
+\TIMO
+\TYPE{=== engine=compare ===}
+\computemodel[engine=compare]
+\TYPE{fpeval: steps \psteps, v \pV, n \pN}
+\TYPE{=== engine=lua (a fresh copy: \string\computemodel\space continues
+  from the current values) ===}
+\copymodel{p}{pl}
+\computemodel[engine=lua]
+\TYPE{lua:    steps \plsteps, v \plV, n \plN}
+\TYPE{=== Unknown function: fallback ===}
+\OMIT
+\renewcommand\currentp{q}
+\mkmodel{q}
+\mrule{N}{fact(3)}
+\mrule{T}{\qT + \qDt}
+\mstop{\qT >= 1}
+\TIMO
+\computemodel[engine=lua]
+\TYPE{fallback: steps \qsteps, n \qN}
+\computemodel[engine=compare]
+\TYPE{=== Global setting ===}
+\numodelsetup{engine=lua}
+\copymodel{p}{pg}
+\computemodel
+\TYPE{steps \pgsteps, v \pgV}
+\TYPE{=== maxiter in the Lua engine ===}
+\numodelsetup{maxiter=5}
+\copymodel{p}{pm}
+\computemodel
+\TYPE{steps \pmsteps}
+\TYPE{=== End ===}
+\end{document}

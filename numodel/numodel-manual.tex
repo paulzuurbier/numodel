@@ -386,6 +386,17 @@ The same keys can also be passed as package options:
   setting is read when the value is shown, so it also applies to
   variables declared before it.  Per variable:
   |\mvar[start-format=...]|.
+\item[\texttt{engine}] How |\computemodel| computes: |fpeval|
+  (default) evaluates every rule with |\fp_eval|; |lua| compiles the
+  rules to Lua first, which is some hundreds of times faster; |compare|
+  runs both, keeps the |\fp_eval| results and reports whether the Lua
+  run agrees.  |\computemodel[engine=...]| chooses for one model.  See
+  Section~\ref{sec:engine}.
+\item[\texttt{debug}] |true| writes |numodel|'s trace output (how
+  variables, rules and tables are built) to the log; default |false|.
+  Only useful when reporting a problem with |numodel| itself.
+\item[\texttt{plot-points}] Maximum number of points per series that
+  |\diagrammodel| plots (default 1000, 0 for all); see its |points| key.
 \item[\texttt{blanks}] |open| (default) or |filled|: whether the
   rules, stop condition and start values declared with the |blank|
   key are shown as gaps (``$F_z = \cdots$'', the pupil's version) or in
@@ -833,6 +844,29 @@ recorded samples (i.e.\ the iteration count $N$, step~0 included),
 and the full time-series can be retrieved with |\mcoords| /
 |\mstep| / |\mstepat|.
 
+\textbf{The Lua engine.}\label{sec:engine}  With |engine=lua| the
+rules are translated into Lua functions -- by the same parser that
+renders them as Coachtaal -- and the loop above runs in Lua.  A model
+of 8\,000 steps then takes a few hundredths of a second instead of
+some seconds.  You keep writing rules in \textsf{l3fp} syntax; TeX
+macros other than the model's own variables (a value defined with
+|\edef|, |\fpeval{...}|, a variable of another model) are expanded
+once, before the run, exactly as |\fp_eval| would see them.  A model
+that cannot be translated -- an \textsf{l3fp} function the translator
+does not know -- is computed with |\fp_eval|, with an info message
+naming the reason, so |engine=lua| never breaks a document.
+
+\textsf{l3fp} computes in decimal, Lua in binary.  Values agree to
+about 15 significant digits; the final values are handed back to TeX
+rounded to 12, which hides the binary noise ($162{,}6$ rather than
+$162{,}600\,000\,000\,009\,4$).  A comparison on a boundary could
+tip, though: ten steps of $0{,}1$ give $0{,}999\,999\,999\,999\,999\,89$
+in binary, so $t \geqslant 1$ would hold one step late.  The Lua engine
+therefore compares with a relative tolerance of $10^{-9}$, which stops
+every model at the same step as |\fp_eval|.  Use |engine=compare|
+once for a document to check this for your own models: it warns for
+every model where the number of steps or a final value differs.
+
 \textbf{What a step contains.}  Every round first \emph{records} the
 current value of every variable, then checks the stop condition, and
 then executes the rules in order.  Step~0 therefore holds the start
@@ -890,6 +924,22 @@ Keys of \meta{keys}, besides |prefix|:
   ``$v(t)$-diagram''.
 \item[\texttt{nocaption}] No caption, and so no figure number and no
   label.
+\item[\texttt{axis}, \texttt{plot}, \texttt{series}] \textsf{pgfplots}
+  options passed on unchanged, after |numodel|'s own, so they override
+  them: |axis={...}| for the axis (|legend pos=north west|, |legend
+  style={...}|, \dots), |plot={...}| for every series (|mark
+  size=1.6pt|), and |series={{...},{...}}| for one series each, in
+  series order (|series={{}, {mark size=0.5pt}}|).  |numodel| keeps its
+  own keys for what concerns the model and the layout; drawing details
+  are left to \textsf{pgfplots}.
+\item[\texttt{points}] Maximum number of points plotted per series,
+  as the |plot-points| setting (default 1000; 0 plots all).  A longer
+  series is thinned by distance in the diagram: a sample is left out
+  when it lies very close to the last one shown, so flat stretches,
+  where thousands of marks overlap, become lighter while every step of
+  a fast change stays visible.  No point is moved or invented; only
+  the plot is affected (|\mcoords|, |\mstep| and exports see all
+  samples).  An 8\,000-step series plots in a tenth of the time.
 \item[\texttt{xcmmax}, \texttt{ycmmax}] Maximum axis length in cm for
   this diagram, as the keys of the same name of
   |\numodelplotsetup|; a smaller value gives a smaller diagram.
@@ -968,6 +1018,33 @@ when \meta{i} falls outside the recorded range
 surfaces typo'd indices and "ran $N$ steps but indexed step $N$"
 off-by-one mistakes rather than expanding to nothing and propagating
 empty arguments into the surrounding plot.
+
+\DescribeMacro{\tablemodel}
+|\tablemodel[<keys>]{<Name>,<Name>,...}| sets a table of computed
+values: one column per variable, headed ``symbol (unit)'', one row per
+step.  The numbers are rounded to each variable's significant figures,
+with the decimal marker of the syntax.  Keys:
+\begin{description}
+\item[\texttt{steps}] Which steps: |0-5| (default), |{0,1,2,10-12}|.
+\item[\texttt{row}] |step| (default): every value from step~$n$.
+  |state|: the state of step~$n$ with the auxiliary values computed from
+  it, which are recorded in step~$n+1$ (see ``What a step contains''
+  under |\computemodel|) -- the row a pupil computes by hand.
+\item[\texttt{blank}] Empty cells in the pupil's version
+  (|blanks=open|, the default), except the first column and the first
+  |given| rows; with |blanks=filled| the table is complete.
+\item[\texttt{given}] Number of rows filled in anyway (an example row).
+\item[\texttt{blanks}] |open| or |filled| for this table.
+\item[\texttt{num}] \textsf{siunitx} options per column, after
+  |numodel|'s rounding: |num={T={round-mode=places,round-precision=0}}|
+  shows the time as whole numbers.
+\item[\texttt{table}] \textsf{tabularray} options added to the table.
+\item[\texttt{prefix}] Another model than the current one.
+\end{description}
+\begin{quote}
+|\tablemodel[steps=0-5, row=state, blank, given=1,|\\
+|  num={T={round-mode=places, round-precision=0}}]{T,V,Fw,Fres,A,Dv}|
+\end{quote}
 
 \DescribeMacro{\mstepat}
 Returns the value of a variable at the first step where another
