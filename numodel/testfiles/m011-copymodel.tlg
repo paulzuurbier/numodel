@@ -1,0 +1,1162 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== A rule added after the stop condition goes before it ===
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bV
+MVAR done: V
+MVAR start: A
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bA
+MVAR done: A
+MRULE start: V
+VTD input: \bV + \bA * \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: v+ a\cdot   dt
+MRULE display: v\,=\,v+ a\cdot   dt
+MRULE done: V
+MRULE start: T
+VTD input: \bT + \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: t+ dt
+MRULE display: t\,=\,t+ dt
+MRULE done: T
+MRULE start: A
+VTD input: 2 + 0 * \bT 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: 2 + 0 \cdot   t
+MRULE display: a\,=\,2 + 0 \cdot   t
+MRULE done: A
+MSTOP start
+VTD input: \bT >= 4
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MSTOP done
+  bT: short=T type=system value=0
+  bDt: short=Dt type=system value=1
+  bV: short=V type=stock value=0
+  bA: short=A type=aux value=2
+  calc: bV := \bV + \bA * \bDt 
+  calc: bT := \bT + \bDt 
+  calc: bA := 2 + 0 * \bT 
+  stop: \bT >= 4
+=== before= / after= / [add] ===
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bV
+MVAR done: V
+MVAR start: A
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bA
+MVAR done: A
+MRULE start: V
+VTD input: \bV + \bA * \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: v+ a\cdot   dt
+MRULE display: v\,=\,v+ a\cdot   dt
+MRULE done: V
+MRULE start: T
+VTD input: \bT + \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: t+ dt
+MRULE display: t\,=\,t+ dt
+MRULE done: T
+MRULE start: A
+VTD input: 2 + 0 * \bT 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: 2 + 0 \cdot   t
+MRULE display: a\,=\,2 + 0 \cdot   t
+MRULE done: A
+MSTOP start
+VTD input: \bT >= 4
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MSTOP done
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bV
+MVAR done: V
+MVAR start: A
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bA
+MVAR done: A
+MRULE start: V
+VTD input: \bV + \bA * \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: v+ a\cdot   dt
+MRULE display: v\,=\,v+ a\cdot   dt
+MRULE done: V
+MRULE start: T
+VTD input: \bT + \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: t+ dt
+MRULE display: t\,=\,t+ dt
+MRULE done: T
+MRULE start: V
+VTD input: \bV + 0
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: v+ 0
+MRULE display: v\,=\,v+ 0
+MRULE done: V
+MRULE start: A
+VTD input: 2 + 0 * \bT 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: 2 + 0 \cdot   t
+MRULE display: a\,=\,2 + 0 \cdot   t
+MRULE done: A
+MSTOP start
+VTD input: \bT >= 4
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MSTOP done
+  bT: short=T type=system value=0
+  bDt: short=Dt type=system value=1
+  bV: short=V type=stock value=0
+  bA: short=A type=aux value=2
+  text: \text {(hier de krachten)}
+  calc: bV := \bV + \bA * \bDt 
+  calc: bT := \bT + \bDt 
+  calc: bV := \bV + 0
+  calc: bA := 2 + 0 * \bT 
+  stop: \bT >= 4
+=== [replace] with two rules for V: error ===
+! Package numodel Error: Model 'b' has several rules for 'V'; \mrule[replace] needs exactly one. Remove them with \mremoverule and add the new rule.
+Type <return> to continue.
+ ...                                              
+l. ...\mrule[replace]{V}{\bV}
+LaTeX does not know anything more about this error, sorry.
+Try typing <return> to proceed.
+If that doesn't work, type X <return> to quit.
+=== \mremoverule and [replace] ===
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bV
+MVAR done: V
+MVAR start: A
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bA
+MVAR done: A
+MRULE start: T
+VTD input: \bT + \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: t+ dt
+MRULE display: t\,=\,t+ dt
+MRULE done: T
+MRULE start: A
+VTD input: 2 + 0 * \bT 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: 2 + 0 \cdot   t
+MRULE display: a\,=\,2 + 0 \cdot   t
+MRULE done: A
+MSTOP start
+VTD input: \bT >= 4
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MSTOP done
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bV
+MVAR done: V
+MVAR start: A
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bA
+MVAR done: A
+MRULE start: V
+VTD input: \bV + \bA * \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: v+ a\cdot   dt
+MRULE display: v\,=\,v+ a\cdot   dt
+MRULE done: V
+MRULE start: T
+VTD input: \bT + \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: t+ dt
+MRULE display: t\,=\,t+ dt
+MRULE done: T
+MRULE start: A
+VTD input: 2 + 0 * \bT 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: 2 + 0 \cdot   t
+MRULE display: a\,=\,2 + 0 \cdot   t
+MRULE done: A
+MSTOP start
+VTD input: \bT >= 4
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MSTOP done
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bV
+MVAR done: V
+MVAR start: A
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bA
+MVAR done: A
+MRULE start: V
+VTD input: \bV + \bA * \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: v+ a\cdot   dt
+MRULE display: v\,=\,v+ a\cdot   dt
+MRULE done: V
+MRULE start: T
+VTD input: \bT + \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: t+ dt
+MRULE display: t\,=\,t+ dt
+MRULE done: T
+MRULE start: A
+VTD input: 3
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: 3
+MRULE display: a\,=\,3
+MRULE done: A
+MSTOP start
+VTD input: \bT >= 4
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MSTOP done
+  bT: short=T type=system value=0
+  bDt: short=Dt type=system value=1
+  bV: short=V type=stock value=0
+  bA: short=A type=aux value=2
+  text: \text {(hier de krachten)}
+  calc: bV := \bV + \bA * \bDt 
+  calc: bT := \bT + \bDt 
+  calc: bA := 3
+  stop: \bT >= 4
+=== A second \mvar and \mstop replace in place ===
+Package numodel Info: Variable 'Dt' of model 'b' is replaced in place.
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bV
+MVAR done: V
+MVAR start: A
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bA
+MVAR done: A
+MRULE start: V
+VTD input: \bV + \bA * \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: v+ a\cdot   dt
+MRULE display: v\,=\,v+ a\cdot   dt
+MRULE done: V
+MRULE start: T
+VTD input: \bT + \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: t+ dt
+MRULE display: t\,=\,t+ dt
+MRULE done: T
+MRULE start: A
+VTD input: 3
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: 3
+MRULE display: a\,=\,3
+MRULE done: A
+MSTOP start
+VTD input: \bT >= 4
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MSTOP done
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bV
+MVAR done: V
+MVAR start: A
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: b
+MVAR body fullname: bA
+MVAR done: A
+MRULE start: V
+VTD input: \bV + \bA * \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: v+ a\cdot   dt
+MRULE display: v\,=\,v+ a\cdot   dt
+MRULE done: V
+MRULE start: T
+VTD input: \bT + \bDt 
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: t+ dt
+MRULE display: t\,=\,t+ dt
+MRULE done: T
+MRULE start: A
+VTD input: 3
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MRULE rhs after: 3
+MRULE display: a\,=\,3
+MRULE done: A
+MSTOP start
+VTD input: \bT >= 2
+VTD seq: bT|bDt|bV|bA
+VTD iter: bT
+VTD replace \c {bT} with t
+VTD iter: bDt
+VTD replace \c {bDt} with dt
+VTD iter: bV
+VTD replace \c {bV} with v
+VTD iter: bA
+VTD replace \c {bA} with a
+MSTOP done
+  bT: short=T type=system value=0
+  bDt: short=Dt type=system value=0.5
+  bV: short=V type=stock value=0
+  bA: short=A type=aux value=2
+  text: \text {(hier de krachten)}
+  calc: bV := \bV + \bA * \bDt 
+  calc: bT := \bT + \bDt 
+  calc: bA := 3
+  stop: \bT >= 2
+COMPUTE start
+COMPUTE done
+steps 5, v 5.5
+=== \copymodel: a series of time steps ===
+NEWPREFIX start: c
+NEWPREFIX save current: b
+NEWPREFIX register
+NEWPREFIX init_backup
+\g__numodel_c_rulecounter_int=\count...
+\g__numodel_c_steps_int=\count...
+NEWPREFIX lua_init
+NEWPREFIX clear_state
+NEWPREFIX set_current
+NEWPREFIX done: c
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: c
+MVAR body fullname: cT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: c
+MVAR body fullname: cDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: c
+MVAR body fullname: cV
+MVAR done: V
+MVAR start: A
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: c
+MVAR body fullname: cA
+MVAR done: A
+MRULE start: V
+VTD input: \cV + \cA * \cDt 
+VTD seq: cT|cDt|cV|cA
+VTD iter: cT
+VTD replace \c {cT} with t
+VTD iter: cDt
+VTD replace \c {cDt} with dt
+VTD iter: cV
+VTD replace \c {cV} with v
+VTD iter: cA
+VTD replace \c {cA} with a
+MRULE rhs after: v+ a\cdot   dt
+MRULE display: v\,=\,v+ a\cdot   dt
+MRULE done: V
+MRULE start: T
+VTD input: \cT + \cDt 
+VTD seq: cT|cDt|cV|cA
+VTD iter: cT
+VTD replace \c {cT} with t
+VTD iter: cDt
+VTD replace \c {cDt} with dt
+VTD iter: cV
+VTD replace \c {cV} with v
+VTD iter: cA
+VTD replace \c {cA} with a
+MRULE rhs after: t+ dt
+MRULE display: t\,=\,t+ dt
+MRULE done: T
+MRULE start: A
+VTD input: 3
+VTD seq: cT|cDt|cV|cA
+VTD iter: cT
+VTD replace \c {cT} with t
+VTD iter: cDt
+VTD replace \c {cDt} with dt
+VTD iter: cV
+VTD replace \c {cV} with v
+VTD iter: cA
+VTD replace \c {cA} with a
+MRULE rhs after: 3
+MRULE display: a\,=\,3
+MRULE done: A
+MSTOP start
+VTD input: \cT >= 2
+VTD seq: cT|cDt|cV|cA
+VTD iter: cT
+VTD replace \c {cT} with t
+VTD iter: cDt
+VTD replace \c {cDt} with dt
+VTD iter: cV
+VTD replace \c {cV} with v
+VTD iter: cA
+VTD replace \c {cA} with a
+MSTOP done
+  cT: short=T type=system value=0
+  cDt: short=Dt type=system value=0.25
+  cV: short=V type=stock value=0
+  cA: short=A type=aux value=2
+  text: \text {(hier de krachten)}
+  calc: cV := \cV + \cA * \cDt 
+  calc: cT := \cT + \cDt 
+  calc: cA := 3
+  stop: \cT >= 2
+COMPUTE start
+COMPUTE done
+steps 9, v 5.75
+=== \copymodel with blank, then changes ===
+NEWPREFIX start: d
+NEWPREFIX save current: c
+NEWPREFIX register
+NEWPREFIX init_backup
+\g__numodel_d_rulecounter_int=\count...
+\g__numodel_d_steps_int=\count...
+NEWPREFIX lua_init
+NEWPREFIX clear_state
+NEWPREFIX set_current
+NEWPREFIX done: d
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: d
+MVAR body fullname: dT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: d
+MVAR body fullname: dDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: d
+MVAR body fullname: dV
+MVAR done: V
+MVAR start: A
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: d
+MVAR body fullname: dA
+MVAR done: A
+MRULE start: V
+VTD input: \dV + \dA * \dDt 
+VTD seq: dT|dDt|dV|dA
+VTD iter: dT
+VTD replace \c {dT} with t
+VTD iter: dDt
+VTD replace \c {dDt} with dt
+VTD iter: dV
+VTD replace \c {dV} with v
+VTD iter: dA
+VTD replace \c {dA} with a
+MRULE rhs after: v+ a\cdot   dt
+MRULE display: v\,=\,v+ a\cdot   dt
+MRULE done: V
+MRULE start: T
+VTD input: \dT + \dDt 
+VTD seq: dT|dDt|dV|dA
+VTD iter: dT
+VTD replace \c {dT} with t
+VTD iter: dDt
+VTD replace \c {dDt} with dt
+VTD iter: dV
+VTD replace \c {dV} with v
+VTD iter: dA
+VTD replace \c {dA} with a
+MRULE rhs after: t+ dt
+MRULE display: t\,=\,t+ dt
+MRULE done: T
+MRULE start: A
+VTD input: 3
+VTD seq: dT|dDt|dV|dA
+VTD iter: dT
+VTD replace \c {dT} with t
+VTD iter: dDt
+VTD replace \c {dDt} with dt
+VTD iter: dV
+VTD replace \c {dV} with v
+VTD iter: dA
+VTD replace \c {dA} with a
+MRULE rhs after: 3
+MRULE display: a\,=\,3
+MRULE done: A
+MSTOP start
+VTD input: \dT >= 2
+VTD seq: dT|dDt|dV|dA
+VTD iter: dT
+VTD replace \c {dT} with t
+VTD iter: dDt
+VTD replace \c {dDt} with dt
+VTD iter: dV
+VTD replace \c {dV} with v
+VTD iter: dA
+VTD replace \c {dA} with a
+MSTOP done
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: d
+MVAR body fullname: dT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: d
+MVAR body fullname: dDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: d
+MVAR body fullname: dV
+MVAR done: V
+MVAR start: A
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: d
+MVAR body fullname: dA
+MVAR done: A
+MRULE start: V
+VTD input: \dV + \dA * \dDt 
+VTD seq: dT|dDt|dV|dA
+VTD iter: dT
+VTD replace \c {dT} with t
+VTD iter: dDt
+VTD replace \c {dDt} with dt
+VTD iter: dV
+VTD replace \c {dV} with v
+VTD iter: dA
+VTD replace \c {dA} with a
+MRULE rhs after: v+ a\cdot   dt
+MRULE display: v\,=\,v+ a\cdot   dt
+MRULE done: V
+MRULE start: T
+VTD input: \dT + 2 * \dDt 
+VTD seq: dT|dDt|dV|dA
+VTD iter: dT
+VTD replace \c {dT} with t
+VTD iter: dDt
+VTD replace \c {dDt} with dt
+VTD iter: dV
+VTD replace \c {dV} with v
+VTD iter: dA
+VTD replace \c {dA} with a
+MRULE rhs after: t+ 2 \cdot   dt
+MRULE display: t\,=\,t+ 2 \cdot   dt
+MRULE done: T
+MRULE start: A
+VTD input: 3
+VTD seq: dT|dDt|dV|dA
+VTD iter: dT
+VTD replace \c {dT} with t
+VTD iter: dDt
+VTD replace \c {dDt} with dt
+VTD iter: dV
+VTD replace \c {dV} with v
+VTD iter: dA
+VTD replace \c {dA} with a
+MRULE rhs after: 3
+MRULE display: a\,=\,3
+MRULE done: A
+MSTOP start
+VTD input: \dT >= 2
+VTD seq: dT|dDt|dV|dA
+VTD iter: dT
+VTD replace \c {dT} with t
+VTD iter: dDt
+VTD replace \c {dDt} with dt
+VTD iter: dV
+VTD replace \c {dV} with v
+VTD iter: dA
+VTD replace \c {dA} with a
+MSTOP done
+  dT: short=T type=system value=0
+  dDt: short=Dt type=system value=0.5
+  dV: short=V type=stock value=0
+  dA: short=A type=aux value=2
+  text: \text {(hier de krachten)}
+  calc[blank]: dV := \dV + \dA * \dDt 
+  calc: dT := \dT + 2 * \dDt 
+  calc[blank]: dA := 3
+  stop: \dT >= 2
+=== The source is unchanged ===
+  bT: short=T type=system value=0
+  bDt: short=Dt type=system value=0.5
+  bV: short=V type=stock value=0
+  bA: short=A type=aux value=2
+  text: \text {(hier de krachten)}
+  calc: bV := \bV + \bA * \bDt 
+  calc: bT := \bT + \bDt 
+  calc: bA := 3
+  stop: \bT >= 2
+=== Errors ===
+! Package numodel Error: Model 'd' has no rule for 'X' to replace.
+Type <return> to continue.
+ ...                                              
+l. ...\mrule[replace]{X}{1}
+LaTeX does not know anything more about this error, sorry.
+Try typing <return> to proceed.
+If that doesn't work, type X <return> to quit.
+! Package numodel Error: Model 'd' has no rule for 'X' to place a rule before.
+Type <return> to continue.
+ ...                                              
+l. ...\mrule[before=X]{V}{1}
+LaTeX does not know anything more about this error, sorry.
+Try typing <return> to proceed.
+If that doesn't work, type X <return> to quit.
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: d
+MVAR body fullname: dT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: d
+MVAR body fullname: dDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: d
+MVAR body fullname: dV
+MVAR done: V
+MVAR start: A
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: d
+MVAR body fullname: dA
+MVAR done: A
+MRULE start: V
+VTD input: \dV + \dA * \dDt 
+VTD seq: dT|dDt|dV|dA
+VTD iter: dT
+VTD replace \c {dT} with t
+VTD iter: dDt
+VTD replace \c {dDt} with dt
+VTD iter: dV
+VTD replace \c {dV} with v
+VTD iter: dA
+VTD replace \c {dA} with a
+MRULE rhs after: v+ a\cdot   dt
+MRULE display: v\,=\,v+ a\cdot   dt
+MRULE done: V
+MRULE start: T
+VTD input: \dT + 2 * \dDt 
+VTD seq: dT|dDt|dV|dA
+VTD iter: dT
+VTD replace \c {dT} with t
+VTD iter: dDt
+VTD replace \c {dDt} with dt
+VTD iter: dV
+VTD replace \c {dV} with v
+VTD iter: dA
+VTD replace \c {dA} with a
+MRULE rhs after: t+ 2 \cdot   dt
+MRULE display: t\,=\,t+ 2 \cdot   dt
+MRULE done: T
+MRULE start: A
+VTD input: 3
+VTD seq: dT|dDt|dV|dA
+VTD iter: dT
+VTD replace \c {dT} with t
+VTD iter: dDt
+VTD replace \c {dDt} with dt
+VTD iter: dV
+VTD replace \c {dV} with v
+VTD iter: dA
+VTD replace \c {dA} with a
+MRULE rhs after: 3
+MRULE display: a\,=\,3
+MRULE done: A
+MSTOP start
+VTD input: \dT >= 2
+VTD seq: dT|dDt|dV|dA
+VTD iter: dT
+VTD replace \c {dT} with t
+VTD iter: dDt
+VTD replace \c {dDt} with dt
+VTD iter: dV
+VTD replace \c {dV} with v
+VTD iter: dA
+VTD replace \c {dA} with a
+MSTOP done
+! Package numodel Error: \copymodel: there is no model 'nope'.
+Type <return> to continue.
+ ...                                              
+l. ...\copymodel{nope}{e}
+LaTeX does not know anything more about this error, sorry.
+Try typing <return> to proceed.
+If that doesn't work, type X <return> to quit.
+NEWPREFIX start: f
+NEWPREFIX save current: d
+NEWPREFIX register
+NEWPREFIX init_backup
+\g__numodel_f_rulecounter_int=\count...
+\g__numodel_f_steps_int=\count...
+NEWPREFIX lua_init
+NEWPREFIX clear_state
+NEWPREFIX set_current
+NEWPREFIX done: f
+! Package numodel Error: \copymodel: model 'f' has no variable 'Q'.
+Type <return> to continue.
+ ...                                              
+l. ...\copymodel[Q=1]{b}{f}
+LaTeX does not know anything more about this error, sorry.
+Try typing <return> to proceed.
+If that doesn't work, type X <return> to quit.
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: f
+MVAR body fullname: fT
+MVAR done: T
+MVAR start: Dt
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: f
+MVAR body fullname: fDt
+MVAR done: Dt
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: f
+MVAR body fullname: fV
+MVAR done: V
+MVAR start: A
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: f
+MVAR body fullname: fA
+MVAR done: A
+MRULE start: V
+VTD input: \fV + \fA * \fDt 
+VTD seq: fT|fDt|fV|fA
+VTD iter: fT
+VTD replace \c {fT} with t
+VTD iter: fDt
+VTD replace \c {fDt} with dt
+VTD iter: fV
+VTD replace \c {fV} with v
+VTD iter: fA
+VTD replace \c {fA} with a
+MRULE rhs after: v+ a\cdot   dt
+MRULE display: v\,=\,v+ a\cdot   dt
+MRULE done: V
+MRULE start: T
+VTD input: \fT + \fDt 
+VTD seq: fT|fDt|fV|fA
+VTD iter: fT
+VTD replace \c {fT} with t
+VTD iter: fDt
+VTD replace \c {fDt} with dt
+VTD iter: fV
+VTD replace \c {fV} with v
+VTD iter: fA
+VTD replace \c {fA} with a
+MRULE rhs after: t+ dt
+MRULE display: t\,=\,t+ dt
+MRULE done: T
+MRULE start: A
+VTD input: 3
+VTD seq: fT|fDt|fV|fA
+VTD iter: fT
+VTD replace \c {fT} with t
+VTD iter: fDt
+VTD replace \c {fDt} with dt
+VTD iter: fV
+VTD replace \c {fV} with v
+VTD iter: fA
+VTD replace \c {fA} with a
+MRULE rhs after: 3
+MRULE display: a\,=\,3
+MRULE done: A
+MSTOP start
+VTD input: \fT >= 2
+VTD seq: fT|fDt|fV|fA
+VTD iter: fT
+VTD replace \c {fT} with t
+VTD iter: fDt
+VTD replace \c {fDt} with dt
+VTD iter: fV
+VTD replace \c {fV} with v
+VTD iter: fA
+VTD replace \c {fA} with a
+MSTOP done
+=== End ===
+(m011-copymodel.aux)

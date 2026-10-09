@@ -52,12 +52,30 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   shown in full. `\computemodel` always uses the full rules.
   `numodel.plaintext` follows the setting (`' F_z := ...` comments when
   open). Regression test `m010-blanks`.
+- Changing and copying models. `\copymodel[Name=value,
+  blank={...}]{source}{copy}` creates a model with all declarations of
+  source, references renamed (`\sprongV` → `\foutV`), start values and
+  blank rules adjusted; the copy becomes the current model. Changes:
+  `\mrule[replace]` replaces the one rule for its target (an error when
+  there is none or several); `before=`/`after=` place a new rule
+  relative to another rule; `[add]` adds explicitly; `\mremoverule`
+  removes the rules for a target; a second `\mstop` replaces the stop
+  condition. Every model keeps a log of its declarations; a change
+  rebuilds the model from it, so table, computation and exports stay
+  consistent. A copy of the H3 parachute model computes exactly like
+  the same model written out in full. Regression test
+  `m011-copymodel`.
 - `numodel.nice_range(lo, hi, cmmax)`: the axis range `\calcplotdims`
   would give a series. `numodel.get_model` uses it for a variable that
   no `\diagrammodel` has drawn, so every computed variable has an axis
   range (`axis_source` tells `"diagram"` from `"computed"`).
 
 #### Changed
+- `\mvar` on a name the model already has now replaces the variable in
+  place (with an info message). It used to add a second row to the
+  initial values and keep both entries.
+- `\mrule` added after the stop condition now goes before it; it used to
+  appear after the stop row in `\textmodel`.
 - `\diagrammodel` builds single and multiple series the same way; a
   multi-series legend now takes the display text unexpanded.
 - A `\diagrammodel` with a single series no longer has a legend by

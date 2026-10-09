@@ -239,6 +239,16 @@ function M.claim_name(p, fullname)
     M.owner[fullname] = M.owner[fullname] or p
 end
 
+-- Forget everything about model p (its declarations are replayed by
+-- a rebuild, see "Declaration log" in numodel.dtx).
+function M.reset_prefix(p)
+    M.models[p] = nil
+    ensure(p)
+    for name, o in pairs(M.owner) do
+        if o == p then M.owner[name] = nil end
+    end
+end
+
 function M.reset()
     M.models = {}
     M.owner = {}

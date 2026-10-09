@@ -81,19 +81,43 @@ MVAR eff: q
 MVAR body fullname: qVmin
 Package numodel Warning: Name collision: 'qVmin' is also the 'min' accessor of variable 'qV'. Both use one macro, so the one defined last wins; \computemodel rewrites the min and max accessors. Rename one of them to avoid this.
 MVAR done: Vmin
-=== Redeclaring in the same model: the usual warning ===
+=== Redeclaring in the same model: replaced in place (info) ===
 MVAR start: M
 MVAR before-keys-set
 MVAR after-keys-set
 MVAR eff: q
 MVAR body fullname: qM
 MVAR done: M
+Package numodel Info: Variable 'M' of model 'q' is replaced in place.
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: q
+MVAR body fullname: qT
+MVAR done: T
+MVAR start: Tmax
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: q
+MVAR body fullname: qTmax
+MVAR done: Tmax
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: q
+MVAR body fullname: qV
+MVAR done: V
+MVAR start: Vmin
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: q
+MVAR body fullname: qVmin
+MVAR done: Vmin
 MVAR start: M
 MVAR before-keys-set
 MVAR after-keys-set
 MVAR eff: q
 MVAR body fullname: qM
-Package numodel Warning: Model variable 'qM' is being redefined.
 MVAR done: M
 === \mstepat ===
 step 100: 9.81 at t=1

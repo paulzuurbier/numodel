@@ -1214,6 +1214,59 @@ Compared with the alias keys, |blank| needs no replacement text and
 switches between both versions; the alias keys remain for any other
 replacement (a question mark, a hint).
 
+\subsection{Changing and copying models}\label{sec:copy}
+
+A model is a list of declarations, and it can be changed after it has
+been written: useful for a series of models that differ in one point
+(the time step, one wrong rule, one extra force).
+\begin{description}
+\item[\texttt{\textbackslash mvar}] on a name the model already has
+  replaces that variable \emph{in place}: same position in the
+  \emph{initial values} column, new value, unit or type.
+\item[\texttt{\textbackslash mrule}] \emph{adds} a rule, also for a
+  target that already has one; |[add]| says so explicitly.  It goes
+  before the stop condition when there is one (else at the end), or
+  where |before=|\meta{Name} or |after=|\meta{Name} puts it: before or
+  after the rule for that variable.  |\mruletext| takes the same
+  position keys.
+\item[\texttt{\textbackslash mrule[replace]}] replaces the one rule
+  for its target, in place (or at |before=|/|after=|).  It is an error
+  when the target has no rule or several; the key makes visible in the
+  source that a rule is being replaced.
+\item[\texttt{\textbackslash mremoverule}\oarg{prefix=...}\marg{Name}]
+  removes every rule for \meta{Name}.
+\item[\texttt{\textbackslash mstop}] a second time replaces the stop
+  condition.
+\end{description}
+
+\DescribeMacro{\copymodel}
+|\copymodel[<keys>]{<source>}{<copy>}| creates the model \meta{copy}
+with all declarations of \meta{source}; references in rules are
+renamed (|\sprongV| becomes |\foutV|).  \meta{copy} becomes the
+current model, so the ordinary commands, with the copy's names, change
+it further.  Keys: \meta{Name}|=|\meta{value} sets a start value;
+|blank={|\meta{Name}|,...}| gives the rules for these targets the
+|blank| key (Section~\ref{sec:blanks}).  The copy is a snapshot: later
+changes to \meta{source} do not reach it.  Not copied: computed
+results (call |\computemodel|), diagrams, and \textsf{numodel-coach}'s
+instruction text.
+\begin{quote}
+\begin{verbatim}
+\copymodel[Dt=0.5]{fall}{fallhalf}           % another time step
+\copymodel[blank={Fz,Fw}]{fall}{template}    % pupil's template
+\copymodel{fall}{wrong}                      % one wrong rule
+\mrule[replace]{Fres}{\wrongFz + \wrongFw}
+\copymodel[Dt=0.02]{fall}{chute}             % an extension
+\mvar{Kpar}{k_{\text{par}}}{30}{\kg\per\m}{2}{constant}
+\mvar{K}{k}{0.24}{\kg\per\m}{2}{aux}          % K was a constant
+\mrule*[before=Fz]{K}{\chuteH < 600 ? \chuteKpar : 0.24}
+\end{verbatim}
+\end{quote}
+Each change rebuilds the model from its list of declarations, so the
+table, the computation and any export always agree.  Variables are
+declared before the rules when a model is rebuilt, so a rule may use a
+variable added to a copy after the rule's original position.
+
 \section{Multiple models in one document}
 
 Each |\newmodelprefix| starts a fresh namespace.  This lets a

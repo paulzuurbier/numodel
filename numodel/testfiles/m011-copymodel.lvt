@@ -1,0 +1,76 @@
+% Regression test: changing and copying models (declaration log).
+% * \mvar on an existing name replaces the variable in place;
+% * \mrule adds by default -- before the stop condition when there is
+%   one -- or before=/after= another rule; [add] says so explicitly;
+%   [replace] replaces the one rule for its target;
+% * \mremoverule removes the rules for a target; a second \mstop
+%   replaces the stop condition;
+% * \copymodel[Name=value, blank={...}]{source}{copy}: references are
+%   renamed, start values and blank rules adjusted; the copy computes
+%   exactly like the same model written out in full;
+% * errors: replacing a rule that does not exist or is not unique,
+%   positioning relative to an unknown rule, copying an unknown model,
+%   a key naming no variable.
+% The program of each model is shown with numodel.dump_model.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\newcommand\showmodel[1]{\directlua{
+  for line in numodel.dump_model("#1"):gmatch("[^\string\n]+") do
+    if line:find("calc", 1, true) == 3 or line:find("ternary", 1, true) == 3
+       or line:find("stop", 1, true) == 3 or line:find("text:", 1, true) == 3
+       or line:find("value=", 1, true) then
+      texio.write_nl((line:gsub(" text=.*value=", " value=")
+        :gsub(" value_expr=.*", "")))
+    end
+  end}}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{b}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{1}{\s}{2}{system}
+\mvar{V}{v}{0}{\m\per\s}{3}{stock}
+\mvar{A}{a}{2}{\m\per\s\squared}{3}{aux}
+\mrule{V}{\bV + \bA * \bDt}
+\mrule{T}{\bT + \bDt}
+\mstop{\bT >= 4}
+\TIMO
+\TYPE{=== A rule added after the stop condition goes before it ===}
+\mrule{A}{2 + 0 * \bT}
+\showmodel{b}
+\TYPE{=== before= / after= / [add] ===}
+\mruletext[before=V]{\text{(hier de krachten)}}
+\mrule[add, after=T]{V}{\bV + 0}
+\showmodel{b}
+\TYPE{=== [replace] with two rules for V: error ===}
+\mrule[replace]{V}{\bV}
+\TYPE{=== \string\mremoverule\space and [replace] ===}
+\mremoverule{V}
+\mrule[before=T]{V}{\bV + \bA * \bDt}
+\mrule[replace]{A}{3}
+\showmodel{b}
+\TYPE{=== A second \string\mvar\space and \string\mstop\space replace in place ===}
+\mvar{Dt}{dt}{0.5}{\s}{2}{system}
+\mstop{\bT >= 2}
+\showmodel{b}
+\computemodel
+\TYPE{steps \bsteps, v \bV}
+\TYPE{=== \string\copymodel: a series of time steps ===}
+\copymodel[Dt=0.25]{b}{c}
+\showmodel{c}
+\computemodel
+\TYPE{steps \csteps, v \cV}
+\TYPE{=== \string\copymodel\space with blank, then changes ===}
+\copymodel[blank={V,A}]{b}{d}
+\mrule[replace]{T}{\dT + 2 * \dDt}
+\showmodel{d}
+\TYPE{=== The source is unchanged ===}
+\showmodel{b}
+\TYPE{=== Errors ===}
+\mrule[replace]{X}{1}
+\mrule[before=X]{V}{1}
+\copymodel{nope}{e}
+\copymodel[Q=1]{b}{f}
+\TYPE{=== End ===}
+\end{document}

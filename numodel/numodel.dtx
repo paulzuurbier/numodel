@@ -747,6 +747,7 @@ end
     \int_new:c  { g__numodel_ #1 _rulecounter_int }
     \tl_new:c   { g__numodel_ #1 _stopexpr_tl   }
     \int_new:c  { g__numodel_ #1 _steps_int     }
+    \seq_new:c  { g__numodel_ #1 _log_seq       }   % declaration log
   }
 
 % Public commands for prefix management
@@ -1032,7 +1033,11 @@ end
   }
 
 \makeatletter
-\NewDocumentCommand{\mvar}{ O{} m m m m m m }{%
+% Executes one \mvar declaration in the current model.  The public
+% \mvar (further below) logs the declaration first; see "Declaration
+% log".  Any prefix= key is ignored here: the caller has already
+% switched to the right model.
+\cs_new_protected:Npn \__numodel_mvar_exec:nnnnnnn #1#2#3#4#5#6#7 {%
   \typeout{MVAR~start:~#2}
   % Parse optional keys (prefix, gridx, gridy, alias, aliasleft, aliasright,
   % flowarrow-cloud-tip)
@@ -1047,6 +1052,7 @@ end
   \bool_set_false:N \l__numodel_blank_bool
   \typeout{MVAR~before-keys-set}
   \keys_set:nn { numodel / mvar } {#1}
+  \tl_clear:N \l__numodel_cmd_prefix_tl
   \typeout{MVAR~after-keys-set}
   \__numodel_resolve_eff_prefix:
   \typeout{MVAR~eff:~\l__numodel_eff_prefix_tl}
@@ -1087,6 +1093,8 @@ end
         \lua_now:e { numodel.clash_kind(
           "\g_numodel_current_prefix_tl", "\l__numodel_fullname_tl") }
       }
+    \bool_if:NT \g__numodel_replay_bool
+      { \tl_set:Nn \l__numodel_clash_tl { replay } }
     \str_case:VnF \l__numodel_clash_tl
       {
         { model }
@@ -1119,7 +1127,7 @@ end
     \directlua{ numodel.register(
       "\g_numodel_current_prefix_tl",
       "\l__numodel_fullname_tl") }
-    \bool_if:NF \l__numodel_clash_warned_bool
+    \bool_if:nF { \l__numodel_clash_warned_bool || \g__numodel_replay_bool }
       {
         \cs_if_exist:cT { \l__numodel_fullname_tl }
           { \msg_warning:nne { numodel } { redef } { \l__numodel_fullname_tl } }
@@ -1545,7 +1553,9 @@ end
       }
   }
 
-\NewDocumentCommand{\mrule}{ s O{} m m }{%
+% Executes one \mrule declaration (#1 = star as a boolean) in the
+% current model; the public \mrule logs it first.
+\cs_new_protected:Npn \__numodel_mrule_exec:nnnn #1#2#3#4 {%
   \typeout{MRULE~start:~#3}
   \bool_set_false:N \l__numodel_is_ternary_bool
   \bool_set_false:N \l__numodel_blank_bool
@@ -1553,8 +1563,8 @@ end
   \tl_clear:N \l__numodel_alias_tl
   \tl_clear:N \l__numodel_aliasleft_tl
   \tl_clear:N \l__numodel_aliasright_tl
-  \tl_clear:N \l__numodel_cmd_prefix_tl
   \keys_set:nn { numodel / mvar } {#2}
+  \tl_clear:N \l__numodel_cmd_prefix_tl
   \__numodel_resolve_eff_prefix:
   \__numodel_with_prefix:Nn \l__numodel_eff_prefix_tl
     { \__numodel_mrule_body:nnn {#1}{#3}{#4} }%
@@ -1709,9 +1719,10 @@ end
 %
 % NOT executed by \computemodel (display only).
 
-\NewDocumentCommand{\mruletext}{ O{} m }{%
-  \tl_clear:N \l__numodel_cmd_prefix_tl
+% Executes one \mruletext declaration in the current model.
+\cs_new_protected:Npn \__numodel_mruletext_exec:nn #1#2 {%
   \keys_set:nn { numodel / cmd } {#1}
+  \tl_clear:N \l__numodel_cmd_prefix_tl
   \__numodel_resolve_eff_prefix:
   \__numodel_with_prefix:Nn \l__numodel_eff_prefix_tl
     {
@@ -1742,7 +1753,8 @@ end
 % aliasleft/aliasright are not (yet) supported for \mstop.
 
 \tl_new:N \l__numodel_stop_tl
-\NewDocumentCommand{\mstop}{ s O{} m }{%
+% Executes one \mstop declaration in the current model.
+\cs_new_protected:Npn \__numodel_mstop_exec:nnn #1#2#3 {%
   \typeout{MSTOP~start}
   % Parse keys (only alias is honoured; prefix via key resolver)
   \tl_clear:N \l__numodel_alias_tl
@@ -1751,6 +1763,7 @@ end
   \tl_clear:N \l__numodel_cmd_prefix_tl
   \bool_set_false:N \l__numodel_blank_bool
   \keys_set:nn { numodel / mvar } {#2}
+  \tl_clear:N \l__numodel_cmd_prefix_tl
   \__numodel_resolve_eff_prefix:
   \__numodel_with_prefix:Nn \l__numodel_eff_prefix_tl
     { \__numodel_mstop_body:n {#3} }%
@@ -1823,6 +1836,518 @@ end
     \seq_gput_right:NV \g_mrule_seq \l__numodel_display_tl
     \seq_gput_right:Nn \g_mrule_type_seq { rule }
   }
+
+% ====================================================================
+% Declaration log: \mvar, \mrule, \mruletext, \mstop, \mremoverule,
+% \copymodel
+% ====================================================================
+% Every model keeps an ordered log of its declarations.  Appending at
+% the end -- the normal way of writing a model -- simply executes the
+% declaration.  Anything else edits the log and rebuilds the model by
+% replaying it: replacing a variable (\mvar with an existing name, in
+% place), replacing a rule (\mrule[replace]), inserting a rule
+% (before=/after=, or before the stop condition), removing rules
+% (\mremoverule), replacing the stop condition, and copying a model
+% (\copymodel).  A rebuild clears the model's state in TeX and Lua and
+% runs every logged declaration again, so table, computation and
+% exports always follow the log.
+%
+% A log item has nine fields:
+%   {kind}{name}{keys}{star}{f1}{f2}{f3}{f4}{f5}
+%   mvar  name = short name; f1..f5 = text, value, unit, sigfigs, type
+%   rule  name = target;      star = true/false; f1 = expression
+%   text  name empty;         f1 = text
+%   stop  name empty;         star; f1 = condition
+
+\bool_new:N \g__numodel_replay_bool
+\tl_new:N   \l__numodel_item_tl
+\tl_new:N   \l__numodel_newval_tl
+\tl_new:N   \l__numodel_pos_before_tl
+\tl_new:N   \l__numodel_pos_after_tl
+\bool_new:N \l__numodel_pos_replace_bool
+\int_new:N  \l__numodel_log_idx_int
+\int_new:N  \l__numodel_log_count_int
+\int_new:N  \l__numodel_log_stop_int
+\seq_new:N  \l__numodel_log_tmp_seq
+\seq_new:N  \l__numodel_copy_names_seq
+\tl_new:N   \l__numodel_copy_from_tl
+\tl_new:N   \l__numodel_copy_to_tl
+\tl_new:N   \l__numodel_copy_src_tl
+
+% Position keys, read before the declaration is logged.  Unknown keys
+% (alias, blank, ...) are left to the executing function.
+\keys_define:nn { numodel / pos }
+  {
+    prefix  .tl_set:N   = \l__numodel_cmd_prefix_tl ,
+    replace .bool_set:N = \l__numodel_pos_replace_bool ,
+    replace .default:n  = true ,
+    add     .code:n     = { \bool_set_false:N \l__numodel_pos_replace_bool } ,
+    before  .tl_set:N   = \l__numodel_pos_before_tl ,
+    after   .tl_set:N   = \l__numodel_pos_after_tl ,
+  }
+% The same keys are accepted (and ignored) when the declaration runs.
+\keys_define:nn { numodel / mvar }
+  {
+    replace .code:n = { } , replace .default:n = true ,
+    add     .code:n = { } ,
+    before  .code:n = { } ,
+    after   .code:n = { } ,
+  }
+\keys_define:nn { numodel / cmd }
+  {
+    before  .code:n = { } ,
+    after   .code:n = { } ,
+  }
+
+% Read prefix and position keys; result in \l__numodel_eff_prefix_tl.
+\cs_new_protected:Npn \__numodel_pos_parse:n #1
+  {
+    \tl_clear:N \l__numodel_cmd_prefix_tl
+    \tl_clear:N \l__numodel_pos_before_tl
+    \tl_clear:N \l__numodel_pos_after_tl
+    \bool_set_false:N \l__numodel_pos_replace_bool
+    \keys_set_known:nn { numodel / pos } {#1}
+    \__numodel_resolve_eff_prefix:
+  }
+
+% Field access on a log item (the item's nine groups follow).
+\cs_new:Npn \__numodel_item_kind:nnnnnnnnn #1#2#3#4#5#6#7#8#9 {#1}
+\cs_new:Npn \__numodel_item_name:nnnnnnnnn #1#2#3#4#5#6#7#8#9 {#2}
+% Run a logged declaration.
+\cs_new_protected:Npn \__numodel_item_exec:nnnnnnnnn #1#2#3#4#5#6#7#8#9
+  {
+    \str_case:nn {#1}
+      {
+        { mvar } { \__numodel_mvar_exec:nnnnnnn {#3} {#2} {#5} {#6} {#7} {#8} {#9} }
+        { rule }
+          {
+            \str_if_eq:nnTF {#4} { true }
+              { \__numodel_mrule_exec:nnnn \c_true_bool  {#3} {#2} {#5} }
+              { \__numodel_mrule_exec:nnnn \c_false_bool {#3} {#2} {#5} }
+          }
+        { text } { \__numodel_mruletext_exec:nn {#3} {#5} }
+        { stop }
+          {
+            \str_if_eq:nnTF {#4} { true }
+              { \__numodel_mstop_exec:nnn \c_true_bool  {#3} {#5} }
+              { \__numodel_mstop_exec:nnn \c_false_bool {#3} {#5} }
+          }
+      }
+  }
+% Copy an item with the value field (f2) replaced by \l__numodel_newval_tl.
+\cs_new_protected:Npn \__numodel_item_set_value:nnnnnnnnn #1#2#3#4#5#6#7#8#9
+  {
+    \tl_set:Nn \l__numodel_item_tl { {#1} {#2} {#3} {#4} {#5} }
+    \tl_put_right:Ne \l__numodel_item_tl { { \exp_not:V \l__numodel_newval_tl } }
+    \tl_put_right:Nn \l__numodel_item_tl { {#7} {#8} {#9} }
+  }
+% Copy an item with "blank" added to its keys.
+\cs_new_protected:Npn \__numodel_item_add_blank:nnnnnnnnn #1#2#3#4#5#6#7#8#9
+  { \tl_set:Nn \l__numodel_item_tl { {#1} {#2} { #3 , blank } {#4} {#5} {#6} {#7} {#8} {#9} } }
+
+\cs_new:Npn \__numodel_log:n #1 { g__numodel_ #1 _log_seq }
+
+% Index (1-based) of the first item of kind #2 named #3 in the log of
+% model #1, and the number of such items.  Name empty: any name.
+\cs_new_protected:Npn \__numodel_log_find:nnn #1#2#3
+  {
+    \int_zero:N \l__numodel_log_idx_int
+    \int_zero:N \l__numodel_log_count_int
+    \seq_map_indexed_inline:cn { \__numodel_log:n {#1} }
+      {
+        \bool_lazy_and:nnT
+          { \str_if_eq_p:ee { \__numodel_item_kind:nnnnnnnnn ##2 } {#2} }
+          {
+            \bool_lazy_or_p:nn
+              { \tl_if_empty_p:n {#3} }
+              { \str_if_eq_p:ee { \__numodel_item_name:nnnnnnnnn ##2 } {#3} }
+          }
+          {
+            \int_incr:N \l__numodel_log_count_int
+            \int_compare:nNnT { \l__numodel_log_idx_int } = { 0 }
+              { \int_set:Nn \l__numodel_log_idx_int {##1} }
+          }
+      }
+  }
+% Put item #3 into the log of model #1 before position #2 (past the end:
+% append).
+\cs_new_protected:Npn \__numodel_log_insert:nnn #1#2#3
+  {
+    \seq_clear:N \l__numodel_log_tmp_seq
+    \seq_map_indexed_inline:cn { \__numodel_log:n {#1} }
+      {
+        \int_compare:nNnT {##1} = {#2}
+          { \seq_put_right:Nn \l__numodel_log_tmp_seq {#3} }
+        \seq_put_right:Nn \l__numodel_log_tmp_seq {##2}
+      }
+    \int_compare:nNnT {#2} > { \seq_count:c { \__numodel_log:n {#1} } }
+      { \seq_put_right:Nn \l__numodel_log_tmp_seq {#3} }
+    \seq_gset_eq:cN { \__numodel_log:n {#1} } \l__numodel_log_tmp_seq
+  }
+% Replace the item at position #2 by #3.
+\cs_new_protected:Npn \__numodel_log_set:nnn #1#2#3
+  {
+    \seq_clear:N \l__numodel_log_tmp_seq
+    \seq_map_indexed_inline:cn { \__numodel_log:n {#1} }
+      {
+        \int_compare:nNnTF {##1} = {#2}
+          { \seq_put_right:Nn \l__numodel_log_tmp_seq {#3} }
+          { \seq_put_right:Nn \l__numodel_log_tmp_seq {##2} }
+      }
+    \seq_gset_eq:cN { \__numodel_log:n {#1} } \l__numodel_log_tmp_seq
+  }
+% Remove every item of kind #2 named #3.
+\cs_new_protected:Npn \__numodel_log_remove:nnn #1#2#3
+  {
+    \seq_clear:N \l__numodel_log_tmp_seq
+    \seq_map_inline:cn { \__numodel_log:n {#1} }
+      {
+        \bool_lazy_and:nnF
+          { \str_if_eq_p:ee { \__numodel_item_kind:nnnnnnnnn ##1 } {#2} }
+          { \str_if_eq_p:ee { \__numodel_item_name:nnnnnnnnn ##1 } {#3} }
+          { \seq_put_right:Nn \l__numodel_log_tmp_seq {##1} }
+      }
+    \seq_gset_eq:cN { \__numodel_log:n {#1} } \l__numodel_log_tmp_seq
+  }
+
+% Rebuild model #1 from its log.
+\cs_new_protected:Npn \__numodel_rebuild:n #1
+  {
+    \tl_set:Nn \l__numodel_copy_src_tl {#1}
+    \__numodel_with_prefix:Nn \l__numodel_copy_src_tl
+      {
+        \__numodel_clear_state:
+        \directlua{ numodel.reset_prefix("#1") }
+        \bool_gset_true:N \g__numodel_replay_bool
+        % Variables first (in their order), then rules, free text and
+        % the stop condition (in theirs): a rule's display needs the
+        % names of all variables it uses, also of variables added to a
+        % copy after the rules they appear in.
+        \seq_map_inline:cn { \__numodel_log:n {#1} }
+          {
+            \str_if_eq:eeT { \__numodel_item_kind:nnnnnnnnn ##1 } { mvar }
+              { \__numodel_item_exec:nnnnnnnnn ##1 }
+          }
+        \seq_map_inline:cn { \__numodel_log:n {#1} }
+          {
+            \str_if_eq:eeF { \__numodel_item_kind:nnnnnnnnn ##1 } { mvar }
+              { \__numodel_item_exec:nnnnnnnnn ##1 }
+          }
+        \bool_gset_false:N \g__numodel_replay_bool
+      }
+  }
+
+% Append item #2 to the log of model #1 and execute it there.
+\cs_new_protected:Npn \__numodel_log_append_exec:nn #1#2
+  {
+    \seq_gput_right:cn { \__numodel_log:n {#1} } {#2}
+    \tl_set:Nn \l__numodel_copy_src_tl {#1}
+    \__numodel_with_prefix:Nn \l__numodel_copy_src_tl
+      { \__numodel_item_exec:nnnnnnnnn #2 }
+  }
+
+\msg_new:nnn { numodel } { no-rule }
+  { Model~'#1'~has~no~rule~for~'#2'~to~#3. }
+\msg_new:nnn { numodel } { several-rules }
+  { Model~'#1'~has~several~rules~for~'#2';~\token_to_str:N \mrule
+    [replace]~needs~exactly~one.~Remove~them~with~
+    \token_to_str:N \mremoverule\space and~add~the~new~rule. }
+\msg_new:nnn { numodel } { var-replaced }
+  { Variable~'#2'~of~model~'#1'~is~replaced~in~place. }
+\msg_new:nnn { numodel } { unknown-model }
+  { \token_to_str:N \copymodel :~there~is~no~model~'#1'. }
+\msg_new:nnn { numodel } { copy-no-var }
+  { \token_to_str:N \copymodel :~model~'#1'~has~no~variable~'#2'. }
+
+% --- public commands ----------------------------------------------------
+
+\NewDocumentCommand{\mvar}{ O{} m m m m m m }
+  {
+    \__numodel_pos_parse:n {#1}
+    \tl_if_empty:NTF \l__numodel_eff_prefix_tl
+      { \__numodel_mvar_exec:nnnnnnn {#1} {#2} {#3} {#4} {#5} {#6} {#7} }
+      {
+        \__numodel_log_find:enn { \l__numodel_eff_prefix_tl } { mvar } {#2}
+        \int_compare:nNnTF { \l__numodel_log_idx_int } > { 0 }
+          {
+            % An existing variable: replaced where it stands.
+            \msg_info:nnee { numodel } { var-replaced }
+              { \l__numodel_eff_prefix_tl } {#2}
+            \__numodel_log_set:enn { \l__numodel_eff_prefix_tl }
+              { \int_use:N \l__numodel_log_idx_int }
+              { {mvar} {#2} {#1} {} {#3} {#4} {#5} {#6} {#7} }
+            \__numodel_rebuild:e { \l__numodel_eff_prefix_tl }
+          }
+          {
+            \__numodel_log_append_exec:en { \l__numodel_eff_prefix_tl }
+              { {mvar} {#2} {#1} {} {#3} {#4} {#5} {#6} {#7} }
+          }
+      }
+  }
+
+% \mrule[keys]{target}{expression}: added at the end (before the stop
+% condition, if there is one), or before=/after= another rule's target;
+% [replace] replaces the one existing rule for the target.
+\NewDocumentCommand{\mrule}{ s O{} m m }
+  {
+    \__numodel_pos_parse:n {#2}
+    \tl_set:Ne \l__numodel_item_tl
+      {
+        { rule } { \exp_not:n {#3} } { \exp_not:n {#2} }
+        { \IfBooleanTF {#1} { true } { false } } { \exp_not:n {#4} } {} {} {} {}
+      }
+    \tl_if_empty:NTF \l__numodel_eff_prefix_tl
+      { \__numodel_mrule_exec:nnnn {#1} {#2} {#3} {#4} }
+      { \__numodel_place_rule:nn {#3} { replace } }
+  }
+
+% Place \l__numodel_item_tl (a rule or free-text row) in the log of the
+% effective model.  #1 = the rule's target, #2 = verb for messages.
+\cs_new_protected:Npn \__numodel_place_rule:nn #1#2
+  {
+    \tl_set_eq:NN \l__numodel_copy_src_tl \l__numodel_eff_prefix_tl
+    \bool_if:NTF \l__numodel_pos_replace_bool
+      {
+        \__numodel_log_find:enn { \l__numodel_eff_prefix_tl } { rule } {#1}
+        \int_case:nnF { \l__numodel_log_count_int }
+          {
+            { 0 }
+              {
+                \msg_error:nneee { numodel } { no-rule }
+                  { \l__numodel_eff_prefix_tl } {#1} {#2}
+              }
+            { 1 }
+              {
+                \bool_lazy_and:nnTF
+                  { \tl_if_empty_p:N \l__numodel_pos_before_tl }
+                  { \tl_if_empty_p:N \l__numodel_pos_after_tl }
+                  {
+                    \__numodel_log_set:eeV { \l__numodel_eff_prefix_tl }
+                      { \int_use:N \l__numodel_log_idx_int }
+                      \l__numodel_item_tl
+                  }
+                  {
+                    \__numodel_log_remove:enn { \l__numodel_eff_prefix_tl }
+                      { rule } {#1}
+                    \__numodel_insert_at_position:
+                  }
+                \__numodel_rebuild:e { \l__numodel_eff_prefix_tl }
+              }
+          }
+          {
+            \msg_error:nnee { numodel } { several-rules }
+              { \l__numodel_eff_prefix_tl } {#1}
+          }
+      }
+      {
+        \bool_lazy_and:nnTF
+          { \tl_if_empty_p:N \l__numodel_pos_before_tl }
+          { \tl_if_empty_p:N \l__numodel_pos_after_tl }
+          {
+            % Default: before the stop condition, else at the end.
+            \__numodel_log_find:enn { \l__numodel_eff_prefix_tl } { stop } { }
+            \int_compare:nNnTF { \l__numodel_log_idx_int } > { 0 }
+              {
+                \__numodel_log_insert:eeV { \l__numodel_eff_prefix_tl }
+                  { \int_use:N \l__numodel_log_idx_int } \l__numodel_item_tl
+                \__numodel_rebuild:e { \l__numodel_eff_prefix_tl }
+              }
+              {
+                \__numodel_log_append_exec:eV
+                  { \l__numodel_eff_prefix_tl } \l__numodel_item_tl
+              }
+          }
+          {
+            \__numodel_insert_at_position:
+            \__numodel_rebuild:e { \l__numodel_eff_prefix_tl }
+          }
+      }
+  }
+% Insert \l__numodel_item_tl before= / after= the rule for a target.
+\cs_new_protected:Npn \__numodel_insert_at_position:
+  {
+    \tl_if_empty:NTF \l__numodel_pos_before_tl
+      {
+        \__numodel_log_find:eeV { \l__numodel_eff_prefix_tl } { rule }
+          \l__numodel_pos_after_tl
+        \int_compare:nNnTF { \l__numodel_log_count_int } = { 0 }
+          {
+            \msg_error:nneee { numodel } { no-rule }
+              { \l__numodel_eff_prefix_tl } { \l__numodel_pos_after_tl }
+              { place~a~rule~after }
+          }
+          {
+            \__numodel_log_insert:eeV { \l__numodel_eff_prefix_tl }
+              { \int_eval:n { \l__numodel_log_idx_int + 1 } }
+              \l__numodel_item_tl
+          }
+      }
+      {
+        \__numodel_log_find:eeV { \l__numodel_eff_prefix_tl } { rule }
+          \l__numodel_pos_before_tl
+        \int_compare:nNnTF { \l__numodel_log_count_int } = { 0 }
+          {
+            \msg_error:nneee { numodel } { no-rule }
+              { \l__numodel_eff_prefix_tl } { \l__numodel_pos_before_tl }
+              { place~a~rule~before }
+          }
+          {
+            \__numodel_log_insert:eeV { \l__numodel_eff_prefix_tl }
+              { \int_use:N \l__numodel_log_idx_int } \l__numodel_item_tl
+          }
+      }
+  }
+
+\NewDocumentCommand{\mruletext}{ O{} m }
+  {
+    \__numodel_pos_parse:n {#1}
+    \tl_set:Nn \l__numodel_item_tl { {text} {} {#1} {} {#2} {} {} {} {} }
+    \tl_if_empty:NTF \l__numodel_eff_prefix_tl
+      { \__numodel_mruletext_exec:nn {#1} {#2} }
+      {
+        \bool_set_false:N \l__numodel_pos_replace_bool
+        \__numodel_place_rule:nn { } { replace }
+      }
+  }
+
+% \mstop: a second \mstop replaces the stop condition where it stands.
+\NewDocumentCommand{\mstop}{ s O{} m }
+  {
+    \__numodel_pos_parse:n {#2}
+    \tl_set:Ne \l__numodel_item_tl
+      {
+        { stop } { } { \exp_not:n {#2} }
+        { \IfBooleanTF {#1} { true } { false } } { \exp_not:n {#3} } {} {} {} {}
+      }
+    \tl_if_empty:NTF \l__numodel_eff_prefix_tl
+      { \__numodel_mstop_exec:nnn {#1} {#2} {#3} }
+      {
+        \__numodel_log_find:enn { \l__numodel_eff_prefix_tl } { stop } { }
+        \int_compare:nNnTF { \l__numodel_log_idx_int } > { 0 }
+          {
+            \__numodel_log_set:eeV { \l__numodel_eff_prefix_tl }
+              { \int_use:N \l__numodel_log_idx_int } \l__numodel_item_tl
+            \__numodel_rebuild:e { \l__numodel_eff_prefix_tl }
+          }
+          {
+            \__numodel_log_append_exec:eV
+              { \l__numodel_eff_prefix_tl } \l__numodel_item_tl
+          }
+      }
+  }
+
+% \mremoverule[prefix=...]{target}: remove every rule for the target.
+\NewDocumentCommand{\mremoverule}{ O{} m }
+  {
+    \__numodel_pos_parse:n {#1}
+    \__numodel_log_find:enn { \l__numodel_eff_prefix_tl } { rule } {#2}
+    \int_compare:nNnTF { \l__numodel_log_count_int } = { 0 }
+      {
+        \msg_error:nneee { numodel } { no-rule }
+          { \l__numodel_eff_prefix_tl } {#2} { remove }
+      }
+      {
+        \__numodel_log_remove:enn { \l__numodel_eff_prefix_tl } { rule } {#2}
+        \__numodel_rebuild:e { \l__numodel_eff_prefix_tl }
+      }
+  }
+
+% \copymodel[<Name>=<value>, blank={<targets>}]{source}{copy}: a new
+% model with the declarations of source, references renamed
+% (\sprongV -> \foutV); start values and blank rules adjusted by the
+% keys.  The copy becomes the current model; change it further with
+% the ordinary commands.  A snapshot: later changes to source do not
+% reach the copy.  Not copied: computed results, diagrams, and
+% numodel-coach's instruction text.
+\NewDocumentCommand{\copymodel}{ O{} m m }
+  {
+    \seq_if_in:NnTF \g_numodel_prefixes_seq {#2}
+      {
+        \newmodelprefix {#3}
+        % Short names of the source's variables.
+        \seq_clear:N \l__numodel_copy_names_seq
+        \seq_map_inline:cn { \__numodel_log:n {#2} }
+          {
+            \str_if_eq:eeT { \__numodel_item_kind:nnnnnnnnn ##1 } { mvar }
+              {
+                \seq_put_right:Ne \l__numodel_copy_names_seq
+                  { \__numodel_item_name:nnnnnnnnn ##1 }
+              }
+          }
+        \seq_map_inline:cn { \__numodel_log:n {#2} }
+          {
+            \tl_set:Nn \l__numodel_item_tl {##1}
+            \seq_map_inline:Nn \l__numodel_copy_names_seq
+              {
+                \tl_set:Ne \l__numodel_copy_from_tl { \exp_not:c { #2 ####1 } }
+                \tl_set:Ne \l__numodel_copy_to_tl   { \exp_not:c { #3 ####1 } }
+                \regex_replace_all:nnN { \u{l__numodel_copy_from_tl} }
+                  { \u{l__numodel_copy_to_tl} } \l__numodel_item_tl
+              }
+            \seq_gput_right:cV { \__numodel_log:n {#3} } \l__numodel_item_tl
+          }
+        \keyval_parse:nnn
+          { \__numodel_copy_key:nn {#3} }
+          { \__numodel_copy_key:nnn {#3} }
+          {#1}
+        \__numodel_rebuild:n {#3}
+      }
+      { \msg_error:nnn { numodel } { unknown-model } {#2} }
+  }
+\cs_new_protected:Npn \__numodel_copy_key:nn #1#2
+  { \__numodel_copy_key:nnn {#1} {#2} { } }
+% Name=value: the start value of a variable; blank={...}: blank rules.
+\cs_new_protected:Npn \__numodel_copy_key:nnn #1#2#3
+  {
+    \str_if_eq:nnTF {#2} { blank }
+      {
+        \clist_map_inline:nn {#3}
+          {
+            \__numodel_log_find:nnn {#1} { rule } {##1}
+            \int_compare:nNnTF { \l__numodel_log_count_int } = { 0 }
+              { \msg_error:nnnnn { numodel } { no-rule } {#1} {##1} { blank } }
+              {
+                \seq_clear:N \l__numodel_log_tmp_seq
+                \seq_map_inline:cn { \__numodel_log:n {#1} }
+                  {
+                    \tl_set:Nn \l__numodel_item_tl {####1}
+                    \bool_lazy_and:nnT
+                      { \str_if_eq_p:ee { \__numodel_item_kind:nnnnnnnnn ####1 } { rule } }
+                      { \str_if_eq_p:ee { \__numodel_item_name:nnnnnnnnn ####1 } {##1} }
+                      { \__numodel_item_add_blank:nnnnnnnnn ####1 }
+                    \seq_put_right:NV \l__numodel_log_tmp_seq \l__numodel_item_tl
+                  }
+                \seq_gset_eq:cN { \__numodel_log:n {#1} } \l__numodel_log_tmp_seq
+              }
+          }
+      }
+      {
+        \__numodel_log_find:nnn {#1} { mvar } {#2}
+        \int_compare:nNnTF { \l__numodel_log_count_int } = { 0 }
+          { \msg_error:nnnn { numodel } { copy-no-var } {#1} {#2} }
+          {
+            \tl_set:Nn \l__numodel_newval_tl {#3}
+            \seq_clear:N \l__numodel_log_tmp_seq
+            \seq_map_indexed_inline:cn { \__numodel_log:n {#1} }
+              {
+                \tl_set:Nn \l__numodel_item_tl {##2}
+                \int_compare:nNnT {##1} = { \l__numodel_log_idx_int }
+                  { \__numodel_item_set_value:nnnnnnnnn ##2 }
+                \seq_put_right:NV \l__numodel_log_tmp_seq \l__numodel_item_tl
+              }
+            \seq_gset_eq:cN { \__numodel_log:n {#1} } \l__numodel_log_tmp_seq
+          }
+      }
+  }
+
+\cs_generate_variant:Nn \__numodel_log_find:nnn { enn , eeV }
+\cs_generate_variant:Nn \__numodel_log_set:nnn { enn , eeV }
+\cs_generate_variant:Nn \__numodel_log_insert:nnn { eeV }
+\cs_generate_variant:Nn \__numodel_log_remove:nnn { enn }
+\cs_generate_variant:Nn \__numodel_log_append_exec:nn { en , eV }
+\cs_generate_variant:Nn \__numodel_rebuild:n { e }
+\cs_generate_variant:Nn \msg_error:nnnnn { nneee }
+\cs_generate_variant:Nn \msg_error:nnnn { nnee }
 
 % ====================================================================
 % \textmodel
