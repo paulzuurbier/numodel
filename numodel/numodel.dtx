@@ -121,20 +121,40 @@
 % Storing those bodies inside an expl3-context would tokenise `:` as
 % letter, which then breaks siunitx's option parser at expansion time.
 % ====================================================================
-\newcommand{\NumodelDefNumCs}[3]{% #1 = fullname, #2 = start expr, #3 = sigfigs
+% The start value is shown rounded to the significant figures, or --
+% with start-format=input -- exactly as typed in \mvar.  \<fullname>num
+% and \<fullname>qty defer that choice to the moment they are used
+% (\NumodelStartNum / \NumodelStartQty, defined in the expl3 part), so a
+% \numodelsetup{start-format=...} after the \mvar still counts.
+\newcommand{\NumodelNumRounded}[2]{% #1 = value, #2 = sigfigs
+  \num[evaluate-expression=true,
+       round-mode=figures, round-precision=#2,
+       exponent-mode=threshold, exponent-thresholds=-3:#2]
+      {#1}\relax
+}
+\newcommand{\NumodelQtyRounded}[3]{% #1 = value, #2 = sigfigs, #3 = unit
+  \qty[evaluate-expression=true,
+       round-mode=figures, round-precision=#2,
+       exponent-mode=threshold, exponent-thresholds=-3:#2]
+      {#1}{#3}\relax
+}
+\newcommand{\NumodelNumInput}[1]{% #1 = number as typed
+  \num[round-mode=none, exponent-mode=input]{#1}\relax
+}
+\newcommand{\NumodelQtyInput}[2]{% #1 = number as typed, #2 = unit
+  \qty[round-mode=none, exponent-mode=input]{#1}{#2}\relax
+}
+% #1 = fullname, #2 = start value as typed when it is a plain number
+% (else empty), #3 = evaluated value, #4 = sigfigs, #5 = start-format
+% of this variable (empty: follow \numodelsetup), #6 = unit (qty only)
+\newcommand{\NumodelDefNumCs}[5]{%
   \expandafter\gdef\csname #1num\endcsname{%
-    \num[evaluate-expression=true,
-         round-mode=figures, round-precision=#3,
-         exponent-mode=threshold, exponent-thresholds=-3:#3]
-        {#2}\relax
+    \NumodelStartNum{#2}{#3}{#4}{#5}%
   }%
 }
-\newcommand{\NumodelDefQtyCs}[4]{% #1 = fullname, #2 = expr, #3 = sigfigs, #4 = unit
+\newcommand{\NumodelDefQtyCs}[6]{%
   \expandafter\gdef\csname #1qty\endcsname{%
-    \qty[evaluate-expression=true,
-         round-mode=figures, round-precision=#3,
-         exponent-mode=threshold, exponent-thresholds=-3:#3]
-        {#2}{#4}\relax
+    \NumodelStartQty{#2}{#3}{#4}{#5}{#6}%
   }%
 }
 \newcommand{\NumodelDefPreCs}[4]{% same parameters as above
@@ -149,6 +169,53 @@
 }
 
 \ExplSyntaxOn
+
+% blanks: open (default; the pupil's version shows "lhs = \cdots" for
+% every \mvar/\mrule/\mstop with the blank key) or filled (the answer
+% version shows them in full).  \textmodel and \coachmodel can
+% override it per call.
+\tl_new:N  \g__numodel_blanks_tl
+\tl_gset:Nn \g__numodel_blanks_tl { open }
+\tl_new:N  \l__numodel_eff_blanks_tl
+\tl_set:Nn \l__numodel_eff_blanks_tl { open }
+\bool_new:N \l__numodel_blank_bool
+% Expands to #1 (the blank form) or #2 (the full form), according to
+% the blanks setting of the \textmodel being typeset.
+\cs_new:Npn \__numodel_blank_choice:nn #1#2
+  { \str_if_eq:VnTF \l__numodel_eff_blanks_tl { filled } {#2} {#1} }
+
+% start-format: rounded (default) or input; see \NumodelDefNumCs.
+\tl_new:N \g__numodel_startfmt_tl
+\tl_gset:Nn \g__numodel_startfmt_tl { rounded }
+\tl_new:N \l__numodel_mvar_startfmt_tl
+\tl_new:N \l__numodel_startlit_tl
+% True when the start value is to be shown as typed: it is a plain
+% number (#1 not empty) and the variable's own start-format (#2), or
+% else the global one, is "input".
+\prg_new_conditional:Npnn \__numodel_if_start_input:nn #1#2 { TF }
+  {
+    \tl_if_blank:nTF {#1}
+      { \prg_return_false: }
+      {
+        \str_if_eq:eeTF
+          { \tl_if_blank:nTF {#2} { \g__numodel_startfmt_tl } {#2} }
+          { input }
+          { \prg_return_true: }
+          { \prg_return_false: }
+      }
+  }
+\cs_new_protected:Npn \NumodelStartNum #1#2#3#4
+  {
+    \__numodel_if_start_input:nnTF {#1} {#4}
+      { \NumodelNumInput {#1} }
+      { \NumodelNumRounded {#2} {#3} }
+  }
+\cs_new_protected:Npn \NumodelStartQty #1#2#3#4#5
+  {
+    \__numodel_if_start_input:nnTF {#1} {#4}
+      { \NumodelQtyInput {#1} {#5} }
+      { \NumodelQtyRounded {#2} {#3} {#5} }
+  }
 
 % ====================================================================
 % Lua module for data storage (O(1) append, O(N) total)
@@ -530,6 +597,21 @@ end
     flowarrow-cloud-tip .code:n =
       { \__numodel_setup_choice:Nnnn \g__numodel_flowcloud_tl
           { flowarrow-cloud-tip } { true , false } {#1} },
+    % How \<name>num/qty (and so the initial values of \textmodel)
+    % show a start value: rounded to its significant figures, or as
+    % typed in \mvar.  Read when the value is shown.
+    start-format        .code:n =
+      { \__numodel_setup_choice:Nnnn \g__numodel_startfmt_tl
+          { start-format } { rounded , input } {#1} },
+    % open: pupil's version (blanks shown as \cdots), filled: answers.
+    % Mirrored in Lua for numodel.plaintext / numodel-coach.
+    blanks              .code:n =
+      {
+        \__numodel_setup_choice:Nnnn \g__numodel_blanks_tl
+          { blanks } { open , filled } {#1}
+        \directlua{ numodel.set_setting("blanks",
+          "\tl_use:N \g__numodel_blanks_tl") }
+      },
     units                      .choice:,
     units / true               .code:n =
       { \bool_gset_true:N  \g__numodel_units_bool },
@@ -586,6 +668,8 @@ end
     valve-style         .meta:nn = { numodel / setup }{ valve-style         = #1 },
     flowarrow-cloud-tip .meta:nn = { numodel / setup }{ flowarrow-cloud-tip = #1 },
     units               .meta:nn = { numodel / setup }{ units               = #1 },
+    start-format        .meta:nn = { numodel / setup }{ start-format        = #1 },
+    blanks              .meta:nn = { numodel / setup }{ blanks              = #1 },
     tblrenv             .meta:nn = { numodel / setup }{ tblrenv             = #1 },
     decimal-separator   .meta:nn = { numodel / setup }{ decimal-separator   = #1 },
   }
@@ -758,6 +842,56 @@ end
       { \tl_set:Nn \l__numodel_cmd_tblrenv_tl { longtblr } },
     tblrenv / talltblr         .code:n =
       { \tl_set:Nn \l__numodel_cmd_tblrenv_tl { talltblr } },
+    % \diagrammodel-only keys, all reset at every call.
+    % legend: true/false, or a list with one label per series (which
+    % also switches the legend on).  A single series has no legend by
+    % default; several series always get one.
+    legend                     .code:n =
+      {
+        \clist_clear:N \l__numodel_cmd_legend_clist
+        \str_case:nnF {#1}
+          {
+            { true }  { \bool_set_true:N  \l__numodel_cmd_legend_bool }
+            { false } { \bool_set_false:N \l__numodel_cmd_legend_bool }
+          }
+          {
+            \bool_set_true:N \l__numodel_cmd_legend_bool
+            \clist_set:Nn \l__numodel_cmd_legend_clist {#1}
+          }
+      },
+    legend                     .default:n = true,
+    % \textmodel-only: blanks=open|filled for this table.
+    blanks                     .code:n =
+      { \__numodel_local_choice:Nnnn \l__numodel_cmd_blanks_tl
+          { blanks } { open , filled } {#1} },
+    % style: model points (marks, default), a line, or both.
+    style                      .code:n =
+      { \__numodel_local_choice:Nnnn \l__numodel_cmd_style_tl
+          { style } { marks , line , both } {#1} },
+    % float=false: no figure float, so the diagram fits in a minipage,
+    % a tcolorbox or an exam solution.
+    float                      .bool_set:N = \l__numodel_cmd_float_bool,
+    caption                    .tl_set:N   = \l__numodel_cmd_caption_tl,
+    nocaption                  .bool_set:N = \l__numodel_cmd_nocaption_bool,
+    nocaption                  .default:n  = true,
+    % Maximum axis size in cm, as \numodelplotsetup{xcmmax,ycmmax}.
+    xcmmax                     .tl_set:N   = \l__numodel_cmd_xcmmax_tl,
+    ycmmax                     .tl_set:N   = \l__numodel_cmd_ycmmax_tl,
+  }
+\bool_new:N  \l__numodel_cmd_legend_bool
+\clist_new:N \l__numodel_cmd_legend_clist
+\tl_new:N    \l__numodel_cmd_blanks_tl
+\tl_new:N    \l__numodel_cmd_style_tl
+\bool_new:N  \l__numodel_single_series_bool
+\tl_new:N    \l__numodel_series_opts_tl
+\tl_new:N    \l__numodel_legend_item_tl
+
+% Legend text of a single-series \diagrammodel, from the keyword table
+% of the current syntax; "model point" for a drop-in .def without it.
+\cs_new:Npn \__numodel_legend_point:
+  {
+    \cs_if_exist_use:cF { __numodel_kw_ \g__numodel_syntax_tl _legend_point: }
+      { model~point }
   }
 \tl_new:N \l__numodel_cmd_diagstyle_tl
 \tl_new:N \l__numodel_cmd_flowarrow_tl
@@ -815,6 +949,13 @@ end
     flowarrow-cloud-tip .code:n =
       { \__numodel_local_choice:Nnnn \l__numodel_mvar_flowcloud_tl
           { flowarrow-cloud-tip } { true , false } {#1} },
+    start-format .code:n =
+      { \__numodel_local_choice:Nnnn \l__numodel_mvar_startfmt_tl
+          { start-format } { rounded , input } {#1} },
+    % blank: show "lhs = \cdots" in the pupil's version (blanks=open);
+    % the model still computes with the full rule / start value.
+    blank        .bool_set:N = \l__numodel_blank_bool ,
+    blank        .default:n  = true ,
   }
 \tl_new:N \l__numodel_mvar_flowcloud_tl
 
@@ -902,6 +1043,8 @@ end
   \tl_clear:N \l__numodel_aliasright_tl
   \tl_clear:N \l__numodel_cmd_prefix_tl
   \tl_clear:N \l__numodel_mvar_flowcloud_tl
+  \tl_clear:N \l__numodel_mvar_startfmt_tl
+  \bool_set_false:N \l__numodel_blank_bool
   \typeout{MVAR~before-keys-set}
   \keys_set:nn { numodel / mvar } {#1}
   \typeout{MVAR~after-keys-set}
@@ -935,14 +1078,52 @@ end
     % optional: it only fires when the user has loaded the project-
     % specific 'defqty' system (used for worksheet expansion).
     % Standalone, the package works without that seq.
+    % Name collisions (numodel.check_name): with another model's
+    % variable an error, with an accessor (T + max = Tmax) a warning
+    % that replaces the generic "being redefined" one.
+    \bool_set_false:N \l__numodel_clash_warned_bool
+    \tl_set:Ne \l__numodel_clash_tl
+      {
+        \lua_now:e { numodel.clash_kind(
+          "\g_numodel_current_prefix_tl", "\l__numodel_fullname_tl") }
+      }
+    \str_case:VnF \l__numodel_clash_tl
+      {
+        { model }
+          {
+            \msg_error:nne { numodel } { name-clash }
+              {
+                \lua_now:e { numodel.clash_message(
+                  "\g_numodel_current_prefix_tl",
+                  "\l__numodel_fullname_tl") }
+              }
+            \bool_set_true:N \l__numodel_clash_warned_bool
+          }
+        { accessor }
+          {
+            \msg_warning:nne { numodel } { accessor-clash }
+              {
+                \lua_now:e { numodel.clash_message(
+                  "\g_numodel_current_prefix_tl",
+                  "\l__numodel_fullname_tl") }
+              }
+            \bool_set_true:N \l__numodel_clash_warned_bool
+          }
+      }
+      { }
+    \lua_now:e { numodel.claim_name(
+      "\g_numodel_current_prefix_tl", "\l__numodel_fullname_tl") }
     \seq_gput_right:NV \g_mvar_names_seq   \l__numodel_fullname_tl
     \cs_if_exist:NT \g_defqty_names_seq
       { \seq_gput_right:NV \g_defqty_names_seq \l__numodel_fullname_tl }
     \directlua{ numodel.register(
       "\g_numodel_current_prefix_tl",
       "\l__numodel_fullname_tl") }
-    \cs_if_exist:cT { \l__numodel_fullname_tl }
-      { \msg_warning:nne { numodel } { redef } { \l__numodel_fullname_tl } }
+    \bool_if:NF \l__numodel_clash_warned_bool
+      {
+        \cs_if_exist:cT { \l__numodel_fullname_tl }
+          { \msg_warning:nne { numodel } { redef } { \l__numodel_fullname_tl } }
+      }
     \tl_if_blank:nTF {#3}
       { \cs_gset:cpe { \l__numodel_fullname_tl } { \fp_eval:n { 0 } } }
       {
@@ -964,6 +1145,8 @@ end
     % can reset auto-placed positions to -1 on a second invocation.
     \cs_gset:cpe { \l__numodel_fullname_tl gridxinit } { \tl_use:N \l__numodel_gridx_tl }
     \cs_gset:cpe { \l__numodel_fullname_tl gridyinit } { \tl_use:N \l__numodel_gridy_tl }
+    \cs_gset:cpe { \l__numodel_fullname_tl blank }
+      { \bool_if:NTF \l__numodel_blank_bool { true } { false } }
     % Pillar A — Lua-side meta for compute_layout (additive in A1).
     % Detokenize text so that \luaescapestring works on bare chars.
     % The start value, unit and significant figures are not used by
@@ -980,15 +1163,30 @@ end
         value = "\tl_if_blank:nF {#3} { \fp_eval:n {#3} }",
         value_expr = "\luaescapestring{\detokenize{#3}}",
         unit  = "\luaescapestring{\detokenize{#4}}",
-        sigfigs = "\luaescapestring{\detokenize{#5}}" }) }
+        sigfigs = "\luaescapestring{\detokenize{#5}}",
+        blank = \bool_if:NTF \l__numodel_blank_bool { true } { false } }) }
     \cs_gset:cpe { \l__numodel_fullname_tl alias }      { \exp_not:V \l__numodel_alias_tl }
     \cs_gset:cpe { \l__numodel_fullname_tl aliasleft }  { \exp_not:V \l__numodel_aliasleft_tl }
     \cs_gset:cpe { \l__numodel_fullname_tl aliasright } { \exp_not:V \l__numodel_aliasright_tl }
     \cs_gset:cpe { \l__numodel_fullname_tl flowcloud }  { \exp_not:V \l__numodel_mvar_flowcloud_tl }
     \tl_if_blank:nF {#3}
       {
-        \exp_args:NV \NumodelDefNumCs \l__numodel_fullname_tl {\fp_eval:n {#3}} {#5}
-        \exp_args:NV \NumodelDefQtyCs \l__numodel_fullname_tl {\fp_eval:n {#3}} {#5} {#4}
+        % The start value as typed, kept only when it is a plain number
+        % (3000, 0.24, -9.81, 1.5e-3); an expression is always rounded.
+        \regex_match:nnTF
+          { \A \s* [+\-]? (?: [0-9]+ \.? [0-9]* | \. [0-9]+ ) (?: [eE] [+\-]? [0-9]+ )? \s* \Z }
+          {#3}
+          { \tl_set:Nn \l__numodel_startlit_tl {#3} }
+          { \tl_clear:N \l__numodel_startlit_tl }
+        \use:e
+          {
+            \exp_not:N \NumodelDefNumCs { \l__numodel_fullname_tl }
+              { \exp_not:V \l__numodel_startlit_tl } { \fp_eval:n {#3} } {#5}
+              { \exp_not:V \l__numodel_mvar_startfmt_tl }
+            \exp_not:N \NumodelDefQtyCs { \l__numodel_fullname_tl }
+              { \exp_not:V \l__numodel_startlit_tl } { \fp_eval:n {#3} } {#5}
+              { \exp_not:V \l__numodel_mvar_startfmt_tl } { \exp_not:n {#4} }
+          }
         \exp_args:NV \NumodelDefPreCs \l__numodel_fullname_tl {\fp_eval:n {#3}} {#5} {#4}
       }
   }
@@ -999,6 +1197,17 @@ end
 
 \msg_new:nnn { numodel } { redef }
   { Model~variable~'#1'~is~being~redefined. }
+\msg_new:nnnn { numodel } { name-clash }
+  { Name~collision:~#1. }
+  { Two~models~would~share~this~macro~name,~so~one~would~silently~
+    overwrite~the~other.~Rename~the~variable~or~choose~a~prefix~that~
+    is~not~the~beginning~of~another~prefix~plus~a~variable~name. }
+\msg_new:nnn { numodel } { accessor-clash }
+  { Name~collision:~#1.~Both~use~one~macro,~so~the~one~defined~last~
+    wins;~\token_to_str:N \computemodel\space rewrites~the~min~and~
+    max~accessors.~Rename~one~of~them~to~avoid~this. }
+\bool_new:N \l__numodel_clash_warned_bool
+\tl_new:N   \l__numodel_clash_tl
 \msg_new:nnn { numodel } { empty-use }
   { Model~variable~'#1'~has~no~start~value~and~is~used~before~assignment. }
 \msg_new:nnn { numodel } { maxiter }
@@ -1059,6 +1268,25 @@ end
   {
     \typeout{VTD~input:~\tl_to_str:N #1}
     \typeout{VTD~seq:~\seq_use:Nn \g_mvar_names_seq {|}}
+    % Multi-character numeric superscripts.  \fp_eval:n accepts
+    % '^1.2' (and '^12', '^-3', ...), but TeX math mode binds only
+    % the next single token to ^, so 'T^1.2' would typeset as
+    % 'T^{1}.2' and 'T^12' as 'T^{1}2'.  Wrap any numeric exponent
+    % literal in braces so display reads 'T^{1.2}', 'T^{12}', etc.
+    % Explicitly braced (^{...}) or parenthesised (^(...)) exponents
+    % are left untouched.
+    \regex_replace_all:nnN { \^ ( [+\-]? [0-9]+ (?: \. [0-9]+)? ) }
+      { \^ \cB\{ \1 \cE\} } #1
+    % Decimal numbers in the rule (0.24, 1.5e-3) through siunitx \num, so
+    % they take the decimal marker of the syntax (\textmodel sets it via
+    % \__numodel_apply_dsep:) and appear as typed: no rounding, no
+    % power of ten.  Integers need no marker and stay as they are.  This
+    % runs before the variable names are replaced, so digits inside a
+    % display name (x_1) are never touched; and after the exponent
+    % bracing above, so ^{1.2} becomes ^{\num{1.2}}.
+    \regex_replace_all:nnN
+      { [0-9]*\.[0-9]+ (?: [eE] [+\-]? [0-9]+ )? | [0-9]+ [eE] [+\-]? [0-9]+ }
+      { \c{num} [round-mode=none,exponent-mode=input] \cB\{ \0 \cE\} } #1
     % Variable names -> display names
     \seq_map_inline:Nn \g_mvar_names_seq
       {
@@ -1070,15 +1298,6 @@ end
             \regex_replace_all:nnN { \c{##1} } { \u{l_tmpa_tl} } #1
           }
       }
-    % Multi-character numeric superscripts.  \fp_eval:n accepts
-    % '^1.2' (and '^12', '^-3', ...), but TeX math mode binds only
-    % the next single token to ^, so 'T^1.2' would typeset as
-    % 'T^{1}.2' and 'T^12' as 'T^{1}2'.  Wrap any numeric exponent
-    % literal in braces so display reads 'T^{1.2}', 'T^{12}', etc.
-    % Explicitly braced (^{...}) or parenthesised (^(...)) exponents
-    % are left untouched.
-    \regex_replace_all:nnN { \^ ( [+\-]? [0-9]+ (?: \. [0-9]+)? ) }
-      { \^ \cB\{ \1 \cE\} } #1
     % Arithmetic operators
     \regex_replace_all:nnN { \* } { \c{cdot} \x{20} } #1
     \regex_replace_all:nnN { >= } { \c{geqslant} \x{20} } #1
@@ -1311,9 +1530,25 @@ end
 %   \mrule[aliasleft=a_x]{modAx}{\modFgx / \modM}
 %   \mrule[alias={\text{(hidden)}}]{modAy}{\modFgy / \modM}
 
+% \mrule[blank]: the display becomes a choice between "lhs = \cdots"
+% and the full form, made when the table is typeset.
+\cs_new_protected:Npn \__numodel_blank_wrap:
+  {
+    \bool_if:NT \l__numodel_blank_bool
+      {
+        \tl_set:Ne \l__numodel_display_tl
+          {
+            \exp_not:N \__numodel_blank_choice:nn
+              { \exp_not:V \l__numodel_lhs_tl \exp_not:n { \,=\, \cdots } }
+              { \exp_not:V \l__numodel_display_tl }
+          }
+      }
+  }
+
 \NewDocumentCommand{\mrule}{ s O{} m m }{%
   \typeout{MRULE~start:~#3}
   \bool_set_false:N \l__numodel_is_ternary_bool
+  \bool_set_false:N \l__numodel_blank_bool
   % Parse keys (prefix, alias, aliasleft, aliasright; gridx/gridy ignored)
   \tl_clear:N \l__numodel_alias_tl
   \tl_clear:N \l__numodel_aliasleft_tl
@@ -1370,6 +1605,7 @@ end
                         \exp_not:V \l__numodel_cond_tl
                         \__numodel_kwt:n {then_nl}
                       }
+                    \__numodel_blank_wrap:
                     \seq_gput_right:NV \g_mrule_seq \l__numodel_display_tl
                     \seq_gput_right:Nn \g_mrule_type_seq { rule }
                     \tl_set:Ne \l__numodel_display_tl
@@ -1379,9 +1615,11 @@ end
                         \exp_not:V \l__numodel_true_tl
                       }
                     \seq_gput_right:NV \g_mrule_seq \l__numodel_display_tl
-                    \seq_gput_right:Nn \g_mrule_type_seq { cont }
+                    \seq_gput_right:Ne \g_mrule_type_seq
+                      { \bool_if:NTF \l__numodel_blank_bool { blankcont } { cont } }
                     \seq_gput_right:Ne \g_mrule_seq { \__numodel_kwt:n {else_nl} }
-                    \seq_gput_right:Nn \g_mrule_type_seq { cont }
+                    \seq_gput_right:Ne \g_mrule_type_seq
+                      { \bool_if:NTF \l__numodel_blank_bool { blankcont } { cont } }
                     \tl_set:Ne \l__numodel_display_tl
                       {
                         \exp_not:n { \quad }
@@ -1389,9 +1627,11 @@ end
                         \exp_not:V \l__numodel_false_tl
                       }
                     \seq_gput_right:NV \g_mrule_seq \l__numodel_display_tl
-                    \seq_gput_right:Nn \g_mrule_type_seq { cont }
+                    \seq_gput_right:Ne \g_mrule_type_seq
+                      { \bool_if:NTF \l__numodel_blank_bool { blankcont } { cont } }
                     \seq_gput_right:Ne \g_mrule_seq { \__numodel_kwt:n {endif_nl} }
-                    \seq_gput_right:Nn \g_mrule_type_seq { cont }
+                    \seq_gput_right:Ne \g_mrule_type_seq
+                      { \bool_if:NTF \l__numodel_blank_bool { blankcont } { cont } }
                   }
                   {
                     % Unstarred ternary -> single-line
@@ -1439,6 +1679,7 @@ end
     % For starred ternary everything is already pushed above
     \bool_if:nF { \l__numodel_is_ternary_bool && #1 }
       {
+        \__numodel_blank_wrap:
         \seq_gput_right:NV \g_mrule_seq \l__numodel_display_tl
         \seq_gput_right:Nn \g_mrule_type_seq { rule }
       }
@@ -1453,7 +1694,8 @@ end
       "\l__numodel_fullname_tl",
       "\luaescapestring{\l__numodel_scratch_tl}",
       "\bool_if:NTF \l__numodel_is_ternary_bool { ternary } { calc }",
-      \IfBooleanTF {#1} { true } { false }) }
+      \IfBooleanTF {#1} { true } { false },
+      \bool_if:NTF \l__numodel_blank_bool { true } { false }) }
   }
 
 % ====================================================================
@@ -1507,6 +1749,7 @@ end
   \tl_clear:N \l__numodel_aliasleft_tl
   \tl_clear:N \l__numodel_aliasright_tl
   \tl_clear:N \l__numodel_cmd_prefix_tl
+  \bool_set_false:N \l__numodel_blank_bool
   \keys_set:nn { numodel / mvar } {#2}
   \__numodel_resolve_eff_prefix:
   \__numodel_with_prefix:Nn \l__numodel_eff_prefix_tl
@@ -1521,7 +1764,8 @@ end
     \tl_gset:Nn \g_numodel_stop_expr_tl {#1}
     \directlua{ numodel.set_stop(
       "\g_numodel_current_prefix_tl",
-      "\luaescapestring{\detokenize{#1}}") }
+      "\luaescapestring{\detokenize{#1}}",
+      \bool_if:NTF \l__numodel_blank_bool { true } { false }) }
     % Generate display
     \tl_if_blank:VTF \l__numodel_alias_tl
       {
@@ -1553,6 +1797,29 @@ end
       {
         \tl_set:Ne \l__numodel_display_tl { \exp_not:V \l__numodel_alias_tl }
       }
+    % \mstop[blank]: "IF \cdots THEN STOP ENDIF" in the pupil's version.
+    \bool_if:NT \l__numodel_blank_bool
+      {
+        \tl_set:Ne \l__numodel_display_tl
+          {
+            \exp_not:N \__numodel_blank_choice:nn
+              {
+                \bool_if:NTF \g__numodel_fpeval_bool
+                  {
+                    \exp_not:n { \__numodel_fpeval_stoprow:nn }
+                      { \__numodel_kw:n {stop} } { \exp_not:n { \cdots } }
+                  }
+                  {
+                    \__numodel_kwt:n {if}
+                    \exp_not:n { \cdots }
+                    \__numodel_kwt:n {then_nl}
+                    \__numodel_kwt:n {stop}
+                    \__numodel_kwt:n {endif_nl}
+                  }
+              }
+              { \exp_not:V \l__numodel_display_tl }
+          }
+      }
     \seq_gput_right:NV \g_mrule_seq \l__numodel_display_tl
     \seq_gput_right:Nn \g_mrule_type_seq { rule }
   }
@@ -1579,6 +1846,21 @@ end
 %                                     \<name>qty (units=true) or
 %                                     \<name>num (units=false)
 \cs_new_protected:Npn \__numodel_emit_startcell:n #1
+  {
+    % \mvar[blank] in the pupil's version: "lhs = \cdots".
+    \bool_lazy_and:nnTF
+      { \str_if_eq_p:ee { \cs_if_exist_use:c { #1 blank } } { true } }
+      { \str_if_eq_p:Vn \l__numodel_eff_blanks_tl { open } }
+      {
+        \tl_gput_right:Nn \g__numodel_table_tl { $ }
+        \str_if_eq:eeTF { \tl_to_str:c { #1 aliasleft } } { }
+          { \tl_gput_right:Nx \g__numodel_table_tl { { \exp_not:c { #1 text } } } }
+          { \tl_gput_right:Nx \g__numodel_table_tl { { \exp_not:c { #1 aliasleft } } } }
+        \tl_gput_right:Nn \g__numodel_table_tl { = \cdots $ }
+      }
+      { \__numodel_emit_startcell_full:n {#1} }
+  }
+\cs_new_protected:Npn \__numodel_emit_startcell_full:n #1
   {
     % Alias-key contents are wrapped in a TeX group { ... } before
     % being placed in the table.  Two reasons:
@@ -1632,41 +1914,24 @@ end
       }
   }
 
-\cs_new_protected:Npn \__numodel_build_table:
+% One table row (rule column + initial-value column) for row
+% \l__numodel_row_int of the rule sequence.
+\cs_new_protected:Npn \__numodel_build_row:
   {
-    \typeout{BUILD_TABLE~rules:~\seq_use:Nn \g_mrule_seq {|}}
-    \typeout{BUILD_TABLE~types:~\seq_use:Nn \g_mrule_type_seq {|}}
-    \int_set:Nn \l__numodel_numrules_int  { \seq_count:N \g_mrule_seq }
-    \int_set:Nn \l__numodel_numstarts_int { \seq_count:N \g_mvar_start_seq }
-    \typeout{BUILD_TABLE~numrules:~\int_use:N \l__numodel_numrules_int}
-    \typeout{BUILD_TABLE~numstarts:~\int_use:N \l__numodel_numstarts_int}
-    \int_zero:N \l__numodel_row_int
-    \int_zero:N \l__numodel_dispnum_int
-    \int_zero:N \l__numodel_startrow_int
-    \tl_gset:Nn \g__numodel_table_tl { \begin }
-    \tl_gput_right:Ne \g__numodel_table_tl
-      { { \tl_use:N \g__numodel_tblrenv_tl } }
-    \tl_gput_right:Nn \g__numodel_table_tl
-      { [theme={numodel}]{colspec={r|l|l}, rowhead=1} & \textbf }
-    \tl_gput_right:Ne \g__numodel_table_tl
-      { { \__numodel_kw:n {th_model} } }
-    \tl_gput_right:Nn \g__numodel_table_tl
-      { & \textbf }
-    \tl_gput_right:Ne \g__numodel_table_tl
-      { { \__numodel_kw:n {th_initvals} } }
-    \tl_gput_right:Nn \g__numodel_table_tl
-      { \\ \hline }
-    \typeout{BUILD_TABLE~before-step~table:~\tl_to_str:N \g__numodel_table_tl}
-    \int_step_inline:nn { \l__numodel_numrules_int }
-      {
-        \typeout{BUILD_TABLE~iter~row:~\int_use:N \l__numodel_row_int}
-        \int_incr:N \l__numodel_row_int
         \int_incr:N \l__numodel_startrow_int
         \typeout{BUILD_TABLE~row:~\int_use:N \l__numodel_row_int~type:~\seq_item:Nn \g_mrule_type_seq { \l__numodel_row_int }}
         % Check type: rule -> show number, cont -> blank
-        \str_if_eq:eeTF
-          { \seq_item:Nn \g_mrule_type_seq { \l__numodel_row_int } }
-          { cont }
+        \bool_lazy_or:nnTF
+          {
+            \str_if_eq_p:ee
+              { \seq_item:Nn \g_mrule_type_seq { \l__numodel_row_int } }
+              { cont }
+          }
+          {
+            \str_if_eq_p:ee
+              { \seq_item:Nn \g_mrule_type_seq { \l__numodel_row_int } }
+              { blankcont }
+          }
           {
             % Continuation rows: no number
             \tl_gput_right:Ne \g__numodel_table_tl
@@ -1701,6 +1966,46 @@ end
               { \seq_item:Nn \g_mvar_start_seq { \l__numodel_startrow_int } }
             \tl_gput_right:Nn \g__numodel_table_tl { \\ }
           }
+  }
+
+\cs_new_protected:Npn \__numodel_build_table:
+  {
+    \typeout{BUILD_TABLE~rules:~\seq_use:Nn \g_mrule_seq {|}}
+    \typeout{BUILD_TABLE~types:~\seq_use:Nn \g_mrule_type_seq {|}}
+    \int_set:Nn \l__numodel_numrules_int  { \seq_count:N \g_mrule_seq }
+    \int_set:Nn \l__numodel_numstarts_int { \seq_count:N \g_mvar_start_seq }
+    \typeout{BUILD_TABLE~numrules:~\int_use:N \l__numodel_numrules_int}
+    \typeout{BUILD_TABLE~numstarts:~\int_use:N \l__numodel_numstarts_int}
+    \int_zero:N \l__numodel_row_int
+    \int_zero:N \l__numodel_dispnum_int
+    \int_zero:N \l__numodel_startrow_int
+    \tl_gset:Nn \g__numodel_table_tl { \begin }
+    \tl_gput_right:Ne \g__numodel_table_tl
+      { { \tl_use:N \g__numodel_tblrenv_tl } }
+    \tl_gput_right:Nn \g__numodel_table_tl
+      { [theme={numodel}]{colspec={r|l|l}, rowhead=1} & \textbf }
+    \tl_gput_right:Ne \g__numodel_table_tl
+      { { \__numodel_kw:n {th_model} } }
+    \tl_gput_right:Nn \g__numodel_table_tl
+      { & \textbf }
+    \tl_gput_right:Ne \g__numodel_table_tl
+      { { \__numodel_kw:n {th_initvals} } }
+    \tl_gput_right:Nn \g__numodel_table_tl
+      { \\ \hline }
+    \typeout{BUILD_TABLE~before-step~table:~\tl_to_str:N \g__numodel_table_tl}
+    \int_step_inline:nn { \l__numodel_numrules_int }
+      {
+        \int_incr:N \l__numodel_row_int
+        % Continuation rows of a [blank] multi-line rule disappear in the
+        % pupil's version: its first row already reads "lhs = \cdots".
+        \bool_lazy_and:nnF
+          {
+            \str_if_eq_p:ee
+              { \seq_item:Nn \g_mrule_type_seq { \l__numodel_row_int } }
+              { blankcont }
+          }
+          { \str_if_eq_p:Vn \l__numodel_eff_blanks_tl { open } }
+          { \__numodel_build_row: }
       }
     \int_while_do:nNnn { \l__numodel_startrow_int } < { \l__numodel_numstarts_int }
       {
@@ -1720,8 +2025,15 @@ end
   \tl_clear:N \l__numodel_cmd_prefix_tl
   \tl_clear:N \l__numodel_cmd_units_tl
   \tl_clear:N \l__numodel_cmd_tblrenv_tl
+  \tl_clear:N \l__numodel_cmd_blanks_tl
   \keys_set:nn { numodel / cmd } {#1}
   \__numodel_resolve_eff_prefix:
+  \tl_set:Ne \l__numodel_eff_blanks_tl
+    {
+      \tl_if_empty:NTF \l__numodel_cmd_blanks_tl
+        { \tl_use:N \g__numodel_blanks_tl }
+        { \tl_use:N \l__numodel_cmd_blanks_tl }
+    }
   % Temporary units override: save the global value, apply the key
   % value before build, restore afterwards.  This way
   % \textmodel[units=false] flips one render without touching the
@@ -1880,6 +2192,22 @@ end
 \cs_new:Npn \mstepp #1#2#3
   {
     \directlua{ numodel.get_step("#1", "#1" .. "#2", #3) }
+  }
+
+% Value of variable #1 at the first step where variable #2 (usually
+% the time) has reached #3: \mstepat{V}{T}{1} is v at t = 1 s, however
+% large the time step.  Fully expandable, like \mstep.  \mstepatp takes
+% the prefix as an extra first argument.
+\cs_new:Npn \mstepat #1#2#3
+  {
+    \directlua{ numodel.get_at(
+      "\g_numodel_current_prefix_tl",
+      "\g_numodel_current_prefix_tl" .. "#1",
+      "\g_numodel_current_prefix_tl" .. "#2", "#3") }
+  }
+\cs_new:Npn \mstepatp #1#2#3#4
+  {
+    \directlua{ numodel.get_at("#1", "#1" .. "#2", "#1" .. "#3", "#4") }
   }
 
 % ====================================================================
@@ -2763,6 +3091,14 @@ end
 \NewDocumentCommand{\diagrammodel}{ O{} m m O{} m }
   {
     \tl_clear:N \l__numodel_cmd_prefix_tl
+    \bool_set_false:N \l__numodel_cmd_legend_bool
+    \clist_clear:N \l__numodel_cmd_legend_clist
+    \tl_clear:N \l__numodel_cmd_style_tl
+    \bool_set_true:N \l__numodel_cmd_float_bool
+    \tl_clear:N \l__numodel_cmd_caption_tl
+    \bool_set_false:N \l__numodel_cmd_nocaption_bool
+    \tl_clear:N \l__numodel_cmd_xcmmax_tl
+    \tl_clear:N \l__numodel_cmd_ycmmax_tl
     \keys_set:nn { numodel / cmd } {#1}
     \__numodel_resolve_eff_prefix:
     % --- Parse prefix list -----------------------------------------
@@ -2853,67 +3189,102 @@ end
       }
     \edef\ylabelqty{\tl_use:N \l__numodel_yqty_tl}
     \edef\ylabelunit{\exp_not:V \l__numodel_yunit_first_tl}
-    \begin{figure}[H]
-    \centering
+    \bool_if:NTF \l__numodel_cmd_float_bool
+      { \begin{figure}[H] \centering }
+      {
+        % As capt-of's \captionof: \caption needs only \@captype.
+        \begin{center}
+        \cs_set:cpn { @captype } { figure }
+      }
     \group_begin:
     \__numodel_apply_dsep:
+    \tl_if_empty:NF \l__numodel_cmd_xcmmax_tl
+      { \cs_set:Npe \xcmmax { \tl_use:N \l__numodel_cmd_xcmmax_tl } }
+    \tl_if_empty:NF \l__numodel_cmd_ycmmax_tl
+      { \cs_set:Npe \ycmmax { \tl_use:N \l__numodel_cmd_ycmmax_tl } }
     % --- Build the plot body ---------------------------------------
-    % Single-series legacy path triggers iff there is exactly one
-    % prefix AND exactly one kept y-variable.  The two-count sum is
-    % 2 iff both lists hold one item.
-    \int_compare:nNnTF
-        {
-          \clist_count:N \l__numodel_yshort_clist +
-          \clist_count:N \l__numodel_eff_prefixes_clist
-        } = { 2 }
+    % One \addplot per (prefix, yvar) pair, prefix-major: all y-vars of
+    % the first prefix come before any of the second.  A single series
+    % (one prefix, one kept y-variable) is drawn in black and has a
+    % legend only on request; several series cycle through the
+    % colour-blind safe palette and always have a legend: the display
+    % text, with the prefix in parentheses when there are several
+    % prefixes, unless legend={...} gives the labels.
+    \bool_set:Nn \l__numodel_single_series_bool
       {
-        % Single-series: preserve the legacy mark-only rendering.
-        \edef\dm@coords
-          { \mcoordsp{\l__numodel_eff_prefix_tl}{#2}{\tl_use:N \l_tmpa_tl} }
-        \__numodel_draw_plot:n
+        \int_compare_p:nNn
           {
-            \addplot[only~marks,~mark=*,~mark~size=0.5pt]~coordinates~{\dm@coords};
-            \addlegendentry{model~point}
-            #4
+            \clist_count:N \l__numodel_yshort_clist +
+            \clist_count:N \l__numodel_eff_prefixes_clist
+          } = { 2 }
+      }
+    \str_case:VnF \l__numodel_cmd_style_tl
+      {
+        { line }
+          { \tl_set:Nn \l__numodel_series_opts_tl { no~markers , thick } }
+        { both }
+          {
+            \tl_set:Nn \l__numodel_series_opts_tl
+              { mark=* , mark~size=0.5pt , thick ,
+                legend~image~post~style = { mark~size=2pt } }
           }
       }
       {
-        % Multi-series: one mark-only \addplot per (prefix, yvar)
-        % pair with cycling colour-blind safe colour and a text
-        % legend.  The legend's mark is enlarged so the colour stays
-        % visible there.  Loop order is prefix-major: all y-vars of
-        % the first prefix come before any of the second.  When more
-        % than one prefix is plotted the prefix is appended in
-        % parentheses after each display text.
-        \tl_clear:N \l__numodel_plotbody_tl
-        \int_zero:N \l__numodel_yidx_int
-        \clist_map_inline:Nn \l__numodel_eff_prefixes_clist
+        \tl_set:Nn \l__numodel_series_opts_tl
+          { only~marks , mark=* , mark~size=0.5pt ,
+            legend~image~post~style = { mark~size=2pt } }
+      }
+    \tl_clear:N \l__numodel_plotbody_tl
+    \int_zero:N \l__numodel_yidx_int
+    \clist_map_inline:Nn \l__numodel_eff_prefixes_clist
+      {
+        \clist_map_inline:Nn \l__numodel_yshort_clist
           {
-            \clist_map_inline:Nn \l__numodel_yshort_clist
+            \int_incr:N \l__numodel_yidx_int
+            \tl_set:Ne \l__numodel_legend_item_tl
               {
-                \int_incr:N \l__numodel_yidx_int
-                \tl_put_right:Ne \l__numodel_plotbody_tl
+                \clist_item:Nn \l__numodel_cmd_legend_clist
+                  { \l__numodel_yidx_int }
+              }
+            \tl_put_right:Ne \l__numodel_plotbody_tl
+              {
+                \exp_not:N \addplot
+                  [ \exp_not:V \l__numodel_series_opts_tl
+                    \bool_if:NF \l__numodel_single_series_bool
+                      {
+                        , color = \__numodel_series_color:n
+                                  { \int_use:N \l__numodel_yidx_int }
+                      }
+                  ]
+                coordinates {
+                  \mcoordsp { ##1 } { #2 } { ####1 }
+                } ;
+                \bool_if:nT
                   {
-                    \exp_not:N \addplot
-                      [ only~marks ,~mark=* ,~mark~size=0.5pt ,
-                        color = \__numodel_series_color:n
-                                  { \int_use:N \l__numodel_yidx_int } ,
-                        legend~image~post~style = { mark~size=2pt } ]
-                    coordinates {
-                      \mcoordsp { ##1 } { #2 } { ####1 }
-                    } ;
+                    ! \l__numodel_single_series_bool
+                    || \l__numodel_cmd_legend_bool
+                  }
+                  {
                     \exp_not:N \addlegendentry
                       {
-                        $ \use:c { ##1 ####1 text } $
-                        \bool_if:NT \l__numodel_multipref_bool
-                          { ~ ( ##1 ) }
+                        \tl_if_empty:NTF \l__numodel_legend_item_tl
+                          {
+                            \bool_if:NTF \l__numodel_single_series_bool
+                              { \exp_not:N \__numodel_legend_point: }
+                              {
+                                $ \exp_not:v { ##1 ####1 text } $
+                                \bool_if:NT \l__numodel_multipref_bool
+                                  { ~ ( ##1 ) }
+                              }
+                          }
+                          { \exp_not:V \l__numodel_legend_item_tl }
                       }
                   }
               }
           }
-        \tl_put_right:Nn \l__numodel_plotbody_tl {#4}
-        \exp_args:NV \__numodel_draw_plot:n \l__numodel_plotbody_tl
       }
+    \tl_put_right:Nn \l__numodel_plotbody_tl {#4}
+    \exp_args:NV \__numodel_draw_plot:n \l__numodel_plotbody_tl
     % Record the axis ranges as drawn (\calcplotdims has rounded
     % \xmin ... \ymax to the tick lattice, still inside this group) for
     % numodel.get_model, so exporters can give a variable the same axis
@@ -2928,13 +3299,20 @@ end
           }
       }
     \group_end:
-    \caption{$\tl_use:N \l__numodel_yqty_tl$($\use:c{\l__numodel_xname_tl text}$)\text{-diagram}}
-    % If the project-specific worksheet system is loaded, pick the
-    % '-ws' label inside a worksheet; otherwise always the bare label.
-    \cs_if_exist:NTF \ifinworksheet
-      { \ifinworksheet{\label{fig:#5-ws}}{\label{fig:#5}} }
-      { \label{fig:#5} }
-    \end{figure}
+    \bool_if:NF \l__numodel_cmd_nocaption_bool
+      {
+        \tl_if_empty:NTF \l__numodel_cmd_caption_tl
+          { \caption{$\tl_use:N \l__numodel_yqty_tl$($\use:c{\l__numodel_xname_tl text}$)\text{-diagram}} }
+          { \caption{ \tl_use:N \l__numodel_cmd_caption_tl } }
+        % If the project-specific worksheet system is loaded, pick the
+        % '-ws' label inside a worksheet; otherwise always the bare label.
+        \cs_if_exist:NTF \ifinworksheet
+          { \ifinworksheet{\label{fig:#5-ws}}{\label{fig:#5}} }
+          { \label{fig:#5} }
+      }
+    \bool_if:NTF \l__numodel_cmd_float_bool
+      { \end{figure} }
+      { \end{center} }
   }
 
 \ExplSyntaxOff
@@ -3207,6 +3585,7 @@ end
 \cs_new:Npn \__numodel_kw_EN_stop:         { ~STOP~ }
 \cs_new:Npn \__numodel_kw_EN_th_model:     { model }
 \cs_new:Npn \__numodel_kw_EN_th_initvals:  { initial~values }
+\cs_new:Npn \__numodel_kw_EN_legend_point: { model~point }
 \cs_new:Npn \__numodel_kw_EN_contfoot:     { Continued~on~next~page }
 \cs_new:Npn \__numodel_kw_EN_conthead:     { (Continued) }
 \cs_new:Npn \__numodel_kw_EN_dsep_default: { point }
@@ -3248,6 +3627,7 @@ end
 \cs_new:Npn \__numodel_kw_NL_stop:         { ~Stop~ }
 \cs_new:Npn \__numodel_kw_NL_th_model:     { model }
 \cs_new:Npn \__numodel_kw_NL_th_initvals:  { startwaarden }
+\cs_new:Npn \__numodel_kw_NL_legend_point: { modelpunt }
 \cs_new:Npn \__numodel_kw_NL_contfoot:     { Wordt~vervolgd~op~volgende~pagina }
 \cs_new:Npn \__numodel_kw_NL_conthead:     { (Vervolg) }
 \cs_new:Npn \__numodel_kw_NL_dsep_default: { comma }
@@ -3297,6 +3677,7 @@ end
 \cs_new:Npn \__numodel_kw_FPEVAL_stop:         { stop: }
 \cs_new:Npn \__numodel_kw_FPEVAL_th_model:     { model~(l3fp) }
 \cs_new:Npn \__numodel_kw_FPEVAL_th_initvals:  { initial~values }
+\cs_new:Npn \__numodel_kw_FPEVAL_legend_point: { model~point }
 \cs_new:Npn \__numodel_kw_FPEVAL_contfoot:     { Continued~on~next~page }
 \cs_new:Npn \__numodel_kw_FPEVAL_conthead:     { (Continued) }
 \cs_new:Npn \__numodel_kw_FPEVAL_dsep_default: { point }

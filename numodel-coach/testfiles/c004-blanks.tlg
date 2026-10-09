@@ -1,0 +1,40 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== Default: follows numodel (open) ===
+Package numodel-coach Info: Wrote Coach activity 'open.cma7'.
+' v := ...
+h := h - v*dt
+t := t + dt
+' Als ... Dan Stop EindAls
+ModelInit:
+t := 0     's
+dt := 0,5  's
+' g := ...
+h := 30    'm
+v := 0     'm/s
+=== blanks=filled ===
+Package numodel-coach Info: Wrote Coach activity 'filled.cma7'.
+v := v + g*dt
+h := h - v*dt
+t := t + dt
+Als h <= 0 Dan Stop EindAls
+ModelInit:
+t := 0     's
+dt := 0,5  's
+g := 9,81  'm/s^2
+h := 30    'm
+v := 0     'm/s
+=== \numodelsetup{blanks=filled} ===
+Package numodel-coach Info: Wrote Coach activity 'global.cma7'.
+v := v + g*dt
+h := h - v*dt
+t := t + dt
+Als h <= 0 Dan Stop EindAls
+ModelInit:
+t := 0     's
+dt := 0,5  's
+g := 9,81  'm/s^2
+h := 30    'm
+v := 0     'm/s
+=== End ===
+(c004-blanks.aux)

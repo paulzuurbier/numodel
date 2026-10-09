@@ -1,0 +1,41 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== Pupil's version (default open) is shorter: the conditional rule is one row ===
+yes
+=== \numodelsetup{blanks=filled} equals the per-table key ===
+yes
+=== The model computes with the full rules ===
+COMPUTE start
+COMPUTE done
+steps: 6, final h below 0: 1
+=== plaintext open / filled ===
+--- open
+' k := ...
+v := v + (g - k*v^2/80)*dt
+h := h - v*dt
+t := t + dt
+' Als ... Dan Stop EindAls
+t := 0     's
+dt := 0,5  's
+' g := ...
+k := 0,24  'kg/m
+h := 30    'm
+v := 0     'm/s
+--- filled
+Als h < 10 Dan
+  k := 3
+Anders
+  k := 0,24
+EindAls
+v := v + (g - k*v^2/80)*dt
+h := h - v*dt
+t := t + dt
+Als h <= 0 Dan Stop EindAls
+t := 0     's
+dt := 0,5  's
+g := 9,81  'm/s^2
+k := 0,24  'kg/m
+h := 30    'm
+v := 0     'm/s
+=== End ===
+(m010-blanks.aux)

@@ -100,6 +100,11 @@ as below.
   \item[\texttt{attach=true/false}] Also embed the file in the PDF
     (with \textsf{embedfile}). Default \texttt{false}. Whether readers
     can open embedded files depends on the PDF viewer.
+  \item[\texttt{blanks=open/filled}] (\cs{coachmodel} only) Write the
+    pupil's version, in which every rule, stop condition and start
+    value declared with \textsf{numodel}'s |blank| key becomes a
+    comment |' F_z := ...| to complete in Coach, or the answer version
+    in full. Default: \textsf{numodel}'s |blanks| setting (|open|).
   \item[\texttt{switch=true/false}] Allow switching between Coach's
     text and graphical view. Default \texttt{false}: Coach derives
     the text view from the graphical model, which
@@ -174,9 +179,11 @@ text. Display math, tables and pictures are not converted.
     be put in Coach's table and graphs. The axis range Coach uses for
     a new graph or meter is the range of the variable's graph in the
     document: the axis limits \cs{diagrammodel} drew (the union, when
-    the variable appears in several diagrams). Variables without a
-    diagram get Coach's default 0 to 10. Call \cs{coachmodel} after
-    the diagrams. Coach shows two decimals.
+    the variable appears in several diagrams). A variable that is not
+    drawn gets the range a diagram of its computed series would have
+    (the same rounding to whole ticks); only a model that was never
+    computed keeps Coach's default 0 to 10. Call \cs{coachmodel} after
+    \cs{computemodel} and the diagrams. Coach shows two decimals.
   \item \emph{Names}: the display name without formatting
     (|F_{\text{res}}| becomes \texttt{F\_res}, |\Delta t|
     becomes \texttt{Δt}). Names Coachtaal does not allow bare, and its

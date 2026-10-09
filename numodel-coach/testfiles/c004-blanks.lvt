@@ -1,0 +1,40 @@
+% Regression test: \coachmodel follows numodel's blanks setting.  With
+% blanks=open (default) a [blank] rule, stop condition or start value
+% becomes a comment "' lhs := ..." for pupils to complete in Coach;
+% \coachmodel[blanks=filled] (or \numodelsetup{blanks=filled}) writes
+% the answer version.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\usepackage{numodel-coach}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{s}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.5}{\s}{2}{systeem}
+\mvar[blank]{G}{g}{9.81}{\m\per\s\squared}{3}{constante}
+\mvar{H}{h}{30}{\m}{3}{voorraad}
+\mvar{V}{v}{0}{\m\per\s}{3}{voorraad}
+\mrule[blank]{V}{\sV + \sG * \sDt}
+\mrule{H}{\sH - \sV * \sDt}
+\mrule{T}{\sT + \sDt}
+\mstop[blank]{\sH <= 0}
+\TIMO
+\newcommand\showcoach[1]{\directlua{
+  local f = io.open("#1.cma7", "rb")
+  local s = numodelcoach.dump(f:read("a")); f:close()
+  for line in s:match("ModelBody:(.-)VarList:"):gmatch("[^\string\n]+") do
+    texio.write_nl(line) end}}
+\TYPE{=== Default: follows numodel (open) ===}
+\coachmodel{open}
+\showcoach{open}
+\TYPE{=== blanks=filled ===}
+\coachmodel[blanks=filled]{filled}
+\showcoach{filled}
+\TYPE{=== \string\numodelsetup{blanks=filled} ===}
+\numodelsetup{blanks=filled}
+\coachmodel{global}
+\showcoach{global}
+\TYPE{=== End ===}
+\end{document}

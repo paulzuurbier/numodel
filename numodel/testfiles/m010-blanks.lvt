@@ -1,0 +1,48 @@
+% Regression test: [blank] on \mvar, \mrule (also a multi-line \mrule*)
+% and \mstop.  With blanks=open (default, the pupil's version)
+% \textmodel shows "lhs = \cdots", the whole conditional rule collapses
+% to one row, and the stop row reads "IF \cdots THEN STOP ENDIF"; with
+% blanks=filled (the answer version) everything is shown in full.  The
+% model always computes with the full rules.  numodel.plaintext follows
+% the same setting: "' lhs := ..." comments when open.  The table
+% heights of the typeset tables show the collapsed rows.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{s}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.5}{\s}{2}{systeem}
+\mvar[blank]{G}{g}{9.81}{\m\per\s\squared}{3}{constante}
+\mvar{K}{k}{0.24}{\kg\per\m}{2}{hulp}
+\mvar{H}{h}{30}{\m}{3}{voorraad}
+\mvar{V}{v}{0}{\m\per\s}{3}{voorraad}
+\mrule*[blank]{K}{\sH < 10 ? 3 : 0.24}
+\mrule{V}{\sV + (\sG - \sK * \sV^2 / 80) * \sDt}
+\mrule{H}{\sH - \sV * \sDt}
+\mrule{T}{\sT + \sDt}
+\mstop[blank]{\sH <= 0}
+\setbox0=\vbox{\textmodel}
+\setbox2=\vbox{\textmodel[blanks=filled]}
+\setbox4=\vbox{\numodelsetup{blanks=filled}\textmodel}
+\TIMO
+\TYPE{=== Pupil's version (default open) is shorter: the conditional
+  rule is one row ===}
+\TYPE{\ifdim\ht0<\ht2 yes\else no\fi}
+\TYPE{=== \string\numodelsetup{blanks=filled} equals the per-table key ===}
+\TYPE{\ifdim\ht4=\ht2 yes\else no\fi}
+\TYPE{=== The model computes with the full rules ===}
+\computemodel
+\TYPE{steps: \ssteps, final h below 0: \fpeval{\sH < 0}}
+\TYPE{=== plaintext open / filled ===}
+\directlua{
+  for _, b in ipairs({"open", "filled"}) do
+    local r = numodel.plaintext("s", { blanks = b })
+    texio.write_nl("--- " .. b)
+    for line in (r.body .. r.init):gmatch("[^\string\n]+") do
+      texio.write_nl(line) end
+  end}
+\TYPE{=== End ===}
+\end{document}

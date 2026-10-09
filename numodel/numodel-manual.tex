@@ -375,6 +375,23 @@ The same keys can also be passed as package options:
   globally via |\numodelsetup|, per-render via |\graphicmodel|, or
   per-stock via |\mvar[flowarrow-cloud-tip=...]|.  The most
   specific source wins.
+\item[\texttt{start-format}] How a start value is shown by
+  |\<prefix><Name>num|/|qty| and so in the \emph{initial values}
+  column of |\textmodel|: |rounded| (default) rounds it to the
+  variable's significant figures, with a power of ten where needed
+  ($h = 3{,}00\cdot10^{3}$\,m); |input| shows it exactly as typed in
+  |\mvar| ($h = 3000$\,m, $k = 0{,}24$\,kg/m, $e = 1{,}5\cdot10^{-3}$\,m).
+  Only a plain number has a typed form: a start value given as an
+  expression (|2*3|, |sqrt(\oscK/\oscM)|) is always rounded.  The
+  setting is read when the value is shown, so it also applies to
+  variables declared before it.  Per variable:
+  |\mvar[start-format=...]|.
+\item[\texttt{blanks}] |open| (default) or |filled|: whether the
+  rules, stop condition and start values declared with the |blank|
+  key are shown as gaps (``$F_z = \cdots$'', the pupil's version) or in
+  full (the answer version).  |\textmodel[blanks=...]| overrides it
+  for one table; \textsf{numodel-coach} follows the same setting.  See
+  Section~\ref{sec:blanks}.
 \item[\texttt{units}] Whether the \emph{initial values} cells in
   |\textmodel| display the SI unit alongside the value (|\qty|) or
   only the numeric value (|\num|).  Boolean, default |true|.  May
@@ -393,7 +410,8 @@ The same keys can also be passed as package options:
   afterwards.
 \item[\texttt{decimal-separator}] Decimal mark used by every number
   that |numodel| renders: the \emph{initial values} column of
-  |\textmodel|, and the tick labels of |\diagrammodel|.  Two values:
+  |\textmodel|, decimal numbers inside the model rules (shown as
+  typed, without rounding), and the tick labels of |\diagrammodel|.  Two values:
   \begin{description}
   \item[\texttt{comma}] use a comma (\textsf{siunitx}
     |output-decimal-marker={,}|, \textsf{pgfplots}
@@ -491,6 +509,14 @@ a variable |Y| versus a prefix |ballY|).  An |\mvar| name of
 |steps| would similarly collide with the per-prefix iteration
 accessor |\<prefix>steps| set by |\computemodel|.
 
+|\mvar| detects these collisions.  A full name that already belongs to
+a variable of \emph{another} model is an error.  A full name that is
+also an accessor of another variable (|T| next to |Tmax|, |V| next to
+|Vmin|) gives a warning naming both; documents that rely on the
+coincidence keep compiling, but the warning says which value wins.
+With the convention of a lower-case prefix and variable names that
+start with a capital, prefixes cannot collide with each other.
+
 Optional \meta{keys}:
 \begin{description}
 \item[\texttt{prefix}] Override the current prefix for this single
@@ -502,6 +528,11 @@ Optional \meta{keys}:
   entire \emph{initial values} cell.
 \item[\texttt{aliasleft}, \texttt{aliasright}] Replace just the
   left symbol or right value half of the cell.
+\item[\texttt{start-format}] |rounded| or |input| for this variable
+  only, overriding the global |start-format| setting.
+\item[\texttt{blank}] Show the start value as a gap in the pupil's
+  version (|blanks=open|); see Section~\ref{sec:blanks}.  |\mrule| and
+  |\mstop| accept the same key.
 \end{description}
 
 \DescribeMacro{\mrule}
@@ -798,8 +829,23 @@ and max so no second pass over the series is needed.  After
 |\computemodel| returns, |\<prefix><Name>min| /
 |\<prefix><Name>max| hold the extrema, |\<prefix><Name>| holds
 the final-step value, |\<prefix>steps| expands to the number of
-recorded samples (i.e.\ the iteration count $N$), and the full
-time-series can be retrieved with |\mcoords| / |\mstep|.
+recorded samples (i.e.\ the iteration count $N$, step~0 included),
+and the full time-series can be retrieved with |\mcoords| /
+|\mstep| / |\mstepat|.
+
+\textbf{What a step contains.}  Every round first \emph{records} the
+current value of every variable, then checks the stop condition, and
+then executes the rules in order.  Step~0 therefore holds the start
+values, and step~$n$ the values after $n$ rounds.  For a stock that is
+simply its value after round~$n$.  An auxiliary variable, however, is
+recorded with the value its rule produced in round~$n$ -- computed
+from the stocks as they were \emph{before} that round, i.e.\ from
+step~$n-1$ when its rule comes before the stock updates (the usual
+order).  A table row ``$t$, $v$, $F_w(v)$, $a$'' thus takes $t$ and
+$v$ from step~$n$ and $F_w$ and $a$ from step~$n+1$.  At step~0 an
+auxiliary variable holds its start value, or 0 when it has none; give
+it a start-value expression (as in the energy example below) when
+step~0 should show the physically meaningful value.
 
 \DescribeMacro{\diagrammodel}
 Convenience wrapper that produces a complete |figure| with caption
@@ -823,7 +869,31 @@ warning is issued.  The seven colours cycle through Okabe \& Ito's
 colour-blind safe palette (yellow omitted), ordered so consecutive
 series differ in luminance -- which keeps them distinguishable on a
 greyscale printout as well.  The legend lists each kept variable's
-display text.
+display text.  A diagram with a single series has no legend by
+default; |legend=true| adds one with the text from the keyword table
+of the current |syntax| (``modelpunt'' for |NL|, ``model point''
+otherwise).
+
+Keys of \meta{keys}, besides |prefix|:
+\begin{description}
+\item[\texttt{legend}] |true| or |false|, or a list with one label per
+  series (in series order), which also switches the legend on:
+  |legend={$\Delta t = 1$\,s, $\Delta t = 0{,}1$\,s}|.  A missing
+  label falls back to the default text.
+\item[\texttt{style}] |marks| (default: the model points), |line|
+  (a line through them), or |both|.
+\item[\texttt{float}] |false| sets the diagram where it stands,
+  centred, instead of in a |figure| float -- so it works inside a
+  |minipage|, a \textsf{tcolorbox} or the |solution| environment of
+  the \textsf{exam} class.  The caption still numbers it as a figure.
+\item[\texttt{caption}] Caption text instead of the automatic
+  ``$v(t)$-diagram''.
+\item[\texttt{nocaption}] No caption, and so no figure number and no
+  label.
+\item[\texttt{xcmmax}, \texttt{ycmmax}] Maximum axis length in cm for
+  this diagram, as the keys of the same name of
+  |\numodelplotsetup|; a smaller value gives a smaller diagram.
+\end{description}
 
 The |prefix=| key likewise accepts a comma-separated list, so the
 same y-variables are plotted across several models in one diagram --
@@ -898,6 +968,17 @@ when \meta{i} falls outside the recorded range
 surfaces typo'd indices and "ran $N$ steps but indexed step $N$"
 off-by-one mistakes rather than expanding to nothing and propagating
 empty arguments into the surrounding plot.
+
+\DescribeMacro{\mstepat}
+Returns the value of a variable at the first step where another
+variable -- usually the time -- has reached a given value, so the text
+does not depend on the time step.  Fully expandable.  Signature:
+|\mstepat{<Name>}{<Var>}{<value>}|;
+|\mstepatp{<prefix>}{<Name>}{<Var>}{<value>}|.  Example:
+|\mstepat{V}{T}{1}| is $v$ at $t = 1$\,s, whether $\Delta t$ is
+0{,}1 or 0{,}01\,s.  Round-off of an accumulated time step is
+tolerated ($t = 0{,}999\,999\,999$ counts as $1$).  Raises an error
+when \meta{Var} never reaches \meta{value}.
 
 Example -- a red secant line through the last two simulated
 $(t,y)$ points of the free-fall ball (the model from the first
@@ -1033,13 +1114,18 @@ Each |\mvar| call generates a family of accessor macros named
 \item[\texttt{unitraw}] The unit argument verbatim, without the
   |\unit{}| wrapper, suitable for use as a building block (e.g.\
   |\xlabelunit| in \textsf{numodel-plot}).
-\item[\texttt{num}] The current value formatted via \textsf{siunitx}'s
-  |\num{}| with the variable's significant figures.  Used by
-  |\textmodel| in the \emph{initial values} column when |units=false|.
+\item[\texttt{num}] The \emph{start value} formatted via
+  \textsf{siunitx}'s |\num{}|: rounded to the variable's significant
+  figures, or as typed with |start-format=input|.  Used by |\textmodel| in the \emph{initial values} column
+  when |units=false|.  It is fixed by |\mvar| and does not follow
+  |\computemodel|: for a computed value use the bare accessor (the
+  final value), |\mstep| or |\mstepat|, formatted with |\num| or
+  |\qty| (or a document macro of your own built on them).
 \item[\texttt{qty}] As |num|, but including the unit
   (|\qty{value}{unit}|).  Used by |\textmodel| in the
   \emph{initial values} column when |units=true| (the default).
-\item[\texttt{pre}] As |qty|, but with engineering prefix mode
+\item[\texttt{pre}] As |qty| (so also the start value), but with
+  engineering prefix mode
   (e.g.\ |1500 W| renders as |1{,}5\,kW|).
 \item[\texttt{sign}] Significant-figure count (raw integer).
 \item[\texttt{type}] Variable type (raw string).
@@ -1059,7 +1145,8 @@ In addition, |\computemodel| writes one per-\emph{prefix} accessor
 \begin{description}
 \item[\texttt{\textbackslash <prefix>steps}] The number of recorded
   samples after the most recent |\computemodel| call for this
-  prefix, i.e.\ the iteration count $N$.  Empty (undefined) before
+  prefix, i.e.\ the iteration count $N$.  Step~0 (the start values)
+  is included, so the model went through $N-1$ rounds.  Empty (undefined) before
   the first |\computemodel|.  Picking |steps| as an |\mvar| name
   would collide with this accessor -- see the naming caveat in
   Section~\ref{sec:api}.
@@ -1094,6 +1181,38 @@ The rule column is unaffected -- |\mrule| has its own
 \mstop{\quizY <= 0}
 \textmodel
 \end{modelexample}
+
+\subsection{Pupil's and answer version: \texttt{blank}}\label{sec:blanks}
+
+The |blank| key makes one declaration serve both versions of an
+exercise.  On |\mvar|, |\mrule| (also |\mrule*|) and |\mstop| it marks
+what the pupil has to supply.  With |blanks=open| -- the default, the
+pupil's version -- |\textmodel| shows such a rule as
+``\meta{symbol}${}= \cdots$'' (a conditional rule collapses to that
+single row, so its structure is part of the question), the stop
+condition as ``IF $\cdots$ THEN STOP ENDIF'', and the start value as
+``\meta{symbol}${}= \cdots$''.  With |blanks=filled| everything is shown
+in full.  |\computemodel| always uses the full rules, so diagrams and
+computed answers are the same in both versions.  Switch once for the
+answer version, e.g.\ with the \textsf{exam} class:
+|\ifprintanswers\numodelsetup{blanks=filled}\fi|.
+
+\begin{modelexample}
+\newmodelprefix{gap}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{0.5}{\s}{2}{system}
+\mvar{V}{v}{0}{\m\per\s}{2}{stock}
+\mvar[blank]{G}{g}{-9.81}{\m\per\s\squared}{3}{constant}
+\mrule[blank]{V}{\gapV + \gapG * \gapDt}
+\mrule{T}{\gapT + \gapDt}
+\mstop[blank]{\gapT >= 3}
+\textmodel
+\textmodel[blanks=filled]
+\end{modelexample}
+
+Compared with the alias keys, |blank| needs no replacement text and
+switches between both versions; the alias keys remain for any other
+replacement (a question mark, a hint).
 
 \section{Multiple models in one document}
 

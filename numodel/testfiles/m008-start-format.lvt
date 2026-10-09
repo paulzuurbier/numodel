@@ -1,0 +1,46 @@
+% Regression test: start-format.  \<name>num/qty show the start value
+% rounded to its significant figures (default) or, with
+% start-format=input, exactly as typed in \mvar.  Only a plain number
+% has a typed form: an expression stays rounded.  A per-variable key
+% overrides the global setting, and the global setting is read when the
+% value is shown, so it also works after the \mvar.  Each result
+% compares the width of the typeset accessor with the expected form.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\newcommand\samewidth[3]{%
+  \setbox0=\hbox{#2}\setbox2=\hbox{#3}%
+  \ifdim\wd0=\wd2 \def\result{same}\else\def\result{DIFFERENT}\fi
+  \TYPE{#1: \result}}
+\newcommand\typed[2]{\qty[round-mode=none,exponent-mode=input]{#1}{#2}}
+\newcommand\rounded[3]{\qty[round-mode=figures,round-precision=#3,
+  exponent-mode=threshold,exponent-thresholds=-3:#3]{#1}{#2}}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{p}
+\mvar{H}{h}{3000}{\m}{3}{voorraad}
+\mvar{L}{l}{600}{\m}{2}{constante}
+\mvar[start-format=rounded]{R}{r}{3000}{\m}{3}{constante}
+\mvar[start-format=input]{S}{s}{3000}{\m}{3}{constante}
+\mvar{K}{k}{2*3}{\newton\per\m}{3}{constante}
+\mvar{E}{e}{1.5e-3}{\m}{2}{constante}
+\setbox0=\hbox{$x \leqslant \mathbb{R}$}
+\TIMO
+\TYPE{=== Default (rounded) ===}
+\samewidth{h 3000/3}{\pHqty}{\rounded{3000}{\m}{3}}
+\samewidth{l 600/2}{\pLqty}{\rounded{600}{\m}{2}}
+\samewidth{s, own key input}{\pSqty}{\typed{3000}{\m}}
+\samewidth{control, typed vs rounded (must differ)}{\typed{3000}{\m}}{\rounded{3000}{\m}{3}}
+\TYPE{=== After start-format=input ===}
+\numodelsetup{start-format=input}
+\samewidth{h}{\pHqty}{\typed{3000}{\m}}
+\samewidth{l}{\pLqty}{\typed{600}{\m}}
+\samewidth{l num}{\pLnum}{\num[round-mode=none,exponent-mode=input]{600}}
+\samewidth{e 1.5e-3}{\pEqty}{\typed{1.5e-3}{\m}}
+\samewidth{r, own key rounded}{\pRqty}{\rounded{3000}{\m}{3}}
+\samewidth{k, expression stays rounded}{\pKqty}{\rounded{6}{\newton\per\m}{3}}
+\TYPE{=== Unknown value ===}
+\numodelsetup{start-format=exact}
+\TYPE{=== End ===}
+\end{document}

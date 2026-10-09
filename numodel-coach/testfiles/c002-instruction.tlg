@@ -21,8 +21,8 @@ Een bal valt van 100 m. Neem g = 9,81 m/s2 en Δt = 0,05 s.
 Opdrachten:
 - Bereken de eindsnelheid veind.
 - Wat gebeurt er als Fw = k^^b7v2?
-Gebruik Simuleren – zie de uitleg.
+Gebruik Simuleren – zie de uitleg. Accenten: Br^^fcggen, na^^efve, caf^^e9, gar^^e7on, Stra^^dfe.
 Instruction HTML:
-<body><p>Een bal valt van 100 m. Neem <i>g</i> = 9,81 m/s<sup>2</sup> en Δ<i>t</i> = 0,05 s.</p><p>Opdrachten:</p><ul><li>Bereken de <b>eindsnelheid</b> <i>v</i><sub>eind</sub>.</li><li>Wat gebeurt er als <i>F</i><sub>w</sub> = <i>k</i>^^b7<i>v</i><sup>2</sup>?</li></ul><p>Gebruik <i>Simuleren</i> – zie de uitleg.</p></body>
+<body><p>Een bal valt van 100 m. Neem <i>g</i> = 9,81 m/s<sup>2</sup> en Δ<i>t</i> = 0,05 s.</p><p>Opdrachten:</p><ul><li>Bereken de <b>eindsnelheid</b> <i>v</i><sub>eind</sub>.</li><li>Wat gebeurt er als <i>F</i><sub>w</sub> = <i>k</i>^^b7<i>v</i><sup>2</sup>?</li></ul><p>Gebruik <i>Simuleren</i> – zie de uitleg. Accenten: Br^^fcggen, na^^efve, caf^^e9, gar^^e7on, Stra^^dfe.</p></body>
 === End ===
 (c002-instruction.aux)

@@ -225,6 +225,24 @@ local text_symbols = {
 local math_relations = { leq = "≤", leqslant = "≤", geq = "≥",
     geqslant = "≥", neq = "≠", ne = "≠", approx = "≈", to = "→",
     rightarrow = "→", propto = "∝" }
+-- LaTeX accents and special letters (\"u, \'e, \c{c}, \ss).
+local accents = {
+    ['"'] = { a = "ä", e = "ë", i = "ï", o = "ö", u = "ü", y = "ÿ",
+              A = "Ä", E = "Ë", I = "Ï", O = "Ö", U = "Ü" },
+    ["'"] = { a = "á", e = "é", i = "í", o = "ó", u = "ú", y = "ý",
+              A = "Á", E = "É", I = "Í", O = "Ó", U = "Ú", c = "ć",
+              n = "ń", s = "ś", z = "ź" },
+    ["`"] = { a = "à", e = "è", i = "ì", o = "ò", u = "ù",
+              A = "À", E = "È", I = "Ì", O = "Ò", U = "Ù" },
+    ["^"] = { a = "â", e = "ê", i = "î", o = "ô", u = "û",
+              A = "Â", E = "Ê", I = "Î", O = "Ô", U = "Û" },
+    ["~"] = { a = "ã", n = "ñ", o = "õ", A = "Ã", N = "Ñ", O = "Õ" },
+    c     = { c = "ç", C = "Ç", s = "ş", S = "Ş" },
+}
+local letters = { ss = "ß", o = "ø", O = "Ø", ae = "æ", AE = "Æ",
+    oe = "œ", OE = "Œ", aa = "å", AA = "Å", l = "ł", L = "Ł", i = "ı",
+    j = "ȷ" }
+
 local ignored = { noindent = true, medskip = true, smallskip = true,
     bigskip = true, centering = true, relax = true, ignorespaces = true,
     displaystyle = true, left = true, right = true }
@@ -258,6 +276,18 @@ local function read_arg(s, i)
         return cs, i + #cs
     end
     return c, i + 1
+end
+
+-- Accent command at s[i] applied to its argument (\"u, \"{u}, \"{\i}).
+local function apply_accent(acc, s, i, ctx)
+    local a; a, i = read_arg(s, i)
+    -- \"\i: the space after a control word belongs to it, as in TeX.
+    if a:match("^\\%a+$") and s:sub(i, i) == " " then i = i + 1 end
+    a = a:gsub("^\\([ij])%s*$", "%1")
+    local ch = accents[acc][a]
+    if ch then return ch, i end
+    ctx.warn("instruction: accent \\" .. acc .. " on '" .. a .. "' is not converted")
+    return esc(a), i
 end
 
 local function fmt_num(s, ctx)
@@ -353,12 +383,17 @@ convert_cmd = function(s, i, ctx)
         if sym == "\\" then return "<br>", i + 2 end
         if sym == "," then return " ", i + 2 end
         if sym == "-" or sym == "/" then return "", i + 2 end
+        if accents[sym] then return apply_accent(sym, s, i + 2, ctx) end
         return esc(sym), i + 2
     end
     i = i + 1 + #cs
     if s:sub(i, i) == " " then i = i + 1 end     -- detokenize space
     local a
-    if wrap_tags[cs] then
+    if cs == "c" then return apply_accent("c", s, i, ctx)
+    elseif letters[cs] then
+        if s:sub(i, i + 1) == "{}" then i = i + 2 end   -- \ss{}
+        return letters[cs], i
+    elseif wrap_tags[cs] then
         a, i = read_arg(s, i)
         local t = wrap_tags[cs]
         return "<" .. t .. ">" .. convert(a, ctx, false) .. "</" .. t .. ">", i
@@ -536,7 +571,8 @@ function C.from_model(p, opts)
     opts = opts or {}
     local g = numodel.get_model(p)
     if not g then error("numodel-coach: unknown model prefix '" .. p .. "'") end
-    local r = numodel.plaintext(p, { dialect = "NL" })
+    -- opts.blanks: "open"/"filled", or nil to follow numodel's setting.
+    local r = numodel.plaintext(p, { dialect = "NL", blanks = opts.blanks })
     local W = {}
     for _, w in ipairs(r.warnings) do W[#W + 1] = w end
     local vars = {}
@@ -586,14 +622,15 @@ end
 -- TeX as \numodelcoachwarn{prefix}{path}{text}.  The text is passed
 -- with catcode "other" (tex.sprint -2), so braces or backslashes in it
 -- are harmless.
-function C.tex_write(p, path, allow_switch)
+function C.tex_write(p, path, allow_switch, blanks)
     if not numodel.get_model(p) then
         tex.sprint("\\numodelcoachnomodel{")
         tex.sprint(-2, p)
         tex.sprint("}")
         return
     end
-    local W = C.write(p, path, { allow_switch = allow_switch })
+    if blanks == "" then blanks = nil end
+    local W = C.write(p, path, { allow_switch = allow_switch, blanks = blanks })
     for _, w in ipairs(W) do
         tex.sprint("\\numodelcoachwarn{")
         tex.sprint(-2, p)

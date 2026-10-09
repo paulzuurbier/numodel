@@ -1,0 +1,143 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== Collision with another model's variable: error ===
+NEWPREFIX start: para
+NEWPREFIX save current: 
+NEWPREFIX register
+NEWPREFIX init_backup
+\g__numodel_para_rulecounter_int=\count...
+\g__numodel_para_steps_int=\count...
+NEWPREFIX lua_init
+NEWPREFIX clear_state
+NEWPREFIX set_current
+NEWPREFIX done: para
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: para
+MVAR body fullname: paraT
+MVAR done: T
+MVAR start: gX
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: para
+MVAR body fullname: paragX
+MVAR done: gX
+NEWPREFIX start: parag
+NEWPREFIX save current: para
+NEWPREFIX register
+NEWPREFIX init_backup
+\g__numodel_parag_rulecounter_int=\count...
+\g__numodel_parag_steps_int=\count...
+NEWPREFIX lua_init
+NEWPREFIX clear_state
+NEWPREFIX set_current
+NEWPREFIX done: parag
+MVAR start: X
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: parag
+MVAR body fullname: paragX
+! Package numodel Error: Name collision: 'paragX' is already a variable of model 'para'.
+For immediate help type H <return>.
+ ...                                              
+l. ...\mvar{X}{x}{5}{\m}{2}{constante}
+Two models would share this macro name, so one would silently overwrite the other. Rename the variable or choose a prefix that is not the beginning of another prefix plus a variable name.
+MVAR done: X
+=== Collision with an accessor: warning naming both ===
+NEWPREFIX start: q
+NEWPREFIX save current: parag
+NEWPREFIX register
+NEWPREFIX init_backup
+\g__numodel_q_rulecounter_int=\count...
+\g__numodel_q_steps_int=\count...
+NEWPREFIX lua_init
+NEWPREFIX clear_state
+NEWPREFIX set_current
+NEWPREFIX done: q
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: q
+MVAR body fullname: qT
+MVAR done: T
+MVAR start: Tmax
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: q
+MVAR body fullname: qTmax
+Package numodel Warning: Name collision: 'qTmax' is also the 'max' accessor of variable 'qT'. Both use one macro, so the one defined last wins; \computemodel rewrites the min and max accessors. Rename one of them to avoid this.
+MVAR done: Tmax
+MVAR start: V
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: q
+MVAR body fullname: qV
+MVAR done: V
+MVAR start: Vmin
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: q
+MVAR body fullname: qVmin
+Package numodel Warning: Name collision: 'qVmin' is also the 'min' accessor of variable 'qV'. Both use one macro, so the one defined last wins; \computemodel rewrites the min and max accessors. Rename one of them to avoid this.
+MVAR done: Vmin
+=== Redeclaring in the same model: the usual warning ===
+MVAR start: M
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: q
+MVAR body fullname: qM
+MVAR done: M
+MVAR start: M
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: q
+MVAR body fullname: qM
+Package numodel Warning: Model variable 'qM' is being redefined.
+MVAR done: M
+=== \mstepat ===
+step 100: 9.81 at t=1
+v at t = 1: 9.81
+v at t = 2 (explicit prefix): 19.62
+samples incl. step 0: 301
+=== never reached: error ===
+! numodel: \mstepat: 'valT' never reaches 5 in model 'val' (last value 3).
+\mstepat ...model_current_prefix_tl ".."#2","#3")}
+l. ...\TYPE{\mstepat{V}{T}{5}}
+Call \computemodel first, and ask for a value within 
+the simulated range.
+=== Numbers in a rule (display tokens) ===
+NEWPREFIX start: num
+NEWPREFIX save current: val
+NEWPREFIX register
+NEWPREFIX init_backup
+\g__numodel_num_rulecounter_int=\count...
+\g__numodel_num_steps_int=\count...
+NEWPREFIX lua_init
+NEWPREFIX clear_state
+NEWPREFIX set_current
+NEWPREFIX done: num
+MVAR start: X
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: num
+MVAR body fullname: numX
+MVAR done: X
+MVAR start: T
+MVAR before-keys-set
+MVAR after-keys-set
+MVAR eff: num
+MVAR body fullname: numT
+MVAR done: T
+MRULE start: X
+VTD input: (\numT + 1)^1.5 * 2.5e-3 + 0.24 * \numX + 12
+VTD seq: numX|numT
+VTD iter: numX
+VTD replace \c {numX} with x_1
+VTD iter: numT
+VTD replace \c {numT} with t
+MRULE rhs after: (t+ 1)^{\num [round-mode=none,exponent-mode=input]{1.5}} \cdot   \num [round-mode=none,exponent-mode=input]{2.5e-3} + \num [round-mode=none,exponent-mode=input]{0.24} \cdot   x_1+ 12
+MRULE display: x_1\,=\,(t+ 1)^{\num [round-mode=none,exponent-mode=input]{1.5}} \cdot   \num [round-mode=none,exponent-mode=input]{2.5e-3} + \num [round-mode=none,exponent-mode=input]{0.24} \cdot   x_1+ 12
+MRULE done: X
+=== End ===
+(m007-names-steps-numbers.aux)

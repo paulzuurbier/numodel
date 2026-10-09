@@ -34,7 +34,7 @@ local M = {}
 numodel = M
 M.models = {}  -- prefix -> {varlist, steps, nsteps}
 -- Package settings that exporters need (mirrored from \numodelsetup).
-M.settings = { maxiter = 20000 }
+M.settings = { maxiter = 20000, blanks = "open" }
 
 function M.set_setting(name, value)
     M.settings[name] = value
@@ -154,8 +154,94 @@ function M.get_step(p, name, step)
     tex.sprint(tostring(data[idx]))
 end
 
+-- Value of variable 'name' at the first recorded step where variable
+-- 'at' (typically the time) has reached 'value'.  Robust against the
+-- round-off of an accumulated time step: t = 0.99999999 counts as 1.
+-- Assumes 'at' does not decrease (time); raises an error when 'at'
+-- never reaches 'value'.
+function M.get_at(p, name, at, value)
+    local m = M.models[p]
+    local data = m and m.steps[name]
+    local times = m and m.steps[at]
+    if not data or not times then
+        tex.error("numodel: \\mstepat: unknown variable '" ..
+            (data and at or name) .. "' in model '" .. p .. "'")
+        return
+    end
+    value = tonumber(value)
+    local eps = 1e-9 * math.max(1, math.abs(value))
+    for i = 1, math.min(#data, #times) do
+        if times[i] >= value - eps then
+            tex.sprint(tostring(data[i]))
+            return
+        end
+    end
+    tex.error(string.format(
+        "numodel: \\mstepat: '%s' never reaches %s in model '%s'" ..
+        " (last value %s)", at, tostring(value), p,
+        tostring(times[#times])),
+        { "Call \\computemodel first, and ask for a value within ",
+          "the simulated range." })
+end
+
+-- --- name collisions ----------------------------------------------------
+-- Every \mvar defines \<fullname> plus a family of accessors
+-- \<fullname><suffix>; \computemodel adds \<prefix>steps.  Two
+-- declarations collide when their macro names meet:
+--   "model"     a variable of another model has the same full name
+--               (prefix para + gX = prefix parag + X): always a bug;
+--   "accessor"  the full name is another variable's accessor
+--               (T + max = Tmax), or the reverse: the documented trap
+--               of the manual's naming caveat.
+-- check_name returns the kind and a message, or nil when the name is
+-- free; \mvar turns "model" into an error and "accessor" into a
+-- warning (existing documents rely on T next to Tmax).
+M.accessor_suffixes = {
+    "text", "unit", "unitraw", "sign", "type", "min", "max", "num",
+    "qty", "pre", "gridx", "gridy", "gridxinit", "gridyinit", "alias",
+    "aliasleft", "aliasright", "flowcloud", "blank",
+}
+M.owner = {}        -- full variable name -> prefix
+
+function M.check_name(p, fullname)
+    local o = M.owner[fullname]
+    if o and o ~= p then
+        return "model", "'" .. fullname .. "' is already a variable of"
+            .. " model '" .. o .. "'"
+    end
+    for _, sfx in ipairs(M.accessor_suffixes) do
+        local base = fullname:sub(1, -#sfx - 1)
+        if base ~= "" and fullname:sub(-#sfx) == sfx and M.owner[base] then
+            return "accessor", "'" .. fullname .. "' is also the '" ..
+                sfx .. "' accessor of variable '" .. base .. "'"
+        end
+        if M.owner[fullname .. sfx] then
+            return "accessor", "the '" .. sfx .. "' accessor of '" ..
+                fullname .. "' is also variable '" .. fullname .. sfx .. "'"
+        end
+    end
+    if fullname == p .. "steps" then
+        return "accessor", "'" .. fullname .. "' is also the iteration"
+            .. " count of model '" .. p .. "'"
+    end
+    return nil
+end
+
+-- TeX-side helpers for \mvar (results as catcode-12 strings).
+function M.clash_kind(p, fullname)
+    tex.sprint(-2, (M.check_name(p, fullname)) or "none")
+end
+function M.clash_message(p, fullname)
+    local _, msg = M.check_name(p, fullname)
+    tex.sprint(-2, msg or "")
+end
+function M.claim_name(p, fullname)
+    M.owner[fullname] = M.owner[fullname] or p
+end
+
 function M.reset()
     M.models = {}
+    M.owner = {}
 end
 
 -- ====================================================================
@@ -214,10 +300,11 @@ function M.set_meta(p, name, opts)
         value_expr = opts.value_expr,
         unit       = opts.unit,
         sigfigs    = tonumber(opts.sigfigs),
+        blank      = opts.blank and true or false,   -- \mvar[blank]
     }
 end
 
-function M.add_rule(p, target, expr, kind, starred)
+function M.add_rule(p, target, expr, kind, starred, blank)
     local m = ensure_meta(p)
     m.rules[#m.rules + 1] = {
         target = target,
@@ -229,6 +316,7 @@ function M.add_rule(p, target, expr, kind, starred)
         target  = target,
         expr    = expr or "",
         starred = starred and true or false,
+        blank   = blank and true or false,          -- \mrule[blank]
     }
 end
 
@@ -248,6 +336,36 @@ function M.set_axis(p, name, lo, hi)
     end
 end
 
+-- Axis range \calcplotdims (numodel-plot) would give a series from lo
+-- to hi on an axis of at most cmmax cm: the range is widened to a whole
+-- number of ticks of 1, 2, 2.5 or 5 times a power of ten.  Mirrors
+-- \calcplotdims, so a variable that is not drawn still gets the range
+-- its diagram would have.  Returns nil for an empty series or an
+-- all-zero one.
+function M.nice_range(lo, hi, cmmax)
+    cmmax = cmmax or 10
+    if not lo or not hi then return nil end
+    if lo == hi then                      -- a constant: from 0 to it
+        if lo == 0 then return nil end
+        lo, hi = math.min(0, lo), math.max(0, hi)
+    end
+    local log = math.floor(math.log(hi - lo, 10))
+    local S = (hi - lo) / 10^log
+    local cm
+    if S <= cmmax / 10 then cm = 10 * S
+    elseif S <= cmmax / 5 then cm = 5 * S
+    elseif S <= cmmax / 4 then cm = 4 * S
+    elseif S <= cmmax / 2 then cm = 2 * S
+    elseif S <= cmmax then cm = S
+    else cm = S / 2 end
+    local tick = S / cm * 10^log
+    -- Snap tick to the decimal it stands for (0.25, not 0.2499999...).
+    tick = tonumber(string.format("%.12g", tick))
+    local function snap(x) return tonumber(string.format("%.12g", x)) end
+    return snap(math.floor(lo / tick + 1e-9) * tick),
+           snap(math.ceil(hi / tick - 1e-9) * tick)
+end
+
 -- Free-text row (\mruletext): display only, never executed.
 function M.add_ruletext(p, text)
     local m = ensure_meta(p)
@@ -256,10 +374,11 @@ end
 
 -- Stop condition (\mstop).  Also recorded as a program row, so that
 -- exporters see it at the position where it appears in \textmodel.
-function M.set_stop(p, expr)
+function M.set_stop(p, expr, blank)
     local m = ensure_meta(p)
     m.stop = expr or ""
-    m.program[#m.program + 1] = { kind = "stop", expr = m.stop }
+    m.program[#m.program + 1] = { kind = "stop", expr = m.stop,
+        blank = blank and true or false }
 end
 
 -- --- helpers ----------------------------------------------------------
@@ -1416,7 +1535,10 @@ end
 --       { name = "ballV", short = "V", text = "v", type = "stock",
 --         value = 0, value_expr = "0", unit = "\\m \\per \\s ",
 --         sigfigs = 3, has_start = true,
---         axis_min = 0, axis_max = 100 },  -- \diagrammodel range, or nil
+--         axis_min = 0, axis_max = 100,    -- axis range, or nil
+--         axis_source = "diagram" },       -- "diagram": as drawn by
+--                                          -- \diagrammodel; "computed":
+--                                          -- nice_range of the series
 --       ...
 --     },
 --     program = {                      -- rows in \textmodel order
@@ -1453,6 +1575,23 @@ function M.get_model(p)
         -- export lists every variable once, at its first position.
         if meta and not seen[name] then
             seen[name] = true
+            -- Axis range: as drawn by \diagrammodel, else what a
+            -- diagram of the computed series would get.
+            local amin, amax, asrc
+            if m.axis and m.axis[name] then
+                amin, amax, asrc = m.axis[name].min, m.axis[name].max, "diagram"
+            else
+                local data = m.steps and m.steps[name]
+                if data and #data > 0 then
+                    local lo, hi = math.huge, -math.huge
+                    for _, x in ipairs(data) do
+                        if x < lo then lo = x end
+                        if x > hi then hi = x end
+                    end
+                    amin, amax = M.nice_range(lo, hi)
+                    if amin then asrc = "computed" end
+                end
+            end
             out.vars[#out.vars + 1] = {
                 name       = name,
                 short      = name:sub(1, #p) == p and name:sub(#p + 1) or name,
@@ -1463,8 +1602,10 @@ function M.get_model(p)
                 unit       = meta.unit,
                 sigfigs    = meta.sigfigs,
                 has_start  = meta.value ~= nil,
-                axis_min   = m.axis and m.axis[name] and m.axis[name].min,
-                axis_max   = m.axis and m.axis[name] and m.axis[name].max,
+                blank      = meta.blank,
+                axis_min   = amin,
+                axis_max   = amax,
+                axis_source = asrc,
             }
         end
     end
@@ -1485,9 +1626,10 @@ function M.dump_model(p)
             .. " unit=%s sigfigs=%s",
             v.name, v.short, v.type, v.text, tostring(v.value),
             tostring(v.value_expr), tostring(v.unit), tostring(v.sigfigs))
+        if v.blank then out[#out] = out[#out] .. " blank" end
         if v.axis_min then
-            out[#out] = out[#out] .. string.format(" axis=[%s,%s]",
-                tostring(v.axis_min), tostring(v.axis_max))
+            out[#out] = out[#out] .. string.format(" axis=[%s,%s](%s)",
+                tostring(v.axis_min), tostring(v.axis_max), v.axis_source)
         end
     end
     out[#out+1] = "program:"
@@ -1495,10 +1637,12 @@ function M.dump_model(p)
         if r.kind == "text" then
             out[#out+1] = "  text: " .. r.text
         elseif r.kind == "stop" then
-            out[#out+1] = "  stop: " .. r.expr
+            out[#out+1] = "  stop" .. (r.blank and "[blank]" or "") .. ": "
+                .. r.expr
         else
-            out[#out+1] = string.format("  %s%s: %s := %s", r.kind,
-                r.starred and "*" or "", r.target, r.expr)
+            out[#out+1] = string.format("  %s%s%s: %s := %s", r.kind,
+                r.starred and "*" or "", r.blank and "[blank]" or "",
+                r.target, r.expr)
         end
     end
     out[#out+1] = "stop=" .. tostring(g.stop)
@@ -2116,6 +2260,9 @@ function M.plaintext(p, opts)
     if not D then error("numodel: unknown dialect " .. tostring(opts.dialect)) end
     local g = M.get_model(p)
     if not g then return nil end
+    -- blanks=open (pupil's version): [blank] rules, stop conditions and
+    -- start values become comments "' lhs := ..."; filled: in full.
+    local open = (opts.blanks or M.settings.blanks) ~= "filled"
     local W, names, used = {}, {}, {}
     local function note(w) if w then W[#W + 1] = w end end
     for _, v in ipairs(g.vars) do
@@ -2137,7 +2284,12 @@ function M.plaintext(p, opts)
     end
     local body = {}
     for _, r in ipairs(g.program) do
-        if r.kind == "calc" then
+        if open and r.blank and (r.kind == "calc" or r.kind == "ternary") then
+            body[#body + 1] = D.comment .. " " .. names[r.target] .. " := ..."
+        elseif open and r.blank and r.kind == "stop" then
+            body[#body + 1] = D.comment .. " " .. D["if"] .. " ... "
+                .. D["then"] .. " " .. D.stop .. " " .. D.endif
+        elseif r.kind == "calc" then
             body[#body + 1] = names[r.target] .. " := " .. expr(r.expr)
         elseif r.kind == "ternary" then
             local c, a, b = plain_ternary(r.expr, names, D, W)
@@ -2169,7 +2321,9 @@ function M.plaintext(p, opts)
     -- Initial values: name := value, unit as an aligned comment.
     local rows, width = {}, 0
     for _, v in ipairs(g.vars) do
-        if v.has_start then
+        if v.has_start and open and v.blank then
+            rows[#rows + 1] = { D.comment .. " " .. names[v.name] .. " := ...", "" }
+        elseif v.has_start then
             local lhs = names[v.name] .. " := " .. expr(v.value_expr)
             local u, w = M.plain_unit(v.unit)
             note(w)

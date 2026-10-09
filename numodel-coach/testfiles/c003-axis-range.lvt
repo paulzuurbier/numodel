@@ -1,7 +1,10 @@
 % Regression test: a variable's axis range in the Coach file (VarList
-% Min/Max) is the range of its graph in the document, as drawn by
-% \diagrammodel after \calcplotdims rounding.  t appears in two
-% diagrams and gets the union; variables without a diagram keep Coach's
+% Min/Max).  A variable drawn by \diagrammodel gets the range of its
+% graph (after \calcplotdims rounding; the union over several
+% diagrams).  A variable that is not drawn gets the range a diagram of
+% its computed series would have (numodel.nice_range): here v, which
+% must come out as the -45..0 its diagram would show, and the
+% constants dt and g.  A model that was never computed keeps Coach's
 % default 0..10.
 \input{regression-test.tex}
 \documentclass{article}
@@ -23,12 +26,25 @@
 \mstop{\ballY <= 2}
 \computemodel
 \diagrammodel{T}{Y}{ball-yt}
-\diagrammodel{T}{V}{ball-vt}
+\newmodelprefix{raw}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{X}{x}{3}{\m}{2}{voorraad}
+\mrule{T}{\rawT + 1}
+\mstop{\rawT >= 3}
 \TIMO
-\TYPE{=== Coach variable list ===}
-\coachmodel{as}
+\TYPE{=== Coach variable list: t and y drawn, v, dt, g computed ===}
+\coachmodel[prefix=ball]{as}
 \directlua{
   local f = io.open("as.cma7", "rb")
+  local s = numodelcoach.dump(f:read("a")); f:close()
+  for line in s:match("VarList:(.*)$"):gmatch("[^\string\n]+") do
+    if line:find("Name") or line:find("Min") or line:find("Max") then
+      texio.write_nl(line) end
+  end}
+\TYPE{=== Not computed: Coach's default ===}
+\coachmodel[prefix=raw]{raw}
+\directlua{
+  local f = io.open("raw.cma7", "rb")
   local s = numodelcoach.dump(f:read("a")); f:close()
   for line in s:match("VarList:(.*)$"):gmatch("[^\string\n]+") do
     if line:find("Name") or line:find("Min") or line:find("Max") then

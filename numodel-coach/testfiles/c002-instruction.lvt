@@ -5,8 +5,8 @@
 % for the same model replaces the first with a warning; showing the
 % text of a model without one warns.  The conversion covers paragraphs,
 % bold/italic, a list, inline math with sub/superscripts and Greek,
-% siunitx quantities with a decimal comma, and an unknown command
-% (warning, text kept).
+% siunitx quantities with a decimal comma, LaTeX accents (\"u, \'e,
+% \c{c}, \ss), and an unknown command (warning, text kept).
 \input{regression-test.tex}
 \documentclass{article}
 \usepackage[syntax=NL]{numodel}
@@ -42,6 +42,7 @@ Opdrachten:
   \item Wat gebeurt er als $F_{\text{w}} = k\cdot v^2$?
 \end{itemize}
 Gebruik \emph{Simuleren}~-- zie \foo{de uitleg}.
+Accenten: Br\"uggen, na\"\i ve, caf\'e, gar\c{c}on, Stra\ss e.
 \end{coachinstruction}
 \OMIT
 \setbox1=\vbox{\hsize=40em \coachinstructiontext}

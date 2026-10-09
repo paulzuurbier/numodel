@@ -1,13 +1,13 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
-=== Coach variable list ===
+=== Coach variable list: t and y drawn, v, dt, g computed ===
 Package numodel-coach Info: Wrote Coach activity 'as.cma7'.
   Name1=t
   Min1=0.0
   Max1=4.5
   Name2=dt
   Min2=0.0
-  Max2=10.0
+  Max2=0.05
   Name3=v
   Min3=-45.0
   Max3=0.0
@@ -15,9 +15,17 @@ Package numodel-coach Info: Wrote Coach activity 'as.cma7'.
   Min4=0.0
   Max4=100.0
   Name5=g
-  Min5=0.0
-  Max5=10.0
+  Min5=-10.0
+  Max5=0.0
+=== Not computed: Coach's default ===
+Package numodel-coach Info: Wrote Coach activity 'raw.cma7'.
+  Name1=t
+  Min1=0.0
+  Max1=10.0
+  Name2=x
+  Min2=0.0
+  Max2=10.0
 === End ===
 [1
-] [2] (c003-axis-range.aux)
+] (c003-axis-range.aux)
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.

@@ -81,7 +81,11 @@
     dir    .tl_set:N   = \l__numodelcoach_dir_tl,
     attach .bool_set:N = \l__numodelcoach_attach_bool,
     switch .bool_set:N = \l__numodelcoach_switch_bool,
+    % blanks=open|filled for this file; empty: numodel's blanks setting.
+    blanks .choices:nn = { open , filled }
+      { \tl_set:Ne \l__numodelcoach_blanks_tl { \l_keys_choice_tl } },
   }
+\tl_new:N \l__numodelcoach_blanks_tl
 
 \NewDocumentCommand \coachsetup { m }
   { \keys_set:nn { numodel-coach / setup } {#1} }
@@ -178,6 +182,7 @@
     \tl_set_eq:NN \l__numodelcoach_dir_tl \g__numodelcoach_dir_tl
     \bool_set_eq:NN \l__numodelcoach_attach_bool \g__numodelcoach_attach_bool
     \bool_set_eq:NN \l__numodelcoach_switch_bool \g__numodelcoach_switch_bool
+    \tl_clear:N \l__numodelcoach_blanks_tl
     \keys_set:nn { numodel-coach / model } {#1}
     \__numodelcoach_write:n {#2}
   }
@@ -198,7 +203,8 @@
         numodelcoach.tex_write(
           "\lua_escape:e { \l__numodelcoach_prefix_tl }",
           "\lua_escape:e { \l__numodelcoach_path_tl }",
-          \bool_if:NTF \l__numodelcoach_switch_bool { true } { false })
+          \bool_if:NTF \l__numodelcoach_switch_bool { true } { false },
+          "\tl_use:N \l__numodelcoach_blanks_tl")
       }
     \bool_if:NT \l__numodelcoach_attach_bool
       {

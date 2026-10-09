@@ -9,6 +9,105 @@ given release is listed as a version-sync entry.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the bundle adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### numodel
+
+#### Added
+- `\mstepat{<Name>}{<Var>}{<value>}` (and `\mstepatp` with an explicit
+  prefix): the value of a variable at the first step where another
+  variable -- usually the time -- has reached a value, so the text no
+  longer depends on the time step: `\mstepat{V}{T}{1}` is v at t = 1 s
+  for any Δt. Round-off of an accumulated time step is tolerated; a
+  value that is never reached is an error.
+- `\diagrammodel[legend=true]`: a legend for a single series, with the
+  text from the keyword table of the syntax ("modelpunt" for NL,
+  "model point" otherwise; a drop-in `.def` without the new
+  `legend_point` keyword falls back to "model point").
+
+- `start-format=input` (`\numodelsetup`, package option, or per
+  variable as `\mvar[start-format=...]`): start values are shown
+  exactly as typed in `\mvar` -- `h = 3000 m` instead of
+  `h = 3,00·10³ m`, `l = 600 m` instead of `6,0·10² m` -- in the
+  initial values of `\textmodel` and in `\<prefix><Name>num`/`qty`. The
+  default `rounded` keeps the previous behaviour. Only a plain number
+  has a typed form; a start value given as an expression stays
+  rounded. The setting is read when the value is shown, so it also
+  applies to variables declared before it. Regression test
+  `m008-start-format`.
+
+- `\diagrammodel` keys for teaching material: `float=false` sets the
+  diagram where it stands (centred, still numbered as a figure), so it
+  works in a minipage, a tcolorbox or an exam `solution`;
+  `caption={...}` replaces the automatic caption and `nocaption` drops
+  it (and the label); `legend={...}` gives one label per series;
+  `style=marks|line|both`; `xcmmax`/`ycmmax` limit the axis size of
+  this diagram. Regression test `m009-diagram-keys`.
+- Pupil's and answer version from one declaration: the key `blank` on
+  `\mvar`, `\mrule` (also `\mrule*`) and `\mstop` marks what the pupil
+  has to supply. With `blanks=open` (`\numodelsetup`, package option or
+  `\textmodel[blanks=...]`; the default) `\textmodel` shows
+  `F_z = ⋯`, a conditional rule collapses to that single row, and the
+  stop row reads `IF ⋯ THEN STOP ENDIF`; with `blanks=filled` all is
+  shown in full. `\computemodel` always uses the full rules.
+  `numodel.plaintext` follows the setting (`' F_z := ...` comments when
+  open). Regression test `m010-blanks`.
+- `numodel.nice_range(lo, hi, cmmax)`: the axis range `\calcplotdims`
+  would give a series. `numodel.get_model` uses it for a variable that
+  no `\diagrammodel` has drawn, so every computed variable has an axis
+  range (`axis_source` tells `"diagram"` from `"computed"`).
+
+#### Changed
+- `\diagrammodel` builds single and multiple series the same way; a
+  multi-series legend now takes the display text unexpanded.
+- A `\diagrammodel` with a single series no longer has a legend by
+  default. It used to show a hard-coded English "model point".
+- Decimal numbers inside a model rule are shown through siunitx `\num`,
+  so `\textmodel` gives them the decimal marker of the syntax and shows
+  them as typed: `k = 0,24` instead of `k = 0.24` with `syntax=NL`.
+  Integers, and digits inside display names such as `x_1`, are left
+  alone.
+- Name collisions are detected precisely. A full name that already
+  belongs to a variable of another model (prefix `para` + `gX` = prefix
+  `parag` + `X`) is now an error. A full name that is also another
+  variable's accessor (`T` next to `Tmax`, `V` next to `Vmin`) gives a
+  warning naming both and the consequence, instead of the generic
+  "being redefined"; documents relying on `T` next to `Tmax` keep
+  compiling.
+
+#### Documentation
+- The manual said that the accessors `num`, `qty` and `pre` hold the
+  current value; they hold the start value (as `\textmodel` needs),
+  fixed by `\mvar`. Corrected, with a pointer to `\mstep`/`\mstepat`
+  for computed values.
+- `\<prefix>steps` counts step 0: a model with N samples went through
+  N − 1 rounds.
+- New paragraph "What a step contains": a step records the values
+  before that round's rules run, so an auxiliary variable in step n
+  was computed from the stocks of step n − 1. A table row "t, v,
+  F_w(v), a" takes t and v from step n and F_w and a from step n + 1.
+- The naming caveat describes the new collision checks.
+- Regression test `m007-names-steps-numbers`.
+
+### numodel-coach
+
+#### Changed
+- A variable that is not drawn by any `\diagrammodel` now gets the axis
+  range its diagram would have, computed from `\computemodel`'s series,
+  instead of Coach's default 0 to 10 (which stays for a model that was
+  never computed). Regression test `c003-axis-range` covers both.
+
+#### Added
+- `\coachmodel[blanks=open|filled]`: the pupil's version, with every
+  `[blank]` rule, stop condition and start value as a comment
+  `' F_z := ...` to complete in Coach, or the answer version in full.
+  Default: numodel's `blanks` setting. Regression test `c004-blanks`.
+- LaTeX accents and special letters in `coachinstruction`: `\"u`,
+  `\'e`, `` \`a ``, `\^o`, `\~n`, `\c{c}`, `\ss`, `\o`, `\ae` and the
+  like (also with braces and `\i`) become the Unicode letter in Coach
+  instead of a stray quote. Regression test `c002-instruction`
+  extended.
+
 ## [0.10.0] — 2026-10-08
 
 Adds a third module, numodel-coach, which exports a model as a CMA Coach 7

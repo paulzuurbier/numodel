@@ -1,0 +1,43 @@
+% Regression test: \diagrammodel keys for teaching material.
+% float=false (no float: fits a minipage or a box; the caption still
+% counts as a figure), caption={...}, nocaption (no caption, no
+% figure number), legend={...} (one label per series), legend=true for a
+% single series, style=line/both, and xcmmax/ycmmax for a smaller
+% diagram.  Every call must compile; the figure counter shows which
+% calls produced a caption.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\setlength{\textwidth}{16cm}
+\begin{document}
+\START
+\OMIT
+\newcommand\fall[2]{%
+  \newmodelprefix{#1}
+  \mvar{T}{t}{0}{\s}{2}{systeem}
+  \mvar{Dt}{dt}{#2}{\s}{2}{systeem}
+  \mvar{V}{v}{0}{\m\per\s}{3}{voorraad}
+  \mrule{V}{\csname #1V\endcsname + 9.81 * \csname #1Dt\endcsname}
+  \mrule{T}{\csname #1T\endcsname + \csname #1Dt\endcsname}
+  \mstop{\csname #1T\endcsname >= 2}
+  \computemodel}
+\fall{a}{0.5}
+\fall{b}{0.1}
+\diagrammodel[prefix=a]{T}{V}{warmup}
+\TIMO
+\TYPE{=== float, default caption: figure \thefigure ===}
+\diagrammodel[prefix={a,b}, style=line,
+  legend={$\Delta t = 0{,}5$, $\Delta t = 0{,}1$},
+  caption={Twee tijdstappen}]{T}{V}{twee}
+\TYPE{after legend list + line + caption: figure \thefigure}
+\noindent\begin{minipage}{0.5\textwidth}
+\diagrammodel[prefix=b, float=false, xcmmax=6, ycmmax=4,
+  style=both, legend=true]{T}{V}{klein}
+\end{minipage}
+\TYPE{after float=false: figure \thefigure}
+\diagrammodel[prefix=b, float=false, nocaption]{T}{V}{geen}
+\TYPE{after nocaption: figure \thefigure\space (unchanged)}
+\TYPE{=== Unknown style warns ===}
+\diagrammodel[prefix=b, style=dots]{T}{V}{dots}
+\TYPE{=== End ===}
+\end{document}

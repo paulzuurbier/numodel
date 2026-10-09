@@ -1,0 +1,55 @@
+% Regression test for three things a teaching module ran into:
+% * name collisions: a full name that already belongs to another
+%   model's variable is an error; a full name that is also another
+%   variable's accessor (T + max = Tmax, V + min = Vmin) a warning that
+%   names both, instead of the generic "being redefined";
+% * \mstepat / \mstepatp: the value at the first step where the time
+%   has reached a given value, independent of the time step, and an
+%   error when it is never reached;
+% * decimal numbers in a rule are shown through \num (decimal marker of
+%   the syntax, as typed); integers and digits inside display names
+%   (x_1) are left alone.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\begin{document}
+\START
+\TYPE{=== Collision with another model's variable: error ===}
+\newmodelprefix{para}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{gX}{g_x}{1}{\m}{2}{constante}
+\newmodelprefix{parag}
+\mvar{X}{x}{5}{\m}{2}{constante}
+\TYPE{=== Collision with an accessor: warning naming both ===}
+\newmodelprefix{q}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Tmax}{T}{5}{\s}{2}{constante}
+\mvar{V}{v}{1}{\m}{2}{constante}
+\mvar{Vmin}{v_{min}}{2}{\m}{2}{constante}
+\TYPE{=== Redeclaring in the same model: the usual warning ===}
+\mvar{M}{m}{1}{\kg}{2}{constante}
+\mvar{M}{m}{2}{\kg}{2}{constante}
+\OMIT
+\newmodelprefix{val}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.01}{\s}{2}{systeem}
+\mvar{V}{v}{0}{\m\per\s}{3}{voorraad}
+\mrule{V}{\valV + 9.81 * \valDt}
+\mrule{T}{\valT + \valDt}
+\mstop{\valT >= 3}
+\computemodel
+\TIMO
+\TYPE{=== \string\mstepat\space ===}
+\TYPE{step 100: \mstep{V}{100} at t=\mstep{T}{100}}
+\TYPE{v at t = 1: \mstepat{V}{T}{1}}
+\TYPE{v at t = 2 (explicit prefix): \mstepatp{val}{V}{T}{2}}
+\TYPE{samples incl. step 0: \valsteps}
+\TYPE{=== never reached: error ===}
+\TYPE{\mstepat{V}{T}{5}}
+\TYPE{=== Numbers in a rule (display tokens) ===}
+\newmodelprefix{num}
+\mvar{X}{x_1}{2}{\m}{2}{hulp}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mrule{X}{(\numT + 1)^1.5 * 2.5e-3 + 0.24 * \numX + 12}
+\TYPE{=== End ===}
+\end{document}
