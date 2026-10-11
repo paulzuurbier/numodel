@@ -61,6 +61,11 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   shown in full. `\computemodel` always uses the full rules.
   `numodel.plaintext` follows the setting (`' F_z := ...` comments when
   open). Regression test `m010-blanks`.
+- `\numodelsetup{table-style={...}}` (also a package option):
+  document-wide tabularray options for `\tablemodel`, before a table's
+  own `table={...}`. The values of `table-style`, `table` and `num` are
+  expanded once, so a macro holding the options works (tabularray used
+  to report "Unknown inner key name").
 - A Lua engine for `\computemodel`: `engine=lua` (`\numodelsetup`,
   package option, or `\computemodel[engine=...]`) compiles the rules --
   with the parser of the plain-text rendering -- into Lua functions and
@@ -74,9 +79,8 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   (ten steps of 0.1 give 0.99999999999999989) does not move a stop
   condition by a step; final values are returned to TeX with 12
   significant digits. `engine=compare` runs both engines, keeps the
-  `\fp_eval` results and reports whether they agree. The default stays
-  `fpeval`. All 25 models of the examples and tests agree. Regression
-  test `m012-engine`.
+  `\fp_eval` results and reports whether they agree. All 25 models of
+  the examples and tests agree. Regression test `m012-engine`.
 - `\diagrammodel` plots at most `plot-points` points per series
   (`\numodelsetup`, default 1000; `points=` per diagram; 0 for all).
   A longer series is thinned by distance in the diagram, so flat
@@ -103,12 +107,46 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   and per series in series order. numodel keeps its own keys for what
   concerns the model and the layout and leaves drawing details to
   pgfplots, instead of growing a key for each of them.
+- `\numodelsetup{angles=radians|degrees}` (also a package option): the
+  angle unit of the program the model is written for. With `degrees`
+  `\textmodel` shows `sind(x)` as `Sin(x)` and `sin(x)` as
+  `Sin(180/π·x)`, `asind(x)` as `Arcsin(x)` and `asin(x)` as
+  `π/180·Arcsin(x)`, as Coach in degree mode needs them; the calculation
+  does not change. Set in the document body it warns, because a rule's
+  text is fixed when the rule is declared.
+- `\diagrammodel[equal]`: equal scales on both axes (for a path y
+  against x), taken into account when the axis ranges and ticks are
+  chosen. `axis={axis equal}` stretched the axis after numodel had
+  chosen the ticks, so the tick labels overlapped.
 - `numodel.nice_range(lo, hi, cmmax)`: the axis range `\calcplotdims`
   would give a series. `numodel.get_model` uses it for a variable that
   no `\diagrammodel` has drawn, so every computed variable has an axis
   range (`axis_source` tells `"diagram"` from `"computed"`).
 
 #### Changed
+- **The default engine is `lua`.** `\computemodel` compiles the rules
+  to Lua; `engine=fpeval` keeps the previous decimal computation with
+  `\fp_eval` (exact decimal steps, 16 digits, identical to `\fpeval`
+  elsewhere; see the manual on when that matters). Every test and
+  example gives the same output with both engines.
+- `\<prefix><Name>min`/`max` of a variable without start value skip
+  step 0, where the variable is still 0 (nothing has computed it yet;
+  Coach's first table row shows 0 too). An auxiliary `r = sqrt(x²+y²)`
+  had minimum 0. Regression test `m007-names-steps-numbers`.
+- `\mstepat` follows the direction in which the variable starts: from
+  above the value it finds the first step at or below it. A falling
+  quantity (`\mstepat{T}{Vy}{0}`, the top of a throw) used to give step
+  0. Regression test `m007-names-steps-numbers`.
+- numodel no longer sets `\SetTblrInner{rowsep=0pt}` for the whole
+  document. It was meant for `\textmodel` but only reached `tblr`
+  tables -- the document's own and `\tablemodel` -- never
+  `\textmodel`'s default `longtblr`. Tables of the document and
+  `\tablemodel` get tabularray's default row spacing again (use
+  `table-style={rows={rowsep=0pt}}` for the previous look).
+- Numbers handed back to TeX by `\mstep`, `\mstepat`, the `min`/`max`
+  accessors, `\mcoords` and table cells are written with 12
+  significant digits, as the final values already were, so binary
+  noise (`0.30000000000000004`, `1.0`) never reaches the document.
 - `\mvar` on a name the model already has now replaces the variable in
   place (with an info message). It used to add a second row to the
   initial values and keep both entries.
@@ -144,6 +182,10 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
 - `\diagrammodel[float=false]` no longer makes the caption package warn
   that `hypcap=true` is ignored: outside a float hypcap is switched off
   locally (only when caption is loaded).
+- `\diagrammodel[float=false]` inside a list (`enumerate`, exam's
+  `questions`) gave an overfull box: the caption was as wide as the
+  text, not as the list's lines. Diagram and caption now sit in a
+  minipage of `\linewidth`. Regression test `m009-diagram-keys`.
 
 #### Documentation
 - The manual said that the accessors `num`, `qty` and `pre` hold the
@@ -158,6 +200,21 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   F_w(v), a" takes t and v from step n and F_w and a from step n + 1.
 - The naming caveat describes the new collision checks.
 - Regression test `m007-names-steps-numbers`.
+
+### numodel-plot
+
+#### Added
+- `\numodelplotsetup{equal}` (`\diagrammodel[equal]` in numodel): the
+  same amount per centimetre on both axes; `\calcplotdims` uses the
+  larger of the two tick distances for both. Regression test
+  `p001-calcplotdims`.
+
+#### Fixed
+- An axis without unit and without scaling got empty parentheses
+  ("X ()"); now just "X". Regression test `p005-axislabels`.
+- Regression test `p001-calcplotdims` printed macros that no longer
+  exist (`\xtick`, `\xwidth`); it now shows `\xtickdistance` and
+  `\xcm`.
 
 ### numodel-coach
 
@@ -177,6 +234,20 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   like (also with braces and `\i`) become the Unicode letter in Coach
   instead of a stray quote. Regression test `c002-instruction`
   extended.
+- Coach's angle unit ("hoekeenheid", `AngleUnits`) follows numodel's
+  `angles` setting, and the trigonometric functions are exported for
+  it: with degrees `sind(x)` becomes `Sin(x)`, `sin(x)`
+  `Sin(180/Pi*x)`, `asind(x)` `Arcsin(x)` and `asin(x)`
+  `Pi/180*Arcsin(x)`. Tested in Coach 7: in degree mode Arctan(1) = 45,
+  although the guide says the inverse functions give radians.
+- Greek letters in names are written without brackets (`ΔT`, `λ`, `ω`);
+  Coach accepts them bare and marks a bracketed name red in its
+  variable list. Brackets remain for names with other characters
+  (`[t_1/2]`) and for reserved words (`[Max]`).
+- A unit declared with `\DeclareSIUnit` is exported as its siunitx
+  symbol (`\dieren\per\day` → `dieren/d`) without the warning
+  "unknown unit macro"; only a macro siunitx does not know warns.
+  Regression test `c005-angles-units`.
 
 ## [0.10.0] — 2026-10-08
 

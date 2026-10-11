@@ -15,8 +15,17 @@
 \TYPE{=== \string\calcplotdims\space results ===}
 \TYPE{x range: \xmin\space.. \xmax}
 \TYPE{y range: \ymin\space.. \ymax}
-\TYPE{x tick : \xtick}
-\TYPE{y tick : \ytick}
-\TYPE{x width: \xwidth\space cm}
-\TYPE{y height: \ywidth\space cm}
+\TYPE{x per cm: \xtickdistance}
+\TYPE{y per cm: \ytickdistance}
+\TYPE{x width: \xcm\space cm}
+\TYPE{y height: \ycm\space cm}
+\TYPE{=== equal: the same amount per cm on both axes ===}
+\OMIT
+\numodelplotsetup{equal}
+\def\xmin{-10}\def\xmax{10}
+\def\ymin{-3}\def\ymax{3}
+\calcplotdims
+\TIMO
+\TYPE{x range: \xmin\space.. \xmax, \xtickdistance\space per cm, \xcm\space cm}
+\TYPE{y range: \ymin\space.. \ymax, \ytickdistance\space per cm, \ycm\space cm}
 \end{document}

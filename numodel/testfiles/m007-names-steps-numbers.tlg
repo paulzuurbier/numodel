@@ -22,6 +22,10 @@ step 100: 9.81 at t=1
 v at t = 1: 9.81
 v at t = 2 (explicit prefix): 19.62
 samples incl. step 0: 301
+=== a falling quantity: the step where it comes down to the value ===
+t when v_y reaches 0 (from above): 1.1
+v_y at t = 1 (time rises): 0.19
+E without start value: 0 in step 0 (0), min 20.01805 and max 190.1828005 from step 1
 === never reached: error ===
 ! numodel: \mstepat: 'valT' never reaches 5 in model 'val' (last value 3).
 \mstepat ...model_current_prefix_tl ".."#2","#3")}

@@ -13,13 +13,13 @@ x := x + v*Δt
 t := t + Δt
 Als t >= 10 Dan Stop EindAls
 === Coachtaal: initial values ===
-t := 0            's
-Δt := 0,01        's
-m := 0,5          'kg
-k := 2*3          'N/m
-v := 0            'm/s
-x := 0,1          'm
-[ω] := Sqrt(k/m)  '1/s
+t := 0          's
+Δt := 0,01      's
+m := 0,5        'kg
+k := 2*3        'N/m
+v := 0          'm/s
+x := 0,1        'm
+ω := Sqrt(k/m)  '1/s
 === Warnings ===
 free-text row exported as a comment: (damping omitted)
 === EN: model rules ===
@@ -35,12 +35,12 @@ x := x + v*Δt
 t := t + Δt
 IF t >= 10 THEN STOP ENDIF
 === EN: initial values ===
-t := 0            's
-Δt := 0.01        's
-m := 0.5          'kg
-k := 2*3          'N/m
-v := 0            'm/s
-x := 0.1          'm
-[ω] := SQRT(k/m)  '1/s
+t := 0          's
+Δt := 0.01      's
+m := 0.5        'kg
+k := 2*3        'N/m
+v := 0          'm/s
+x := 0.1        'm
+ω := SQRT(k/m)  '1/s
 === End ===
 (m006-plaintext.aux)

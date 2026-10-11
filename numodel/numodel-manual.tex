@@ -386,12 +386,17 @@ The same keys can also be passed as package options:
   setting is read when the value is shown, so it also applies to
   variables declared before it.  Per variable:
   |\mvar[start-format=...]|.
-\item[\texttt{engine}] How |\computemodel| computes: |fpeval|
-  (default) evaluates every rule with |\fp_eval|; |lua| compiles the
-  rules to Lua first, which is some hundreds of times faster; |compare|
-  runs both, keeps the |\fp_eval| results and reports whether the Lua
-  run agrees.  |\computemodel[engine=...]| chooses for one model.  See
-  Section~\ref{sec:engine}.
+\item[\texttt{engine}] How |\computemodel| computes: |lua| (default)
+  compiles the rules to Lua, some hundreds of times faster than |fpeval|,
+  which evaluates every rule with |\fp_eval| in decimal arithmetic;
+  |compare| runs both, keeps the |\fp_eval| results and reports whether
+  the Lua run agrees.  |\computemodel[engine=...]| chooses for one
+  model.  See Section~\ref{sec:engine}.
+\item[\texttt{table-style}] Document-wide \textsf{tabularray} options
+  for every |\tablemodel|, e.g.\ room to write in:
+  |table-style={columns={c,colsep=8pt}, rows={rowsep=5pt}}|.  A table's
+  own |table={...}| comes after it.  A macro holding the options may be
+  given.
 \item[\texttt{debug}] |true| writes |numodel|'s trace output (how
   variables, rules and tables are built) to the log; default |false|.
   Only useful when reporting a problem with |numodel| itself.
@@ -403,6 +408,20 @@ The same keys can also be passed as package options:
   full (the answer version).  |\textmodel[blanks=...]| overrides it
   for one table; \textsf{numodel-coach} follows the same setting.  See
   Section~\ref{sec:blanks}.
+\item[\texttt{angles}] |radians| (default) or |degrees|: the angle
+  unit of the program the model is written for, as Coach's
+  ``hoekeenheid''.  With |degrees| that program's |Sin|, |Cos| and
+  |Tan| take degrees, so |\textmodel| and \textsf{numodel-coach}
+  write |sind(\alpha)| as $\text{Sin}(\alpha)$ and |sin(x)| as
+  $\text{Sin}(\sfrac{180}{\pi}\cdot x)$; with |radians| it is the
+  other way round ($\text{Sin}(\sfrac{\pi}{180}\cdot \alpha)$ and
+  $\text{Sin}(x)$).  The inverse functions (|Arcsin|, \dots) answer
+  in the same unit, as in Coach: with |degrees| |asind(x)| is
+  $\text{Arcsin}(x)$ and |asin(x)| is
+  $\sfrac{\pi}{180}\cdot\text{Arcsin}(x)$.  The calculation does not
+  change: in the rules, |sin| always takes radians and |sind| degrees.
+  The text of a rule is fixed when it is declared, so set |angles| in
+  the preamble (a warning reminds you otherwise).
 \item[\texttt{units}] Whether the \emph{initial values} cells in
   |\textmodel| display the SI unit alongside the value (|\qty|) or
   only the numeric value (|\num|).  Boolean, default |true|.  May
@@ -827,28 +846,28 @@ calls can each pick their own style without re-issuing
 |\numodelsetup|.
 
 \DescribeMacro{\computemodel}
-Runs the Euler simulation.  Each iteration step is executed in
-LaTeX itself: \textsf{expl3}'s |\fp_eval| (the engine behind the
-LaTeX2e |\fpeval|) evaluates the stop condition and then every
-|\mrule| body in declaration order, writing each new value into
-the accessor macro |\<prefix><Name>|.  The per-step values are
-appended to Lua tables on the side -- storing the time series as
-growing TeX token lists would cost $O(N)$ per append and $O(N^2)$
-overall, whereas the Lua-table append is $O(1)$, so a 20\,000-step
-run stays linear in total work.  Lua also keeps the running min
-and max so no second pass over the series is needed.  After
+Runs the Euler simulation.  Each iteration step evaluates the stop
+condition and then every |\mrule| body in declaration order; by
+default in Lua, with |engine=fpeval| in LaTeX itself through
+\textsf{expl3}'s |\fp_eval| (the engine behind the LaTeX2e |\fpeval|),
+writing each new value into the accessor macro |\<prefix><Name>|.  The
+per-step values are kept in Lua tables, so even a 20\,000-step run stays
+linear in total work.  After
 |\computemodel| returns, |\<prefix><Name>min| /
-|\<prefix><Name>max| hold the extrema, |\<prefix><Name>| holds
+|\<prefix><Name>max| hold the extrema (for a variable without start
+value from step~1: in step~0 it is still 0, as in Coach's first table
+row), |\<prefix><Name>| holds
 the final-step value, |\<prefix>steps| expands to the number of
 recorded samples (i.e.\ the iteration count $N$, step~0 included),
 and the full time-series can be retrieved with |\mcoords| /
 |\mstep| / |\mstepat|.
 
-\textbf{The Lua engine.}\label{sec:engine}  With |engine=lua| the
-rules are translated into Lua functions -- by the same parser that
+\textbf{Two engines.}\label{sec:engine}  By default (|engine=lua|)
+the rules are translated into Lua functions -- by the same parser that
 renders them as Coachtaal -- and the loop above runs in Lua.  A model
-of 8\,000 steps then takes a few hundredths of a second instead of
-some seconds.  You keep writing rules in \textsf{l3fp} syntax; TeX
+of 8\,000 steps takes a few hundredths of a second; with |engine=fpeval|
+every rule goes through |\fp_eval| and the same model takes some
+seconds.  You keep writing rules in \textsf{l3fp} syntax; TeX
 macros other than the model's own variables (a value defined with
 |\edef|, |\fpeval{...}|, a variable of another model) are expanded
 once, before the run, exactly as |\fp_eval| would see them.  A model
@@ -866,6 +885,20 @@ therefore compares with a relative tolerance of $10^{-9}$, which stops
 every model at the same step as |\fp_eval|.  Use |engine=compare|
 once for a document to check this for your own models: it warns for
 every model where the number of steps or a final value differs.
+
+\textbf{Why \texttt{fpeval} is still there.}  \textsf{l3fp} computes in
+\emph{decimal} with 16 significant digits, as you would by hand: $0{,}1
++ 0{,}2$ is exactly $0{,}3$, and a time step of $0{,}1$ lands exactly on
+$t = 1$, $2$, \dots, with no tolerance needed.  The results are the
+same, digit for digit, as any |\fpeval| or |\num[evaluate-expression]|
+elsewhere in the document, so a value you compute in the text from the
+model's data agrees exactly with the model.  Every \textsf{l3fp}
+function and construct is available, also the rare ones the Lua
+translator does not know (a model using one falls back to |fpeval| by
+itself).  |engine=fpeval| is the reference for |engine=compare|, and it
+computes exactly as \textsf{numodel}~0.10 and earlier did.  The price is speed: choose it when exact decimal arithmetic
+matters more than compilation time, for instance a short model whose
+step-by-step values are discussed digit by digit.
 
 \textbf{What a step contains.}  Every round first \emph{records} the
 current value of every variable, then checks the stop condition, and
@@ -920,6 +953,8 @@ Keys of \meta{keys}, besides |prefix|:
   centred, instead of in a |figure| float -- so it works inside a
   |minipage|, a \textsf{tcolorbox} or the |solution| environment of
   the \textsf{exam} class.  The caption still numbers it as a figure.
+  Inside a list (|enumerate|, \textsf{exam}'s |questions|) diagram and
+  caption take the width of the list's lines.
 \item[\texttt{caption}] Caption text instead of the automatic
   ``$v(t)$-diagram''.
 \item[\texttt{nocaption}] No caption, and so no figure number and no
@@ -943,7 +978,19 @@ Keys of \meta{keys}, besides |prefix|:
 \item[\texttt{xcmmax}, \texttt{ycmmax}] Maximum axis length in cm for
   this diagram, as the keys of the same name of
   |\numodelplotsetup|; a smaller value gives a smaller diagram.
+\item[\texttt{equal}] Equal scales on both axes (a centimetre is the
+  same amount on the $x$- and the $y$-axis), for a path such as $y$
+  against $x$.  |numodel| chooses the axis ranges and ticks with it,
+  so the diagram stays within |xcmmax| and |ycmmax|; do not use
+  \textsf{pgfplots}' |axis equal| for this.  Also a
+  |\numodelplotsetup| key.
 \end{description}
+
+A variable without unit gets no parentheses in its axis label
+(``$X$'' instead of ``$X$ ()''), unless the axis is scaled
+(``$X$ ($10^{3}$)'').  A count can also get a unit of its own,
+\verb|\DeclareSIUnit{\animals}{animals}|; \textsf{numodel-coach}
+exports it as that word.
 
 The |prefix=| key likewise accepts a comma-separated list, so the
 same y-variables are plotted across several models in one diagram --
@@ -1037,8 +1084,10 @@ with the decimal marker of the syntax.  Keys:
 \item[\texttt{blanks}] |open| or |filled| for this table.
 \item[\texttt{num}] \textsf{siunitx} options per column, after
   |numodel|'s rounding: |num={T={round-mode=places,round-precision=0}}|
-  shows the time as whole numbers.
-\item[\texttt{table}] \textsf{tabularray} options added to the table.
+  shows the time as whole numbers (the options may also be a macro).
+\item[\texttt{table}] \textsf{tabularray} options added to the table,
+  after the document-wide |table-style| (see |\numodelsetup|), so they
+  override it.  A macro holding the options may be given.
 \item[\texttt{prefix}] Another model than the current one.
 \end{description}
 \begin{quote}
@@ -1056,6 +1105,15 @@ does not depend on the time step.  Fully expandable.  Signature:
 0{,}1 or 0{,}01\,s.  Round-off of an accumulated time step is
 tolerated ($t = 0{,}999\,999\,999$ counts as $1$).  Raises an error
 when \meta{Var} never reaches \meta{value}.
+
+``Reaches'' follows the direction in which \meta{Var} starts: from
+below the value it is the first step at or above it, from above the
+first step at or below it.  So \meta{Var} need not be the time:
+|\mstepat{T}{C}{30}| is the time at which $C$ reaches 30\,mg/L,
+|\mstepat{T}{Vy}{0}| the time at which a falling $v_y$ becomes zero
+(the top of a throw), and |\mstepatp{flu}{T}{Z}{\fluZmax}| the time
+of the peak of $Z$.  Such a number always matches the model, also
+after a change of the time step.
 
 Example -- a red secant line through the last two simulated
 $(t,y)$ points of the free-fall ball (the model from the first
@@ -1340,7 +1398,16 @@ instruction text.
 \end{verbatim}
 \end{quote}
 Each change rebuilds the model from its list of declarations, so the
-table, the computation and any export always agree.  Variables are
+table, the computation and any export always agree.
+
+|\copymodel| is also the way to declare several models that differ
+only in a value.  A home-made macro that builds the model for a prefix
+given as argument, with rules such as
+|\mrule{V}{\csname #1V\endcsname + ...}|, computes correctly but
+has a pitfall: |\csname| is expanded when the rule is declared, so
+|\textmodel| shows the numbers instead of the names ($t = 50 + 0{,}1$)
+and \textsf{numodel-coach} reports unknown variables.  Declare one
+model in full and copy it.  Variables are
 declared before the rules when a model is rebuilt, so a rule may use a
 variable added to a copy after the rule's original position.
 

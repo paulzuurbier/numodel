@@ -511,6 +511,8 @@ end
 --   variables = { { name, unit, min, max, decimals }, ... },
 --   iterations        number of iterations (>= 1),
 --   allow_switch      true: pupils may switch to the graphical view
+--   degrees           true: Coach's angle unit is degrees (Sin(x)
+--                     takes x in degrees), else radians
 --   instruction       optional { html = ..., text = ... } for Coach's
 --                     instruction window (see instruction_html)
 -- }
@@ -524,6 +526,7 @@ function C.build(spec)
     local desc = find(items, "Description")[4]
     find_leaf(desc, "CanSwitchModelModes")[5] =
         string.char(spec.allow_switch and 1 or 0)
+    find_leaf(desc, "AngleUnits")[5] = spec.degrees and "\1" or "\0"
     find_leaf(find(items, "GrModMain")[4], "Mode")[5] = "\1"
 
     if spec.instruction then
@@ -594,6 +597,7 @@ function C.from_model(p, opts)
     local data = C.build({
         body = r.body, init = r.init, variables = vars,
         iterations = g.maxiter, allow_switch = opts.allow_switch,
+        degrees = numodel.settings.angles == "degrees",
         instruction = instruction,
     })
     return data, W
@@ -659,6 +663,7 @@ function C.dump(data)
     end
     local desc = find(items, "Description")[4]
     out[#out + 1] = "CanSwitchModelModes=" .. find_leaf(desc, "CanSwitchModelModes")[5]:byte()
+    out[#out + 1] = "AngleUnits=" .. find_leaf(desc, "AngleUnits")[5]:byte()
     out[#out + 1] = "Mode=" .. find_leaf(find(items, "GrModMain")[4], "Mode")[5]:byte()
     local xml = find(items, "ModelXML")[4][1][5]:sub(5)
     for _, tag in ipairs({ "start", "stop", "step" }) do

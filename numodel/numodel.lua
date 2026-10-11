@@ -34,7 +34,7 @@ local M = {}
 numodel = M
 M.models = {}  -- prefix -> {varlist, steps, nsteps}
 -- Package settings that exporters need (mirrored from \numodelsetup).
-M.settings = { maxiter = 20000, blanks = "open" }
+M.settings = { maxiter = 20000, blanks = "open", angles = "radians" }
 
 function M.set_setting(name, value)
     M.settings[name] = value
@@ -127,10 +127,20 @@ function M.get_coords(p, xvar, yvar, maxpoints)
     local parts = {}
     for i = 1, n do
         if (not keep or keep[i]) and xd[i] and yd[i] then
-            parts[#parts + 1] = "(" .. xd[i] .. "," .. yd[i] .. ")"
+            parts[#parts + 1] = "(" .. M.tex_number(xd[i]) .. "," .. M.tex_number(yd[i]) .. ")"
         end
     end
     tex.sprint(table.concat(parts, " "))
+end
+
+-- First step that counts for min/max: a variable without start value
+-- (an auxiliary computed by a rule) is 0 in step 0 -- nothing has
+-- computed it yet, as in Coach's first table row -- so its extrema
+-- start at step 1.
+local function extrema_from(m, name, data)
+    local meta = m.meta and m.meta[name]
+    if meta and meta.value == nil and #data > 1 then return 2 end
+    return 1
 end
 
 function M.get_min(p, name)
@@ -142,10 +152,11 @@ function M.get_min(p, name)
         return
     end
     local mn = math.huge
-    for _, v in ipairs(data) do
+    for i = extrema_from(m, name, data), #data do
+        local v = data[i]
         if v and v < mn then mn = v end
     end
-    tex.sprint(tostring(mn))
+    tex.sprint(M.tex_number(mn))
 end
 
 function M.get_max(p, name)
@@ -157,10 +168,11 @@ function M.get_max(p, name)
         return
     end
     local mx = -math.huge
-    for _, v in ipairs(data) do
+    for i = extrema_from(m, name, data), #data do
+        local v = data[i]
         if v and v > mx then mx = v end
     end
-    tex.sprint(tostring(mx))
+    tex.sprint(M.tex_number(mx))
 end
 
 -- Value of variable 'name' at step 'step' (0-based).
@@ -186,14 +198,16 @@ function M.get_step(p, name, step)
               "within the recorded range -- see \\<prefix>steps." })
         return
     end
-    tex.sprint(tostring(data[idx]))
+    tex.sprint(M.tex_number(data[idx]))
 end
 
 -- Value of variable 'name' at the first recorded step where variable
--- 'at' (typically the time) has reached 'value'.  Robust against the
--- round-off of an accumulated time step: t = 0.99999999 counts as 1.
--- Assumes 'at' does not decrease (time); raises an error when 'at'
--- never reaches 'value'.
+-- 'at' reaches 'value', coming from the side it starts on: a quantity
+-- that starts below the value (time, a rising concentration) counts
+-- when it is at or above it, one that starts above it (v_y of a throw
+-- at the top) when it is at or below it.  Robust against the round-off
+-- of an accumulated step: t = 0.99999999 counts as 1.  Raises an error
+-- when 'at' never reaches 'value'.
 function M.get_at(p, name, at, value)
     local m = M.models[p]
     local data = m and m.steps[name]
@@ -205,16 +219,25 @@ function M.get_at(p, name, at, value)
     end
     value = tonumber(value)
     local eps = 1e-9 * math.max(1, math.abs(value))
+    local first = times[1]
+    local reached
+    if first == nil or first < value - eps then
+        reached = function(x) return x >= value - eps end
+    elseif first > value + eps then
+        reached = function(x) return x <= value + eps end
+    else
+        reached = function() return true end
+    end
     for i = 1, math.min(#data, #times) do
-        if times[i] >= value - eps then
-            tex.sprint(tostring(data[i]))
+        if reached(times[i]) then
+            tex.sprint(M.tex_number(data[i]))
             return
         end
     end
     tex.error(string.format(
         "numodel: \\mstepat: '%s' never reaches %s in model '%s'" ..
         " (last value %s)", at, tostring(value), p,
-        tostring(times[#times])),
+        M.tex_number(times[#times])),
         { "Call \\computemodel first, and ask for a value within ",
           "the simulated range." })
 end
@@ -1830,11 +1853,26 @@ for w in ([[Aan Abs Afgeleide AfgeleideGlad Als Anders ArcCos ArcSin
     reserved[w:lower()] = true
 end
 
+-- A name Coach accepts without brackets: letters (ASCII and Greek,
+-- including Coach's own ∆ U+2206 and µ), digits and _, not starting
+-- with a digit.  Tested in Coach 7: ΔT and λ work bare; a name in
+-- brackets is marked red in the variable list.
+local function bare_name(s)
+    local first = true
+    for _, c in utf8.codes(s) do
+        local ok = (c >= 65 and c <= 90) or (c >= 97 and c <= 122)
+            or c == 95 or (not first and c >= 48 and c <= 57)
+            or (c >= 0x391 and c <= 0x3C9) or c == 0x2206 or c == 0xB5
+        if not ok then return false end
+        first = false
+    end
+    return not first
+end
+
 -- TeX display name -> plain name, e.g. F_{\text{res}} -> F_res,
--- \Delta t -> Δt.  CoachTaal allows bare names of ASCII letters,
--- digits and _ (not starting with a digit), plus Δt for the time
--- step; anything else -- other Greek letters, spaces, reserved
--- words -- is put in brackets, as Coach itself does: [ω], [Max].
+-- \Delta t -> Δt, \lambda -> λ.  Anything Coach does not accept bare
+-- -- spaces, a slash, reserved words -- is put in brackets, as Coach
+-- itself does: [t_1/2], [Max].
 -- Returns the name and, for unknown control sequences, a warning.
 function M.plain_name(text)
     local warn
@@ -1851,8 +1889,7 @@ function M.plain_name(text)
     end)
     s = s:gsub("[{}%s$]", "")
     if s == "" then return "[]", "empty name for '" .. tostring(text) .. "'" end
-    if s == "Δt" then return s, warn end
-    if s:find("^[%a_][%w_]*$") and not reserved[s:lower()] then
+    if bare_name(s) and not reserved[s:lower()] then
         return s, warn
     end
     return "[" .. s .. "]", warn
@@ -1909,6 +1946,26 @@ local unit_abbrev = {
     mT = "mT", uT = "uT", nT = "nT",
 }
 
+-- Units declared with siunitx's \DeclareSIUnit that numodel's tables
+-- do not know: name -> list of { sym, e } factors, from siunitx's own
+-- formatting (\siunitx_unit_format:nN), registered by \mvar.
+M.siunitx_units = {}
+function M.register_unit(name, formatted)
+    if M.siunitx_units[name] then return end
+    local factors = {}
+    -- \TextOrMath {°}{...} -> °
+    formatted = formatted:gsub("\\TextOrMath%s*{([^{}]*)}%s*{[^{}]*{[^{}]*}[^{}]*}", "%1")
+    for sym, rest in formatted:gmatch("\\mathrm%s*{([^{}]*)}([^\\]*)") do
+        local e = tonumber(rest:match("%^%s*{?%s*(%-?%d+)")) or 1
+        factors[#factors + 1] = { sym = sym, e = e }
+    end
+    if #factors == 0 then
+        local plain = formatted:gsub("\\%a+", ""):gsub("[{}%s]", "")
+        if plain ~= "" then factors[1] = { sym = plain, e = 1 } end
+    end
+    if #factors > 0 then M.siunitx_units[name] = factors end
+end
+
 local function fmt_power(sym, e)
     if e == 1 then return sym end
     return sym .. "^" .. tostring(e)
@@ -1961,6 +2018,15 @@ function M.plain_unit(unit)
             elseif unit_prefixes[cs] then prefix = unit_prefixes[cs]
             elseif unit_symbols[cs] then add(unit_symbols[cs])
             elseif unit_abbrev[cs] then add(unit_abbrev[cs])
+            elseif M.siunitx_units[cs] then
+                -- a unit of the document's own (\DeclareSIUnit)
+                local sign = per and -1 or 1
+                for _, f in ipairs(M.siunitx_units[cs]) do
+                    factors[#factors + 1] = { sym = prefix .. f.sym,
+                        e = sign * f.e * (pre_power or 1) }
+                    prefix = ""
+                end
+                pre_power, per = nil, false
             elseif cs ~= "" then
                 warn = "unknown unit macro \\" .. cs .. " in '"
                     .. trim(unit) .. "'"
@@ -2183,17 +2249,36 @@ local function print_call(n, ctx)
     -- Argument as a factor: parenthesised unless atomic.
     local f1 = n.args[1] and strength(n.args[1]) >= 100 and a1 or paren(a1)
     local function call(f, s) return f .. "(" .. s .. ")" end
-    local deg = D.pi .. "/180*" .. f1
-    local rad = "180/" .. D.pi .. "*"
+    -- Angles (\numodelsetup{angles=...}): the unit in which the target
+    -- program's Sin/Cos/Tan take their argument.  fwd_deg / fwd_rad:
+    -- the argument of a degree (sind) / radian (sin) function, as that
+    -- program's Sin needs it.  The inverse functions answer in the same
+    -- unit (tested in Coach 7: with degrees Arctan(1) = 45, although
+    -- the guide says "radialen"); inv_deg / inv_rad wrap them for an
+    -- answer in degrees (asind) / radians (asin).
+    local degrees = M.settings.angles == "degrees"
+    local fwd_deg = degrees and a1 or (D.pi .. "/180*" .. f1)
+    local fwd_rad = degrees and ("180/" .. D.pi .. "*" .. f1) or a1
+    local function inv_deg(f, s)
+        if degrees then return call(f, s) end
+        return paren("180/" .. D.pi .. "*" .. call(f, s))
+    end
+    local function inv_rad(f, s)
+        if degrees then return paren(D.pi .. "/180*" .. call(f, s)) end
+        return call(f, s)
+    end
     local direct = {
         sign = D.sign, abs = D.abs, sqrt = D.sqrt, exp = D.exp,
-        ln = D.ln, sin = D.sin, cos = D.cos, tan = D.tan,
-        asin = D.asin, acos = D.acos, floor = D.floor,
-        min = D.min, max = D.max,
+        ln = D.ln, floor = D.floor, min = D.min, max = D.max,
     }
+    local forward = { sin = D.sin, cos = D.cos, tan = D.tan }
     local name = n.s
     if direct[name] then
         return call(direct[name], table.concat(args, D.argsep))
+    elseif forward[name] then
+        return call(forward[name], fwd_rad)
+    elseif name == "asin" then return inv_rad(D.asin, a1)
+    elseif name == "acos" then return inv_rad(D.acos, a1)
     elseif name == "round" then
         if #args >= 2 then
             local p = "10^" .. (strength(n.args[2]) >= 100 and args[2]
@@ -2209,29 +2294,29 @@ local function print_call(n, ctx)
                 .. "(y/x): the quadrant is lost"
             local y = strength(n.args[1]) >= 100 and args[1] or paren(args[1])
             local x = strength(n.args[2]) >= 100 and args[2] or paren(args[2])
-            return call(D.atan, y .. "/" .. x)
+            return inv_rad(D.atan, y .. "/" .. x)
         end
-        return call(D.atan, a1)
+        return inv_rad(D.atan, a1)
     elseif name == "ceil" then
         return paren("-" .. call(D.floor, "-" .. f1))
-    elseif name == "cot" then return paren("1/" .. call(D.tan, a1))
-    elseif name == "csc" then return paren("1/" .. call(D.sin, a1))
-    elseif name == "sec" then return paren("1/" .. call(D.cos, a1))
-    elseif name == "acot" then return call(D.atan, "1/" .. f1)
-    elseif name == "acsc" then return call(D.asin, "1/" .. f1)
-    elseif name == "asec" then return call(D.acos, "1/" .. f1)
-    elseif name == "sind" then return call(D.sin, deg)
-    elseif name == "cosd" then return call(D.cos, deg)
-    elseif name == "tand" then return call(D.tan, deg)
-    elseif name == "cotd" then return paren("1/" .. call(D.tan, deg))
-    elseif name == "cscd" then return paren("1/" .. call(D.sin, deg))
-    elseif name == "secd" then return paren("1/" .. call(D.cos, deg))
-    elseif name == "asind" then return paren(rad .. call(D.asin, a1))
-    elseif name == "acosd" then return paren(rad .. call(D.acos, a1))
-    elseif name == "atand" then return paren(rad .. call(D.atan, a1))
-    elseif name == "acotd" then return paren(rad .. call(D.atan, "1/" .. f1))
-    elseif name == "acscd" then return paren(rad .. call(D.asin, "1/" .. f1))
-    elseif name == "asecd" then return paren(rad .. call(D.acos, "1/" .. f1))
+    elseif name == "cot" then return paren("1/" .. call(D.tan, fwd_rad))
+    elseif name == "csc" then return paren("1/" .. call(D.sin, fwd_rad))
+    elseif name == "sec" then return paren("1/" .. call(D.cos, fwd_rad))
+    elseif name == "acot" then return inv_rad(D.atan, "1/" .. f1)
+    elseif name == "acsc" then return inv_rad(D.asin, "1/" .. f1)
+    elseif name == "asec" then return inv_rad(D.acos, "1/" .. f1)
+    elseif name == "sind" then return call(D.sin, fwd_deg)
+    elseif name == "cosd" then return call(D.cos, fwd_deg)
+    elseif name == "tand" then return call(D.tan, fwd_deg)
+    elseif name == "cotd" then return paren("1/" .. call(D.tan, fwd_deg))
+    elseif name == "cscd" then return paren("1/" .. call(D.sin, fwd_deg))
+    elseif name == "secd" then return paren("1/" .. call(D.cos, fwd_deg))
+    elseif name == "asind" then return inv_deg(D.asin, a1)
+    elseif name == "acosd" then return inv_deg(D.acos, a1)
+    elseif name == "atand" then return inv_deg(D.atan, a1)
+    elseif name == "acotd" then return inv_deg(D.atan, "1/" .. f1)
+    elseif name == "acscd" then return inv_deg(D.asin, "1/" .. f1)
+    elseif name == "asecd" then return inv_deg(D.acos, "1/" .. f1)
     end
     W[#W + 1] = "function " .. name .. "() has no plain-text equivalent;"
         .. " exported unchanged"
@@ -2556,7 +2641,9 @@ end
 
 -- A number as TeX gets it back: what \fp_eval would accept, rounded to
 -- 12 significant digits so that binary noise (162.6000000000094 after
--- 8130 steps of 0.02) does not show when a value is typeset directly.
+-- 8130 steps of 0.02, 0.30000000000000004) does not show when a value
+-- is typeset directly.  Used for everything handed back to TeX: final
+-- values, \mstep, \mstepat, min/max, coordinates and table cells.
 function M.tex_number(x)
     if x ~= x then return "nan" end
     if x == math.huge then return "inf" end

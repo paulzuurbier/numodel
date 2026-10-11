@@ -186,11 +186,23 @@ text. Display math, tables and pictures are not converted.
     \cs{computemodel} and the diagrams. Coach shows two decimals.
   \item \emph{Names}: the display name without formatting
     (|F_{\text{res}}| becomes \texttt{F\_res}, |\Delta t|
-    becomes \texttt{Δt}). Names Coachtaal does not allow bare, and its
-    reserved words, are put in brackets: \texttt{[ω]}, \texttt{[Max]}.
+    becomes \texttt{Δt}, |\lambda| \texttt{λ}). Names Coach does not
+    accept bare (with a space or a slash), and its reserved words, are
+    put in brackets: \texttt{[t\_1/2]}, \texttt{[Max]}.
   \item \emph{Units}: siunitx units in Coach's notation:
     |\m\per\s\squared| becomes \texttt{m/s\^{}2},
     |\mole\per\litre\per\second| becomes \texttt{mol/(L*s)}.
+    A unit of your own (|\DeclareSIUnit{\animals}{animals}|) is
+    exported as its symbol: |\animals\per\day| becomes
+    \texttt{animals/d}.
+  \item \emph{Angle unit}: Coach's ``hoekeenheid'' follows
+    \textsf{numodel}'s |angles| setting (|\numodelsetup{angles=degrees}|
+    in the preamble; default radians), and so do the trigonometric
+    functions: with degrees |sind(\alpha)| is exported as
+    \texttt{Sin(alfa)}, |sin(x)| as \texttt{Sin(180/Pi*x)}, |asind(x)|
+    as \texttt{Arcsin(x)} and |asin(x)| as \texttt{Pi/180*Arcsin(x)}
+    (Coach's inverse functions answer in the angle unit too).
+    |\textmodel| shows the same.
   \item \emph{Iterations}: the number of iterations in Coach's model
     settings is \textsf{numodel}'s \texttt{maxiter}
     (|\numodelsetup{maxiter=...}|, default 20000). The

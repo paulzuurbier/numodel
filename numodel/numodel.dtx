@@ -105,12 +105,10 @@
     \SetTblrTemplate {firstfoot, middlefoot}{numodel}
     \SetTblrTemplate {lastfoot}             {numodel}
   }
-% Tighten the default row separation of all tabularray tables: the
-% \textmodel rule listing is denser and more compact than the
-% tabularray default.  Users who want the default spacing back in
-% their own tables can simply issue \SetTblrInner{rowsep=<value>} in
-% their document.
-\SetTblrInner{rowsep=0pt}
+% numodel used to issue \SetTblrInner{rowsep=0pt} here, meant for
+% \textmodel.  It only reached tblr tables, though -- the document's
+% own and \tablemodel -- never \textmodel's default longtblr.  Removed:
+% numodel leaves the spacing of other tables alone.
 \RequirePackage{numodel-plot}
 
 % ====================================================================
@@ -170,12 +168,13 @@
 
 \ExplSyntaxOn
 
-% engine: fpeval (default; every rule through \fp_eval), lua (rules
-% compiled to Lua, some hundreds of times faster; falls back to fpeval
-% when a model cannot be compiled) or compare (runs both, keeps the
-% fpeval results and warns where the Lua run differs).
+% engine: lua (default; rules compiled to Lua, some hundreds of times
+% faster; falls back to fpeval when a model cannot be compiled), fpeval
+% (every rule through \fp_eval: decimal arithmetic, see the manual) or
+% compare (runs both, keeps the fpeval results and warns where the Lua
+% run differs).
 \tl_new:N \g__numodel_engine_tl
-\tl_gset:Nn \g__numodel_engine_tl { fpeval }
+\tl_gset:Nn \g__numodel_engine_tl { lua }
 \tl_new:N \l__numodel_cmd_engine_tl
 \tl_new:N \l__numodel_eff_engine_tl
 \tl_new:N \l__numodel_engine_status_tl
@@ -185,8 +184,36 @@
 % (\numodelsetup{debug=true}).  The argument is not even expanded when
 % it is off.
 \bool_new:N \g__numodel_debug_bool
+\tl_new:N   \g__numodel_tablestyle_tl
 \cs_new_protected:Npn \__numodel_debug:n #1
   { \bool_if:NT \g__numodel_debug_bool { \typeout {#1} } }
+
+% Units of the document's own (\DeclareSIUnit): tell Lua the symbol
+% siunitx typesets for every unit macro in #1 that siunitx knows, so
+% plain-text exports (numodel-coach) can use it.
+\cs_new_protected:Npn \__numodel_register_units:n #1
+  {
+    \cs_if_exist:NT \l_siunitx_unit_seq
+      {
+        \tl_map_inline:nn {#1}
+          {
+            \tl_if_single_token:nT {##1}
+              {
+                \token_if_cs:NT ##1
+                  {
+                    \seq_if_in:NnT \l_siunitx_unit_seq {##1}
+                      {
+                        \siunitx_unit_format:nN {##1} \l__numodel_unitfmt_tl
+                        \directlua{ numodel.register_unit(
+                          "\cs_to_str:N ##1",
+                          "\luaescapestring{ \tl_to_str:N \l__numodel_unitfmt_tl }") }
+                      }
+                  }
+              }
+          }
+      }
+  }
+\tl_new:N \l__numodel_unitfmt_tl
 
 % blanks: open (default; the pupil's version shows "lhs = \cdots" for
 % every \mvar/\mrule/\mstop with the blank key) or filled (the answer
@@ -194,6 +221,12 @@
 % override it per call.
 \tl_new:N  \g__numodel_blanks_tl
 \tl_gset:Nn \g__numodel_blanks_tl { open }
+% Angle unit of the program the model is written for (Coach's
+% "hoekeenheid"): with degrees, Sin/Cos/Tan take degrees, so the text
+% model and the Coach export write sind(x) as Sin(x) and sin(x) as
+% Sin(180/Pi*x).  The calculation itself (l3fp, Lua) does not change.
+\tl_new:N  \g__numodel_angles_tl
+\tl_gset:Nn \g__numodel_angles_tl { radians }
 \tl_new:N  \l__numodel_eff_blanks_tl
 \tl_set:Nn \l__numodel_eff_blanks_tl { open }
 \bool_new:N \l__numodel_blank_bool
@@ -560,6 +593,12 @@ end
 % flowarrow-cloud-tip keys).  Any other value triggers a warning.
 \msg_new:nnn { numodel } { bad-choice }
   { Key~'#1'~accepts~only~#2,~or~empty~to~reset.~Got:~'#3'. }
+\msg_new:nnn { numodel } { angles-in-document }
+  {
+    'angles'~set~in~the~document.~The~text~model~is~fixed~when~a~rule~
+    is~declared,~the~Coach~export~uses~the~setting~at~\token_to_str:N
+    \coachmodel.~Set~'angles'~in~the~preamble.
+  }
 
 \cs_new_protected:Npn \__numodel_setup_choice:Nnnn #1 #2 #3 #4
   {
@@ -625,6 +664,11 @@ end
       { \__numodel_setup_choice:Nnnn \g__numodel_engine_tl
           { engine } { fpeval , lua , compare } {#1} },
     debug               .bool_gset:N = \g__numodel_debug_bool,
+    % Document-wide tabularray options for \tablemodel (before a
+    % table's own table={...}).  Expanded once, so a macro holding the
+    % options works too.
+    table-style         .code:n =
+      { \tl_gset:Ne \g__numodel_tablestyle_tl {#1} },
     % Maximum number of points per series that \diagrammodel plots
     % (0: all).  A long series is thinned for the plot only.
     plot-points         .int_gset:N = \g__numodel_plotpoints_int,
@@ -636,6 +680,15 @@ end
           { blanks } { open , filled } {#1}
         \directlua{ numodel.set_setting("blanks",
           "\tl_use:N \g__numodel_blanks_tl") }
+      },
+    angles              .code:n =
+      {
+        \__numodel_setup_choice:Nnnn \g__numodel_angles_tl
+          { angles } { radians , degrees } {#1}
+        \directlua{ numodel.set_setting("angles",
+          "\tl_use:N \g__numodel_angles_tl") }
+        \cs_if_eq:cNT { @nodocument } \scan_stop:
+          { \msg_warning:nn { numodel } { angles-in-document } }
       },
     units                      .choice:,
     units / true               .code:n =
@@ -696,8 +749,10 @@ end
     units               .meta:nn = { numodel / setup }{ units               = #1 },
     start-format        .meta:nn = { numodel / setup }{ start-format        = #1 },
     blanks              .meta:nn = { numodel / setup }{ blanks              = #1 },
+    angles              .meta:nn = { numodel / setup }{ angles              = #1 },
     engine              .meta:nn = { numodel / setup }{ engine              = #1 },
     plot-points         .meta:nn = { numodel / setup }{ plot-points         = #1 },
+    table-style         .meta:nn = { numodel / setup }{ table-style         = #1 },
     tblrenv             .meta:nn = { numodel / setup }{ tblrenv             = #1 },
     decimal-separator   .meta:nn = { numodel / setup }{ decimal-separator   = #1 },
   }
@@ -916,6 +971,9 @@ end
       { \seq_set_split:Nnn \l__numodel_cmd_series_seq { , } {#1} },
     % Maximum number of plotted points per series, as plot-points.
     points                     .tl_set:N   = \l__numodel_cmd_points_tl,
+    % Equal scales on both axes, as \numodelplotsetup{equal}.
+    equal                      .bool_set:N = \l__numodel_cmd_equal_bool,
+    equal                      .default:n  = true,
     % Maximum axis size in cm, as \numodelplotsetup{xcmmax,ycmmax}.
     xcmmax                     .tl_set:N   = \l__numodel_cmd_xcmmax_tl,
     ycmmax                     .tl_set:N   = \l__numodel_cmd_ycmmax_tl,
@@ -1183,6 +1241,7 @@ end
     \cs_gset:cpn { \l__numodel_fullname_tl text }   {#2}
     \cs_gset:cpn { \l__numodel_fullname_tl unit }   { \unit{#4} }
     \cs_gset:cpn { \l__numodel_fullname_tl unitraw } {#4}
+    \__numodel_register_units:n {#4}
     \cs_gset:cpn { \l__numodel_fullname_tl sign }   {#5}
     \__numodel_normalize_type:n {#6}
     \cs_gset:cpe { \l__numodel_fullname_tl type }
@@ -1308,6 +1367,17 @@ end
 %   cond ? a : b  -> IF cond THEN ... ELSE ... ENDIF (or coachtaal eq.)
 
 \tl_new:N \l__numodel_display_tl
+% Factor in front of the argument of a degree function (sind, cotd,
+% ...) and of a radian function (sin, cot, ...), so that the argument
+% suits SIN of the target program: pi/180 and nothing with
+% angles=radians, nothing and 180/pi with angles=degrees.  The inverse
+% functions of the target program answer in the same unit, so asind
+% gets 180/pi and asin nothing in front with radians, and the other
+% way round with degrees.
+\tl_new:N \l__numodel_degfac_tl
+\tl_new:N \l__numodel_radfac_tl
+\tl_new:N \l__numodel_invdegfac_tl
+\tl_new:N \l__numodel_invradfac_tl
 \tl_new:N \l__numodel_lhs_tl
 \tl_new:N \l__numodel_rhs_tl
 \tl_new:N \l__numodel_cond_tl
@@ -1316,6 +1386,19 @@ end
 
 \cs_new_protected:Npn \__numodel_vars_to_display:N #1
   {
+    \str_if_eq:VnTF \g__numodel_angles_tl { degrees }
+      {
+        \tl_clear:N \l__numodel_degfac_tl
+        \tl_set:Nn \l__numodel_radfac_tl { \sfrac {180} {\pi} \cdot ~ }
+        \tl_clear:N \l__numodel_invdegfac_tl
+        \tl_set:Nn \l__numodel_invradfac_tl { \sfrac {\pi} {180} \cdot ~ }
+      }
+      {
+        \tl_set:Nn \l__numodel_degfac_tl { \sfrac {\pi} {180} \cdot ~ }
+        \tl_clear:N \l__numodel_radfac_tl
+        \tl_set:Nn \l__numodel_invdegfac_tl { \sfrac {180} {\pi} \cdot ~ }
+        \tl_clear:N \l__numodel_invradfac_tl
+      }
     \__numodel_debug:n{VTD~input:~\tl_to_str:N #1}
     \__numodel_debug:n{VTD~seq:~\seq_use:Nn \g_mvar_names_seq {|}}
     % Multi-character numeric superscripts.  \fp_eval:n accepts
@@ -1366,11 +1449,11 @@ end
     \regex_replace_all:nnN { ln \( }
       { \c{text}\cB\{ \u{g__numodel_kw_ln_tl}\cE\}( } #1
     \regex_replace_all:nnN { asin \( }
-      { \c{text}\cB\{ \u{g__numodel_kw_asin_tl}\cE\}( } #1
+      { \u{l__numodel_invradfac_tl}\c{text}\cB\{ \u{g__numodel_kw_asin_tl}\cE\}( } #1
     \regex_replace_all:nnN { acos \( }
-      { \c{text}\cB\{ \u{g__numodel_kw_acos_tl}\cE\}( } #1
+      { \u{l__numodel_invradfac_tl}\c{text}\cB\{ \u{g__numodel_kw_acos_tl}\cE\}( } #1
     \regex_replace_all:nnN { atan \( }
-      { \c{text}\cB\{ \u{g__numodel_kw_atan_tl}\cE\}( } #1
+      { \u{l__numodel_invradfac_tl}\c{text}\cB\{ \u{g__numodel_kw_atan_tl}\cE\}( } #1
     % Inverse reciprocal trig (degrees): rendered as
     % 180/pi * <radian inverse>(1/arg).  The "1/arg" sits inside the
     % parens so the argument must be captured (no nested parens) -- the
@@ -1379,24 +1462,24 @@ end
     % (cscd/cotd/secd): "acscd(" contains "cscd(" and the bare acsc
     % regex would mis-bite without the leading "a".
     \regex_replace_all:nnN { acscd \( ([^()]*) \) }
-      { \c{sfrac}\cB\{180\cE\}\cB\{\c{pi}\cE\}\c{cdot}\x{20}
+      { \u{l__numodel_invdegfac_tl}
         \c{text}\cB\{ \u{g__numodel_kw_asin_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
     \regex_replace_all:nnN { asecd \( ([^()]*) \) }
-      { \c{sfrac}\cB\{180\cE\}\cB\{\c{pi}\cE\}\c{cdot}\x{20}
+      { \u{l__numodel_invdegfac_tl}
         \c{text}\cB\{ \u{g__numodel_kw_acos_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
     \regex_replace_all:nnN { acotd \( ([^()]*) \) }
-      { \c{sfrac}\cB\{180\cE\}\cB\{\c{pi}\cE\}\c{cdot}\x{20}
+      { \u{l__numodel_invdegfac_tl}
         \c{text}\cB\{ \u{g__numodel_kw_atan_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
     % Inverse reciprocal trig (radians): <radian inverse>(1/arg),
     % e.g. acsc(x) -> ARCSIN(1/x).  Captured argument (no nested
     % parens).  Must precede the reciprocal cot/csc/sec regexes:
     % "acsc(" contains "csc(".
     \regex_replace_all:nnN { acsc \( ([^()]*) \) }
-      { \c{text}\cB\{ \u{g__numodel_kw_asin_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
+      { \u{l__numodel_invradfac_tl}\c{text}\cB\{ \u{g__numodel_kw_asin_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
     \regex_replace_all:nnN { asec \( ([^()]*) \) }
-      { \c{text}\cB\{ \u{g__numodel_kw_acos_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
+      { \u{l__numodel_invradfac_tl}\c{text}\cB\{ \u{g__numodel_kw_acos_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
     \regex_replace_all:nnN { acot \( ([^()]*) \) }
-      { \c{text}\cB\{ \u{g__numodel_kw_atan_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
+      { \u{l__numodel_invradfac_tl}\c{text}\cB\{ \u{g__numodel_kw_atan_tl}\cE\}(\c{sfrac}\cB\{1\cE\}\cB\{\1\cE\}) } #1
     % Inverse trig (degrees): rendered as 180/pi * <radian inverse>.
     % The 180/pi factor is a fixed prefix, so the head-only rewrite
     % stays correct for any argument (the original ")" still closes
@@ -1404,30 +1487,30 @@ end
     % them from matching the radian regexes, but keep them together for
     % readability.
     \regex_replace_all:nnN { asind \( }
-      { \c{sfrac}\cB\{180\cE\}\cB\{\c{pi}\cE\}\c{cdot}\x{20}
+      { \u{l__numodel_invdegfac_tl}
         \c{text}\cB\{ \u{g__numodel_kw_asin_tl}\cE\}( } #1
     \regex_replace_all:nnN { acosd \( }
-      { \c{sfrac}\cB\{180\cE\}\cB\{\c{pi}\cE\}\c{cdot}\x{20}
+      { \u{l__numodel_invdegfac_tl}
         \c{text}\cB\{ \u{g__numodel_kw_acos_tl}\cE\}( } #1
     \regex_replace_all:nnN { atand \( }
-      { \c{sfrac}\cB\{180\cE\}\cB\{\c{pi}\cE\}\c{cdot}\x{20}
+      { \u{l__numodel_invdegfac_tl}
         \c{text}\cB\{ \u{g__numodel_kw_atan_tl}\cE\}( } #1
     % Forward trig (degrees): SIN(pi/180 * arg).  The pi/180 factor is
     % a fixed prefix placed just after the opening paren, so this is a
     % head-only rewrite (robust for any argument).  The trailing "d"
     % keeps sind/cosd/tand from matching the radian sin/cos/tan below.
     \regex_replace_all:nnN { sind \( }
-      { \c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}(\c{sfrac}\cB\{\c{pi}\cE\}\cB\{180\cE\}\c{cdot}\x{20} } #1
+      { \c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}(\u{l__numodel_degfac_tl} } #1
     \regex_replace_all:nnN { cosd \( }
-      { \c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}(\c{sfrac}\cB\{\c{pi}\cE\}\cB\{180\cE\}\c{cdot}\x{20} } #1
+      { \c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}(\u{l__numodel_degfac_tl} } #1
     \regex_replace_all:nnN { tand \( }
-      { \c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}(\c{sfrac}\cB\{\c{pi}\cE\}\cB\{180\cE\}\c{cdot}\x{20} } #1
+      { \c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}(\u{l__numodel_degfac_tl} } #1
     \regex_replace_all:nnN { sin \( }
-      { \c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}( } #1
+      { \c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}(\u{l__numodel_radfac_tl} } #1
     \regex_replace_all:nnN { cos \( }
-      { \c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}( } #1
+      { \c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}(\u{l__numodel_radfac_tl} } #1
     \regex_replace_all:nnN { \b tan \( }
-      { \c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}( } #1
+      { \c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}(\u{l__numodel_radfac_tl} } #1
     % Reciprocal trig functions: rendered as a slashed fraction
     % \sfrac{1}{<base>(arg)} so the "1/" no longer jams against the
     % preceding term.  The argument is captured (([^()]*)) so the
@@ -1436,28 +1519,28 @@ end
     % the rare nested-argument case so it still translates (just
     % without the \sfrac wrapper).
     \regex_replace_all:nnN { cot \( ([^()]*) \) }
-      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}(\1)\cE\} } #1
+      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}(\u{l__numodel_radfac_tl}\1)\cE\} } #1
     \regex_replace_all:nnN { csc \( ([^()]*) \) }
-      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}(\1)\cE\} } #1
+      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}(\u{l__numodel_radfac_tl}\1)\cE\} } #1
     \regex_replace_all:nnN { sec \( ([^()]*) \) }
-      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}(\1)\cE\} } #1
+      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}(\u{l__numodel_radfac_tl}\1)\cE\} } #1
     \regex_replace_all:nnN { cot \( }
-      { 1/\c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}( } #1
+      { 1/\c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}(\u{l__numodel_radfac_tl} } #1
     \regex_replace_all:nnN { csc \( }
-      { 1/\c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}( } #1
+      { 1/\c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}(\u{l__numodel_radfac_tl} } #1
     \regex_replace_all:nnN { sec \( }
-      { 1/\c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}( } #1
+      { 1/\c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}(\u{l__numodel_radfac_tl} } #1
     % Reciprocal trig (degrees): \sfrac{1}{<base>(pi/180 * arg)}.  Both
     % the reciprocal and the degree conversion are inside the fraction,
     % so the argument is captured (no nested parens); a nested-argument
     % call is left untranslated rather than risk mis-biting the longer
     % acotd/acscd/asecd names (which were already consumed above).
     \regex_replace_all:nnN { cotd \( ([^()]*) \) }
-      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}(\c{sfrac}\cB\{\c{pi}\cE\}\cB\{180\cE\}\c{cdot}\x{20}\1)\cE\} } #1
+      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_tan_tl}\cE\}(\u{l__numodel_degfac_tl}\1)\cE\} } #1
     \regex_replace_all:nnN { cscd \( ([^()]*) \) }
-      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}(\c{sfrac}\cB\{\c{pi}\cE\}\cB\{180\cE\}\c{cdot}\x{20}\1)\cE\} } #1
+      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_sin_tl}\cE\}(\u{l__numodel_degfac_tl}\1)\cE\} } #1
     \regex_replace_all:nnN { secd \( ([^()]*) \) }
-      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}(\c{sfrac}\cB\{\c{pi}\cE\}\cB\{180\cE\}\c{cdot}\x{20}\1)\cE\} } #1
+      { \c{sfrac}\cB\{1\cE\}\cB\{\c{text}\cB\{ \u{g__numodel_kw_cos_tl}\cE\}(\u{l__numodel_degfac_tl}\1)\cE\} } #1
     % Floor and ceiling.  ceil(x) is rendered as -INT(-x) (the l3fp
     % identity), reusing the floor keyword; argument captured.
     \regex_replace_all:nnN { floor \( }
@@ -2647,7 +2730,8 @@ end
 %   given   rows always filled with blank (an example row), default 0
 %   blanks  open|filled for this table, as \numodelsetup{blanks}
 %   num     siunitx options per column: num={T={round-precision=0}}
-%   table   tabularray options added to the table
+%   table   tabularray options added to the table, after the
+%           document-wide \numodelsetup{table-style={...}}
 % Numbers are rounded to each variable's significant figures, with the
 % decimal marker of the syntax.
 
@@ -2668,11 +2752,13 @@ end
       {
         \prop_clear:N \l__numodel_tab_num_prop
         \keyval_parse:nnn { \use_none:n }
-          { \prop_put:Nnn \l__numodel_tab_num_prop } {#1}
+          { \prop_put:Nne \l__numodel_tab_num_prop } {#1}
       } ,
-    table  .tl_set:N   = \l__numodel_tab_table_tl ,
+    table  .code:n     = { \tl_set:Ne \l__numodel_tab_table_tl {#1} } ,
   }
 \tl_new:N   \l__numodel_tab_row_tl
+\tl_new:N   \l__numodel_tab_table_tl
+\cs_generate_variant:Nn \prop_put:Nnn { Nne }
 \prop_new:N \l__numodel_tab_num_prop
 \tl_new:N   \l__numodel_tab_body_tl
 \tl_new:N   \l__numodel_tab_opts_tl
@@ -2724,6 +2810,8 @@ end
           {
             colspec = { * { \clist_count:N \l__numodel_tab_vars_clist } { c } } ,
             hlines , vlines , row{1} = { font = \exp_not:N \bfseries } ,
+            \tl_if_empty:NF \g__numodel_tablestyle_tl
+              { \exp_not:V \g__numodel_tablestyle_tl , }
             \exp_not:V \l__numodel_tab_table_tl
           }
       }
@@ -3962,6 +4050,7 @@ end
     \tl_clear:N \l__numodel_cmd_xcmmax_tl
     \tl_clear:N \l__numodel_cmd_ycmmax_tl
     \tl_clear:N \l__numodel_cmd_points_tl
+    \bool_set_false:N \l__numodel_cmd_equal_bool
     \tl_clear:N \l__numodel_cmd_axis_tl
     \tl_clear:N \l__numodel_cmd_plot_tl
     \seq_clear:N \l__numodel_cmd_series_seq
@@ -4059,7 +4148,13 @@ end
       { \begin{figure}[H] \centering }
       {
         % As capt-of's \captionof: \caption needs only \@captype.
+        % Inside a list (exam's questions, enumerate) \hsize stays the
+        % text width while \linewidth is narrower; the caption is \hsize
+        % wide and would stick out.  The minipage makes \hsize the line
+        % width (and keeps diagram and caption together).
         \begin{center}
+        \begin{minipage}{\linewidth}
+        \centering
         \cs_set:cpn { @captype } { figure }
         % Outside a float hypcap has no anchor to place; switch it off
         % (locally) instead of letting caption warn for every diagram.
@@ -4071,6 +4166,7 @@ end
       { \cs_set:Npe \xcmmax { \tl_use:N \l__numodel_cmd_xcmmax_tl } }
     \tl_if_empty:NF \l__numodel_cmd_ycmmax_tl
       { \cs_set:Npe \ycmmax { \tl_use:N \l__numodel_cmd_ycmmax_tl } }
+    \bool_if:NT \l__numodel_cmd_equal_bool { \use:c { nmp@equaltrue } }
     \tl_if_empty:NF \l__numodel_cmd_axis_tl
       {
         \exp_args:Ne \pgfplotsset
@@ -4189,7 +4285,7 @@ end
       }
     \bool_if:NTF \l__numodel_cmd_float_bool
       { \end{figure} }
-      { \end{center} }
+      { \end{minipage} \end{center} }
   }
 
 \ExplSyntaxOff

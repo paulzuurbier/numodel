@@ -40,6 +40,13 @@
 \diagrammodel[prefix={a,b}, axis={legend pos=south east},
   plot={mark size=1.6pt}, series={{}, {mark size=0.4pt, gray}}]{T}{V}{pass}
 \TYPE{after axis/plot/series pass-through: figure \thefigure}
+\TYPE{=== float=false inside a list: no overfull box ===}
+\begin{enumerate}
+\item \diagrammodel[prefix={a,b}, float=false]{T}{V}{inlist}
+\end{enumerate}
+\TYPE{after list: figure \thefigure}
+\TYPE{=== equal scales ===}
+\diagrammodel[prefix=b, equal, nocaption]{T}{V}{gelijk}
 \TYPE{=== Unknown style warns ===}
 \diagrammodel[prefix=b, style=dots]{T}{V}{dots}
 \TYPE{=== End ===}

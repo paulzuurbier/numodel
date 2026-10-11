@@ -114,4 +114,8 @@ Don't change this file in any respect.
  unit: \mathrm {s}
 \metre  | 0..5 | prefix -> macro:->$\si {\nmp@savedxlabelunit }$
  unit: \mathrm {m}
+=== no unit: no parentheses unless the axis is scaled ===
+ | 0..5 | prefix -> macro:->$\nmp@savedxlabelqty $
+ | 0..5000 | prefix -> macro:->$\qtyPlain [evaluate-expression=false,round-mode=none,prefix-mode=extract-exponent,extract-mass-in-kilograms=true,print-zero-exponent=false,print-unity-mantissa=false]{1e3}{\nmp@savedxlabelunit }$
+ number: 10^{3}
 (p005-axislabels.aux)

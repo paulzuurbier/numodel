@@ -88,4 +88,7 @@
 \LBLfmt{brackets}
 \LBLfmt{qty-only}
 \LBLfmt{unit-only}
+\TYPE{=== no unit: no parentheses unless the axis is scaled ===}
+\LBL{X}{}{0}{5}{prefix}
+\LBL{X}{}{0}{5000}{prefix}
 \end{document}

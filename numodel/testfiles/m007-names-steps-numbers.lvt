@@ -44,6 +44,24 @@
 \TYPE{v at t = 1: \mstepat{V}{T}{1}}
 \TYPE{v at t = 2 (explicit prefix): \mstepatp{val}{V}{T}{2}}
 \TYPE{samples incl. step 0: \valsteps}
+\TYPE{=== a falling quantity: the step where it comes down to the value ===}
+\OMIT
+\newmodelprefix{k}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.1}{\s}{2}{systeem}
+\mvar{Vy}{v_y}{10}{\m\per\s}{3}{voorraad}
+\mvar{E}{E}{}{\J\per\kg}{3}{hulp}
+\mrule{E}{0.5 * \kVy^2 + 20}
+\mrule{Vy}{\kVy - 9.81 * \kDt}
+\mrule{T}{\kT + \kDt}
+\mstop{\kT >= 3}
+\computemodel
+\TIMO
+\TYPE{t when v_y reaches 0 (from above): \mstepatp{k}{T}{Vy}{0}}
+\TYPE{v_y at t = 1 (time rises): \mstepatp{k}{Vy}{T}{1}}
+\TYPE{E without start value: 0 in step 0 (\mstepp{k}{E}{0}),
+  min \kEmin\space and max \kEmax\space from step 1}
+\switchmodelprefix{val}
 \TYPE{=== never reached: error ===}
 \TYPE{\mstepat{V}{T}{5}}
 \TYPE{=== Numbers in a rule (display tokens) ===}

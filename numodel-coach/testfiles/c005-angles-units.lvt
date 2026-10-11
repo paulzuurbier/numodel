@@ -1,0 +1,46 @@
+% Regression test: \numodelsetup{angles=degrees} sets Coach's angle
+% unit and rewrites the trigonometric functions (sind(x) -> Sin(x),
+% sin(x) -> Sin(180/Pi*x)); the inverse functions give radians in
+% both settings.  A unit declared with \DeclareSIUnit is exported as
+% its siunitx symbol, without a warning.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\usepackage{numodel-coach}
+\DeclareSIUnit{\dieren}{dieren}
+\numodelsetup{angles=degrees}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{k}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.1}{\s}{2}{systeem}
+\mvar{A}{alfa}{40}{}{3}{constante}
+\mvar{B}{b}{0.5}{}{3}{constante}
+\mvar{N}{N}{100}{\dieren}{3}{voorraad}
+\mvar{R}{r}{0.1}{\per\dieren\per\day}{3}{constante}
+\mvar{X}{x}{}{}{3}{hulp}
+\mvar{Y}{y}{}{}{3}{hulp}
+\mvar{Z}{z}{}{}{3}{hulp}
+\mrule{X}{cosd(\kA) + sin(\kB)}
+\mrule{Y}{cot(\kB) + cscd(\kA)}
+\mrule{Z}{asind(\kB) + atan(\kB)}
+\mrule{T}{\kT + \kDt}
+\mstop{\kT >= 1}
+\TIMO
+\newcommand\showcoach[1]{\directlua{
+  local f = io.open("#1.cma7", "rb")
+  local s = numodelcoach.dump(f:read("a")); f:close()
+  texio.write_nl(s:match("AngleUnits=[0-9]"))
+  for line in s:match("ModelBody:(.-)VarList:"):gmatch("[^\string\n]+") do
+    texio.write_nl(line) end}}
+\TYPE{=== angles=degrees ===}
+\coachmodel{deg}
+\showcoach{deg}
+\TYPE{=== text model (NL) ===}
+\ExplSyntaxOn
+\int_step_inline:nn { 3 }
+  { \TYPE { \tl_to_str:e { \seq_item:Nn \g_mrule_seq {#1} } } }
+\ExplSyntaxOff
+\TYPE{=== End ===}
+\end{document}

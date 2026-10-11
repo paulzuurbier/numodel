@@ -164,6 +164,7 @@
 \tl_new:N \g__numodelplot_axislabel_tl
 \tl_gset:Nn \g__numodelplot_axislabel_tl {ieee}
 
+\newif\ifnmp@equal
 \providecommand{\xcmmax}{12}
 \providecommand{\ycmmax}{10}
 
@@ -197,6 +198,11 @@
 
     xcmmax .code:n = \def\xcmmax{#1},
     ycmmax .code:n = \def\ycmmax{#1},
+    % Equal scales on both axes (a trajectory y against x).
+    equal .choice:,
+    equal / true  .code:n = \nmp@equaltrue,
+    equal / false .code:n = \nmp@equalfalse,
+    equal .default:n = true,
 
     % Colour of the tick-label halo.  `auto' (the default) matches the
     % surrounding background at each \drawplot (tcolorbox, beamer,
@@ -446,6 +452,14 @@
 
 \cs_new_protected:Npn \__numodelplot_xlabel_emit_unscaled:
   {
+    % A quantity without a unit and without a scale factor: no empty
+    % "()" -- just the quantity.
+    \tl_if_blank:VTF \nmp@savedxlabelunit
+      { \def \xlabel { $\nmp@savedxlabelqty$ } }
+      { \__numodelplot_xlabel_emit_unscaled_unit: }
+  }
+\cs_new_protected:Npn \__numodelplot_xlabel_emit_unscaled_unit:
+  {
     \str_case:Vn \g__numodelplot_axislabel_tl
       {
         {iso}
@@ -514,6 +528,14 @@
   }
 
 \cs_new_protected:Npn \__numodelplot_ylabel_emit_unscaled:
+  {
+    % A quantity without a unit and without a scale factor: no empty
+    % "()" -- just the quantity.
+    \tl_if_blank:VTF \nmp@savedylabelunit
+      { \def \ylabel { $\nmp@savedylabelqty$ } }
+      { \__numodelplot_ylabel_emit_unscaled_unit: }
+  }
+\cs_new_protected:Npn \__numodelplot_ylabel_emit_unscaled_unit:
   {
     \str_case:Vn \g__numodelplot_axislabel_tl
       {
@@ -842,6 +864,13 @@
 \edef\nmp@ytickdiv{\fpeval{\nmp@yS / \ycm}}%
 \edef\xtickdistance{\fpeval{\nmp@xtickdiv * 10^\nmp@xlog}}%
 \edef\ytickdistance{\fpeval{\nmp@ytickdiv * 10^\nmp@ylog}}%
+% Equal scales (equal=true): one tick is 1 cm on both axes, so the same
+% tick distance on both gives the same length per unit.  The larger of
+% the two keeps both axes within their maximum length.
+\ifnmp@equal
+  \edef\xtickdistance{\fpeval{max(\xtickdistance, \ytickdistance)}}%
+  \let\ytickdistance\xtickdistance
+\fi
 \edef\xmax{\fpeval{ceil(\xmax / \xtickdistance) * \xtickdistance}}%
 \edef\ymax{\fpeval{ceil(\ymax / \ytickdistance) * \ytickdistance}}%
 \edef\xmin{\fpeval{floor(\xmin / \xtickdistance) * \xtickdistance}}%

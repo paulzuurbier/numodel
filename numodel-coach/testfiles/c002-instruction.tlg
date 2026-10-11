@@ -12,6 +12,7 @@ Package numodel-coach Warning: Model 'osc' has no instruction text (coachinstruc
 Package numodel-coach Warning: Model 'ball' (instructie.cma7): instruction: unknown command \foo; its text is kept
 Package numodel-coach Info: Wrote Coach activity 'instructie.cma7'.
 CanSwitchModelModes=0
+AngleUnits=0
 Mode=1
 start=0
 stop=19999

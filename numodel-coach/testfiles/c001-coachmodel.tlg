@@ -4,6 +4,7 @@ Don't change this file in any respect.
 Package numodel-coach Warning: Model 'ball' (coach-out/vrije-val.cma7): free-text row exported as a comment: (massa 0,5 kg)
 Package numodel-coach Info: Wrote Coach activity 'coach-out/vrije-val.cma7'.
 CanSwitchModelModes=0
+AngleUnits=0
 Mode=1
 start=0
 stop=499

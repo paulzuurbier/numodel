@@ -1,0 +1,23 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== angles=degrees ===
+Package numodel-coach Info: Wrote Coach activity 'deg.cma7'.
+AngleUnits=1
+x := Cos(alfa) + Sin(180/Pi*b)
+y := (1/Tan(180/Pi*b)) + (1/Sin(alfa))
+z := Arcsin(b) + (Pi/180*Arctan(b))
+t := t + dt
+Als t >= 1 Dan Stop EindAls
+ModelInit:
+t := 0      's
+dt := 0,1   's
+alfa := 40
+b := 0,5
+N := 100    'dieren
+r := 0,1    '1/(dieren*d)
+=== text model (NL) ===
+x\,=\,\text {Cos}(alfa) + \text {Sin}(\sfrac {180}{\pi }\cdot b)
+y\,=\,\sfrac {1}{\text {Tan}(\sfrac {180}{\pi }\cdot b)} + \sfrac {1}{\text {Sin}(alfa)}
+z\,=\,\text {Arcsin}(b) + \sfrac {\pi }{180}\cdot \text {Arctan}(b)
+=== End ===
+(c005-angles-units.aux)
