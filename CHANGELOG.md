@@ -11,6 +11,18 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.11.0] — 2026-10-11
+
+Driven by writing a full teaching module with the bundle. The default
+engine is now Lua, some hundreds of times faster than `\fp_eval`. New:
+`\tablemodel` for tables of computed values, pupil's and answer
+versions from one declaration (`blank`), model variants with
+`\copymodel`, `\mstepat`, more `\diagrammodel` keys, and angles in
+degrees for Coach. Note two changes in behaviour: the default engine
+(`engine=fpeval` restores the previous decimal computation), and the
+row spacing of tabularray tables (numodel no longer sets it for the
+whole document).
+
 ### numodel
 
 #### Added

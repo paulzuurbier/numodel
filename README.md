@@ -7,7 +7,7 @@ the model as text, as a stock-and-flow diagram, and as graphs of the
 results. It can also hand the model to the modelling software pupils
 use.
 
-The bundle is pre-1.0 (current release `v0.10.0`); breaking changes
+The bundle is pre-1.0 (current release `v0.11.0`); breaking changes
 may still occur.
 
 | Module | Purpose |

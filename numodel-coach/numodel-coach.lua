@@ -1,6 +1,6 @@
 -- ====================================================================
 -- numodel-coach.lua --- write numodel models as CMA Coach 7 files
--- numodel-coach.lua  v0.10.0  2026/10/08
+-- numodel-coach.lua  v0.11.0  2026/10/11
 -- ====================================================================
 --
 -- Copyright (C) 2026 Paul Zuurbier <mail@paulzuurbier.nl>
