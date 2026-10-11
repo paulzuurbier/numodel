@@ -5,8 +5,8 @@ vars:
   eeEel: type=stock text=Eel gridx=0 gridy=0 role=stock vpos_x= vpos_y=
   eeQ: type=stock text=Q gridx=2 gridy=0 role=stock vpos_x= vpos_y=
   eeP: type=aux text=P gridx=1 gridy=0 role=inflow-valve vpos_x= vpos_y=
-  eeR: type=constant text=R gridx=0 gridy=2 role=constant vpos_x= vpos_y=
-  eeI: type=constant text=I gridx=1 gridy=2 role=constant vpos_x= vpos_y=
+  eeR: type=constant text=R gridx=0 gridy=1 role=constant vpos_x= vpos_y=
+  eeI: type=constant text=I gridx=1 gridy=1 role=constant vpos_x= vpos_y=
 flows.inflow:
   eeQ -> eeP
 flows.outflow:

@@ -11,6 +11,15 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### numodel
+
+#### Changed
+- Development only: `l3build check` also runs the Lua unit tests
+  (`tests/run.lua`) and stops when one fails. Eight layout tests had
+  been failing unnoticed since the placement fix of 25 May 2026
+  (constants on row 1 when a model has no auxiliary variables); their
+  expectations are updated, the code is unchanged.
+
 ## [0.11.0] — 2026-10-11
 
 Driven by writing a full teaching module with the bundle. The default

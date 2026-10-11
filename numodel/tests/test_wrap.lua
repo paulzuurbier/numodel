@@ -24,9 +24,10 @@ return {
     run = function(ctx)
         ----------------------------------------------------------------
         -- 1. Constants row wraps; only constants shift up.
-        --    Four standalone constants with gridmaxx=3.  Place
-        --    K1,K2,K3 at row 2; before K4 the row is full → constants
-        --    on row 2 shift to row 3, then K4 lands at (0,2).
+        --    Four standalone constants with gridmaxx=3.  Without aux
+        --    the constants take row 1 (no empty row).  Place K1,K2,K3
+        --    at row 1; before K4 the row is full → constants on row 1
+        --    shift to row 2, then K4 lands at (0,1).
         ----------------------------------------------------------------
         local p = setup("w1", {
             { name = "K1", type = "constant", text = "k1" },
@@ -35,10 +36,10 @@ return {
             { name = "K4", type = "constant", text = "k4" },
         })
         numodel.compute_layout(p, "tight", 3)
-        ctx.assert_eq("const wrap K1", "(0,3)", pos(p, "K1"))
-        ctx.assert_eq("const wrap K2", "(1,3)", pos(p, "K2"))
-        ctx.assert_eq("const wrap K3", "(2,3)", pos(p, "K3"))
-        ctx.assert_eq("const wrap K4", "(0,2)", pos(p, "K4"))
+        ctx.assert_eq("const wrap K1", "(0,2)", pos(p, "K1"))
+        ctx.assert_eq("const wrap K2", "(1,2)", pos(p, "K2"))
+        ctx.assert_eq("const wrap K3", "(2,2)", pos(p, "K3"))
+        ctx.assert_eq("const wrap K4", "(0,1)", pos(p, "K4"))
 
         ----------------------------------------------------------------
         -- 2. Aux row wraps; aux + constants shift up, stocks stay.
@@ -66,8 +67,9 @@ return {
 
         ----------------------------------------------------------------
         -- 3. Stocks row wraps; everything shifts up by one.  Three
-        --    standalone stocks (no flows) plus one constant; gridmaxx=2
-        --    forces the stocks row to wrap after S1,S2.
+        --    standalone stocks (no flows) plus one constant (on row 1,
+        --    as there is no aux); gridmaxx=2 forces the stocks row to
+        --    wrap after S1,S2.
         ----------------------------------------------------------------
         p = setup("w3", {
             { name = "K",  type = "constant", text = "k"  },
@@ -76,7 +78,7 @@ return {
             { name = "S3", type = "stock",    text = "s3" },
         })
         numodel.compute_layout(p, "tight", 2)
-        ctx.assert_eq("stock wrap K",  "(0,3)", pos(p, "K"))
+        ctx.assert_eq("stock wrap K",  "(0,2)", pos(p, "K"))
         ctx.assert_eq("stock wrap S1", "(0,1)", pos(p, "S1"))
         ctx.assert_eq("stock wrap S2", "(1,1)", pos(p, "S2"))
         ctx.assert_eq("stock wrap S3", "(0,0)", pos(p, "S3"))

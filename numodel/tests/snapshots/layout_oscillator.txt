@@ -4,8 +4,8 @@ vars:
   oscDt: type=system text=dt gridx=-1 gridy=-1 role= vpos_x= vpos_y=
   oscX: type=stock text=x gridx=1 gridy=0 role=stock vpos_x= vpos_y=
   oscV: type=stock text=v gridx=2 gridy=0 role=stock vpos_x= vpos_y=
-  oscM: type=constant text=m gridx=0 gridy=2 role=constant vpos_x= vpos_y=
-  oscK: type=constant text=k gridx=1 gridy=2 role=constant vpos_x= vpos_y=
+  oscM: type=constant text=m gridx=0 gridy=1 role=constant vpos_x= vpos_y=
+  oscK: type=constant text=k gridx=1 gridy=1 role=constant vpos_x= vpos_y=
 flows.inflow:
   oscX -> oscV
 flows.outflow:

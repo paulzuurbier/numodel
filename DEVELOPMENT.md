@@ -59,11 +59,14 @@ becomes the CTAN announcement via `l3build upload`), and re-run
 The CTAN archive is flat and carries exactly one `README.md` and one
 `CHANGELOG.md`, both from the bundle root.
 
-### Tests outside l3build
+### Lua unit tests
 
 `numodel/tests/` contains a separate Lua test suite that exercises
 `numodel.lua` directly (no LaTeX run): flow detection, layout, the
-model export API and the plain-text (Coachtaal) rendering.  Run via
+model export API and the plain-text (Coachtaal) rendering.
+`l3build check` runs it first (from the bundle root or in `numodel/`,
+via `checkinit_hook` in `numodel/build.lua`) and stops when a test
+fails; `l3build save` does not run it.  By hand:
 
 ```
 texlua numodel/tests/run.lua            # all tests

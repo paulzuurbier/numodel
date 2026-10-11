@@ -81,3 +81,23 @@ textfiles    = {}
 -- Regression tests ------------------------------------------------------
 
 testfiledir = "testfiles"
+
+-- Lua unit tests (tests/run.lua: parser, layout, plain text, ...) run
+-- first in `l3build check`; a failure stops the check.  They are
+-- quiet when they pass.  Not run by `save`, so a .tlg can still be
+-- saved while a Lua test is being worked on.
+function checkinit_hook()
+  -- "bundlecheck" is the target when check runs from the bundle root.
+  local t = options["target"]
+  if t ~= "check" and t ~= "bundlecheck" then return 0 end
+  local p = io.popen("texlua tests/run.lua 2>&1")
+  local out = p:read("a")
+  local ok = p:close()
+  if ok then
+    print("Lua unit tests: " .. (out:match("(%d+ checks, 0 failed)") or "passed"))
+    return 0
+  end
+  print(out)
+  print("Lua unit tests failed (texlua tests/run.lua).")
+  return 1
+end
