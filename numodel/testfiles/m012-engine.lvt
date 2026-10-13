@@ -49,7 +49,7 @@
 \OMIT
 \renewcommand\currentp{q}
 \mkmodel{q}
-\mrule{N}{fact(3)}
+\mrule{N}{randint(6, 6)}
 \mrule{T}{\qT + \qDt}
 \mstop{\qT >= 1}
 \TIMO

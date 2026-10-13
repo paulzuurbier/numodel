@@ -1786,7 +1786,7 @@ M.dialects = {
         ln = "Ln", sin = "Sin", cos = "Cos", tan = "Tan",
         asin = "Arcsin", acos = "Arccos", atan = "Arctan",
         min = "Min", max = "Max", floor = "Entier", round = "Round",
-        pi = "Pi",
+        fact = "Fac", log10 = "Log", pi = "Pi",
         decimal = ",", argsep = ";", comment = "'",
         th_model = "Modelregels", th_initvals = "Startwaarden",
     },
@@ -1798,7 +1798,7 @@ M.dialects = {
         ln = "LN", sin = "SIN", cos = "COS", tan = "TAN",
         asin = "ARCSIN", acos = "ARCCOS", atan = "ARCTAN",
         min = "MIN", max = "MAX", floor = "INT", round = "ROUND",
-        pi = "PI",
+        fact = "FACT", log10 = "LOG10", pi = "PI",
         decimal = ".", argsep = ",", comment = "'",
         th_model = "Model rules", th_initvals = "Initial values",
     },
@@ -2286,6 +2286,10 @@ local function print_call(n, ctx)
             return paren(call(D.round, f1 .. "*" .. p) .. "/" .. p)
         end
         return call(D.round, a1)
+    elseif name == "fact" then
+        return call(D.fact, a1)
+    elseif name == "logb" then
+        return call(D.floor, call(D.log10, call(D.abs, a1)))
     elseif name == "trunc" then
         return call(D.sign, a1) .. "*" .. call(D.floor, call(D.abs, a1))
     elseif name == "atan" then
@@ -2488,6 +2492,25 @@ function H.floor(x, n)
     local s = 10^n
     return math.floor(x * s) / s
 end
+-- fact: as l3fp, for whole numbers >= 0 only (else NaN).
+function H.fact(x)
+    if x ~= x or x < 0 or x ~= math.floor(x) then return 0/0 end
+    local r = 1
+    for i = 2, x do
+        r = r * i
+        if r == math.huge then break end
+    end
+    return r
+end
+-- logb: the decimal exponent, as l3fp (16 significant digits):
+-- logb(1234) = 3, logb(0.05) = -2.
+function H.logb(x)
+    if x == 0 then return -math.huge end
+    if x ~= x or x == math.huge or x == -math.huge then
+        return math.abs(x)
+    end
+    return tonumber(string.format("%.15e", x):match("e([-+]%d+)$"))
+end
 function H.min(...) return math.min(...) end
 function H.max(...) return math.max(...) end
 function H.atan(y, x)
@@ -2501,7 +2524,7 @@ local lua_fn = {
     asin = "math.asin", acos = "math.acos",
     sign = "H.sign", round = "H.round", trunc = "H.trunc",
     ceil = "H.ceil", floor = "H.floor", min = "H.min", max = "H.max",
-    atan = "H.atan",
+    atan = "H.atan", fact = "H.fact", logb = "H.logb",
 }
 -- Functions defined through others: name -> Lua template ($1 = arg).
 local lua_fn_tpl = {

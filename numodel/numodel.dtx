@@ -421,7 +421,16 @@ end
 \tl_new:N \g__numodel_kw_min_tl
 \tl_new:N \g__numodel_kw_max_tl
 \tl_new:N \g__numodel_kw_floor_tl
+\tl_new:N \g__numodel_kw_round_tl
+\tl_new:N \g__numodel_kw_fact_tl
+\tl_new:N \g__numodel_kw_logten_tl
 \tl_new:N \g__numodel_kw_stop_tl
+
+% Keyword with a fallback, for keywords added after the first
+% language files: a drop-in numodel-<LANG>.def without them keeps
+% working.
+\cs_new:Npn \__numodel_kw_opt:nn #1#2
+  { \cs_if_exist_use:cF { __numodel_kw_ \g__numodel_syntax_tl _ #1 : } {#2} }
 
 % Recomputes all tl caches from \g__numodel_syntax_tl.  Must be
 % called after any change to the syntax language.
@@ -451,6 +460,9 @@ end
     \tl_gset:Ne \g__numodel_kw_min_tl      { \__numodel_kw:n {min}      }
     \tl_gset:Ne \g__numodel_kw_max_tl      { \__numodel_kw:n {max}      }
     \tl_gset:Ne \g__numodel_kw_floor_tl    { \__numodel_kw:n {floor}    }
+    \tl_gset:Ne \g__numodel_kw_round_tl    { \__numodel_kw_opt:nn {round} {ROUND} }
+    \tl_gset:Ne \g__numodel_kw_fact_tl     { \__numodel_kw_opt:nn {fact} {FACT} }
+    \tl_gset:Ne \g__numodel_kw_logten_tl   { \__numodel_kw_opt:nn {logten} {LOG10} }
     \tl_gset:Ne \g__numodel_kw_stop_tl     { \__numodel_kw:n {stop}     }
     % tabularray continuation markers (used by longtblr in \textmodel)
     \tl_gset:Ne \tblrcontfootname { \__numodel_kw:n {contfoot} }
@@ -1401,6 +1413,12 @@ end
       }
     \__numodel_debug:n{VTD~input:~\tl_to_str:N #1}
     \__numodel_debug:n{VTD~seq:~\seq_use:Nn \g_mvar_names_seq {|}}
+    % round(x, n) -> round(x*10^n)/10^n, as the Coach export writes it
+    % (Coach's Round has one argument).  First of all, while the
+    % arguments are still plain (no \num with commas); arguments
+    % without parentheses only.
+    \regex_replace_all:nnN { round \( ([^(),]*) , \s* ([^(),]*) \) }
+      { round(\1*10\^\cB\{\2\cE\})/10\^\cB\{\2\cE\} } #1
     % Multi-character numeric superscripts.  \fp_eval:n accepts
     % '^1.2' (and '^12', '^-3', ...), but TeX math mode binds only
     % the next single token to ^, so 'T^1.2' would typeset as
@@ -1420,6 +1438,11 @@ end
     \regex_replace_all:nnN
       { [0-9]*\.[0-9]+ (?: [eE] [+\-]? [0-9]+ )? | [0-9]+ [eE] [+\-]? [0-9]+ }
       { \c{num} [round-mode=none,exponent-mode=input] \cB\{ \0 \cE\} } #1
+    % The constant deg (pi/180), before the names are put in: until
+    % then the variables are control sequences, so no display name can
+    % contain the letters.
+    \regex_replace_all:nnN { \b deg \b }
+      { \c{sfrac}\cB\{\c{pi}\cE\}\cB\{180\cE\} } #1
     % Variable names -> display names
     \seq_map_inline:Nn \g_mvar_names_seq
       {
@@ -1547,6 +1570,20 @@ end
       { \c{text}\cB\{ \u{g__numodel_kw_floor_tl}\cE\}( } #1
     \regex_replace_all:nnN { ceil \( ([^()]*) \) }
       { -\c{text}\cB\{ \u{g__numodel_kw_floor_tl}\cE\}(-\1) } #1
+    % trunc(x) -> SIGN(x)*INT(ABS(x)), logb(x) -> INT(LOG10(ABS(x))):
+    % as the Coach export writes them; argument captured.
+    \regex_replace_all:nnN { trunc \( ([^()]*) \) }
+      { \c{text}\cB\{ \u{g__numodel_kw_sign_tl}\cE\}(\1)\c{cdot}\x{20}
+        \c{text}\cB\{ \u{g__numodel_kw_floor_tl}\cE\}(
+        \c{text}\cB\{ \u{g__numodel_kw_abs_tl}\cE\}(\1)) } #1
+    \regex_replace_all:nnN { logb \( ([^()]*) \) }
+      { \c{text}\cB\{ \u{g__numodel_kw_floor_tl}\cE\}(
+        \c{text}\cB\{ \u{g__numodel_kw_logten_tl}\cE\}(
+        \c{text}\cB\{ \u{g__numodel_kw_abs_tl}\cE\}(\1))) } #1
+    \regex_replace_all:nnN { round \( }
+      { \c{text}\cB\{ \u{g__numodel_kw_round_tl}\cE\}( } #1
+    \regex_replace_all:nnN { fact \( }
+      { \c{text}\cB\{ \u{g__numodel_kw_fact_tl}\cE\}( } #1
     % Two-argument extrema.
     \regex_replace_all:nnN { min \( }
       { \c{text}\cB\{ \u{g__numodel_kw_min_tl}\cE\}( } #1
@@ -2699,13 +2736,32 @@ end
   \tl_set_eq:NN \l__numodel_saved_tblrenv_tl \g__numodel_tblrenv_tl
   \tl_if_empty:NF \l__numodel_cmd_tblrenv_tl
     { \tl_gset_eq:NN \g__numodel_tblrenv_tl \l__numodel_cmd_tblrenv_tl }
+  % Inside a box (minipage, tcolorbox, exam's framed solution) longtblr
+  % cannot break the page, but it still measures the space left on the
+  % page and may split the table with "Continued on next page" in
+  % the middle of the box.  There a centred tblr does the same job.
+  % longtblr ends the paragraph anyway; after \par, \ifinner tells a
+  % box (internal vertical mode) from the page.
+  \bool_set_false:N \l__numodel_tm_inbox_bool
+  \str_if_eq:VnT \g__numodel_tblrenv_tl { longtblr }
+    {
+      \par
+      \mode_if_inner:T
+        {
+          \bool_set_true:N \l__numodel_tm_inbox_bool
+          \tl_gset:Nn \g__numodel_tblrenv_tl { tblr }
+        }
+    }
   \__numodel_with_prefix:Nn \l__numodel_eff_prefix_tl
     {
       \group_begin:
+        \bool_if:NT \l__numodel_tm_inbox_bool { \centering }
         \__numodel_apply_dsep:
         \__numodel_build_table:
         \__numodel_debug:n{TEXTMODEL~table:~\tl_to_str:N \g__numodel_table_tl}
         \tl_use:N \g__numodel_table_tl
+        \bool_if:NT \l__numodel_tm_inbox_bool
+          { \par \addvspace { \medskipamount } }
       \group_end:
     }%
   \bool_gset_eq:NN \g__numodel_units_bool \l__numodel_saved_units_bool
@@ -2713,6 +2769,7 @@ end
   \__numodel_debug:n{TEXTMODEL~done}
 }
 \bool_new:N \l__numodel_saved_units_bool
+\bool_new:N \l__numodel_tm_inbox_bool
 \tl_new:N \l__numodel_saved_tblrenv_tl
 
 % ====================================================================
@@ -3179,7 +3236,7 @@ end
 % Positioning: automatic (auto-layout) or manual via
 %   \mvar[gridx=N, gridy=N]{...}.  Mixed mode is supported.
 % Auto-layout places stocks+valves at gridy=0, aux at gridy=1, and
-% constants at gridy=2.  Variables of type system are skipped.
+% constants at gridy=2 (gridy=1 when there are no aux).  Variables of type system are skipped.
 % Auxiliary variables that act as inflow are placed as a valve
 % (not as aux).
 
@@ -3213,7 +3270,7 @@ end
 % --- Resolved render settings (set per-\graphicmodel call) ---
 % These hold the effective values (after resolving diagram-style
 % defaults and explicit global/local overrides) used by the emit
-% helpers and by the public \flowarrow / \flowoutarrow macros.
+% helpers and by the internal \flowarrow / \flowoutarrow macros.
 \tl_new:N \l__numodel_flowarrow_eff_tl     % "hollow" or "filled"
 \tl_new:N \l__numodel_valve_eff_tl         % "valve" | "circle" | "edu"
 \tl_new:N \l__numodel_flowcloud_global_tl  % "true" or "false" (global default)
@@ -3275,7 +3332,7 @@ end
                        \l__numodel_flowcloud_global_tl }
   }
 
-% Sets the public \nmflowbody and \nmflowtip macros that the
+% Sets the internal \nmflowbody and \nmflowtip macros that the
 % \flowarrow / \flowoutarrow / \flowbetweenarrow macros expand to.
 % Reads the resolved flowarrow-style.
 \cs_new_protected:Npn \__numodel_apply_flowarrow_style:
@@ -4429,9 +4486,14 @@ end
 	causal/.style={thick, arrows={-Stealth[length=0.5em]}}
 }
 
-% Default values for the body / tip macros so a manual call to
-% \flowarrow (outside \graphicmodel) keeps working.  The
-% \graphicmodel pipeline overwrites these per render.
+% Default values for the body / tip macros, before the first
+% \graphicmodel; the pipeline overwrites these per render.
+%
+% \constnode, \flowarrow, \flowoutarrow, \flowbetweenarrow,
+% \flowarrowbent, \flowoutarrowbent and the \nmflow... macros are
+% internal: \graphicmodel writes them into its tikzpicture.  They are
+% not part of the user interface (drawing a diagram by hand is not
+% supported) and may change without notice.
 \providecommand{\nmflowbody}{flowpipe-filled}
 \providecommand{\nmflowtip}{flowpipe-filled-tip}
 \providecommand{\nmflowtipcloudin}{flowpipe-filled-cloudin}
@@ -4555,6 +4617,9 @@ end
 \cs_new:Npn \__numodel_kw_EN_min:          { MIN }
 \cs_new:Npn \__numodel_kw_EN_max:          { MAX }
 \cs_new:Npn \__numodel_kw_EN_floor:        { INT }
+\cs_new:Npn \__numodel_kw_EN_round:        { ROUND }
+\cs_new:Npn \__numodel_kw_EN_fact:         { FACT }
+\cs_new:Npn \__numodel_kw_EN_logten:       { LOG10 }
 \cs_new:Npn \__numodel_kw_EN_stop:         { ~STOP~ }
 \cs_new:Npn \__numodel_kw_EN_th_model:     { model }
 \cs_new:Npn \__numodel_kw_EN_th_initvals:  { initial~values }
@@ -4597,6 +4662,9 @@ end
 \cs_new:Npn \__numodel_kw_NL_min:          { Min }
 \cs_new:Npn \__numodel_kw_NL_max:          { Max }
 \cs_new:Npn \__numodel_kw_NL_floor:        { Entier }
+\cs_new:Npn \__numodel_kw_NL_round:        { Round }
+\cs_new:Npn \__numodel_kw_NL_fact:         { Fac }
+\cs_new:Npn \__numodel_kw_NL_logten:       { Log }
 \cs_new:Npn \__numodel_kw_NL_stop:         { ~Stop~ }
 \cs_new:Npn \__numodel_kw_NL_th_model:     { model }
 \cs_new:Npn \__numodel_kw_NL_th_initvals:  { startwaarden }
@@ -4647,6 +4715,8 @@ end
 \cs_new:Npn \__numodel_kw_FPEVAL_min:          { min }
 \cs_new:Npn \__numodel_kw_FPEVAL_max:          { max }
 \cs_new:Npn \__numodel_kw_FPEVAL_floor:        { floor }
+\cs_new:Npn \__numodel_kw_FPEVAL_round:        { round }
+\cs_new:Npn \__numodel_kw_FPEVAL_fact:         { fact }
 \cs_new:Npn \__numodel_kw_FPEVAL_stop:         { stop: }
 \cs_new:Npn \__numodel_kw_FPEVAL_th_model:     { model~(l3fp) }
 \cs_new:Npn \__numodel_kw_FPEVAL_th_initvals:  { initial~values }

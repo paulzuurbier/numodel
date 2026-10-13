@@ -156,9 +156,9 @@ the textbook description, the conceptual stock-and-flow diagram,
 and the numerical result of the same model are guaranteed to stay
 in sync.  Variables and rules live in namespaces (\emph{prefixes})
 so a document can contain multiple independent models;
-|\newmodelprefix{P}| starts a fresh one.  The simulation engine
-runs in Lua (through \textsf{luacode}) for $\mathcal{O}(1)$ appends
-and cheap min/max tracking; the rendering layer is pure
+|\newmodelprefix{P}| starts a fresh one.  The model is computed in
+Lua (or, on request, with \textsf{l3fp}; Section~\ref{sec:engine}),
+which also keeps the computed series; the rendering layer is
 \textsf{expl3}.
 
 \section{First example: a free-falling ball}
@@ -244,7 +244,8 @@ phantom valve plus a causal link to the source stock:
 
 Layout is automatic from the rule graph: stocks (with their
 inflow/outflow valves) sit on the bottom row, auxiliaries on the
-middle row, and constants on the top row, each filled
+middle row, and constants on the top row (on the middle row when the
+model has no auxiliaries, so no row stays empty), each filled
 left-to-right in declaration order.  The order of |\mvar| calls
 therefore drives the horizontal reading order of the diagram --
 reordering, inserting or holding back a |\mvar| nudges the
@@ -305,15 +306,17 @@ The same keys can also be passed as package options:
   \end{description}
   Each language tag |X| corresponds
   to a file |numodel-X.def| located via |kpse| when the package
-  processes the key.  The package ships with |numodel-EN.def| and
-  |numodel-NL.def|; drop your own |numodel-FR.def| (or any other
+  processes the key.  The package ships with |numodel-EN.def|, |numodel-NL.def| and
+  |numodel-FPEVAL.def|; drop your own |numodel-FR.def| (or any other
   tag) in |TEXMFHOME/tex/latex/numodel/| and select it with
   |\usepackage[syntax=FR]{numodel}| -- no package rebuild needed.
   The setting affects display only; the expression syntax in
   |\mrule| bodies is always |\fp_eval|-compatible.
 \item[\texttt{maxiter}] Safety limit on the number of |\computemodel|
   iterations (default 20\,000).  When reached, the simulation
-  aborts with a warning naming the unmet stop condition.
+  stops with a warning to check the stop condition; the series up to
+  that point are kept.  \textsf{numodel-coach} uses it as Coach's
+  number of iterations.
 \item[\texttt{graphscalex}] Horizontal grid spacing in centimetres
   for |\graphicmodel|'s Forrester layout (default 2).  Larger
   values spread the diagram out horizontally.
@@ -430,12 +433,12 @@ The same keys can also be passed as package options:
 \item[\texttt{tblrenv}] Which \textsf{tabularray} environment wraps
   the |\textmodel| table.  Three values: |longtblr| (default,
   page-breakable); |tblr| (inline, no page breaks); |talltblr|
-  (inline, no page breaks, supports |\caption|/notes).  Pick |tblr|
-  or |talltblr| when |\textmodel| sits inside an enclosing
-  environment that suppresses page breaks (|subfigure|, |minipage|,
-  \dots); the default |longtblr| would otherwise emit spurious
-  ``(Continued)'' / \emph{Continued on next page} markers in that
-  setting.  May also be supplied per render as
+  (inline, no page breaks, supports |\caption|/notes).  Inside a box
+  (|minipage|, |subfigure|, a \textsf{tcolorbox}, a framed |solution|
+  of \textsf{exam}) |longtblr| cannot break the page but could still
+  split the table with a spurious \emph{Continued on next page};
+  there |\textmodel| uses |tblr| instead.  A box that breaks across
+  pages has the same limit, so a long model table belongs outside it.  May also be supplied per render as
   |\textmodel[tblrenv=...]|; the global setting is restored
   afterwards.
 \item[\texttt{decimal-separator}] Decimal mark used by every number
@@ -596,6 +599,19 @@ keeping the table column narrow so a |\graphicmodel| can sit
 alongside it, and making the source itself easier to read.  For
 non-ternary expressions the star has no effect.
 \meta{expr} may use the full |\fp_eval| expression grammar.
+
+Optional \meta{keys} of |\mrule|:
+\begin{description}
+\item[\texttt{prefix}] Another model than the current one.
+\item[\texttt{blank}] Show the rule as ``\meta{symbol}${}= \cdots$''
+  in the pupil's version (Section~\ref{sec:blanks}).
+\item[\texttt{alias}] Replaces the whole row in |\textmodel|;
+  |aliasright| only the right-hand side (``$v = \cdots$'').  The model
+  still computes with \meta{expr}.
+\item[\texttt{before}, \texttt{after}, \texttt{add},
+  \texttt{replace}] Where the rule goes, and whether it replaces the
+  rule for the same target; see Section~\ref{sec:copy}.
+\end{description}
 See Table~\ref{tab:expr} (Section~\ref{sec:expr}) for a complete
 overview of supported operators and functions with their XMILE and
 CoachTaal equivalents.
@@ -609,9 +625,10 @@ rule tables.
 \DescribeMacro{\mstop}
 Sets the simulation stop condition.  Signature:
 |\mstop[<keys>]{<expr>}|.  The simulation halts at the first step
-where \meta{expr} evaluates true.  Exactly one |\mstop| per model
-prefix is required before |\computemodel|.  Without one,
-|\computemodel| issues a warning.
+where \meta{expr} evaluates true.  A model needs one |\mstop| before
+|\computemodel|, which otherwise stops with an error; a second
+|\mstop| replaces the first (Section~\ref{sec:copy}).  Keys: |prefix|
+and |blank|.
 
 \subsection{Expression reference}\label{sec:expr}
 
@@ -621,11 +638,14 @@ bodies.  The \textbf{XMILE} column shows XMILE\,v1.0 syntax,
 |\mrule|, and \textbf{CoachTaal} shows the Coach\,7 equivalent
 (function names from the standard CoachTaal math reference;
 note that argument separators in CoachTaal are semicolons).
-\textcolor{numorange}{Orange} entries are not yet fully supported
-by \textsf{numodel} (the expression computes correctly, but the
-rendered keyword in the rule table is not yet translated).
+\textcolor{numorange}{Orange} entries are not translated by
+\textsf{numodel}: the construct is missing on one side (no \textsf{l3fp}
+function, no Coach equivalent), or a translation would change its
+meaning (the quadrant of a two-argument arctangent).
 \textit{Italic} cells contain a derived equivalent rather than a
-native keyword.
+native keyword.  The trigonometric rows show the default
+|angles=radians|; with |angles=degrees| the conversion factors move
+to the radian functions (see |angles| in Section~\ref{sec:cfg}).
 
 \begin{longtblr}[
   caption = {Expression reference: XMILE, \texttt{\textbackslash fp\_eval},
@@ -679,22 +699,19 @@ native keyword.
   \texttt{ABS(x)}  & \texttt{abs(x)}  & \texttt{Abs(x)}  \\
   \texttt{SIGN(x)} & \texttt{sign(x)} & \texttt{Teken(x)} \\
   \texttt{SQRT(x)} & \texttt{sqrt(x)} & \texttt{Sqrt(x)} \\
-  \textcolor{numorange}{\texttt{INT(x)}}
-    & \textcolor{numorange}{\texttt{trunc(x)}}
-    & \textcolor{numorange}{\textit{Entier(Abs(x))*Teken(x)}} \\
-  \textcolor{numorange}{\textit{INT(x+0.5)}}
-    & \textcolor{numorange}{\texttt{round(x)}}
-    & \textcolor{numorange}{\texttt{Round(x)}} \\
+  \textit{SIGN(x)*INT(ABS(x))} & \texttt{trunc(x)}
+    & \textit{Teken(x)*Entier(Abs(x))} \\
+  \textit{ROUND(x)} & \texttt{round(x)} & \texttt{Round(x)} \\
+  \textit{ROUND(x*10\textasciicircum n)/10\textasciicircum n}
+    & \texttt{round(x,n)}
+    & \textit{Round(x*10\textasciicircum n)/10\textasciicircum n} \\
   \textit{INT(x)} & \texttt{floor(x)} & \texttt{Entier(x)} \\
   \textit{-INT(-x)} & \texttt{ceil(x)} & \textit{-Entier(-x)} \\
   \texttt{MIN(x,y)} & \texttt{min(x,y)} & \texttt{Min(x;y)} \\
   \texttt{MAX(x,y)} & \texttt{max(x,y)} & \texttt{Max(x;y)} \\
-  \textcolor{numorange}{\textit{---}}
-    & \textcolor{numorange}{\texttt{fact(x)}}
-    & \textcolor{numorange}{\texttt{Fac(x)}} \\
-  \textcolor{numorange}{\textit{INT(LOG10(ABS(x)))}}
-    & \textcolor{numorange}{\texttt{logb(x)}}
-    & \textcolor{numorange}{\textit{Entier(Log(Abs(x)))}} \\
+  \textit{FACT(x)} & \texttt{fact(x)} & \texttt{Fac(x)} \\
+  \textit{INT(LOG10(ABS(x)))} & \texttt{logb(x)}
+    & \textit{Entier(Log(Abs(x)))} \\
 
   \SetCell[c=3]{l} \itshape Exponential and logarithmic \\
   \hline
@@ -756,9 +773,7 @@ native keyword.
   \textcolor{numorange}{\texttt{NAN}}
     & \textcolor{numorange}{\texttt{nan}}
     & \textcolor{numorange}{\textit{---}} \\
-  \textcolor{numorange}{\textit{PI/180}}
-    & \textcolor{numorange}{\texttt{deg}}
-    & \textcolor{numorange}{\textit{Pi/180}} \\
+  \textit{PI/180} & \texttt{deg} & \textit{Pi/180} \\
   \textcolor{numorange}{\textit{1}}
     & \textcolor{numorange}{\texttt{true}}
     & \textcolor{numorange}{\texttt{Aan}} \\
@@ -812,35 +827,23 @@ native keyword.
 \DescribeMacro{\textmodel}
 Renders the rule-and-startvalue table.  Optional |[<keys>]| accepts
 |prefix=<name>| (render a non-current model), |units=true| or
-|units=false|, and |tblrenv=tblr|longtblr|talltblr|.  Each per-call
-key overrides the global |\numodelsetup| setting for this single
-render only; the global state is restored afterwards.
-
-|tblrenv| selects which |tabularray| environment wraps the table:
-|longtblr| (default) breaks across pages, |tblr| renders inline
-without page breaks, |talltblr| renders inline but with caption and
-note support.  Use |tblr| or |talltblr| when |\textmodel| sits inside
-an enclosing environment that suppresses page breaks (|subfigure|,
-|minipage|, \dots); the default |longtblr| would otherwise emit
-spurious continuation markers there.
-
-\textbf{Row spacing.}  |numodel| loads |tabularray| and sets
-|\SetTblrInner{rowsep=0pt}| globally so the rule listing renders
-compactly.  This applies to \emph{every} |tabularray| table in the
-document; if you want the default spacing back in your own tables,
-issue |\SetTblrInner{rowsep=2pt}| (or whatever value you prefer)
-somewhere in your document.
+|units=false|, |blanks=open| or |filled|, and |tblrenv=tblr|,
+|longtblr| or |talltblr| (see |\numodelsetup|; inside a box |longtblr|
+becomes |tblr|).  Each per-call key overrides the global
+|\numodelsetup| setting for this single render only; the global state
+is restored afterwards.
 
 \DescribeMacro{\graphicmodel}
 Renders the Forrester stock-and-flow diagram.  Variables of type
-|stock| become rectangles, |constant| become circles, |aux|
-become identifier nodes; flow arrows connect stocks to constant or
-helper sources/sinks based on which variables appear in
-the right-hand side of stock-updating rules.
+|stock| become rectangles, |aux| circles and |constant| circles with
+two dashes; |system| variables are not drawn.  Flow arrows connect
+stocks to constant or helper sources/sinks based on which variables
+appear in the right-hand side of stock-updating rules.
 
 Optional |[<keys>]| accepts |prefix=<name>| (render a non-current
-model) and |diagram-style=tight|forrester|edu|, which overrides the
-global |\numodelsetup| setting for this single render only.  The
+model), |diagram-style=tight|, |forrester| or |edu|, |flowarrow-style|,
+|valve-style| and |flowarrow-cloud-tip|, which override the global
+|\numodelsetup| setting for this single render only.  The
 global state is restored afterwards, so multiple |\graphicmodel|
 calls can each pick their own style without re-issuing
 |\numodelsetup|.
@@ -989,7 +992,7 @@ Keys of \meta{keys}, besides |prefix|:
 A variable without unit gets no parentheses in its axis label
 (``$X$'' instead of ``$X$ ()''), unless the axis is scaled
 (``$X$ ($10^{3}$)'').  A count can also get a unit of its own,
-\verb|\DeclareSIUnit{\animals}{animals}|; \textsf{numodel-coach}
+|\DeclareSIUnit{\animals}{animals}|; \textsf{numodel-coach}
 exports it as that word.
 
 The |prefix=| key likewise accepts a comma-separated list, so the
@@ -1044,8 +1047,8 @@ values.
 \subsection{Series accessors}
 
 \DescribeMacro{\mcoords}
-Returns a comma-separated PGFPlots coordinate list of the
-simulated series for two variables.  Fully expandable.  Signature:
+Returns the simulated series of two variables as a PGFPlots
+coordinate list, |(x,y) (x,y) ...|, with all samples.  Fully expandable.  Signature:
 |\mcoords{<xvar>}{<yvar>}| (current prefix);
 |\mcoordsp{<prefix>}{<xvar>}{<yvar>}| (explicit prefix).  Both
 forms are usable inside |\addplot coordinates{ ... }|.
@@ -1090,6 +1093,17 @@ with the decimal marker of the syntax.  Keys:
   override it.  A macro holding the options may be given.
 \item[\texttt{prefix}] Another model than the current one.
 \end{description}
+Example -- the first steps of the energy model above, once complete and
+once as an exercise with one example row:
+\switchmodelprefix{nrg}
+\begin{modelexample}
+\tablemodel[steps=0-4]{T,V,Y,Ek}
+
+\medskip
+\tablemodel[steps=0-4, blank, given=1]{T,V,Y,Ek}
+\end{modelexample}
+For a model with an auxiliary force, |row=state| gives the rows a pupil
+computes by hand, and |num| shows the time as whole numbers:
 \begin{quote}
 |\tablemodel[steps=0-5, row=state, blank, given=1,|\\
 |  num={T={round-mode=places, round-precision=0}}]{T,V,Fw,Fres,A,Dv}|
@@ -1222,15 +1236,16 @@ are interchangeable.
   \emph{initial values} row.
 \item[\texttt{constant}] A constant
   parameter (mass, gravitational acceleration, spring stiffness,
-  $\ldots$).  Drawn as a circle.  Receives an \emph{initial values}
-  row.
+  $\ldots$).  Drawn as a circle with two dashes.  Receives an
+  \emph{initial values} row.
 \item[\texttt{aux}] An auxiliary variable
-  computed from other variables on each step.  Drawn as a plain
-  identifier node, no rectangle.  No \emph{initial values} row
-  (start value is normally left empty).
+  computed from other variables on each step.  Drawn as a circle.
+  Usually without start value, and then without \emph{initial values}
+  row; a start value (or start-value expression) gives it one and
+  fixes its value in step~0.
 \item[\texttt{system}] System-level
   bookkeeping (time |T|, step size |Dt|, terminal time,
-  $\ldots$).  Drawn separately, no flow arrows.  Receives an
+  $\ldots$).  Not drawn in the Forrester diagram.  Receives an
   \emph{initial values} row.
 \end{description}
 
@@ -1264,8 +1279,9 @@ Each |\mvar| call generates a family of accessor macros named
   (e.g.\ |1500 W| renders as |1{,}5\,kW|).
 \item[\texttt{sign}] Significant-figure count (raw integer).
 \item[\texttt{type}] Variable type (raw string).
-\item[\texttt{min}, \texttt{max}] Extrema over the simulated series.
-  Empty before |\computemodel|.
+\item[\texttt{min}, \texttt{max}] Extrema over the simulated series;
+  for a variable without start value from step~1, as step~0 holds 0.
+  Defined by |\computemodel|.
 \item[\texttt{gridx}, \texttt{gridy}] Manual placement coordinates
   in the Forrester grid; $-1$ if left to auto-layout.
 \item[\texttt{alias}, \texttt{aliasleft}, \texttt{aliasright}]
@@ -1287,9 +1303,41 @@ In addition, |\computemodel| writes one per-\emph{prefix} accessor
   Section~\ref{sec:api}.
 \end{description}
 
-Example -- the alias keys exist primarily as a worksheet hook:
-the same model can be rendered as a fully-specified reference
-\emph{and} as a fill-in-the-blanks exercise.  |aliasright=\cdots|
+\section{Exercises: pupil's and answer version}\label{sec:blanks}
+
+The |blank| key makes one declaration serve both versions of an
+exercise.  On |\mvar|, |\mrule| (also |\mrule*|) and |\mstop| it marks
+what the pupil has to supply.  With |blanks=open| -- the default, the
+pupil's version -- |\textmodel| shows such a rule as
+``\meta{symbol}${}= \cdots$'' (a conditional rule collapses to that
+single row, so its structure is part of the question), the stop
+condition as ``IF $\cdots$ THEN STOP ENDIF'', and the start value as
+``\meta{symbol}${}= \cdots$''.  With |blanks=filled| everything is shown
+in full.  |\computemodel| always uses the full rules, so diagrams and
+computed answers are the same in both versions.  Switch once for the
+answer version, e.g.\ with the \textsf{exam} class:
+|\ifprintanswers\numodelsetup{blanks=filled}\fi|.  The same setting
+governs |\tablemodel[blank]| (empty cells to fill in) and the Coach
+file of \textsf{numodel-coach} (the gaps become comments).
+
+\begin{modelexample}
+\newmodelprefix{gap}
+\mvar{T}{t}{0}{\s}{2}{system}
+\mvar{Dt}{dt}{0.5}{\s}{2}{system}
+\mvar{V}{v}{0}{\m\per\s}{2}{stock}
+\mvar[blank]{G}{g}{-9.81}{\m\per\s\squared}{3}{constant}
+\mrule[blank]{V}{\gapV + \gapG * \gapDt}
+\mrule{T}{\gapT + \gapDt}
+\mstop[blank]{\gapT >= 3}
+\textmodel
+\textmodel[blanks=filled]
+\end{modelexample}
+
+\subsection{Other replacements: the alias keys}
+
+|blank| needs no replacement text and switches between both versions.
+For any other replacement -- a question mark, a hint -- the alias keys
+of |\mvar| and |\mrule| replace what |\textmodel| shows.  |aliasright=\cdots|
 blanks the value while keeping the symbol visible (asking
 \emph{what value} belongs there), |alias={?}| blanks the entire
 cell (asking the student to supply both the symbol and the value
@@ -1317,37 +1365,30 @@ The rule column is unaffected -- |\mrule| has its own
 \textmodel
 \end{modelexample}
 
-\subsection{Pupil's and answer version: \texttt{blank}}\label{sec:blanks}
+\section{Multiple models in one document}\label{sec:multi}
 
-The |blank| key makes one declaration serve both versions of an
-exercise.  On |\mvar|, |\mrule| (also |\mrule*|) and |\mstop| it marks
-what the pupil has to supply.  With |blanks=open| -- the default, the
-pupil's version -- |\textmodel| shows such a rule as
-``\meta{symbol}${}= \cdots$'' (a conditional rule collapses to that
-single row, so its structure is part of the question), the stop
-condition as ``IF $\cdots$ THEN STOP ENDIF'', and the start value as
-``\meta{symbol}${}= \cdots$''.  With |blanks=filled| everything is shown
-in full.  |\computemodel| always uses the full rules, so diagrams and
-computed answers are the same in both versions.  Switch once for the
-answer version, e.g.\ with the \textsf{exam} class:
-|\ifprintanswers\numodelsetup{blanks=filled}\fi|.
+Each |\newmodelprefix| starts a fresh namespace.  This lets a
+document contain several unrelated models without name clashes:
+\begin{quote}
+\begin{verbatim}
+\newmodelprefix{ball}
+\mvar{Y}{y}{100}{\m}{3}{stock}
+% ... ball model ...
 
-\begin{modelexample}
-\newmodelprefix{gap}
-\mvar{T}{t}{0}{\s}{2}{system}
-\mvar{Dt}{dt}{0.5}{\s}{2}{system}
-\mvar{V}{v}{0}{\m\per\s}{2}{stock}
-\mvar[blank]{G}{g}{-9.81}{\m\per\s\squared}{3}{constant}
-\mrule[blank]{V}{\gapV + \gapG * \gapDt}
-\mrule{T}{\gapT + \gapDt}
-\mstop[blank]{\gapT >= 3}
-\textmodel
-\textmodel[blanks=filled]
-\end{modelexample}
+\newmodelprefix{spring}
+\mvar{X}{x}{0.1}{\m}{3}{stock}
+% ... spring model ...
 
-Compared with the alias keys, |blank| needs no replacement text and
-switches between both versions; the alias keys remain for any other
-replacement (a question mark, a hint).
+% Render the ball model:
+\switchmodelprefix{ball}\textmodel\computemodel\diagrammodel{T}{Y}{fall}
+
+% Render the spring model:
+\switchmodelprefix{spring}\textmodel\computemodel\diagrammodel{T}{X}{spring}
+\end{verbatim}
+\end{quote}
+Each prefix carries an independent rule list, stop condition, and
+recorded series.
+
 
 \subsection{Changing and copying models}\label{sec:copy}
 
@@ -1398,7 +1439,9 @@ instruction text.
 \end{verbatim}
 \end{quote}
 Each change rebuilds the model from its list of declarations, so the
-table, the computation and any export always agree.
+table, the computation and any export always agree.  Variables are
+declared before the rules when a model is rebuilt, so a rule may use a
+variable added to a copy after the rule's original position.
 
 |\copymodel| is also the way to declare several models that differ
 only in a value.  A home-made macro that builds the model for a prefix
@@ -1407,41 +1450,15 @@ given as argument, with rules such as
 has a pitfall: |\csname| is expanded when the rule is declared, so
 |\textmodel| shows the numbers instead of the names ($t = 50 + 0{,}1$)
 and \textsf{numodel-coach} reports unknown variables.  Declare one
-model in full and copy it.  Variables are
-declared before the rules when a model is rebuilt, so a rule may use a
-variable added to a copy after the rule's original position.
-
-\section{Multiple models in one document}
-
-Each |\newmodelprefix| starts a fresh namespace.  This lets a
-document contain several unrelated models without name clashes:
-\begin{quote}
-\begin{verbatim}
-\newmodelprefix{ball}
-\mvar{Y}{y}{100}{\m}{3}{stock}
-% ... ball model ...
-
-\newmodelprefix{spring}
-\mvar{X}{x}{0.1}{\m}{3}{stock}
-% ... spring model ...
-
-% Render the ball model:
-\switchmodelprefix{ball}\textmodel\computemodel\diagrammodel{T}{Y}{fall}
-
-% Render the spring model:
-\switchmodelprefix{spring}\textmodel\computemodel\diagrammodel{T}{X}{spring}
-\end{verbatim}
-\end{quote}
-Each prefix carries an independent rule list, stop condition, and
-recorded series.
+model in full and copy it.
 
 \section{Requirements}
 
 \textsf{numodel} requires LuaLaTeX (the engine, for the Lua
-runtime) and TeX~Live~2022 or later.  Mandatory dependencies:
+runtime) and TeX~Live~2024 or later.  Mandatory dependencies:
 \textsf{expl3}, \textsf{xparse}, \textsf{l3keys2e}, \textsf{amsmath},
 \textsf{amssymb}, \textsf{xfrac}, \textsf{tikz}, \textsf{luacode},
-\textsf{siunitx}, \textsf{float}, and the sibling package
+\textsf{siunitx}, \textsf{float}, \textsf{tabularray}, and the sibling package
 \textsf{numodel-plot}
 (which itself pulls in \textsf{pgfplots}).  The companion Lua
 module |numodel.lua| must be installed alongside the |.sty| in a

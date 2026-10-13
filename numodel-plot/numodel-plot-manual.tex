@@ -224,7 +224,16 @@ Configuration is set through a single key--value interface:
   |numodel/grid| style.
 \item[\texttt{xcmmax}, \texttt{ycmmax}] Maximum axis width and
   height in centimetres (defaults 12 and 10).
+\item[\texttt{equal}] |true| (or just |equal|) gives both axes the
+  same amount per centimetre, for a path such as $y$ against $x$:
+  |\calcplotdims| uses the larger of the two tick distances for both
+  axes, so the plot stays within |xcmmax| and |ycmmax|.  Default
+  |false|.  Use it instead of \textsf{pgfplots}' |axis equal|, which
+  stretches an axis after the ticks have been chosen.
 \end{description}
+
+An axis without unit (an empty |\xlabelunit|) gets no parentheses in
+its label, unless the axis is scaled: ``$N$'' or ``$N$ ($10^{3}$)''.
 
 The first three axis-label formats render as follows.  Each plot
 uses |\numodelplotsetup{xcmmax=3, ycmmax=3}| so the axis itself is
@@ -444,7 +453,8 @@ and |\centi\metre\per\centi\second| ($10^{0}$) do not.
 \textsf{l3keys2e}, \textsf{siunitx} (mandatory, for quantities in
 labels), and \textsf{pgfplots} (with the |fillbetween| library).
 LuaLaTeX is not required at the plot layer (it is required by the
-sibling \textsf{numodel} package).
+sibling \textsf{numodel} package).  TeX~Live~2024 or later (or an
+up-to-date MiKTeX) has all of them in recent enough versions.
 
 \textsf{siunitx} is requested with a date of 2023-11-06 (v3.3.8).
 Everything the axis labels call has been public since \textsf{siunitx}

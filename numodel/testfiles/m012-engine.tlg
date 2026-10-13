@@ -8,9 +8,9 @@ fpeval: steps 11, v 9.728417279787808, n 7
 \g__numodel_pl_steps_int=\count...
 lua: steps 11, v 9.72841727979, n 7
 === Unknown function: fallback ===
-Package numodel Info: Model 'q' computed with \fp_eval:n instead of Lua: unknown function 'fact'.
+Package numodel Info: Model 'q' computed with \fp_eval:n instead of Lua: unknown function 'randint'.
 fallback: steps 11, n 6
-Package numodel Warning: Model 'q' computed with \fp_eval:n instead of Lua: unknown function 'fact'.
+Package numodel Warning: Model 'q' computed with \fp_eval:n instead of Lua: unknown function 'randint'.
 === Global setting ===
 \g__numodel_pg_rulecounter_int=\count...
 \g__numodel_pg_steps_int=\count...

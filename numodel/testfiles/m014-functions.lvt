@@ -1,0 +1,42 @@
+% Regression test: trunc, round (one and two arguments), fact, logb and
+% the constant deg.  The Lua engine computes them as \fp_eval does
+% (engine=compare warns on a difference), \textmodel shows them and
+% numodel.plaintext writes them as Coach does: Teken(x)*Entier(Abs(x)),
+% Round(x*10^n)/10^n, Fac(x), Entier(Log(Abs(x))), Pi/180.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{f}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{0.7}{\s}{2}{systeem}
+\mvar{N}{n}{1}{}{1}{constante}
+\mvar{A}{a}{}{}{3}{hulp}
+\mvar{B}{b}{}{}{3}{hulp}
+\mvar{C}{c}{}{}{3}{hulp}
+\mvar{D}{d}{}{}{3}{hulp}
+\mvar{E}{e}{}{}{3}{hulp}
+\mrule{A}{trunc(-\fT * 3)}
+\mrule{B}{round(\fT * 1.37, 2) + round(\fT) + round(\fT, \fN)}
+\mrule{C}{fact(\fT * 10 / 7)}
+\mrule{D}{logb(\fT * 1000 + 0.05)}
+\mrule{E}{sin(30 * deg)}
+\mrule{T}{\fT + \fDt}
+\mstop{\fT >= 3}
+\computemodel[engine=compare]
+\TIMO
+\TYPE{=== final values (fp_eval, Lua agrees) ===}
+\TYPE{a=\fA, b=\fB, c=\fC, d=\fD}
+\TYPE{=== Coachtaal ===}
+\directlua{texio.write_nl(numodel.plaintext("f", {dialect = "NL"}).body)}
+\TYPE{=== EN ===}
+\directlua{texio.write_nl(numodel.plaintext("f", {dialect = "EN"}).body)}
+\TYPE{=== text model (NL) ===}
+\ExplSyntaxOn
+\int_step_inline:nn { 5 }
+  { \TYPE { \tl_to_str:e { \seq_item:Nn \g_mrule_seq {#1} } } }
+\ExplSyntaxOff
+\TYPE{=== End ===}
+\end{document}

@@ -95,7 +95,7 @@ it with `\usepackage[syntax=XX]{numodel}`.
 
 ### Requirements
 
-LuaLaTeX, TeX Live 2022 or later. Depends on `expl3`, `xparse`,
+LuaLaTeX, TeX Live 2024 or later. Depends on `expl3`, `xparse`,
 `l3keys2e`, `amsmath`, `amssymb`, `xfrac`, `tikz`, `luacode`,
 `siunitx`, `float`, `tabularray` and `numodel-plot`.
 
@@ -140,7 +140,7 @@ own.
 
 ### Requirements
 
-LuaLaTeX, TeX Live 2022 or later. Depends on `expl3`, `xparse`,
+LuaLaTeX, TeX Live 2024 or later. Depends on `expl3`, `xparse`,
 `l3keys2e`, `siunitx` (2023-11-06 / v3.3.8 or newer), `pgfplots`
 (`compat=1.18`) and `pdfrender`.
 

@@ -13,12 +13,59 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
 
 ### numodel
 
+#### Added
+- `\textmodel` and the Coach export translate `trunc(x)` (as
+  `Teken(x)*Entier(Abs(x))`), `round(x)`, `round(x,n)` (as
+  `Round(x*10^n)/10^n`; Coach's `Round` has one argument), `fact(x)`
+  (`Fac`), `logb(x)` (`Entier(Log(Abs(x)))`) and the constant `deg`
+  (π/180); they used to appear untranslated in the rule table. New
+  keywords `round`, `fact` and `logten` in the language files; a
+  drop-in `numodel-<LANG>.def` without them falls back to `ROUND`,
+  `FACT`, `LOG10`. Regression test `m014-functions`.
+- The Lua engine computes `fact` and `logb` itself (as l3fp: `fact`
+  for whole numbers, `logb` the decimal exponent); a model using them
+  no longer falls back to `\fp_eval`.
+
 #### Changed
 - Development only: `l3build check` also runs the Lua unit tests
   (`tests/run.lua`) and stops when one fails. Eight layout tests had
   been failing unnoticed since the placement fix of 25 May 2026
   (constants on row 1 when a model has no auxiliary variables); their
   expectations are updated, the code is unchanged.
+
+#### Fixed
+- `\textmodel` inside a box (minipage, tcolorbox, exam's framed
+  `solution`) no longer splits its table with "Continued on next page"
+  in the middle of the box. The default `longtblr` cannot break a page
+  there but still measured the space left on the page; inside a box
+  `\textmodel` now uses a centred `tblr`.
+
+#### Documentation
+- Manual checked against the package: `\mrule` keys listed; `\mstop`
+  without stop condition is an error (not a warning), a second one
+  replaces it; `\textmodel` key `blanks`; `\graphicmodel` keys
+  `valve-style`, `flowarrow-style`, `flowarrow-cloud-tip`; shapes of
+  `aux` (circle) and `system` (not drawn); constants on the middle row
+  without auxiliaries; `\mcoords` output; the `maxiter` warning;
+  `numodel-FPEVAL.def` and `tabularray` among the files and
+  dependencies. The paragraph on the global `rowsep=0pt`, removed in
+  0.11.0, is gone. New example for `\tablemodel`.
+- "Changing and copying models" moved to the section on multiple
+  models, after its introduction. The pupil's and answer version
+  (`blank`) has a section of its own, "Exercises", with the alias keys
+  as other replacements; it used to sit under "Generated accessors". The expression reference marks the
+  newly translated functions as supported.
+- `\constnode`, `\flowarrow` and the other drawing macros that
+  `\graphicmodel` writes are marked internal in the source: drawing a
+  Forrester diagram by hand is not supported.
+- Minimum TeX Live raised to 2024 in the manuals and README:
+  numodel-plot needs siunitx v3.3.8 (November 2023).
+
+### numodel-plot
+
+#### Documentation
+- The manual describes the `equal` key (added in 0.11.0) and the axis
+  label without unit.
 
 ## [0.11.0] — 2026-10-11
 

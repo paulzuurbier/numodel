@@ -1,0 +1,28 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== final values (fp_eval, Lua agrees) ===
+a=-8, b=9.64, c=24, d=3
+=== Coachtaal ===
+a := Teken(-t*3)*Entier(Abs(-t*3))
+b := (Round((t*1,37)*10^2)/10^2) + Round(t) + (Round(t*10^n)/10^n)
+c := Fac(t*10/7)
+d := Entier(Log(Abs(t*1000 + 0,05)))
+e := Sin(30*(Pi/180))
+t := t + dt
+Als t >= 3 Dan Stop EindAls
+=== EN ===
+a := SIGN(-t*3)*INT(ABS(-t*3))
+b := (ROUND((t*1.37)*10^2)/10^2) + ROUND(t) + (ROUND(t*10^n)/10^n)
+c := FACT(t*10/7)
+d := INT(LOG10(ABS(t*1000 + 0.05)))
+e := SIN(30*(PI/180))
+t := t + dt
+IF t >= 3 THEN STOP ENDIF
+=== text model (NL) ===
+a\,=\,\text {Teken}(-t\cdot   3)\cdot  \text {Entier}(\text {Abs}(-t\cdot   3))
+b\,=\,\text {Round}(t\cdot   \num [round-mode=none,exponent-mode=input]{1.37}\cdot  10^{2})/10^{2} + \text {Round}(t) + \text {Round}(t\cdot  10^{n})/10^{n}
+c\,=\,\text {Fac}(t\cdot   10 / 7)
+d\,=\,\text {Entier}(\text {Log}(\text {Abs}(t\cdot   1000 + \num [round-mode=none,exponent-mode=input]{0.05})))
+e\,=\,\text {Sin}(30 \cdot   \sfrac {\pi }{180})
+=== End ===
+(m014-functions.aux)
