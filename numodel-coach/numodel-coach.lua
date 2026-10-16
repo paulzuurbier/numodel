@@ -738,6 +738,23 @@ function C.graphic_xml(p, r, g, opts, note)
         end
     end
     if #problems > 0 then return nil, problems end
+    -- edu: every variable an object of its own, the flows Stroom_1, ...
+    -- with the variable as formula (\graphicmodel's edu style);
+    -- tight: a flow that is one variable takes its name and formula,
+    -- as \graphicmodel's tight style draws it as the valve.
+    local tight = opts.graphic_style == "tight"
+
+    -- How many formulas use each variable (tight: a variable used only
+    -- in its flow becomes the flow).
+    local uses = {}
+    local function count(e)
+        for x in pairs(numodel.expr_refs(e)) do uses[x] = (uses[x] or 0) + 1 end
+    end
+    for n, row in pairs(rules) do if n ~= time then count(row.expr) end end
+    for _, v in ipairs(g.vars) do
+        if v.has_start and v.value_expr then count(v.value_expr) end
+    end
+    if stop then count(stop.expr) end
 
     -- Flows: a term -X of stock A and +X of stock B is one flow A -> B.
     local flows = {}
@@ -767,10 +784,43 @@ function C.graphic_xml(p, r, g, opts, note)
             to = f.sign > 0 and f.stock or nil, expr = f.expr, refs = f.refs }
     end
 
-    -- Positions: the grid of \graphicmodel in its edu style -- every
-    -- variable a node of its own, the valve of a flow variable beside
-    -- it with an arrow from the variable -- turned into Coach's pixels.
-    numodel.compute_layout(p, "edu")
+    -- Compact: a flow that is one variable used nowhere else -- an
+    -- auxiliary (also a conditional one) or a constant -- takes its
+    -- name and formula (or value).
+    local absorbed = {}
+    for _, f in ipairs(tight and flows or {}) do
+        local only, nrefs = nil, 0
+        for x in pairs(f.refs) do only, nrefs = x, nrefs + 1 end
+        -- used in the stock rule(s) of this flow only: one, or two for
+        -- a flow between two stocks
+        local n_rules = (f.from and f.to) and 2 or 1
+        if nrefs == 1 and uses[only] == n_rules and names[only] == f.expr then
+            local v, row = var[only], rules[only]
+            if kind[only] == "Aux" and not v.has_start then
+                f.var = only
+                f.refs = numodel.expr_refs(row.expr)
+                if row.kind == "ternary" then
+                    local c, a, b, ws = numodel.plain_ternary(row.expr, names, D)
+                    for _, w in ipairs(ws) do note(w) end
+                    f.cond = { c, a, b }
+                    f.expr = ""
+                else
+                    f.expr = pe(row.expr)
+                end
+            elseif kind[only] == "Constant" and v.has_start then
+                f.var, f.const = only, true
+                f.refs = numodel.expr_refs(v.value_expr)
+                f.expr = pe(v.value_expr)
+            end
+            if f.var then absorbed[only] = f end
+        end
+    end
+
+    -- Positions: the grid of \graphicmodel in the same style -- edu:
+    -- every variable a node of its own, the valve of a flow variable
+    -- beside it; tight: the flow variable is the valve -- turned into
+    -- Coach's pixels.
+    numodel.compute_layout(p, tight and "tight" or "edu")
     local M = numodel.models[p]
     local maxgy = 0
     for _, L in pairs(M.layout or {}) do
@@ -824,11 +874,18 @@ function C.graphic_xml(p, r, g, opts, note)
 
     for _, v in ipairs(g.vars) do
         local n = v.name
-        if kind[n] then
+        if kind[n] and not absorbed[n] then
             local L = M.layout and M.layout[n] or {}
             local o = base(n)
             o.tag = kind[n]
             o.x, o.y = px(L.gridx or 0, L.gridy or 0)
+            -- Compact: a valve of \graphicmodel that stays an object of
+            -- its own goes to the row above when that cell is free, else
+            -- half a row up.
+            if tight and L.role and L.role:find("valve") then
+                local up = string.format("%d,%d", L.gridx, L.gridy + 1)
+                o.y = o.y - ((M.occupied or {})[up] and 45 or 90)
+            end
             if kind[n] == "Constant" or kind[n] == "State" then
                 o.expr = blank_start(n) and "" or
                     (v.has_start and pe(v.value_expr) or "0")
@@ -853,8 +910,26 @@ function C.graphic_xml(p, r, g, opts, note)
     -- Flows: the valve beside its stock, or between two stocks.
     local side = {}
     for k, f in ipairs(flows) do
-        local o = { tag = "Flow", label = "Stroom_" .. k, unit = "",
-            showlabel = false, expr = f.expr }
+        local o
+        if f.var then
+            -- tight: the flow is the variable, its name shown
+            o = base(f.var)
+            o.showlabel = true
+            o.expr = f.expr
+            if f.cond then
+                o.condition, o.condtrue, o.condfalse =
+                    f.cond[1], f.cond[2], f.cond[3]
+            end
+            if f.const and blank_start(f.var)
+               or not f.const and blank_rule(f.var) then
+                o.expr = ""
+                if f.cond then o.condition, o.condtrue, o.condfalse = "", "", "" end
+            end
+        else
+            o = { label = "Stroom_" .. k, unit = "", showlabel = false,
+                expr = f.expr }
+        end
+        o.tag = "Flow"
         local A, B = f.from and by_var[f.from], f.to and by_var[f.to]
         if f.from and blank_rule(f.from) or f.to and blank_rule(f.to) then
             o.expr = ""
@@ -865,10 +940,15 @@ function C.graphic_xml(p, r, g, opts, note)
         local dy = (side[key] - 1) * 30
         -- The valve of \graphicmodel, when the flow is one variable.
         local only
-        for x in pairs(f.refs) do only = only == nil and x or false end
-        local VL = M.layout and M.layout[only or ""]
-        if VL and VL.vpos_x then
+        for x in pairs(f.var and {} or f.refs) do
+            only = only == nil and x or false
+        end
+        local VL = M.layout and M.layout[f.var or only or ""]
+        if not tight and VL and VL.vpos_x then
             o.x, o.y = px(VL.vpos_x, VL.vpos_y or 0)
+        elseif tight and VL and VL.role and VL.role:find("valve")
+               and VL.gridx then
+            o.x, o.y = px(VL.gridx, VL.gridy)
         elseif A and B then
             o.x, o.y = (A.x + B.x) / 2, (A.y + B.y) / 2 + dy
         elseif B then
@@ -894,6 +974,7 @@ function C.graphic_xml(p, r, g, opts, note)
         o.refs = f.refs
         o.ends = { [A or 0] = true, [B or 0] = true }
         add(o)
+        if f.var then by_var[f.var] = o end
     end
 
     -- Relations: from every variable a formula uses to its object.
@@ -1071,7 +1152,7 @@ end
 -- TeX as \numodelcoachwarn{prefix}{path}{text}.  The text is passed
 -- with catcode "other" (tex.sprint -2), so braces or backslashes in it
 -- are harmless.
-function C.tex_write(p, path, allow_switch, blanks, mode)
+function C.tex_write(p, path, allow_switch, blanks, mode, graphic_style)
     if not numodel.get_model(p) then
         tex.sprint("\\numodelcoachnomodel{")
         tex.sprint(-2, p)
@@ -1080,7 +1161,7 @@ function C.tex_write(p, path, allow_switch, blanks, mode)
     end
     if blanks == "" then blanks = nil end
     local W = C.write(p, path, { allow_switch = allow_switch, blanks = blanks,
-        mode = mode })
+        mode = mode, graphic_style = graphic_style })
     for _, w in ipairs(W) do
         tex.sprint("\\numodelcoachwarn{")
         tex.sprint(-2, p)

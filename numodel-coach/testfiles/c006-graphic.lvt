@@ -44,13 +44,16 @@
        or line:match("stopcondition>") or line:match("<[A-Z][a-z]+ locked")
        or line:match("<label>") or line:match("<expr>[^<]")
        or line:match("<condition[a-z]*>[^<]") or line:match("<fig[12]>[^<]")
-       or line:match("<initexpr>[^<]") then
+       or line:match("<initexpr>[^<]") or line:match("<showlabel>true") then
       texio.write_nl(line:match("^ *(.-)$"))
     end
   end}}
 \TYPE{=== mode=graphic ===}
 \coachmodel[mode=graphic]{vaten}
 \showxml{vaten}
+\TYPE{=== graphic-style=tight: Q and L are the flows ===}
+\coachmodel[mode=graphic, graphic-style=tight]{vaten-tight}
+\showxml{vaten-tight}
 \TYPE{=== cannot be drawn: text model ===}
 \OMIT
 \newmodelprefix{c}

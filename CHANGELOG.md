@@ -72,11 +72,14 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   with switching to the text view on. The time rule gives Coach's time
   and step; a stock rule `X := X ± term·dt` a stock with one flow per
   term (`-Q·dt` in one stock and `+Q·dt` in another one flow between
-  them), named `Stroom_1`, ... with the rate as formula; other rules
-  auxiliaries (`?:` as Coach's condition),
+  them), named `Stroom_1`, ... with the rate as formula; with
+  `graphic-style=tight` a flow that is one variable used nowhere else
+  (an auxiliary, also a conditional one, or a constant) is that
+  variable, with its name shown, as `diagram-style=tight` draws it;
+  other rules auxiliaries (`?:` as Coach's condition),
   variables without rule constants; every reference a relation.
-  Objects and valves are placed as `\graphicmodel[diagram-style=edu]`
-  places them. A model that cannot be
+  Objects and valves are placed as `\graphicmodel` places them in the
+  matching style (`edu`, the default, or `tight`). A model that cannot be
   drawn (a stock rule with a term without dt, ...) is written as a
   text model with a warning. Regression test `c006-graphic`.
 

@@ -10,21 +10,27 @@ CanSwitchModelModes=1 Mode=0
 <stopcondition>t &gt;= 60</stopcondition>
 <Independent locked="false">
 <label>t</label>
+<showlabel>true</showlabel>
 <expr>0</expr>
 <State locked="false">
 <label>V_A</label>
+<showlabel>true</showlabel>
 <expr>100</expr>
 <State locked="false">
 <label>V_B</label>
+<showlabel>true</showlabel>
 <expr>0</expr>
 <Constant locked="false">
 <label>k</label>
+<showlabel>true</showlabel>
 <expr>0,1</expr>
 <Aux locked="false" external_var="" external_indvar="" external_table="">
 <label>Q</label>
+<showlabel>true</showlabel>
 <expr>k*(V_A - V_B)</expr>
 <Aux locked="false" external_var="" external_indvar="" external_table="">
 <label>L</label>
+<showlabel>true</showlabel>
 <condition>V_B &gt; 30</condition>
 <conditiontrue>2</conditiontrue>
 <conditionfalse>0</conditionfalse>
@@ -61,6 +67,59 @@ CanSwitchModelModes=1 Mode=0
 <label>Relatie_6</label>
 <fig1>L</fig1>
 <fig2>Stroom_2</fig2>
+=== graphic-style=tight: Q and L are the flows ===
+Package numodel-coach Info: Wrote Coach activity 'vaten-tight.cma7'.
+CanSwitchModelModes=1 Mode=0
+<start>0</start>
+<stop>20000</stop>
+<step>1</step>
+<usestopcondition>true</usestopcondition>
+<stopcondition>t &gt;= 60</stopcondition>
+<Independent locked="false">
+<label>t</label>
+<showlabel>true</showlabel>
+<expr>0</expr>
+<State locked="false">
+<label>V_A</label>
+<showlabel>true</showlabel>
+<expr>100</expr>
+<State locked="false">
+<label>V_B</label>
+<showlabel>true</showlabel>
+<expr>0</expr>
+<Constant locked="false">
+<label>k</label>
+<showlabel>true</showlabel>
+<expr>0,1</expr>
+<Flow locked="false">
+<label>Q</label>
+<showlabel>true</showlabel>
+<expr>k*(V_A - V_B)</expr>
+<fig1>V_A</fig1>
+<fig2>V_B</fig2>
+<Flow locked="false">
+<label>L</label>
+<showlabel>true</showlabel>
+<condition>V_B &gt; 30</condition>
+<conditiontrue>2</conditiontrue>
+<conditionfalse>0</conditionfalse>
+<fig1>V_B</fig1>
+<Relation locked="false">
+<label>Relatie_1</label>
+<fig1>V_A</fig1>
+<fig2>Q</fig2>
+<Relation locked="false">
+<label>Relatie_2</label>
+<fig1>V_B</fig1>
+<fig2>Q</fig2>
+<Relation locked="false">
+<label>Relatie_3</label>
+<fig1>k</fig1>
+<fig2>Q</fig2>
+<Relation locked="false">
+<label>Relatie_4</label>
+<fig1>V_B</fig1>
+<fig2>L</fig2>
 === cannot be drawn: text model ===
 Package numodel-coach Warning: Model 'c' (teller.cma7): no graphical model: the rule for n uses n itself but is no stock rule: a term without a factor dt; written as a text model
 Package numodel-coach Info: Wrote Coach activity 'teller.cma7'.

@@ -108,6 +108,11 @@ another model, and \texttt{dir}, \texttt{attach}, \texttt{switch},
   \item[\texttt{mode=text/graphic}] Write the model as a text model
     (default) or as a graphical model, in which pupils can switch to
     the text view; see Section~\ref{sec:graphic}.
+  \item[\texttt{graphic-style=edu/tight}] The look of a graphical
+    model, as \textsf{numodel}'s |diagram-style| |edu| and |tight|:
+    |edu| (default) draws every variable as an object of its own,
+    |tight| lets a flow that is a single variable carry its name and
+    formula; see Section~\ref{sec:graphic}.
   \item[\texttt{switch=true/false}] For a text model: allow switching
     to Coach's graphical view. Default \texttt{false}: Coach derives
     the text view from the graphical model, which a text model leaves
@@ -131,17 +136,23 @@ of the rules). The model is translated as follows:
     one flow per term; the factor $\Delta t$ goes, as Coach multiplies
     by it itself. A term $-Q\,\Delta t$ in one stock and $+Q\,\Delta t$
     in another is one flow between them.
-  \item The flows are called \texttt{Stroom\_1}, \dots; a flow
-    $+a\,\Delta t$ has the formula $a$, and $a$ stays an object of its
-    own with an arrow to the flow, as \cs{graphicmodel} draws it in its
-    |edu| style.
+  \item With |graphic-style=edu| (the default) the flows are called
+    \texttt{Stroom\_1}, \dots; a flow $+a\,\Delta t$ has the formula
+    $a$, and $a$ stays an object of its own with an arrow to the flow,
+    as \cs{graphicmodel} draws it in its |edu| style. With
+    |graphic-style=tight| a flow that is a single variable used
+    nowhere else -- an auxiliary variable, also a conditional one, or a
+    constant -- \emph{is} that variable: it gets its name (shown in the
+    diagram), unit and formula or value, as \cs{graphicmodel} draws it
+    as the valve in its default |tight| style. Other flows are still
+    \texttt{Stroom\_1}, \dots
   \item Other rules become auxiliary variables; a conditional rule
     |c ? a : b| uses Coach's condition. Variables without a rule are
     constants. A start value of an auxiliary variable becomes its
     initial value.
   \item Every variable a formula uses gets an arrow (relation) to it.
-  \item The positions follow \cs{graphicmodel}'s layout in the |edu|
-    style; Coach lets pupils move everything.
+  \item The positions follow \cs{graphicmodel}'s layout in the
+    matching style; Coach lets pupils move everything.
 \end{itemize}
 A model that cannot be drawn this way -- a stock rule with a term
 without $\Delta t$ (|n := n + 1|), a conditional rule using $\Delta t$,
