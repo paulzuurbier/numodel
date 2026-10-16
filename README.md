@@ -189,9 +189,11 @@ Een bal valt vanuit rust van \qty{100}{\m}. Wat is de eindsnelheid?
 \end{document}
 ```
 
-Options (`\coachmodel[...]` or `\coachsetup{...}`): `dir` (output
-directory), `attach` (also embed the file in the PDF), `switch` (allow
-switching to Coach's graphical view; off by default), `prefix`.
+Options (`\coachmodel[...]` or `\coachsetup{...}`): `mode` (`text`,
+the default, or `graphic`: Coach's stock-and-flow diagram, in which
+pupils can switch to the text view), `dir` (output directory),
+`attach` (also embed the file in the PDF), `switch` (for a text model:
+allow switching to the graphical view; off by default), `prefix`.
 
 CMA does not document the `.cma7` format; the package was developed
 against files saved by Coach 7.0 and tested with Coach 7 on

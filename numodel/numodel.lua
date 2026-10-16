@@ -452,6 +452,10 @@ end
 function M.nice_range(lo, hi, cmmax)
     cmmax = cmmax or 10
     if not lo or not hi then return nil end
+    -- A series that ran away (inf, NaN) has no axis range.
+    if lo ~= lo or hi ~= hi or lo == -math.huge or hi == math.huge then
+        return nil
+    end
     if lo == hi then                      -- a constant: from 0 to it
         if lo == 0 then return nil end
         lo, hi = math.min(0, lo), math.max(0, hi)
@@ -2423,6 +2427,106 @@ local function plain_ternary(expr, names, D, W)
     local ctx = { D = D, W = W, names = names }
     return print_node(tree.c, ctx), print_node(tree.a, ctx),
         print_node(tree.b, ctx)
+end
+
+-- --- graphical export helpers (numodel-coach, mode=graphic) ---------
+
+-- Variables (control-word names) an expression refers to, as a set.
+local function collect_refs(n, out)
+    if type(n) ~= "table" then return out end
+    if n.k == "var" then out[n.s] = true end
+    for _, key in ipairs({ "a", "b", "c", "e" }) do
+        if n[key] then collect_refs(n[key], out) end
+    end
+    if n.args then
+        for _, x in ipairs(n.args) do collect_refs(x, out) end
+    end
+    return out
+end
+function M.expr_refs(expr)
+    return collect_refs(parse(tokenize(expr or ""), {}), {})
+end
+
+-- Split "c ? a : b" into its printed parts (nil when expr is not a
+-- conditional).
+function M.plain_ternary(expr, names, D)
+    if type(D) ~= "table" then D = M.dialects[D or "NL"] end
+    local W = {}
+    local c, a, b = plain_ternary(expr, names or {}, D, W)
+    return c, a, b, W
+end
+
+-- Remove one factor dt from a product: a*dt -> a, dt*a -> a,
+-- a*dt/m -> a/m, dt -> 1.  nil when the node is no such product.
+local function remove_dt(n, dt)
+    if n.k == "var" and n.s == dt then return { k = "num", s = "1" } end
+    if n.k == "paren" then
+        local e = remove_dt(n.e, dt)
+        return e and { k = "paren", e = e }
+    end
+    if n.k == "bin" and (n.op == "*" or n.op == "imul") then
+        local a = remove_dt(n.a, dt)
+        if a then
+            if a.k == "num" and a.s == "1" then return n.b end
+            return { k = "bin", op = n.op, a = a, b = n.b }
+        end
+        local b = remove_dt(n.b, dt)
+        if b then
+            if b.k == "num" and b.s == "1" then return n.a end
+            return { k = "bin", op = n.op, a = n.a, b = b }
+        end
+    elseif n.k == "bin" and n.op == "/" then
+        local a = remove_dt(n.a, dt)
+        if a then return { k = "bin", op = "/", a = a, b = n.b } end
+    end
+    return nil
+end
+
+-- A stock rule "X := X + a*dt - b*dt ..." as flows: returns a list of
+-- { sign = 1 | -1, expr = <printed rate>, refs = <set> }, or nil and
+-- the reason.  target and dt are control-word names (ballV, ballDt).
+function M.plain_flow_terms(expr, target, dt, names, D)
+    if type(D) ~= "table" then D = M.dialects[D or "NL"] end
+    local W = {}
+    local tree = parse(tokenize(expr or ""), W)
+    local terms = {}
+    local function split(n, sign)
+        if n.k == "bin" and (n.op == "+" or n.op == "-") then
+            split(n.a, sign)
+            split(n.b, n.op == "-" and -sign or sign)
+        elseif n.k == "paren" and n.e.k == "bin"
+               and (n.e.op == "+" or n.e.op == "-") then
+            split(n.e, sign)
+        elseif n.k == "neg" then split(n.e, -sign)
+        elseif n.k == "pos" then split(n.e, sign)
+        else terms[#terms + 1] = { node = n, sign = sign } end
+    end
+    split(tree, 1)
+    local self, out = 0, {}
+    for _, t in ipairs(terms) do
+        if t.node.k == "var" and t.node.s == target then
+            if t.sign ~= 1 then return nil, "the stock occurs with a minus sign" end
+            self = self + 1
+        else
+            local r = remove_dt(t.node, dt)
+            if not r then return nil, "a term without a factor dt" end
+            if collect_refs(r, {})[dt] then
+                return nil, "a term with dt more than once"
+            end
+            -- -a*dt parses as (-a)*dt: the minus belongs to the sign.
+            local sign = t.sign
+            while r.k == "neg" or r.k == "paren" do
+                if r.k == "neg" then sign = -sign end
+                r = r.e
+            end
+            local ctx = { D = D, W = W, names = names or {} }
+            out[#out + 1] = { sign = sign, expr = print_node(r, ctx),
+                refs = collect_refs(r, {}) }
+        end
+    end
+    if self ~= 1 then return nil, "the stock does not occur once on the right" end
+    if #out == 0 then return nil, "no flow" end
+    return out, W
 end
 
 -- ====================================================================

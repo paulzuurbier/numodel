@@ -1,0 +1,70 @@
+% Regression test: \coachmodel[mode=graphic] writes Coach's graphical
+% model (ModelXML objects) in graphical mode with switching on.  Stock
+% rules become a State with one Flow per term (dt taken out); -Q in one
+% stock and +Q in another is one flow between them (Stroom_1 = Q, as
+% \graphicmodel's edu style draws it); a conditional rule an Aux with a
+% Coach condition; every variable a formula uses a Relation.  A model
+% that cannot be drawn is written as a text model, with a warning.
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage[syntax=NL]{numodel}
+\usepackage{numodel-coach}
+\begin{document}
+\START
+\OMIT
+\newmodelprefix{w}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{1}{\s}{2}{systeem}
+\mvar{A}{V_A}{100}{\litre}{3}{voorraad}
+\mvar{B}{V_B}{0}{\litre}{3}{voorraad}
+\mvar{K}{k}{0.1}{\per\s}{2}{constante}
+\mvar{Q}{Q}{}{\litre\per\s}{3}{hulp}
+\mvar{L}{L}{}{\litre\per\s}{3}{hulp}
+\mrule{Q}{\wK * (\wA - \wB)}
+\mrule*{L}{\wB > 30 ? 2 : 0}
+\mrule{A}{\wA - \wQ * \wDt}
+\mrule{B}{\wB + \wQ * \wDt - \wL * \wDt}
+\mrule{T}{\wT + \wDt}
+\mstop{\wT >= 60}
+\computemodel
+\TIMO
+\newcommand\showxml[1]{\directlua{
+  local f = io.open("#1.cma7", "rb")
+  local d = f:read("a"); f:close()
+  local s = numodelcoach.dump(d)
+  texio.write_nl(s:match("CanSwitchModelModes=[0-9]") .. " "
+    .. s:match("Mode=[0-9]"))
+  local tree = numodelcoach.parse(d)
+  local xml
+  for _, it in ipairs(tree.items) do
+    if it[2] == "ModelXML" then xml = it[4][1][5]:sub(5) end
+  end
+  for line in xml:gmatch("[^\string\r\string\n]+") do
+    if line:match("<start>") or line:match("<stop>") or line:match("<step>")
+       or line:match("stopcondition>") or line:match("<[A-Z][a-z]+ locked")
+       or line:match("<label>") or line:match("<expr>[^<]")
+       or line:match("<condition[a-z]*>[^<]") or line:match("<fig[12]>[^<]")
+       or line:match("<initexpr>[^<]") then
+      texio.write_nl(line:match("^ *(.-)$"))
+    end
+  end}}
+\TYPE{=== mode=graphic ===}
+\coachmodel[mode=graphic]{vaten}
+\showxml{vaten}
+\TYPE{=== cannot be drawn: text model ===}
+\OMIT
+\newmodelprefix{c}
+\mvar{T}{t}{0}{\s}{2}{systeem}
+\mvar{Dt}{dt}{1}{\s}{2}{systeem}
+\mvar{N}{n}{0}{}{2}{voorraad}
+\mrule{N}{\cN + 1}
+\mrule{T}{\cT + \cDt}
+\mstop{\cT >= 5}
+\TIMO
+\coachmodel[mode=graphic]{teller}
+\directlua{
+  local f = io.open("teller.cma7", "rb")
+  local s = numodelcoach.dump(f:read("a")); f:close()
+  texio.write_nl(s:match("Mode=[0-9]"))}
+\TYPE{=== End ===}
+\end{document}

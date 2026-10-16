@@ -87,8 +87,8 @@ graphs) with their units.
 \cs{coachmodel}\oarg{options}\marg{name} writes the model with the
 current prefix to \meta{name}\texttt{.cma7} (no extension is added
 when \meta{name} has one). Options: \texttt{prefix=}\meta{prefix} for
-another model, and \texttt{dir}, \texttt{attach} and \texttt{switch}
-as below.
+another model, and \texttt{dir}, \texttt{attach}, \texttt{switch},
+\texttt{mode} and \texttt{blanks} as below.
 
 \DescribeMacro{\coachsetup}
 \cs{coachsetup}\marg{options} sets defaults for all following
@@ -105,12 +105,51 @@ as below.
     value declared with \textsf{numodel}'s |blank| key becomes a
     comment |' F_z := ...| to complete in Coach, or the answer version
     in full. Default: \textsf{numodel}'s |blanks| setting (|open|).
-  \item[\texttt{switch=true/false}] Allow switching between Coach's
-    text and graphical view. Default \texttt{false}: Coach derives
-    the text view from the graphical model, which
-    \textsf{numodel-coach} leaves empty, so switching would lose the
-    model.
+  \item[\texttt{mode=text/graphic}] Write the model as a text model
+    (default) or as a graphical model, in which pupils can switch to
+    the text view; see Section~\ref{sec:graphic}.
+  \item[\texttt{switch=true/false}] For a text model: allow switching
+    to Coach's graphical view. Default \texttt{false}: Coach derives
+    the text view from the graphical model, which a text model leaves
+    empty, so switching would lose the model. A graphical model always
+    allows switching.
 \end{description}
+
+\section{Graphical model}\label{sec:graphic}
+
+With |\coachmodel[mode=graphic]{...}| the file holds Coach's
+graphical model: the stock-and-flow diagram, with a formula in every
+object. Coach opens it in the graphical view, and pupils can switch to
+the text view, which Coach derives from the diagram (in its own order
+of the rules). The model is translated as follows:
+\begin{itemize}
+  \item The time rule |t := t + dt| becomes Coach's time; the start
+    value of $t$ and $\Delta t$ go to the model settings, together
+    with the stop condition.
+  \item A stock rule $X := X + \dots$ in which every other term has
+    a factor $\Delta t$ becomes a stock (\emph{voorraadgrootheid}) with
+    one flow per term; the factor $\Delta t$ goes, as Coach multiplies
+    by it itself. A term $-Q\,\Delta t$ in one stock and $+Q\,\Delta t$
+    in another is one flow between them.
+  \item The flows are called \texttt{Stroom\_1}, \dots; a flow
+    $+a\,\Delta t$ has the formula $a$, and $a$ stays an object of its
+    own with an arrow to the flow, as \cs{graphicmodel} draws it in its
+    |edu| style.
+  \item Other rules become auxiliary variables; a conditional rule
+    |c ? a : b| uses Coach's condition. Variables without a rule are
+    constants. A start value of an auxiliary variable becomes its
+    initial value.
+  \item Every variable a formula uses gets an arrow (relation) to it.
+  \item The positions follow \cs{graphicmodel}'s layout in the |edu|
+    style; Coach lets pupils move everything.
+\end{itemize}
+A model that cannot be drawn this way -- a stock rule with a term
+without $\Delta t$ (|n := n + 1|), a conditional rule using $\Delta t$,
+two rules for one variable -- is written as a text model, with a
+warning naming the reason. In a graphical model Coach computes the
+auxiliary variables from the stocks of the same step; a text model in
+which an auxiliary rule comes \emph{after} the stock it uses computes
+it from the new value, so the two can differ slightly.
 
 \section{Instruction text}
 

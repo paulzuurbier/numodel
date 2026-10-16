@@ -60,6 +60,9 @@
 %
 %    \begin{macrocode}
 \tl_new:N   \g__numodelcoach_dir_tl
+\tl_new:N   \g__numodelcoach_mode_tl
+\tl_gset:Nn \g__numodelcoach_mode_tl { text }
+\tl_new:N   \l__numodelcoach_mode_tl
 \bool_new:N \g__numodelcoach_attach_bool
 \bool_new:N \g__numodelcoach_switch_bool
 \tl_new:N   \l__numodelcoach_prefix_tl
@@ -74,6 +77,10 @@
     dir    .tl_gset:N   = \g__numodelcoach_dir_tl,
     attach .bool_gset:N = \g__numodelcoach_attach_bool,
     switch .bool_gset:N = \g__numodelcoach_switch_bool,
+    % mode=text: Coach's text model; graphic: the graphical model (in
+    % which pupils can switch to the text view).
+    mode   .choices:nn = { text , graphic }
+      { \tl_gset:Ne \g__numodelcoach_mode_tl { \l_keys_choice_tl } },
   }
 \keys_define:nn { numodel-coach / model }
   {
@@ -81,6 +88,8 @@
     dir    .tl_set:N   = \l__numodelcoach_dir_tl,
     attach .bool_set:N = \l__numodelcoach_attach_bool,
     switch .bool_set:N = \l__numodelcoach_switch_bool,
+    mode   .choices:nn = { text , graphic }
+      { \tl_set:Ne \l__numodelcoach_mode_tl { \l_keys_choice_tl } },
     % blanks=open|filled for this file; empty: numodel's blanks setting.
     blanks .choices:nn = { open , filled }
       { \tl_set:Ne \l__numodelcoach_blanks_tl { \l_keys_choice_tl } },
@@ -183,6 +192,7 @@
     \bool_set_eq:NN \l__numodelcoach_attach_bool \g__numodelcoach_attach_bool
     \bool_set_eq:NN \l__numodelcoach_switch_bool \g__numodelcoach_switch_bool
     \tl_clear:N \l__numodelcoach_blanks_tl
+    \tl_set_eq:NN \l__numodelcoach_mode_tl \g__numodelcoach_mode_tl
     \keys_set:nn { numodel-coach / model } {#1}
     \__numodelcoach_write:n {#2}
   }
@@ -204,7 +214,8 @@
           "\lua_escape:e { \l__numodelcoach_prefix_tl }",
           "\lua_escape:e { \l__numodelcoach_path_tl }",
           \bool_if:NTF \l__numodelcoach_switch_bool { true } { false },
-          "\tl_use:N \l__numodelcoach_blanks_tl")
+          "\tl_use:N \l__numodelcoach_blanks_tl",
+          "\tl_use:N \l__numodelcoach_mode_tl")
       }
     \bool_if:NT \l__numodelcoach_attach_bool
       {

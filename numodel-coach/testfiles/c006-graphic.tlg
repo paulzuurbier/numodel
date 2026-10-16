@@ -1,0 +1,69 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+=== mode=graphic ===
+Package numodel-coach Info: Wrote Coach activity 'vaten.cma7'.
+CanSwitchModelModes=1 Mode=0
+<start>0</start>
+<stop>20000</stop>
+<step>1</step>
+<usestopcondition>true</usestopcondition>
+<stopcondition>t &gt;= 60</stopcondition>
+<Independent locked="false">
+<label>t</label>
+<expr>0</expr>
+<State locked="false">
+<label>V_A</label>
+<expr>100</expr>
+<State locked="false">
+<label>V_B</label>
+<expr>0</expr>
+<Constant locked="false">
+<label>k</label>
+<expr>0,1</expr>
+<Aux locked="false" external_var="" external_indvar="" external_table="">
+<label>Q</label>
+<expr>k*(V_A - V_B)</expr>
+<Aux locked="false" external_var="" external_indvar="" external_table="">
+<label>L</label>
+<condition>V_B &gt; 30</condition>
+<conditiontrue>2</conditiontrue>
+<conditionfalse>0</conditionfalse>
+<Flow locked="false">
+<label>Stroom_1</label>
+<expr>Q</expr>
+<fig1>V_A</fig1>
+<fig2>V_B</fig2>
+<Flow locked="false">
+<label>Stroom_2</label>
+<expr>L</expr>
+<fig1>V_B</fig1>
+<Relation locked="false">
+<label>Relatie_1</label>
+<fig1>V_A</fig1>
+<fig2>Q</fig2>
+<Relation locked="false">
+<label>Relatie_2</label>
+<fig1>V_B</fig1>
+<fig2>Q</fig2>
+<Relation locked="false">
+<label>Relatie_3</label>
+<fig1>k</fig1>
+<fig2>Q</fig2>
+<Relation locked="false">
+<label>Relatie_4</label>
+<fig1>V_B</fig1>
+<fig2>L</fig2>
+<Relation locked="false">
+<label>Relatie_5</label>
+<fig1>Q</fig1>
+<fig2>Stroom_1</fig2>
+<Relation locked="false">
+<label>Relatie_6</label>
+<fig1>L</fig1>
+<fig2>Stroom_2</fig2>
+=== cannot be drawn: text model ===
+Package numodel-coach Warning: Model 'c' (teller.cma7): no graphical model: the rule for n uses n itself but is no stock rule: a term without a factor dt; written as a text model
+Package numodel-coach Info: Wrote Coach activity 'teller.cma7'.
+Mode=1
+=== End ===
+(c006-graphic.aux)

@@ -34,6 +34,9 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   expectations are updated, the code is unchanged.
 
 #### Fixed
+- `numodel.nice_range` (the axis range numodel-coach gives a variable
+  no diagram has drawn) failed with a Lua error on a series that ran
+  away to infinity; such a variable now keeps Coach's default range.
 - `\textmodel` inside a box (minipage, tcolorbox, exam's framed
   `solution`) no longer splits its table with "Continued on next page"
   in the middle of the box. The default `longtblr` cannot break a page
@@ -60,6 +63,22 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   Forrester diagram by hand is not supported.
 - Minimum TeX Live raised to 2024 in the manuals and README:
   numodel-plot needs siunitx v3.3.8 (November 2023).
+
+### numodel-coach
+
+#### Added
+- `\coachmodel[mode=graphic]` (also `\coachsetup{mode=graphic}`):
+  the model as Coach's graphical model, opened in the graphical view
+  with switching to the text view on. The time rule gives Coach's time
+  and step; a stock rule `X := X ± term·dt` a stock with one flow per
+  term (`-Q·dt` in one stock and `+Q·dt` in another one flow between
+  them), named `Stroom_1`, ... with the rate as formula; other rules
+  auxiliaries (`?:` as Coach's condition),
+  variables without rule constants; every reference a relation.
+  Objects and valves are placed as `\graphicmodel[diagram-style=edu]`
+  places them. A model that cannot be
+  drawn (a stock rule with a term without dt, ...) is written as a
+  text model with a warning. Regression test `c006-graphic`.
 
 ### numodel-plot
 

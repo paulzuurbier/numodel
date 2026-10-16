@@ -527,7 +527,14 @@ function C.build(spec)
     find_leaf(desc, "CanSwitchModelModes")[5] =
         string.char(spec.allow_switch and 1 or 0)
     find_leaf(desc, "AngleUnits")[5] = spec.degrees and "\1" or "\0"
-    find_leaf(find(items, "GrModMain")[4], "Mode")[5] = "\1"
+    -- Mode: 1 text, 0 graphical.  A graphical model always allows
+    -- switching: that is what it is for.
+    if spec.graphic_xml then
+        find_leaf(desc, "CanSwitchModelModes")[5] = "\1"
+        find_leaf(find(items, "GrModMain")[4], "Mode")[5] = "\0"
+    else
+        find_leaf(find(items, "GrModMain")[4], "Mode")[5] = "\1"
+    end
 
     if spec.instruction then
         find(items, "NewText\0Instructie")[4] = long_text(spec.instruction.text)
@@ -553,6 +560,14 @@ function C.build(spec)
     -- A text model sets its own time step in the initial values, so
     -- <step> has no other role.
     local xml_rec = find(items, "ModelXML")
+    if spec.graphic_xml then
+        -- Graphical: the objects carry the model; Coach derives the
+        -- variable list from them, as in CMA's own activities.
+        find(items, "VarList")[4] =
+            { leaf("Number", 2, string.pack("<i4", 0)) }
+        xml_rec[4] = long_text(spec.graphic_xml)
+        return C.serialise(tree)
+    end
     local xml = xml_rec[4][1][5]:sub(5)            -- ANSI copy, CRLF
     local n = math.max(1, math.floor(spec.iterations or 101))
     local function set(tag, val)
@@ -563,6 +578,426 @@ function C.build(spec)
     xml_rec[4] = long_text(xml)
 
     return C.serialise(tree)
+end
+
+-- --- graphical model (mode=graphic) -----------------------------------
+-- Coach keeps a graphical model as XML in ModelXML: one <modelobject>
+-- per object -- Independent (the time), Constant, Aux, State (a stock),
+-- Flow (between two states, or a state and a cloud) and Relation (an
+-- arrow from a variable to a formula that uses it) -- with its
+-- formula, unit and position.  CMA's activities (and Coach on
+-- switching) derive the text model from it.  The XML below follows
+-- what Coach 7.0 itself writes.
+
+local function xml_esc(s)
+    return (tostring(s or ""):gsub("[&<>]", { ["&"] = "&amp;",
+        ["<"] = "&lt;", [">"] = "&gt;" }))
+end
+
+-- The fields every object has, in Coach's order.
+local function object_xml(tag, o)
+    local open = tag == "Aux"
+        and '<Aux locked="false" external_var="" external_indvar="" external_table="">'
+        or '<' .. tag .. ' locked="false">'
+    local L = {
+        "  <modelobject>", "    " .. open,
+        "      <label>" .. xml_esc(o.label) .. "</label>",
+        "      <color>" .. (o.color or 16711680) .. "</color>",
+        "      <x>" .. math.floor(o.x + 0.5) .. "</x>",
+        "      <y>" .. math.floor(o.y + 0.5) .. "</y>",
+        "      <font>Segoe UI</font>",
+        "      <fontsize>12</fontsize>",
+        "      <unit>" .. xml_esc(o.unit) .. "</unit>",
+        "      <description></description>",
+        "      <decimals>2</decimals>",
+        "      <showdisplay>" .. tostring(o.showdisplay ~= false) .. "</showdisplay>",
+        "      <showlabel>" .. tostring(o.showlabel ~= false) .. "</showlabel>",
+        "      <labelpos>south</labelpos>",
+        "      <usecondition>" .. tostring(o.condition ~= nil) .. "</usecondition>",
+        "      <condition>" .. xml_esc(o.condition) .. "</condition>",
+        "      <conditiontrue>" .. xml_esc(o.condtrue) .. "</conditiontrue>",
+        "      <conditionfalse>" .. xml_esc(o.condfalse) .. "</conditionfalse>",
+        "      <useinit>" .. tostring(o.init ~= nil) .. "</useinit>",
+        "      <expr>" .. xml_esc(o.expr) .. "</expr>",
+        "      <initexpr>" .. xml_esc(o.init) .. "</initexpr>",
+        "      <fontbold>false</fontbold>",
+        "      <fontitalic>false</fontitalic>",
+        "      <fontunderline>false</fontunderline>",
+        "      <fontstrikeout>false</fontstrikeout>",
+        "      <fontcolor>16711680</fontcolor>",
+        "      <conobject></conobject>",
+        "      <minvalue>" .. xml_esc(o.min or 0) .. "</minvalue>",
+        "      <maxvalue>" .. xml_esc(o.max or 10) .. "</maxvalue>",
+        "      <easydisplay>true</easydisplay>",
+        "      <scientificnotation>false</scientificnotation>",
+    }
+    for _, e in ipairs(o.extra or {}) do L[#L + 1] = "      " .. e end
+    L[#L + 1] = "    </" .. tag .. ">"
+    L[#L + 1] = "  </modelobject>"
+    return table.concat(L, "\r\n")
+end
+
+-- Where a line from the centre of object o towards (tx, ty) leaves
+-- it: a state is a 42 x 26 rectangle, a valve a small circle, the
+-- others a circle of radius 11.
+local function edge(o, tx, ty)
+    local dx, dy = tx - o.x, ty - o.y
+    local d = math.sqrt(dx * dx + dy * dy)
+    if d == 0 then return o.x, o.y end
+    if o.tag == "State" then
+        local f = math.min(21 / math.max(math.abs(dx), 1e-9),
+                           13 / math.max(math.abs(dy), 1e-9))
+        return o.x + dx * f, o.y + dy * f
+    end
+    local r = o.tag == "Flow" and 6 or 11
+    return o.x + dx * r / d, o.y + dy * r / d
+end
+
+local function num_text(x)
+    -- A number in Coach's notation: decimal comma, no binary noise.
+    local s = numodel.tex_number(x)
+    return (s:gsub("%.", ","))
+end
+
+-- Build the XML for numodel prefix p.  r = numodel.plaintext's result
+-- (names), g = numodel.get_model(p).  Returns the XML, or nil and the
+-- reasons why the model cannot be drawn.
+function C.graphic_xml(p, r, g, opts, note)
+    local names = r.names
+    local open = (opts.blanks or numodel.settings.blanks) ~= "filled"
+    local D = numodel.dialects.NL
+    local function pe(e)
+        local s, ws = numodel.plain_expr(e, names, D)
+        for _, w in ipairs(ws) do note(w) end
+        return s
+    end
+    local var = {}
+    for _, v in ipairs(g.vars) do var[v.name] = v end
+    local problems = {}
+    local function problem(s) problems[#problems + 1] = s end
+
+    -- Rules per target, and the stop condition.
+    local rules, stop = {}, nil
+    for _, row in ipairs(g.program) do
+        if row.kind == "calc" or row.kind == "ternary" then
+            if rules[row.target] then
+                problem(names[row.target] .. " has more than one rule")
+            end
+            rules[row.target] = row
+        elseif row.kind == "stop" then stop = row
+        elseif row.kind == "text" then
+            note("free-text row left out of the graphical model")
+        end
+    end
+
+    -- The time: t := t + dt.
+    local time, dt
+    for name, row in pairs(rules) do
+        local refs = numodel.expr_refs(row.expr)
+        if row.kind == "calc" and var[name].type == "system" then
+            for other in pairs(refs) do
+                if other ~= name then
+                    local terms = numodel.plain_flow_terms(row.expr, name,
+                        other, names, D)
+                    if terms and #terms == 1 and terms[1].sign == 1
+                       and terms[1].expr == "1" then
+                        time, dt = name, other
+                    end
+                end
+            end
+        end
+    end
+    if not time then
+        return nil, { "no time rule t := t + dt (a system variable)" }
+    end
+
+    -- Classify: State (stock rule with flows), Aux (other rule),
+    -- Constant (no rule).
+    local kind, flows_of = {}, {}
+    for _, v in ipairs(g.vars) do
+        local n, row = v.name, rules[v.name]
+        if n == time or n == dt then
+        elseif not row then kind[n] = "Constant"
+        elseif row.kind == "ternary" then
+            if numodel.expr_refs(row.expr)[dt] then
+                problem("the conditional rule for " .. names[n]
+                    .. " uses dt (a conditional stock is not drawn)")
+            end
+            kind[n] = "Aux"
+        else
+            local terms = numodel.plain_flow_terms(row.expr, n, dt, names, D)
+            if terms then
+                kind[n] = "State"; flows_of[n] = terms
+            elseif numodel.expr_refs(row.expr)[n] then
+                local _, why = numodel.plain_flow_terms(row.expr, n, dt, names, D)
+                problem("the rule for " .. names[n] .. " uses " .. names[n]
+                    .. " itself but is no stock rule: " .. why)
+            else
+                kind[n] = "Aux"
+            end
+        end
+    end
+    if #problems > 0 then return nil, problems end
+
+    -- Flows: a term -X of stock A and +X of stock B is one flow A -> B.
+    local flows = {}
+    local pending = {}
+    for _, v in ipairs(g.vars) do
+        for _, t in ipairs(flows_of[v.name] or {}) do
+            local hit
+            for i, f in ipairs(pending) do
+                if f.expr == t.expr and f.sign == -t.sign and f.stock ~= v.name then
+                    hit = i; break
+                end
+            end
+            if hit then
+                local f = table.remove(pending, hit)
+                local from = f.sign < 0 and f.stock or v.name
+                local to = f.sign < 0 and v.name or f.stock
+                flows[#flows + 1] = { from = from, to = to, expr = t.expr,
+                    refs = t.refs }
+            else
+                pending[#pending + 1] = { stock = v.name, sign = t.sign,
+                    expr = t.expr, refs = t.refs }
+            end
+        end
+    end
+    for _, f in ipairs(pending) do
+        flows[#flows + 1] = { from = f.sign < 0 and f.stock or nil,
+            to = f.sign > 0 and f.stock or nil, expr = f.expr, refs = f.refs }
+    end
+
+    -- Positions: the grid of \graphicmodel in its edu style -- every
+    -- variable a node of its own, the valve of a flow variable beside
+    -- it with an arrow from the variable -- turned into Coach's pixels.
+    numodel.compute_layout(p, "edu")
+    local M = numodel.models[p]
+    local maxgy = 0
+    for _, L in pairs(M.layout or {}) do
+        if (L.gridy or -1) > maxgy then maxgy = L.gridy end
+    end
+    local function px(gx, gy)
+        return 90 + gx * 110, 80 + (maxgy - gy) * 90
+    end
+
+    local objs, by_var = {}, {}
+    local function add(o)
+        objs[#objs + 1] = o
+        if o.var then by_var[o.var] = o end
+        return o
+    end
+    local function blank_rule(n) return open and rules[n] and rules[n].blank end
+    local function blank_start(n) return open and var[n].blank end
+    local function base(n)
+        local v = var[n]
+        local u = numodel.plain_unit(v.unit)
+        return { var = n, label = names[n], unit = u,
+            min = v.axis_min and num_text(v.axis_min),
+            max = v.axis_max and num_text(v.axis_max) }
+    end
+
+    local tv = var[time]
+    local ind = base(time)
+    ind.tag, ind.x, ind.y, ind.expr, ind.showdisplay = "Independent", 20, 20,
+        tv.has_start and pe(tv.value_expr) or "0", false
+    ind.extra = { "<placed>false</placed>" }
+    add(ind)
+
+    -- dt as a constant when a formula still uses it once the factors
+    -- dt of the stock rules have gone into the flows.
+    local need_dt = stop and numodel.expr_refs(stop.expr)[dt]
+    for n, row in pairs(rules) do
+        if n ~= time and kind[n] ~= "State"
+           and numodel.expr_refs(row.expr)[dt] then need_dt = true end
+    end
+    for _, v in ipairs(g.vars) do
+        if v.has_start and v.value_expr
+           and numodel.expr_refs(v.value_expr)[dt] then need_dt = true end
+    end
+    for _, f in ipairs(flows) do if f.refs[dt] then need_dt = true end end
+    if need_dt then
+        local o = base(dt)
+        o.tag, o.expr = "Constant", pe(var[dt].value_expr)
+        o.x, o.y = 20, 60
+        add(o)
+    end
+
+    for _, v in ipairs(g.vars) do
+        local n = v.name
+        if kind[n] then
+            local L = M.layout and M.layout[n] or {}
+            local o = base(n)
+            o.tag = kind[n]
+            o.x, o.y = px(L.gridx or 0, L.gridy or 0)
+            if kind[n] == "Constant" or kind[n] == "State" then
+                o.expr = blank_start(n) and "" or
+                    (v.has_start and pe(v.value_expr) or "0")
+                if not v.has_start then
+                    note(names[n] .. " has no start value; 0 in Coach")
+                end
+            elseif rules[n].kind == "ternary" then
+                local c, a, b, ws = numodel.plain_ternary(rules[n].expr, names, D)
+                for _, w in ipairs(ws) do note(w) end
+                if blank_rule(n) then c, a, b = "", "", "" end
+                o.condition, o.condtrue, o.condfalse, o.expr = c, a, b, ""
+            else
+                o.expr = blank_rule(n) and "" or pe(rules[n].expr)
+            end
+            if kind[n] == "Aux" and v.has_start then
+                o.init = blank_start(n) and "" or pe(v.value_expr)
+            end
+            add(o)
+        end
+    end
+
+    -- Flows: the valve beside its stock, or between two stocks.
+    local side = {}
+    for k, f in ipairs(flows) do
+        local o = { tag = "Flow", label = "Stroom_" .. k, unit = "",
+            showlabel = false, expr = f.expr }
+        local A, B = f.from and by_var[f.from], f.to and by_var[f.to]
+        if f.from and blank_rule(f.from) or f.to and blank_rule(f.to) then
+            o.expr = ""
+        end
+        local S = B or A
+        local key = S.var .. (B and "in" or "out")
+        side[key] = (side[key] or 0) + 1
+        local dy = (side[key] - 1) * 30
+        -- The valve of \graphicmodel, when the flow is one variable.
+        local only
+        for x in pairs(f.refs) do only = only == nil and x or false end
+        local VL = M.layout and M.layout[only or ""]
+        if VL and VL.vpos_x then
+            o.x, o.y = px(VL.vpos_x, VL.vpos_y or 0)
+        elseif A and B then
+            o.x, o.y = (A.x + B.x) / 2, (A.y + B.y) / 2 + dy
+        elseif B then
+            -- the cell numodel keeps free for the valve of a stock
+            o.x, o.y = B.x - 110, B.y + dy
+        else
+            o.x, o.y = A.x + 110, A.y + dy
+        end
+        local x1, y1, x2, y2
+        if A then x1, y1 = edge(A, o.x, o.y) else x1, y1 = o.x - 40, o.y end
+        if B then x2, y2 = edge(B, o.x, o.y) else x2, y2 = o.x + 40, o.y end
+        o.extra = {
+            "<fig1>" .. xml_esc(A and A.label or "") .. "</fig1>",
+            "<fig1x>" .. math.floor(x1 + 0.5) .. "</fig1x>",
+            "<fig1y>" .. math.floor(y1 + 0.5) .. "</fig1y>",
+            "<fig2>" .. xml_esc(B and B.label or "") .. "</fig2>",
+            "<fig2x>" .. math.floor(x2 + 0.5) .. "</fig2x>",
+            "<fig2y>" .. math.floor(y2 + 0.5) .. "</fig2y>",
+            "<FlowType>0</FlowType>",
+            "<flowctrlx>" .. math.floor(o.x + 0.5) .. "</flowctrlx>",
+            "<flowctrly>" .. math.floor(o.y + 0.5) .. "</flowctrly>",
+        }
+        o.refs = f.refs
+        o.ends = { [A or 0] = true, [B or 0] = true }
+        add(o)
+    end
+
+    -- Relations: from every variable a formula uses to its object.
+    local rel = 0
+    local relations = {}
+    -- A straight arrow that would pass close by another object is bent
+    -- (above it, or to its left for a vertical arrow), as the curved
+    -- causal arrows of \graphicmodel.
+    local function blocked(src, dst)
+        -- from a stock to its own flow: along the pipe
+        if dst.ends and dst.ends[src] then return true end
+        local ax, ay, bx, by = src.x, src.y, dst.x, dst.y
+        local lx, ly = bx - ax, by - ay
+        local l2 = lx * lx + ly * ly
+        if l2 == 0 then return false end
+        for _, o in ipairs(objs) do
+            if o ~= src and o ~= dst then
+                local t = ((o.x - ax) * lx + (o.y - ay) * ly) / l2
+                if t > 0.05 and t < 0.95 then
+                    local qx, qy = ax + t * lx - o.x, ay + t * ly - o.y
+                    if qx * qx + qy * qy < 18 * 18 then return true end
+                end
+            end
+        end
+        return false
+    end
+    local function relate(src, dst)
+        if not src or not dst or src == dst then return end
+        rel = rel + 1
+        local ox, oy = 0, 0
+        if blocked(src, dst) then
+            local lx, ly = dst.x - src.x, dst.y - src.y
+            local l = math.sqrt(lx * lx + ly * ly)
+            ox, oy = ly / l * 45, -lx / l * 45      -- a normal
+            if oy > 0 or (oy == 0 and ox > 0) then ox, oy = -ox, -oy end
+        end
+        local c1x = src.x + (dst.x - src.x) / 3 + ox
+        local c1y = src.y + (dst.y - src.y) / 3 + oy
+        local c2x = src.x + 2 * (dst.x - src.x) / 3 + ox
+        local c2y = src.y + 2 * (dst.y - src.y) / 3 + oy
+        local x1, y1 = edge(src, c1x, c1y)
+        local x2, y2 = edge(dst, c2x, c2y)
+        if ox == 0 and oy == 0 then
+            c1x, c1y = x1 + (x2 - x1) / 3, y1 + (y2 - y1) / 3
+            c2x, c2y = x1 + 2 * (x2 - x1) / 3, y1 + 2 * (y2 - y1) / 3
+        end
+        relations[#relations + 1] = {
+            tag = "Relation", label = "Relatie_" .. rel, color = 255,
+            x = (x1 + x2) / 2 + 0.75 * ox, y = (y1 + y2) / 2 + 0.75 * oy,
+            showlabel = false, unit = "", expr = "",
+            extra = {
+                "<fig1>" .. xml_esc(src.label) .. "</fig1>",
+                "<fig1x>" .. math.floor(x1 + 0.5) .. "</fig1x>",
+                "<fig1y>" .. math.floor(y1 + 0.5) .. "</fig1y>",
+                "<fig2>" .. xml_esc(dst.label) .. "</fig2>",
+                "<fig2x>" .. math.floor(x2 + 0.5) .. "</fig2x>",
+                "<fig2y>" .. math.floor(y2 + 0.5) .. "</fig2y>",
+                "<ctrlpoint>", "  <x>" .. math.floor(c1x + 0.5) .. "</x>",
+                "  <y>" .. math.floor(c1y + 0.5) .. "</y>", "</ctrlpoint>",
+                "<ctrlpoint>", "  <x>" .. math.floor(c2x + 0.5) .. "</x>",
+                "  <y>" .. math.floor(c2y + 0.5) .. "</y>", "</ctrlpoint>",
+            },
+        }
+    end
+    for _, o in ipairs(objs) do
+        local refs = {}
+        local function merge(e)
+            if e then for x in pairs(numodel.expr_refs(e)) do refs[x] = true end end
+        end
+        if o.tag == "Flow" then
+            for x in pairs(o.refs or {}) do refs[x] = true end
+        elseif o.var and o.var ~= time then
+            if rules[o.var] and kind[o.var] == "Aux" then merge(rules[o.var].expr) end
+            if var[o.var].has_start then merge(var[o.var].value_expr) end
+        end
+        local list = {}
+        for x in pairs(refs) do list[#list + 1] = x end
+        table.sort(list)
+        for _, x in ipairs(list) do
+            if x ~= o.var then relate(by_var[x], o) end
+        end
+    end
+
+    -- Settings: time from the start of t, step dt, at most maxiter
+    -- steps; the stop condition ends the run.
+    local t0 = tv.value or 0
+    local step = var[dt].value or 1
+    local L = {
+        '<model rowindex="1" xmlversion="7.1">',
+        "  <start>" .. num_text(t0) .. "</start>",
+        "  <stop>" .. num_text(t0 + step * g.maxiter) .. "</stop>",
+        "  <step>" .. num_text(step) .. "</step>",
+        "  <method>Euler</method>",
+        "  <notation>difference</notation>",
+        "  <usestopcondition>" .. tostring(stop ~= nil) .. "</usestopcondition>",
+        "  <stopcondition>" .. xml_esc(stop and not (open and stop.blank)
+            and pe(stop.expr) or "") .. "</stopcondition>",
+        "  <savedataevery>1</savedataevery>",
+        "  <autocreaterelations>false</autocreaterelations>",
+    }
+    for _, o in ipairs(objs) do L[#L + 1] = object_xml(o.tag, o) end
+    for _, o in ipairs(relations) do L[#L + 1] = object_xml("Relation", o) end
+    L[#L + 1] = "</model>"
+    return table.concat(L, "\r\n") .. "\r\n"
 end
 
 -- --- from a numodel model ----------------------------------------------
@@ -589,6 +1024,16 @@ function C.from_model(p, opts)
         vars[#vars + 1] = { name = r.names[v.name], unit = unit,
             min = v.axis_min, max = v.axis_max }
     end
+    local graphic_xml
+    if opts.mode == "graphic" then
+        local why
+        graphic_xml, why = C.graphic_xml(p, r, g, opts,
+            function(w) W[#W + 1] = w end)
+        if not graphic_xml then
+            W[#W + 1] = "no graphical model: " .. table.concat(why, "; ")
+                .. "; written as a text model"
+        end
+    end
     local instruction
     if C.instructions[p] then
         instruction = C.instruction_html(C.instructions[p], ",",
@@ -598,7 +1043,7 @@ function C.from_model(p, opts)
         body = r.body, init = r.init, variables = vars,
         iterations = g.maxiter, allow_switch = opts.allow_switch,
         degrees = numodel.settings.angles == "degrees",
-        instruction = instruction,
+        instruction = instruction, graphic_xml = graphic_xml,
     })
     return data, W
 end
@@ -626,7 +1071,7 @@ end
 -- TeX as \numodelcoachwarn{prefix}{path}{text}.  The text is passed
 -- with catcode "other" (tex.sprint -2), so braces or backslashes in it
 -- are harmless.
-function C.tex_write(p, path, allow_switch, blanks)
+function C.tex_write(p, path, allow_switch, blanks, mode)
     if not numodel.get_model(p) then
         tex.sprint("\\numodelcoachnomodel{")
         tex.sprint(-2, p)
@@ -634,7 +1079,8 @@ function C.tex_write(p, path, allow_switch, blanks)
         return
     end
     if blanks == "" then blanks = nil end
-    local W = C.write(p, path, { allow_switch = allow_switch, blanks = blanks })
+    local W = C.write(p, path, { allow_switch = allow_switch, blanks = blanks,
+        mode = mode })
     for _, w in ipairs(W) do
         tex.sprint("\\numodelcoachwarn{")
         tex.sprint(-2, p)
