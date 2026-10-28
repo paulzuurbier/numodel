@@ -1,6 +1,6 @@
 -- ====================================================================
 -- numodel-coach.lua --- write numodel models as CMA Coach 7 files
--- numodel-coach.lua  v0.11.0  2026/10/11
+-- numodel-coach.lua  v0.12.0  2026/10/28
 -- ====================================================================
 --
 -- Copyright (C) 2026 Paul Zuurbier <mail@paulzuurbier.nl>
@@ -510,7 +510,9 @@ end
 --   body, init        model rules / initial values (UTF-8 text),
 --   variables = { { name, unit, min, max, decimals }, ... },
 --   iterations        number of iterations (>= 1),
---   allow_switch      true: pupils may switch to the graphical view
+--   allow_switch      true/false: pupils may switch between the text
+--                     and the graphical view; nil: only for a
+--                     graphical model
 --   degrees           true: Coach's angle unit is degrees (Sin(x)
 --                     takes x in degrees), else radians
 --   instruction       optional { html = ..., text = ... } for Coach's
@@ -524,13 +526,15 @@ function C.build(spec)
     local items = tree.items
 
     local desc = find(items, "Description")[4]
-    find_leaf(desc, "CanSwitchModelModes")[5] =
-        string.char(spec.allow_switch and 1 or 0)
+    -- Switching between text and graphical view: by default on for a
+    -- graphical model, off for a text model (Coach derives the text
+    -- from the graphical model, so a text-only model would be lost).
+    local switch = spec.allow_switch
+    if switch == nil then switch = spec.graphic_xml ~= nil end
+    find_leaf(desc, "CanSwitchModelModes")[5] = string.char(switch and 1 or 0)
     find_leaf(desc, "AngleUnits")[5] = spec.degrees and "\1" or "\0"
-    -- Mode: 1 text, 0 graphical.  A graphical model always allows
-    -- switching: that is what it is for.
+    -- Mode: 1 text, 0 graphical.
     if spec.graphic_xml then
-        find_leaf(desc, "CanSwitchModelModes")[5] = "\1"
         find_leaf(find(items, "GrModMain")[4], "Mode")[5] = "\0"
     else
         find_leaf(find(items, "GrModMain")[4], "Mode")[5] = "\1"
@@ -1160,6 +1164,11 @@ function C.tex_write(p, path, allow_switch, blanks, mode, graphic_style)
         return
     end
     if blanks == "" then blanks = nil end
+    -- "true", "false", or "" for the default of the mode
+    if allow_switch == "" then allow_switch = nil
+    elseif type(allow_switch) == "string" then
+        allow_switch = allow_switch == "true"
+    end
     local W = C.write(p, path, { allow_switch = allow_switch, blanks = blanks,
         mode = mode, graphic_style = graphic_style })
     for _, w in ipairs(W) do

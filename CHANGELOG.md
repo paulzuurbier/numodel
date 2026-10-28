@@ -11,6 +11,15 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.12.0] — 2026-10-28
+
+numodel-coach can write Coach's graphical model, in the edu or tight
+style of `\graphicmodel`, with switching to the text view chosen by
+`switch`. `\graphicmodel` now draws every flow the Coach export makes,
+and `\textmodel` translates more l3fp functions. One change in
+behaviour: a sum in parentheses, `(A + B)*dt`, is one flow in the
+diagram; only a difference is split.
+
 ### numodel
 
 #### Added
@@ -34,6 +43,20 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   expectations are updated, the code is unchanged.
 
 #### Fixed
+- `\graphicmodel` draws the flows it used to leave out, the same
+  flows the Coach export makes: an outflow whose rate is a stock
+  (`h := h - v*dt`, the falling ball) gets a valve after the stock
+  with a causal arrow from `v` -- before, `v` was even placed as if it
+  were that valve; a flow without a variable (`V := V + 0.5*dt`) or
+  with several (`(r + i)*dt`, `k/m*x*dt`) gets a valve without a name
+  and an arrow from each variable. The stock itself counts: growth
+  `N := N + g*N*dt` and decay `A := A - ln(2)/t_half*A*dt` get an
+  unnamed valve with arrows from `g` and from `N` (the feedback loop);
+  before, the constant was drawn as the valve, as if the flow were `g`. A sum in parentheses is one flow;
+  only a difference `(A - B)*C` is still split into an inflow and an
+  outflow. The valve of an inflow whose rate is a stock
+  (`s := s + v*dt`) has no name any more: labelled with the stock it
+  read as if that stock were the valve. Lua tests extended.
 - `numodel.nice_range` (the axis range numodel-coach gives a variable
   no diagram has drawn) failed with a Lua error on a series that ran
   away to infinity; such a variable now keeps Coach's default range.
@@ -66,6 +89,11 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
 
 ### numodel-coach
 
+#### Changed
+- `switch` takes `true`, `false` or `auto` (the default): `auto` turns
+  switching between text and graphical view on for a graphical model
+  and off for a text model, as before for text models.
+
 #### Added
 - `\coachmodel[mode=graphic]` (also `\coachsetup{mode=graphic}`):
   the model as Coach's graphical model, opened in the graphical view
@@ -79,7 +107,8 @@ and the bundle adheres to [Semantic Versioning](https://semver.org/).
   other rules auxiliaries (`?:` as Coach's condition),
   variables without rule constants; every reference a relation.
   Objects and valves are placed as `\graphicmodel` places them in the
-  matching style (`edu`, the default, or `tight`). A model that cannot be
+  matching style (`edu`, the default, or `tight`). Pupils may switch to
+  the text view unless `switch=false`. A model that cannot be
   drawn (a stock rule with a term without dt, ...) is written as a
   text model with a warning. Regression test `c006-graphic`.
 

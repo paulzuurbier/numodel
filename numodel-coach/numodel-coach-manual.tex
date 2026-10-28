@@ -113,11 +113,11 @@ another model, and \texttt{dir}, \texttt{attach}, \texttt{switch},
     |edu| (default) draws every variable as an object of its own,
     |tight| lets a flow that is a single variable carry its name and
     formula; see Section~\ref{sec:graphic}.
-  \item[\texttt{switch=true/false}] For a text model: allow switching
-    to Coach's graphical view. Default \texttt{false}: Coach derives
-    the text view from the graphical model, which a text model leaves
-    empty, so switching would lose the model. A graphical model always
-    allows switching.
+  \item[\texttt{switch=true/false/auto}] Whether pupils may switch
+    between Coach's text and graphical view. Default |auto|: on for a
+    graphical model, off for a text model. Coach derives the text view
+    from the graphical model, which a text model leaves empty, so
+    switching would lose a text model.
 \end{description}
 
 \section{Graphical model}\label{sec:graphic}

@@ -120,6 +120,15 @@ CanSwitchModelModes=1 Mode=0
 <label>Relatie_4</label>
 <fig1>V_B</fig1>
 <fig2>L</fig2>
+=== switch: auto (on for graphic), false, true for text ===
+Package numodel-coach Info: Wrote Coach activity 'vaten-noswitch.cma7'.
+vaten-noswitch: CanSwitchModelModes=0 Mode=0
+Package numodel-coach Info: Wrote Coach activity 'vaten-text.cma7'.
+vaten-text: CanSwitchModelModes=0 Mode=1
+Package numodel-coach Info: Wrote Coach activity 'vaten-textswitch.cma7'.
+vaten-textswitch: CanSwitchModelModes=1 Mode=1
+Package numodel-coach Info: Wrote Coach activity 'vaten-auto.cma7'.
+vaten-auto: CanSwitchModelModes=1 Mode=0
 === cannot be drawn: text model ===
 Package numodel-coach Warning: Model 'c' (teller.cma7): no graphical model: the rule for n uses n itself but is no stock rule: a term without a factor dt; written as a text model
 Package numodel-coach Info: Wrote Coach activity 'teller.cma7'.

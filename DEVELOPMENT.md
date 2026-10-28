@@ -59,6 +59,11 @@ becomes the CTAN announcement via `l3build upload`), and re-run
 The CTAN archive is flat and carries exactly one `README.md` and one
 `CHANGELOG.md`, both from the bundle root.
 
+CTAN wants the date after the version number; `build.lua` sends
+`v<release_tag> <release_date>` (e.g. `v0.12.0 2026-10-28`) as the
+upload version.  Without a `release-X.Y.Z.txt` the upload goes without
+an announcement.
+
 ### Lua unit tests
 
 `numodel/tests/` contains a separate Lua test suite that exercises

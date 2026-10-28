@@ -226,17 +226,24 @@ as a separate node; |diagram-style=forrester| or |edu| keep both
 Flows are inferred per additive term on the right-hand side of
 each stock rule.  After dropping the self-carry term, every |+T|
 is a candidate inflow and every |-T| a candidate outflow of the
-target stock; the first non-|system|, non-|Dt| variable appearing
-inside~|T| becomes the flow variable (|aux| and |stock| beat
-|constant| when several candidates coexist).  When the same flow
+target stock.  When~|T| contains exactly one variable apart from
+$\Delta t$, and that is not the stock itself, it is the flow variable
+and labels the valve.  A term with no variable (|0.5*\Dt|) or with
+several (|(\R + \I)*\Dt|, |\K/\M*\X*\Dt|) -- the stock itself counts,
+as in growth |\G*\N*\Dt| -- gets a valve without a name, with a
+causal arrow from each of its variables (so from the stock to its own
+valve: the feedback loop) -- the same flows the Coach export of
+\textsf{numodel-coach} makes.  When the same flow
 variable surfaces as an outflow term of stock~|A| and a matching
 inflow term of stock~|B|, the pair is promoted to a
 \emph{between-flow}: one valve drains |A| into |B| instead of two
-separate valves.  If the flow variable of an inflow term is itself
-a stock, the source stock takes the valve's place -- with a
-matching outflow term on its own rule (a conserved-quantity
-between-flow) or, when no such match exists, with a cloud-fed
-phantom valve plus a causal link to the source stock:
+separate valves.  If the flow variable of a term is itself a stock,
+the source stock takes the valve's place -- with a matching outflow
+term on its own rule (a conserved-quantity between-flow) or, when no
+such match exists, with a valve without a name plus a causal link
+from that stock ($h := h - v\cdot\Delta t$: a valve after~$h$, an
+arrow from~$v$).  One stock has at most one inflow and one outflow
+valve; further terms are left out of the diagram:
 
 \begin{center}
 \graphicmodel
@@ -1212,11 +1219,12 @@ Two flow-classification refinements support these layouts:
   appear in the same additive term, so an inflow valve carries
   the meaningful rate variable instead of an earlier-declared
   scaling constant.
-\item Top-level parenthesised inflow terms of the form
+\item Top-level parenthesised terms of the form
   |(A - B)*C| are distributed into |+A*C, -B*C| before
   classification, so |A| surfaces as the inflow valve and
   |B| (typically a radiative or dissipative loss involving a
-  constant) surfaces as the outflow valve.
+  constant) surfaces as the outflow valve.  A sum such as
+  |(A + B)*C| stays one flow.
 \end{itemize}
 
 \section{Variable types}\label{sec:types}

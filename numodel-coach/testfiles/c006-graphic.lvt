@@ -54,6 +54,22 @@
 \TYPE{=== graphic-style=tight: Q and L are the flows ===}
 \coachmodel[mode=graphic, graphic-style=tight]{vaten-tight}
 \showxml{vaten-tight}
+\TYPE{=== switch: auto (on for graphic), false, true for text ===}
+\newcommand\showswitch[1]{\directlua{
+  local f = io.open("#1.cma7", "rb")
+  local s = numodelcoach.dump(f:read("a")); f:close()
+  texio.write_nl("#1: " .. s:match("CanSwitchModelModes=[0-9]") .. " "
+    .. s:match("Mode=[0-9]"))}}
+\coachmodel[mode=graphic, switch=false]{vaten-noswitch}
+\showswitch{vaten-noswitch}
+\coachmodel{vaten-text}
+\showswitch{vaten-text}
+\coachmodel[switch]{vaten-textswitch}
+\showswitch{vaten-textswitch}
+\coachsetup{mode=graphic, switch=false}
+\coachmodel[switch=auto]{vaten-auto}
+\showswitch{vaten-auto}
+\coachsetup{mode=text, switch=auto}
 \TYPE{=== cannot be drawn: text model ===}
 \OMIT
 \newmodelprefix{c}

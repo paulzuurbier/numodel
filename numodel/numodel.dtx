@@ -25,7 +25,7 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{numodel}[2026/10/11 v0.11.0
+\ProvidesPackage{numodel}[2026/10/28 v0.12.0
   Numerical physics models with Euler integration and Forrester diagrams]
 
 \RequirePackage{expl3}
@@ -3257,6 +3257,7 @@ end
 \prop_new:N \l__numodel_between_target_prop % aux/const -> target_stock (between-flow)
 \prop_new:N \l__numodel_stock_valve_prop    % stock -> source stock (stock-as-flow)
 \prop_new:N \l__numodel_stock_phantom_valve_prop % stock -> source stock (phantom flow)
+\prop_new:N \l__numodel_stock_phantom_outvalve_prop % stock -> source stock (phantom outflow)
 % For diagram-style=forrester|edu: separate valve gridx position next
 % to the stock; the variable's own gridx/gridy keeps the natural
 % position at gridy=1 (aux) or gridy=2 (constant).  vpos_y is always 0
@@ -3452,6 +3453,12 @@ end
       {
         \tl_if_in:nnF {##1} { __sv }
           { \__numodel_emit_stock_phantom_valve:nn {##1} {##2} }
+      }
+    % Phantom out-valves (outflow whose rate is a stock or a number)
+    \prop_map_inline:Nn \l__numodel_stock_phantom_outvalve_prop
+      {
+        \tl_if_in:nnF {##1} { __so }
+          { \__numodel_emit_stock_phantom_outvalve:nn {##1} {##2} }
       }
     \__numodel_debug:n{BUILD:~step~6~flow~arrows}
     % Flow arrows (one segment each; drawn underneath the valves)
@@ -3895,33 +3902,81 @@ end
                 \exp_not:N \flowarrow {#1 __svc} {#1}
               }
           }
-        % Defer the visible valve node, labelled with the source stock
-        \tl_set:Ne \l__numodel_tmp_tl { \use:c { #2 text } }
+        % Defer the visible valve node, without a name: the flow is
+        % not a variable of its own (labelling it with the source stock
+        % read as if that stock were the valve).
+        \tl_clear:N \l__numodel_tmp_tl
         \__numodel_defer_valve:nnnn { #1 __sv }
           { \tl_use:N \l__numodel_scratch_tl }
           { \tl_use:N \l__numodel_scratch_y_tl }
           \l__numodel_tmp_tl
-        % Causal arrow source-stock -> valve.  Bend (curved) only when
-        % source and valve sit on the same row — see the equivalent
-        % comment in \__numodel_emit_stock_valve:nn for the rationale.
-        \str_if_eq:eeTF { \tl_use:N \l__numodel_scratch_y_tl }
-                        { \use:c { #2 gridy } }
-          {
-            \tl_put_right:Ne \l__numodel_late_causals_tl
-              {
-                \exp_not:N \draw ~ [\exp_not:n{causal}] ~
-                (#2) ~ \exp_not:n{to} ~ [\exp_not:n{bend~left=30}] ~ (#1__sv) ;
-              }
-          }
-          {
-            \tl_put_right:Ne \l__numodel_late_causals_tl
-              {
-                \exp_not:N \draw ~ [\exp_not:n{causal}] ~
-                (#2) ~ \exp_not:n{to} ~ (#1__sv) ;
-              }
-          }
+        % Causal arrow from each source (a stock, or the variables of a
+        % compound rate) -> valve; none for a flow without a variable.
+        \clist_map_inline:nn {#2}
+          { \__numodel_phantom_causal:nnV {##1} { #1__sv } \l__numodel_scratch_y_tl }
       }
       { }  % no gridx found: skip
+  }
+
+% Causal arrow from source stock #1 to phantom valve #2 on row #3.
+% Bend (curved) only when source and valve sit on the same row -- see
+% the equivalent comment in \__numodel_emit_stock_valve:nn.
+\cs_new_protected:Npn \__numodel_phantom_causal:nnn #1 #2 #3
+  {
+    \str_if_eq:eeTF {#3} { \use:c { #1 gridy } }
+      {
+        \tl_put_right:Ne \l__numodel_late_causals_tl
+          {
+            \exp_not:N \draw ~ [\exp_not:n{causal}] ~
+            (#1) ~ \exp_not:n{to} ~ [\exp_not:n{bend~left=30}] ~ (#2) ;
+          }
+      }
+      {
+        \tl_put_right:Ne \l__numodel_late_causals_tl
+          {
+            \exp_not:N \draw ~ [\exp_not:n{causal}] ~
+            (#1) ~ \exp_not:n{to} ~ (#2) ;
+          }
+      }
+  }
+\cs_generate_variant:Nn \__numodel_phantom_causal:nnn { nnV }
+
+% --- Stock phantom out-valve emission ---
+% An outflow whose rate is a stock without a matching inflow
+% (h := h - v*dt), or a number (source empty): an unnamed valve to the
+% right of the stock, the flow from the stock through it to the open
+% end, and a causal arrow from the source stock.
+\cs_new_protected:Npn \__numodel_emit_stock_phantom_outvalve:nn #1 #2
+  {
+    % #1 = source stock (e.g. ballH), #2 = rate stock (e.g. ballV), the
+    % variables of a compound rate (a clist), or empty
+    \prop_get:NnNT \l__numodel_stock_phantom_outvalve_prop { #1 __sogx }
+      \l__numodel_scratch_tl
+      {
+        \prop_get:NnNF \l__numodel_stock_phantom_outvalve_prop { #1 __sogy }
+          \l__numodel_scratch_y_tl
+          { \tl_set:Nn \l__numodel_scratch_y_tl { 0 } }
+        \__numodel_emit_valve_coord:nnn { #1 __soc }
+          { \tl_use:N \l__numodel_scratch_tl }
+          { \tl_use:N \l__numodel_scratch_y_tl }
+        \__numodel_eff_flowcloud:n {#1}
+        \str_if_eq:VnTF \l__numodel_flowcloud_eff_tl { true }
+          {
+            \tl_put_right:Ne \l__numodel_flows_tl
+              { \exp_not:N \flowoutarrow [x] {#1} {#1 __soc} }
+          }
+          {
+            \tl_put_right:Ne \l__numodel_flows_tl
+              { \exp_not:N \flowoutarrow {#1} {#1 __soc} }
+          }
+        \tl_clear:N \l__numodel_tmp_tl
+        \__numodel_defer_valve:nnnn { #1 __so }
+          { \tl_use:N \l__numodel_scratch_tl }
+          { \tl_use:N \l__numodel_scratch_y_tl }
+          \l__numodel_tmp_tl
+        \clist_map_inline:nn {#2}
+          { \__numodel_phantom_causal:nnV {##1} { #1__so } \l__numodel_scratch_y_tl }
+      }
   }
 
 % --------------------------------------------------------------------
@@ -3946,6 +4001,7 @@ end
     \prop_clear:N  \l__numodel_between_target_prop
     \prop_clear:N  \l__numodel_stock_valve_prop
     \prop_clear:N  \l__numodel_stock_phantom_valve_prop
+    \prop_clear:N  \l__numodel_stock_phantom_outvalve_prop
     \prop_clear:N  \l__numodel_vpos_x_prop
     \prop_clear:N  \l__numodel_vpos_y_prop
     % 2. Run the Lua pipeline.
@@ -4591,7 +4647,7 @@ end
 %
 %    \begin{macrocode}
 %<*EN>
-\ProvidesExplFile{numodel-EN.def}{2026/10/11}{0.11.0}
+\ProvidesExplFile{numodel-EN.def}{2026/10/28}{0.12.0}
   {numodel~keyword~table~--~English~(XMILE)}
 \cs_new:Npn \__numodel_kw_EN_if:           { IF~ }
 \cs_new:Npn \__numodel_kw_EN_then:         { ~THEN~ }
@@ -4636,7 +4692,7 @@ end
 %
 %    \begin{macrocode}
 %<*NL>
-\ProvidesExplFile{numodel-NL.def}{2026/10/11}{0.11.0}
+\ProvidesExplFile{numodel-NL.def}{2026/10/28}{0.12.0}
   {numodel~keyword~table~--~Dutch~(CoachTaal)}
 \cs_new:Npn \__numodel_kw_NL_if:           { Als~ }
 \cs_new:Npn \__numodel_kw_NL_then:         { ~Dan~ }
@@ -4689,7 +4745,7 @@ end
 %
 %    \begin{macrocode}
 %<*FPEVAL>
-\ProvidesExplFile{numodel-FPEVAL.def}{2026/10/11}{0.11.0}
+\ProvidesExplFile{numodel-FPEVAL.def}{2026/10/28}{0.12.0}
   {numodel~keyword~table~--~l3fp~(fpeval)~syntax}
 \cs_new:Npn \__numodel_kw_FPEVAL_if:           { }
 \cs_new:Npn \__numodel_kw_FPEVAL_then:         { ~?~ }

@@ -9,7 +9,6 @@ vars:
 flows.inflow:
   oscX -> oscV
 flows.outflow:
-  oscV -> oscX
 flows.valve_for:
 flows.outvalve_for:
 flows.between_valve:
@@ -17,6 +16,8 @@ flows.between_target:
 flows.stock_valve:
 flows.stock_phantom_valve:
   oscX -> oscV
+flows.stock_phantom_outvalve:
+  oscV -> oscX,oscM,oscK
 flows.valve_extra_targets:
 flows.outvalve_extra_sources:
 deps:
@@ -24,5 +25,3 @@ deps:
   oscV -> oscDt,oscX,oscM,oscK
   oscX -> oscDt,oscV
 causals:
-  oscM -> oscV bend=none tgt_is_valve=false
-  oscK -> oscV bend=none tgt_is_valve=false

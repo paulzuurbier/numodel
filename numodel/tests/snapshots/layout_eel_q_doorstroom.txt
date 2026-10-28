@@ -19,6 +19,7 @@ flows.between_target:
   eeP -> eeQ
 flows.stock_valve:
 flows.stock_phantom_valve:
+flows.stock_phantom_outvalve:
 flows.valve_extra_targets:
 flows.outvalve_extra_sources:
 deps:

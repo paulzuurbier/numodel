@@ -82,7 +82,8 @@ end
 
 uploadconfig = {
   pkg         = ctanpkg,
-  version     = "v" .. release_tag,
+  -- CTAN wants the date after the version number: "v0.12.0 2026-10-28".
+  version     = "v" .. release_tag .. " " .. release_date:gsub("/", "-"),
   author      = "Paul Zuurbier",
   uploader    = "Paul Zuurbier",
   email       = "mail@paulzuurbier.nl",

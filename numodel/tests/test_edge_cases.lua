@@ -69,10 +69,11 @@ return {
             { target = "eg3V",
               expr = "\\eg3V - (\\eg3K / \\eg3M) * \\eg3X * \\eg3Dt" },
         })
-        -- find_flow_var walks declaration order, skips target eg3V,
-        -- skips system (eg3Dt) and dt-display, picks first match.
-        -- Order: eg3X first (declared after eg3V).
-        ctx.assert_eq("parenthesised outflow", "eg3X", F3.outflow.eg3V)
+        -- The rate uses x, k and m (the target v and dt do not count):
+        -- no single flow variable, so an unnamed out-valve with all
+        -- three as sources, in declaration order.
+        ctx.assert_eq("parenthesised outflow", "eg3X,eg3K,eg3M",
+            F3.stock_phantom_outvalve.eg3V)
 
         ----------------------------------------------------------------
         -- 4. Function-call protection: `sign(\modV) * \modA * \modDt`.
@@ -92,13 +93,54 @@ return {
             { name = "eg4K",  type = "constant", text = "k"  },
             { name = "eg4Dt", type = "system",   text = "dt" },
         }, {
-            -- Outflow on V; expression contains sign(V) and \eg4A.
-            -- First var in declaration order after eg4V is eg4A → that's
-            -- the picked flow var.
+            -- Outflow on V; expression contains sign(V), \eg4K and
+            -- \eg4A.  Several variables (V itself counts): no single
+            -- flow variable, but an unnamed valve with all as sources.
             { target = "eg4V",
               expr = "\\eg4V - sign(\\eg4V) * \\eg4K * \\eg4A * \\eg4Dt" },
         })
-        ctx.assert_eq("function-call: first non-target var wins",
-            "eg4A", F4.outflow.eg4V)
+        ctx.assert_eq("function-call: several vars give an unnamed valve",
+            "eg4V,eg4A,eg4K", F4.stock_phantom_outvalve.eg4V)
+        ctx.assert_eq("function-call: no named outflow",
+            nil, F4.outflow.eg4V)
+
+        ----------------------------------------------------------------
+        -- 5. Flows the Coach export also makes (wish list K2, K3):
+        --    an outflow whose rate is a stock (h := h - v*dt), a flow
+        --    without a variable (n := n + 0.5*dt) and a sum
+        --    ((r + i)*dt, one flow, not split).  Each an unnamed valve.
+        ----------------------------------------------------------------
+        local F5 = classify("eg5", {
+            { name = "eg5H",  type = "stock",    text = "h"  },
+            { name = "eg5V",  type = "stock",    text = "v"  },
+            { name = "eg5N",  type = "stock",    text = "n"  },
+            { name = "eg5S",  type = "stock",    text = "S"  },
+            { name = "eg5R",  type = "constant", text = "r"  },
+            { name = "eg5I",  type = "constant", text = "i"  },
+            { name = "eg5B",  type = "stock",    text = "N"  },
+            { name = "eg5G",  type = "constant", text = "g"  },
+            { name = "eg5W",  type = "stock",    text = "W"  },
+            { name = "eg5Dt", type = "system",   text = "dt" },
+        }, {
+            -- K5: the stock itself in the rate (growth, decay)
+            { target = "eg5B", expr = "\\eg5B + \\eg5G * \\eg5B * \\eg5Dt" },
+            { target = "eg5W", expr = "\\eg5W + 0.15 * \\eg5W * \\eg5Dt" },
+            { target = "eg5H", expr = "\\eg5H - \\eg5V * \\eg5Dt" },
+            { target = "eg5N", expr = "\\eg5N + 0.5 * \\eg5Dt" },
+            { target = "eg5S", expr = "\\eg5S + (\\eg5R + \\eg5I) * \\eg5Dt" },
+        })
+        ctx.assert_eq("stock as outflow rate", "eg5V",
+            F5.stock_phantom_outvalve.eg5H)
+        ctx.assert_eq("stock as outflow rate: no named outflow", nil,
+            F5.outflow.eg5H)
+        ctx.assert_eq("number as inflow", "", F5.stock_phantom_valve.eg5N)
+        ctx.assert_eq("sum as one inflow", "eg5R,eg5I",
+            F5.stock_phantom_valve.eg5S)
+        ctx.assert_eq("stock in its own rate: unnamed valve", "eg5B,eg5G",
+            F5.stock_phantom_valve.eg5B)
+        ctx.assert_eq("stock in its own rate: g is no valve", nil,
+            F5.valve_for.eg5G)
+        ctx.assert_eq("stock alone in its own rate", "eg5W",
+            F5.stock_phantom_valve.eg5W)
     end,
 }

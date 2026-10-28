@@ -1,6 +1,6 @@
 -- ====================================================================
 -- numodel.lua --- Lua data store for the numodel package (per-prefix)
--- numodel.lua  v0.11.0  2026/10/11
+-- numodel.lua  v0.12.0  2026/10/28
 -- ====================================================================
 --
 -- Copyright (C) 2026 Paul Zuurbier <mail@paulzuurbier.nl>
@@ -545,6 +545,20 @@ local function first_flow_var(m, target, term)
     return fallback
 end
 
+-- All variables of a term (not system variables, not dt), in
+-- declaration order -- the target stock too when the term uses it
+-- (g*N*dt in the rule for N: the flow depends on N itself).
+local function flow_vars(m, target, term)
+    local out = {}
+    for name, meta in var_iter(m) do
+        if meta.type ~= "system" and meta.text ~= "dt"
+           and cs_in_expr(name, term) then
+            out[#out + 1] = name
+        end
+    end
+    return out
+end
+
 -- Tokenize an additive expression into top-level (sign, term) pairs.
 -- Parentheses, braces, and brackets are treated as opaque blocks; only
 -- top-level `+`/`-` split.  The leading term has implicit "+" if the
@@ -643,6 +657,13 @@ function M._distribute_paren_term(sign, term)
     if #inner_terms < 2 then
         return { { sign = sign, term = term } }
     end
+    -- Only a difference is split (an inflow and an outflow part); a
+    -- sum such as (r + i)*dt is one flow.
+    local mixed = false
+    for _, it in ipairs(inner_terms) do
+        if it.sign ~= inner_terms[1].sign then mixed = true end
+    end
+    if not mixed then return { { sign = sign, term = term } } end
     local before = term:sub(1, sp - 1)
     local after  = term:sub(ep + 1)
     -- Bail out if there's another paren-group on either side; the
@@ -781,7 +802,15 @@ function M.classify_flows(p)
         between_target      = {},
         stock_valve         = {},
         stock_phantom_valve = {},
+        -- Outflow whose rate is a stock without a matching inflow
+        -- (h := h - v*dt): stock -> source stock.  A flow without any
+        -- variable (V := V + 0.5*dt) has source "" here and in
+        -- stock_phantom_valve, one with several ((r + i)*dt) the list
+        -- "spR,spI".  Drawn as an unnamed valve beside the stock, with
+        -- a causal arrow from each source.
+        stock_phantom_outvalve = {},
     }
+    local num_in, num_out = {}, {}
     -- Step 1: tokenize each stock rule, build per-stock term lists.
     -- Ternary rules contribute terms from all branches; if the same
     -- (term, fv) appears as inflow in one branch and outflow in
@@ -808,6 +837,17 @@ function M.classify_flows(p)
                         local norm = normalize_term(t.term)
                         if not (t.sign == "+" and norm == self_cs) then
                             local fv = first_flow_var(m, r.target, t.term)
+                            local vs = flow_vars(m, r.target, t.term)
+                            if not fv or #vs >= 2 then
+                                -- no variable (a number), or several --
+                                -- the stock itself counts (g*N*dt): an
+                                -- unnamed valve with arrows from those
+                                -- variables
+                                local list = table.concat(vs, ",")
+                                if t.sign == "+" then num_in[r.target] = list
+                                else num_out[r.target] = list end
+                                fv = nil
+                            end
                             if fv then
                                 local key = norm .. "|" .. fv
                                 if t.sign == "+" then
@@ -915,8 +955,12 @@ function M.classify_flows(p)
             for _, out_t in ipairs(outs) do
                 if not out_t.used then
                     local fv = out_t.fv
-                    m.flows.outflow[src] = fv
                     local fmeta = m.meta[fv]
+                    if fmeta and fmeta.type == "stock" then
+                        m.flows.stock_phantom_outvalve[src] = fv
+                    else
+                        m.flows.outflow[src] = fv
+                    end
                     if fmeta and fmeta.type ~= "stock" then
                         local already = m.flows.valve_for[fv]
                         local match_between = false
@@ -963,6 +1007,18 @@ function M.classify_flows(p)
                     out_t.used = true
                 end
             end
+        end
+    end
+    -- Step 4: flows without a variable, when the stock has no other
+    -- flow on that side (one valve per side and stock).
+    for name, _ in var_iter(m) do
+        if num_in[name] and not m.flows.inflow[name]
+           and not m.flows.stock_phantom_valve[name] then
+            m.flows.stock_phantom_valve[name] = num_in[name]
+        end
+        if num_out[name] and not m.flows.outflow[name]
+           and not m.flows.stock_phantom_outvalve[name] then
+            m.flows.stock_phantom_outvalve[name] = num_out[name]
         end
     end
 end
@@ -1069,6 +1125,18 @@ local function shift_up_at_or_above(m, threshold)
                         L.sv_gridy = new_y
                     end
                 end
+                if L.so_gridx then
+                    local sy = L.so_gridy or 0
+                    if sy >= threshold then
+                        local new_y = sy + 1
+                        moves[#moves+1] = {
+                            old    = string.format("%d,%d", L.so_gridx, sy),
+                            new    = string.format("%d,%d", L.so_gridx, new_y),
+                            marker = name .. "__so",
+                        }
+                        L.so_gridy = new_y
+                    end
+                end
             end
         end
     end
@@ -1116,6 +1184,9 @@ function M.auto_layout(p, diagram_style, max_gridx)
             elseif meta.type == "stock" then
                 stock_count = stock_count + 1
                 if F.stock_valve[name] or F.stock_phantom_valve[name] then
+                    stock_count = stock_count + 1
+                end
+                if F.stock_phantom_outvalve[name] then
                     stock_count = stock_count + 1
                 end
                 local ofv = F.outflow[name]
@@ -1225,6 +1296,7 @@ function M.auto_layout(p, diagram_style, max_gridx)
                 or F.outvalve_for[ofv] == nil) then
             w = w + 1
         end
+        if F.stock_phantom_outvalve[sn] then w = w + 1 end
         return w
     end
 
@@ -1342,6 +1414,14 @@ function M.auto_layout(p, diagram_style, max_gridx)
                 cursor = cursor + 1
             end
         end
+        if F.stock_phantom_outvalve[s] then
+            cursor = next_free(cursor, 0)
+            occupy(m, cursor, 0, s .. "__so")
+            local L = m.layout[s] or {}
+            L.so_gridx = cursor
+            m.layout[s] = L
+            cursor = cursor + 1
+        end
     end
     local placed_stocks = {}
     -- True when the previous chain on this row ended with a non-between
@@ -1383,10 +1463,11 @@ function M.auto_layout(p, diagram_style, max_gridx)
             -- a gap before a following chain.  Shared outflows where
             -- this chain was an extra source leave the valve cell to
             -- the primary's chain and add no trailing valve here.
-            last_outflow = ofv ~= nil
+            last_outflow = (ofv ~= nil
                        and F.between_valve[ofv] == nil
                        and (F.outvalve_for[ofv] == sn
-                            or F.outvalve_for[ofv] == nil)
+                            or F.outvalve_for[ofv] == nil))
+                       or F.stock_phantom_outvalve[sn] ~= nil
         end
     end
 
@@ -1409,6 +1490,13 @@ function M.auto_layout(p, diagram_style, max_gridx)
                     set_valve_pos(m, keep_natural, ifv,
                                   stock_gx - 1, stock_gy)
                 end
+            end
+            if F.stock_phantom_outvalve[name] then
+                occupy(m, stock_gx + 1, stock_gy, name .. "__so")
+                local L = m.layout[name] or {}
+                L.so_gridx = stock_gx + 1
+                L.so_gridy = stock_gy
+                m.layout[name] = L
             end
             local ofv = F.outflow[name]
             if ofv then
@@ -1491,6 +1579,21 @@ local function causal_bend(m, src, tgt)
             end
         end
     end
+    local po = F.stock_phantom_outvalve
+    if po then
+        for name, _ in var_iter(m) do
+            if po[name] and name ~= src and name ~= tgt then
+                local L = m.layout[name]
+                if L and L.so_gridx then
+                    local sy = L.so_gridy or L.gridy
+                    if sy then
+                        local b = obstacle_bend(L.so_gridx, sy)
+                        if b then return b end
+                    end
+                end
+            end
+        end
+    end
     return "none"
 end
 
@@ -1519,6 +1622,16 @@ function M.causals(p, diagram_style)
                     end
                     if not skip and F.inflow[tgt] == src then skip = true end
                     if not skip and F.outflow[tgt] == src then skip = true end
+                    -- drawn to the unnamed valve by the emitter
+                    for _, key in ipairs({ "stock_phantom_valve",
+                                           "stock_phantom_outvalve" }) do
+                        local list = F[key][tgt]
+                        if not skip and list then
+                            for x in list:gmatch("[^,]+") do
+                                if x == src then skip = true end
+                            end
+                        end
+                    end
                     if not skip then
                         local bend = causal_bend(m, src, tgt)
                         local tgt_is_valve =
@@ -1610,6 +1723,7 @@ function M.dump_layout(p)
     dump_map("flows.between_target",      F.between_target)
     dump_map("flows.stock_valve",         F.stock_valve)
     dump_map("flows.stock_phantom_valve", F.stock_phantom_valve)
+    dump_map("flows.stock_phantom_outvalve", F.stock_phantom_outvalve)
     out[#out+1] = "flows.valve_extra_targets:"
     for _, k in ipairs(sorted_keys(F.valve_extra_targets or {})) do
         out[#out+1] = "  " .. k .. " -> " ..
@@ -3088,6 +3202,20 @@ function M.tex_writeback(p)
             emit(string.format(
                 "\\prop_put:Nnn \\l__numodel_stock_phantom_valve_prop {%s__svgy} {%d}",
                 stock, L.sv_gridy or L.gridy or 0))
+        end
+    end
+    for stock, src in pairs(F.stock_phantom_outvalve or {}) do
+        local L = m.layout and m.layout[stock] or {}
+        if L.so_gridx then
+            emit(string.format(
+                "\\prop_put:Nnn \\l__numodel_stock_phantom_outvalve_prop {%s} {%s}",
+                stock, src))
+            emit(string.format(
+                "\\prop_put:Nnn \\l__numodel_stock_phantom_outvalve_prop {%s__sogx} {%d}",
+                stock, L.so_gridx))
+            emit(string.format(
+                "\\prop_put:Nnn \\l__numodel_stock_phantom_outvalve_prop {%s__sogy} {%d}",
+                stock, L.so_gridy or L.gridy or 0))
         end
     end
 
